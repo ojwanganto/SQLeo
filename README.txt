@@ -1,3 +1,11 @@
+To Build with eclipse :
+1. Checkout SQLeo source
+2. Create a new project SQLeoVQBuilder in eclipse 
+3. Import sources
+4. Configure build path - Libraries - Add External JARS - Select path to your installed jdk...Java\jr6\lib\rt.jar
+5. Build project
+6. Export as jar and deselect svn files and select Main class (Application.java)
+
 To run SQLeo Visual Query Builder, launch:
 
   java -jar SQLeoVQB.jar
