@@ -1,0 +1,226 @@
+﻿<?xml version="1.0"?>
+
+<!-- =============================================================== -->
+<!-- Ant own build file                                              -->
+<!-- =============================================================== -->
+
+<project name="SQLeoVQB" default="compile" basedir=".">
+  <description>Builds, tests, and runs the project SQLeo.</description>
+
+  <property name="build.compiler" value="modern"/>
+  <property name="build.sysclasspath" value="ignore"/>
+
+  <property name="name" value="SQLeoVQB"/>
+  <property name="version" value="2012.01Beta"/>
+
+  <property name="src" value="${basedir}/src"/>
+  <property name="lib" value="${basedir}/lib"/>
+  <property name="target" value="${basedir}/build" />
+  <property name="classes" value="${target}/classes"/>
+  <property name="javadocs" value="${target}/javadocs"/>
+  <property name="dist" value="${basedir}/dist"/>
+  <property name="packages" value="*"/>
+
+  <!-- ============================================================= -->
+  <!-- Classpath with libraries needed to compile this application   -->
+  <!-- ============================================================= -->
+  <path id="compile.classpath">
+    <fileset dir="${lib}">
+      <include name="**/*.jar"/>
+      <include name="**/*.zip"/>
+    </fileset>
+  </path>
+
+
+     
+  <!-- ============================================================= -->
+  <!-- Prepares the project                                          -->
+  <!-- ============================================================= -->
+  <target name="prepare">
+    <defaultexcludes echo="false" add="**/*.nbattrs"/>
+  
+    <mkdir dir="${classes}"/>
+    <mkdir dir="${lib}"/>
+    <mkdir dir="${dist}"/>
+
+    <!-- Copy all images to the classes directory -->
+    <copy todir="${classes}">
+      <fileset dir="${src}">
+        <include name="**/*.jpg"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.dtd"/>
+        <include name="**/*.jav"/>
+        <include name="**/*.png"/>
+        <include name="**/*.xml"/>
+        <include name="**/*.jrxml"/>
+        <include name="**/*.properties"/>
+        <include name="**/*.jasper"/>
+      </fileset>
+    </copy>
+
+  </target>
+
+  <!-- ============================================================= -->
+  <!-- Compiles the source code                                      -->
+  <!-- ============================================================= -->
+  <target name="compile" depends="prepare">
+
+    <javac srcdir="${src}"
+           destdir="${classes}"
+           debug="on"
+	   excludes="**/bak/**"
+           optimize="on"
+           target="1.6"
+           source="6">
+      <classpath refid="compile.classpath"/>
+    </javac>
+
+    <!-- copy over the language and other properties files. -->      
+    <copy todir="${classes}">
+      <fileset dir="${src}">
+        <include name="**/*.properties"/>
+      </fileset>
+    </copy>
+    
+    
+  </target>
+
+  <!-- ============================================================= -->
+  <!-- Clean up all files that are generated.                        -->
+  <!-- ============================================================= -->
+  <target name="clean">
+    <delete quiet="true" dir="${classes}"/>
+    <delete dir="${dist}" />
+    <delete file="${target}/${name}-${version}.jar"/>
+    <delete file="${target}/${name}-utils-${version}.jar"/>
+  </target>
+
+  <!-- ============================================================= -->
+  <!-- Clean and then compile the project                            -->
+  <!-- ============================================================= -->
+  <target name="rebuild">
+    <antcall target="clean"/>
+    <antcall target="compile"/>
+  </target>
+
+  <!-- ============================================================= -->
+  <!-- Create the jar file                                           -->
+  <!-- ============================================================= -->
+  <target name="jar" depends="compile">
+    <jar jarfile="${target}/${name}-${version}.jar">
+    	<manifest>
+    		<attribute name="Main-Class" value="nickyb.sqleonardo.environment.Application"/>
+		<attribute name="Built-By" value="none"/>
+		<section name="Global">
+			<attribute name="Specification-Title" value="${name}"/>
+			<attribute name="Specification-Version" value="${version}"/>
+			<attribute name="Specification-Vendor" value="none"/>
+			<attribute name="Implementation-Title" value="${name}"/>
+			<attribute name="Implementation-Version" value="${version}"/> 
+			<attribute name="Implementation-Vendor" value="none"/>
+		</section>
+	</manifest>
+      <fileset dir="${classes}"/>
+    </jar>
+  </target>
+
+  <!-- ============================================================= -->
+  <!-- Create the dist_bin_zip                                               -->
+  <!-- ============================================================= -->
+  <target name="dist_bin_zip" depends="jar">
+    <!-- Full includes a bunch of JDBC drivers so, the user has nothing todo -->
+    <!-- It just works out of the box                                        -->
+    <zip destfile="${dist}/${name}-${version}.zip">
+      <zipfileset dir="lib" includes="*.jar" prefix="${name}-${version}/lib"/>
+      <zipfileset dir="lib" includes="*.txt" prefix="${name}-${version}/lib"/>
+      <zipfileset dir="${target}" includes="${name}-${version}.jar" fullpath="${name}-${version}/${name}.jar"/>
+      <zipfileset dir="." includes="LICENSE.txt" fullpath="${name}-${version}/LICENSE.txt"/>
+      <zipfileset dir="." includes="README.txt" fullpath="${name}-${version}/README.txt"/>
+    </zip>  
+  </target>
+  
+      
+  <!-- ============================================================= -->
+  <!-- Create the dist_src_zip                                               -->
+  <!-- ============================================================= -->
+  <target name="dist_src_zip">
+    <!-- Full includes a bunch of JDBC drivers so, the user has nothing todo -->
+    <!-- It just works out of the box                                        -->
+    <zip destfile="${dist}/${name}-${version}-src.zip">
+      <zipfileset dir="src" excludes="**/*.class" prefix="${name}-${version}-src/src"/>      
+      <zipfileset dir="lib" includes="*.jar" prefix="${name}-${version}-src/lib"/>
+      <zipfileset dir="lib" includes="*.txt" prefix="${name}-${version}-src/lib"/>
+      <zipfileset dir="." includes="build.xml" fullpath="${name}-${version}-src/build.xml"/>      
+      <zipfileset dir="." includes="LICENSE.txt" fullpath="${name}-${version}-src/LICENSE.txt"/>
+      <zipfileset dir="." includes="README.txt" fullpath="${name}-${version}-src/README.txt"/>
+    </zip>  
+  </target>
+
+  <!-- ============================================================= -->
+  <!-- Create the dist_bin_zip                                               -->
+  <!-- ============================================================= -->
+  <target name="dist_bin_tar" depends="jar">
+    <!-- Full includes a bunch of JDBC drivers so, the user has nothing todo -->
+    <!-- It just works out of the box                                        -->
+    <tar destfile="${dist}/${name}-${version}.tar">
+      <tarfileset dir="lib" includes="*.jar" prefix="${name}-${version}/lib"/>
+      <tarfileset dir="lib" includes="*.txt" prefix="${name}-${version}/lib"/>
+      <tarfileset dir="${target}" includes="${name}-${version}.jar" fullpath="${name}-${version}/${name}.jar"/>
+      <tarfileset dir="." includes="LICENSE.txt" fullpath="${name}-${version}/LICENSE.txt"/>
+      <tarfileset dir="." includes="README.txt" fullpath="${name}-${version}/README.txt"/>
+    </tar>
+    <gzip src="${dist}/${name}-${version}.tar" destfile="${dist}/${name}-${version}.tar.gz"/>
+    <delete file="${dist}/${name}-${version}.tar"/>      
+  </target>
+  
+  
+  
+  
+  <!-- ============================================================= -->
+  <!-- Create the dist                                               -->
+  <!-- ============================================================= -->
+  <target name="dist" depends="dist_bin_zip, dist_bin_tar, dist_src_zip">
+    <!-- Full includes a bunch of JDBC drivers so, the user has nothing todo -->
+    <!-- It just works out of the box                                        -->
+  </target>
+   
+  <!-- ============================================================= -->
+  <!-- Execute SQLeo                                     	     -->
+  <!-- ============================================================= -->
+  <target name="run" depends="compile">
+    <java classname="nickyb.sqleonardo.environment.Application" fork="true">
+    <jvmarg value="-Xms48m"/> 
+    <jvmarg value="-Xmx512m"/> 
+    <sysproperty key="sun.swing.enableImprovedDragGesture" value="true"/>
+    <sysproperty key="nickyb.sqleonardo.laf.class" value="com.sun.java.swing.plaf.windows.WindowsLookAndFeel"/>
+    
+    	<classpath>
+    			<pathelement location="${classes}"/>
+			<pathelement location="./${name}-{${version}.jar"/>
+			<fileset dir="${lib}">
+				<include name="**/*.jar"/>
+				<include name="**/*.zip"/>
+			</fileset>
+		</classpath>
+     </java>
+  </target>
+
+  <!-- ============================================================= -->
+  <!-- Creates the API documentation                                 -->
+  <!-- ============================================================= -->
+  <target name="javadocs" depends="compile">
+    <mkdir dir="${javadocs}"/>
+    <javadoc packagenames="${packages}"
+             sourcepath="${src}"
+             destdir="${javadocs}"
+             author="true"
+             version="true"
+             windowtitle="SQLeo API"
+             doctitle="SQLeo"
+             use="true"
+             bottom="Copyright &#169; All Rights Reserved."
+    />
+  </target>
+  
+  
+</project>

@@ -6,6 +6,15 @@ To Build with eclipse :
 5. Build project
 6. Export as jar and deselect svn files and select Main class (Application.java)
 
+To Build with ant on windows :
+1. Checkout SQLeo source
+2. launch
+	set JAVA_HOME=C:\Program Files\Java\jdk1.6.0_30
+	set ANT_HOME=D:\apache-ant-1.8.3
+	set PATH=%PATH%;%ANT_HOME%\bin
+	ant dist
+
+
 To run SQLeo Visual Query Builder, launch:
 
   java -jar SQLeoVQB.jar
