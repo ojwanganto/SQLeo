@@ -175,12 +175,19 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		        		ceToolbar.getActionMap().get("action-rollback").setEnabled(!isAutoCommitON);
 		        	}	
 		        	
-		        	MDIClient[] contentClients = Application.window.getClients(ClientContent.DEFAULT_TITLE);
+		        	MDIClient[] contentClients = Application.window.getClientsOfConnection(ClientContent.DEFAULT_TITLE,null);
 		        	for(int i=0; i<contentClients.length; i++){
 			        	ClientContent cct = (ClientContent)contentClients[i];
 			        	Toolbar cctToolbar = cct.getSubToolbar();
 			        	cctToolbar.getActionMap().get("action-commit").setEnabled(!isAutoCommitON);
 			        	cctToolbar.getActionMap().get("action-rollback").setEnabled(!isAutoCommitON);
+		        	}
+		        	MDIClient[] previewClients = Application.window.getClientsOfConnection(ClientContent.PREVIEW_TITLE,null);
+		        	for(int i=0; i<previewClients.length; i++){
+			        	ClientContent pct = (ClientContent)previewClients[i];
+			        	Toolbar pctToolbar = pct.getSubToolbar();
+			        	pctToolbar.getActionMap().get("action-commit").setEnabled(!isAutoCommitON);
+			        	pctToolbar.getActionMap().get("action-rollback").setEnabled(!isAutoCommitON);
 		        	}
 		        	
 		        	

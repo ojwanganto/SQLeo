@@ -215,7 +215,7 @@ public class ClientQueryBuilder extends MDIClient {
 
 			ClientContent client = new ClientContent(
 					ClientQueryBuilder.this.keycah, qm, um);
-			client.setTitle("PREVIEW : " + subtitle);
+			client.setTitle(ClientContent.PREVIEW_TITLE+" : " + subtitle);
 
 			Application.window.add(client);
 		}

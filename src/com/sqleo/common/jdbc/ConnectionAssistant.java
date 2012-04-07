@@ -68,6 +68,8 @@ public class ConnectionAssistant
 			File f = new File(fkDefFileName);
 			if(f.exists()){
 				dbMetaDatas.put(keycah, new ManualDBMetaData(fkDefFileName));
+			}else{
+	        	Application.alert(Application.PROGRAM,"Join definition file: "+ fkDefFileName+" not found, choose a new one");     	
 			}
 		}
     	return ch;

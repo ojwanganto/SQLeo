@@ -220,29 +220,16 @@ public class MDIWindow extends JFrame implements _Constants
 		
 		return (MDIClient[])clients.toArray(new MDIClient[clients.size()]);
     }
-    public MDIClient[] getClients(String name)
-    {
-    	Vector clients = new Vector();
-    	
-		JInternalFrame[] clientFrames = desktop.getAllFrames();
-		for(int i=0; i<clientFrames.length; i++)
-		{
-			if(clientFrames[i].getName()!=null && clientFrames[i].getName().equals(name)){
-				clients.add((MDIClient)clientFrames[i]);
-			}
-		}
-	
-		return (MDIClient[])clients.toArray(new MDIClient[clients.size()]);
-    }
     
-    public MDIClient[] getClientsOfConnection(String startsWithName,String keych)
+    
+    public MDIClient[] getClientsOfConnection(String containsTitle,String keych)
     {
     	Vector clients = new Vector();
     	
 		JInternalFrame[] clientFrames = desktop.getAllFrames();
 		for(int i=0; i<clientFrames.length; i++)
 		{
-			if(clientFrames[i].getName()!=null && clientFrames[i].getName().startsWith(startsWithName)){
+			if(clientFrames[i].getTitle().contains(containsTitle)){
 				if(null == keych || clientFrames[i].getTitle().contains(keych)){
 					clients.add((MDIClient)clientFrames[i]);
 				}				

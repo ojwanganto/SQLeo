@@ -160,7 +160,7 @@ public class ClientDefinition extends MDIClient
 			boolean retrieve = records > 0 && option == JOptionPane.YES_OPTION;
 			
 			ClientContent client = new ClientContent(this.getTableMetaData(),retrieve);
-			client.setTitle("CONTENT : " + this.getTableMetaData() + " : " + this.getTableMetaData().getHandlerKey());
+			client.setTitle(ClientContent.DEFAULT_TITLE+" : " + this.getTableMetaData() + " : " + this.getTableMetaData().getHandlerKey());
 			
 			Application.window.add(client);
 		}

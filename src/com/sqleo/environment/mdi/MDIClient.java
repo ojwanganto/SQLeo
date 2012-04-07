@@ -52,7 +52,6 @@ public abstract class MDIClient extends ClientFrame {
 		if (getName() == null) {
 			setName("MDIClient_" + ++counter);
 			setTitle((id = counter) + " - " + title);
-			//setClosable(true); redundant
 		}
 	}
 

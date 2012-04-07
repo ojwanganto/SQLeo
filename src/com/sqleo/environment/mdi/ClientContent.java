@@ -54,17 +54,15 @@ import com.sqleo.querybuilder.QueryModel;
 
 public class ClientContent extends MDIClientWithCRActions
 {
-	public static final String DEFAULT_TITLE = "content";	
+	public static final String DEFAULT_TITLE = "CONTENT";	
+	public static final String PREVIEW_TITLE = "PREVIEW";	
 	
 	private ContentPane control;
 	private JMenuItem[] m_actions;
 	private Toolbar toolbar;
 	
 	private DialogFindReplace dlg;
-	@Override
-	public final String getName() {
-		return DEFAULT_TITLE; 
-	}
+
 	public ClientContent(TableMetaData tmd, boolean retrieve)
 	{
 		this(tmd.getHandlerKey(),tmd.createQueryModel(),tmd.createUpdateModel(),retrieve);

@@ -442,8 +442,11 @@ public class FileStreamXLQ
 			
 		int start = t.indexOf(a) + a.length();
 		int end = t.indexOf("\"",start);
-			
-		t = t.substring(start,end);
+		if (start!=-1 && end!=-1 && start < end){	
+			t = t.substring(start,end);
+		}else{
+			return null;
+		}
 		return t.equals("null") ? null : Text.replaceText(t,"&apos;","'");
 	}
 

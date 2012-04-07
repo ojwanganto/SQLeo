@@ -196,10 +196,9 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 			JMenu submenu = new JMenu("add to query");
 			submenu.setEnabled(false);
 			
-			ActionAppendQuery q = new ActionAppendQuery();
-			
 			if(queryWindows.length>0) {
 				submenu.setEnabled(true);
+				ActionAppendQuery q = new ActionAppendQuery();
 				for(int i = 0; i < queryWindows.length ; i++){
 					JMenuItem item = new JMenuItem(queryWindows[i].getTitle());
 					item.setActionCommand(queryWindows[i].getName());
@@ -285,7 +284,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	}
 	
 	private MDIClient[] getQueryWindows(){
-		return Application.window.getClientsOfConnection("MDIClient_",AbstractViewObjects.this.getHandlerKey());
+		return Application.window.getClientsOfConnection(ClientQueryBuilder.DEFAULT_TITLE,AbstractViewObjects.this.getHandlerKey());
 	}
 	
 	protected class ActionAppendQuery extends AbstractAction implements Runnable
@@ -299,6 +298,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 			String name		= AbstractViewObjects.this.getTableName();
 			
 			ClientQueryBuilder client = (ClientQueryBuilder) Application.window.getClient(queryWindow);
+			Application.window.showClient(client);
 			if(Preferences.getBoolean("querybuilder.use-schema")){
 				schema = AbstractViewObjects.this.getTableSchema();
 			}
@@ -433,7 +433,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 			boolean retrieve = records > 0 && option == JOptionPane.YES_OPTION;
 			
 			ClientContent client = new ClientContent(this.getTableMetaData(),retrieve);
-			client.setTitle("CONTENT : " + this.getTableMetaData() + " : " + this.getTableMetaData().getHandlerKey());
+			client.setTitle(ClientContent.DEFAULT_TITLE+" : " + this.getTableMetaData() + " : " + this.getTableMetaData().getHandlerKey());
 			
 			Application.window.add(client);
 		}
