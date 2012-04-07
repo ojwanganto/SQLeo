@@ -109,7 +109,7 @@
   <target name="jar" depends="compile">
     <jar jarfile="${target}/${name}-${version}.jar">
     	<manifest>
-    		<attribute name="Main-Class" value="nickyb.sqleonardo.environment.Application"/>
+    		<attribute name="Main-Class" value="com.sqleo.environment.Application"/>
 		<attribute name="Built-By" value="none"/>
 		<section name="Global">
 			<attribute name="Specification-Title" value="${name}"/>
@@ -188,11 +188,11 @@
   <!-- Execute SQLeo                                     	     -->
   <!-- ============================================================= -->
   <target name="run" depends="compile">
-    <java classname="nickyb.sqleonardo.environment.Application" fork="true">
+    <java classname="com.sqleo.environment.Application" fork="true">
     <jvmarg value="-Xms48m"/> 
     <jvmarg value="-Xmx512m"/> 
     <sysproperty key="sun.swing.enableImprovedDragGesture" value="true"/>
-    <sysproperty key="nickyb.sqleonardo.laf.class" value="com.sun.java.swing.plaf.windows.WindowsLookAndFeel"/>
+    <sysproperty key="com.sqleo.laf.class" value="com.sun.java.swing.plaf.windows.WindowsLookAndFeel"/>
     
     	<classpath>
     			<pathelement location="${classes}"/>

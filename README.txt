@@ -1,11 +1,3 @@
-To Build with eclipse :
-1. Checkout SQLeo source
-2. Create a new project SQLeoVQBuilder in eclipse 
-3. Import sources
-4. Configure build path - Libraries - Add External JARS - Select path to your installed jdk...Java\jr6\lib\rt.jar
-5. Build project
-6. Export as jar and deselect svn files and select Main class (Application.java)
-
 To Build with ant on windows :
 1. Checkout SQLeo source
 2. launch
@@ -14,6 +6,13 @@ To Build with ant on windows :
 	set PATH=%PATH%;%ANT_HOME%\bin
 	ant dist
 
+To Build with eclipse :
+1. Checkout SQLeo source and add an empty lib folder on project root path.
+2. In Eclipe goto File->New->Other->Java Project from existing ant build file 
+   and select the ant build file.
+3. To run the application: Run com.sqleo.environment.Application.java
+4. To export as JAR : Select project -> export as jar (deselect svn files)
+   and then select Main class (com.sqleo.environment.Application.java)
 
 To run SQLeo Visual Query Builder, launch:
 
