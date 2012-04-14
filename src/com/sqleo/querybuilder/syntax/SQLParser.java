@@ -125,6 +125,7 @@ public class SQLParser
 			{
 				qs.addSelectList(new QueryTokens.DefaultExpression(value.trim(),alias));
 				value = new String();
+				alias = null; // added to fix bug #13
 			}
 			else if(isClauseWord(next.toString()))
 			{
