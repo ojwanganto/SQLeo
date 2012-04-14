@@ -95,6 +95,7 @@ public abstract class QueryTokens
 		{
 			return isAliasSet() ? value + SQLFormatter.SPACE + _ReservedWords.AS +  SQLFormatter.SPACE + this.getAlias() : value;
 		}
+
 	}
 	
 	public abstract static class AbstractDatabaseObject implements _Alias
@@ -177,6 +178,7 @@ public abstract class QueryTokens
 			
 			return declare;
 		}
+
 	}
 	
 	public static class Table extends AbstractDatabaseObject implements _TableReference
@@ -417,7 +419,8 @@ public abstract class QueryTokens
 		
 		public String toString()
 		{
-			return expr instanceof Column ? ((Column)expr).getReference() : expr.toString();
+// fix for ticket #12   return expr instanceof Column ? ((Column)expr).getReference() : expr.toString();
+			return expr instanceof Column ? ((Column)expr).getIdentifier() : expr.toString();
 		}		
 	}
 	
