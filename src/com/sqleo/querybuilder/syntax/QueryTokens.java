@@ -420,7 +420,8 @@ public abstract class QueryTokens
 		public String toString()
 		{
 // fix for ticket #12   return expr instanceof Column ? ((Column)expr).getReference() : expr.toString();
-			return expr instanceof Column ? ((Column)expr).getIdentifier() : expr.toString();
+// fix for ticket #47	return expr instanceof Column ? ((Column)expr).getIdentifier() : expr.toString();
+			return expr instanceof Column ? ((Column)expr).getIdentifier() : ((DefaultExpression)expr).getValue();
 		}		
 	}
 	
@@ -465,7 +466,8 @@ public abstract class QueryTokens
 		
 		public String toString()
 		{
-			return (expr instanceof Column ? ((Column)expr).getIdentifier() : expr.toString() ) + (isAscending() ? " ASC" : " DESC");
+// fix for ticket #47	return (expr instanceof Column ? ((Column)expr).getIdentifier() : expr.toString() ) + (isAscending() ? " ASC" : " DESC");
+			return (expr instanceof Column ? ((Column)expr).getIdentifier() : ((DefaultExpression)expr).getValue() ) + (isAscending() ? " ASC" : " DESC");
 		}
 	}
 }
