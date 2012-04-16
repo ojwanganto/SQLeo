@@ -166,17 +166,8 @@ public class ClientQueryBuilder extends MDIClient {
 			setTooltip(I18n
 					.getString("application.launchQuery", "launch query"));
 		}
-
-		@Override
-		public void actionPerformed(ActionEvent ae) {
-			if (ClientQueryBuilder.this.builder.getConnection() == null) {
-				Application.alert(Application.PROGRAM, "no connection!");
-				return;
-			}
-
-			int pos = getTitle().indexOf(":");
-			String subtitle = getTitle().substring(pos);
-
+		
+		private void onLaunchFromDesigner(String subtitle){
 			UpdateModel um = null;
 			QueryModel qm = null;
 			try {
@@ -216,8 +207,30 @@ public class ClientQueryBuilder extends MDIClient {
 			ClientContent client = new ClientContent(
 					ClientQueryBuilder.this.keycah, qm, um);
 			client.setTitle(ClientContent.PREVIEW_TITLE+" : " + subtitle);
-
 			Application.window.add(client);
+		}
+		
+		private void onLaunchFromSyntax(String subtitle){
+			String query = ClientQueryBuilder.this.builder.getSyntax().getText();
+			ClientContent client = new ClientContent(ClientQueryBuilder.this.keycah, query,true);
+			client.setTitle(ClientContent.PREVIEW_TITLE+" : " + subtitle);
+			Application.window.add(client);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			if (ClientQueryBuilder.this.builder.getConnection() == null) {
+				Application.alert(Application.PROGRAM, "no connection!");
+				return;
+			}
+
+			int pos = getTitle().indexOf(":");
+			String subtitle = getTitle().substring(pos);
+			if(ClientQueryBuilder.this.builder.getSelectedIndex()==0){
+				onLaunchFromDesigner(subtitle);
+			}else{
+				onLaunchFromSyntax(subtitle);
+			}
 		}
 	}
 

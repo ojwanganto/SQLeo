@@ -87,7 +87,8 @@ public abstract class QueryActions
 		
 		public void actionPerformed(ActionEvent ae)
 		{
-			String value = builder.getQueryModel().toString(true);
+			String value = builder.getSelectedIndex()==0 ? builder.getQueryModel().toString(true):
+				builder.getSyntax().getText();
 			
 			Clipboard cb = builder.getToolkit().getSystemClipboard();
 			StringSelection contents = new StringSelection(value);

@@ -23,6 +23,7 @@ package com.sqleo.environment.mdi;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -156,7 +157,8 @@ public abstract class MDIActions implements _Constants
 			if(ret[0]!=null && ret[1]!=null && ret[2]!=null)
 			{
 				ClientQueryBuilder cqb = new ClientQueryBuilder(ret[2].toString());
-				cqb.setFileName(ret[0].toString());
+				String fileName = ret[0].toString();
+				cqb.setFileName(fileName);
 				
 				DiagramLayout dl = (DiagramLayout)ret[1];
 				
@@ -192,10 +194,59 @@ public abstract class MDIActions implements _Constants
 
 				Application.window.add(cqb);
 				cqb.setDiagramLayout(dl);
+				if(fileName.toLowerCase().endsWith(".sql")){
+					cqb.getBuilder().setSelectedIndex(1);
+				}
 			}
 		}
 	}
-	
+
+	public static class LoadGivenQuery extends AbstractBase
+	{
+		public LoadGivenQuery(){super(I18n.getString("application.menu.loadQuery","load query..."));}
+
+		public void actionPerformed(ActionEvent ae)
+		{
+			String fileName = ae.getActionCommand();
+			if(!ConnectionAssistant.getHandlers().isEmpty())
+			{
+				Object keycah = null;
+				if(ConnectionAssistant.getHandlers().size() > 1)
+					keycah = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.useConnection","use connection:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,ConnectionAssistant.getHandlers().toArray(),null);
+				else
+					keycah = ConnectionAssistant.getHandlers().toArray()[0];
+
+				if(keycah != null)
+				{
+
+					ClientQueryBuilder cqb = new ClientQueryBuilder(keycah.toString());
+					cqb.setFileName(fileName);
+
+					DiagramLayout dl = DialogQuery.getDiagramLayoutForFile(fileName);
+					if(!Preferences.getBoolean("querybuilder.use-schema"))
+					{
+						ConnectionHandler ch = ConnectionAssistant.getHandler(keycah.toString());
+						ArrayList schemas = (ArrayList)ch.getObject("$schema_names");
+						if(schemas.size()>0)
+						{
+							Object schema = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.schema","schema:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,schemas.toArray(),null);
+							if(schema == null) return;
+							dl.getQueryModel().setSchema(schema.toString());
+						}
+					}
+					Application.window.menubar.addMenuItemAtFirst(fileName);
+					Application.window.add(cqb);
+					cqb.setDiagramLayout(dl);
+					if(fileName.toLowerCase().endsWith(".sql")){
+						cqb.getBuilder().setSelectedIndex(1);
+					}
+				}
+			}else{
+				Application.alert(Application.window.getTitle(),"No connections exists!");
+			}
+		}
+	}
+
 	public static class Exit extends AbstractBase
 	{
 		public Exit(){super(I18n.getString("application.menu.exit","exit"));}

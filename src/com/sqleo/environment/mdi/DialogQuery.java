@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -57,6 +59,11 @@ public class DialogQuery extends AbstractDialogWizard
 	private boolean terminated;
 
 	private DialogQuery(String title)
+	{
+		super(Application.window,title);
+		mkp = new MaskPreview();
+	}
+	private DialogQuery(String title,String fileName)
 	{
 		super(Application.window,title);
 		mkp = new MaskPreview();
@@ -95,6 +102,9 @@ public class DialogQuery extends AbstractDialogWizard
 			ret[1] = dlg.mkp.getDiagramLayout();
 			ret[2] = dlg.mkp.cbxConnections.getSelectedItem();
 			ret[3] = dlg.mkp.cbxSchemas.getSelectedItem();
+
+			Application.window.menubar.addMenuItemAtFirst(((File)ret[0]).getAbsolutePath());
+
 		}
 		
 		dlg.dispose();
@@ -179,6 +189,25 @@ public class DialogQuery extends AbstractDialogWizard
 			this.setVisible(false);
 			return false;
 		}
+	}
+
+	public static DiagramLayout getDiagramLayoutForFile(String filename){
+		DiagramLayout layout = new DiagramLayout();
+		try
+		{
+			if(filename.toLowerCase().endsWith(".xlq"))
+				layout = FileStreamXLQ.read(filename);
+			else if(filename.toLowerCase().endsWith(".lqy"))
+				layout.setQueryModel(FileStreamLQY.read(filename));
+			else if(filename.toLowerCase().endsWith(".sql"))
+				layout.setQueryModel(FileStreamSQL.read(filename));
+		}
+		catch(Exception e)
+		{
+			Application.println(e,true);
+			e.printStackTrace();
+		}
+		return layout;
 	}
 
 	private boolean doSave()

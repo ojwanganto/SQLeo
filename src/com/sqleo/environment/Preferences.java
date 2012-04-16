@@ -97,4 +97,8 @@ public class Preferences
 		
 		return getString(key);
 	}
+
+	public static boolean containsKey(String key) {
+		return get().containsKey(key);
+	}
 }

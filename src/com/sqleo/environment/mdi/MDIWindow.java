@@ -66,6 +66,15 @@ public class MDIWindow extends JFrame implements _Constants
 			Preferences.set("window.height"	,new Integer(this.getSize().height));
 			Preferences.set("window.width"	,new Integer(this.getSize().width));
 		}
+		StringBuilder sb = new StringBuilder();
+		int total = menubar.recentQueryMenu.getItemCount();
+		for(int i = 0 ; i< total ;i++){
+			sb.append(menubar.recentQueryMenu.getItem(i).getText());
+			if(i<total-1){
+				sb.append(MDIMenubar.RECENT_QUERY_SEPARATOR);
+			}
+		}
+		Preferences.set(MDIMenubar.RECENT_QUERIES, sb.toString());
 		
 		super.dispose();
 	}    

@@ -24,6 +24,13 @@
 
 package com.sqleo.environment.mdi;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.Action;
@@ -37,26 +44,62 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 
 
 public class MDIMenubar extends JMenuBar implements InternalFrameListener
 {
-    static final int IDX_ACTIONS	= 1;
-    static final int IDX_TOOLS		= 2;
-    static final int IDX_WINDOW		= 3;
-    
-    public History history;
-    private WindowGroup winGroup;
-    
-    public MDIMenubar()
-    {
-    	history = new History();
+	static final int IDX_ACTIONS	= 1;
+	static final int IDX_TOOLS		= 2;
+	static final int IDX_WINDOW		= 3;
+
+	public History history;
+	private WindowGroup winGroup;
+	public JMenu recentQueryMenu;
+	public static final String RECENT_QUERIES = "RECENT_QUERIES";
+	public static final String RECENT_QUERY_SEPARATOR = "||";
+
+	public MDIMenubar()
+	{
+		history = new History();
 		winGroup = new WindowGroup();
     	
 		JMenu menu = add("file");
 		menu.setMnemonic('f');
 		menu.add(createItem(MDIActions.ACTION_NEW_QUERY));
 		menu.add(createItem(MDIActions.ACTION_LOAD_QUERY));
+
+		recentQueryMenu = add("recent queries");
+		MDIActions.LoadGivenQuery action = new MDIActions.LoadGivenQuery();  
+
+		if(Preferences.containsKey(RECENT_QUERIES)){
+			String value = Preferences.getString(RECENT_QUERIES);
+			if(value.length()>0){
+				if(value.contains(RECENT_QUERY_SEPARATOR)){
+					String[] queryNames = value.split("\\|\\|");
+					for(int i=0;i<queryNames.length;i++){
+						String fileName =queryNames[i];
+						File f = new File(fileName);
+						if(f.exists()){
+							JMenuItem item = new JMenuItem(fileName);
+							item.setActionCommand(fileName);
+							item.addActionListener(action);
+							recentQueryMenu.add(item);
+						}
+					}
+				}else{
+					File f = new File(value);
+					if(f.exists()){
+						JMenuItem item = new JMenuItem(value);
+						item.setActionCommand(value);
+						item.addActionListener(action);
+						recentQueryMenu.add(item);
+					}
+				}
+			}
+		}
+		menu.add(recentQueryMenu);
+
 		menu.addSeparator();
 		menu.add(createItem(new MDIActions.Dummy("print..."))).setEnabled(false);
 		menu.addSeparator();
@@ -90,12 +133,27 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		menu.add(createItem(new MDIActions.Dummy("how to..."))).setEnabled(false);
 		menu.addSeparator();
 		menu.add(createItem(MDIActions.ACTION_ABOUT));
-    }
-    
-    private JMenu add(String text)
-    {
-        return add(new JMenu(text));
-    }
+	}
+
+	public void addMenuItemAtFirst(String text){
+		MDIActions.LoadGivenQuery action = new MDIActions.LoadGivenQuery(); 
+		for(int i = 0; i<recentQueryMenu.getItemCount();i++){
+			JMenuItem subMenuItem = recentQueryMenu.getItem(i);
+			if(text.equals(subMenuItem.getText())){
+				recentQueryMenu.remove(subMenuItem);
+				break;
+			}
+		}
+		JMenuItem item = new JMenuItem(text);
+		item.setActionCommand(text);
+		item.addActionListener(action);
+		recentQueryMenu.insert(item,0);
+	}
+	
+	private JMenu add(String text)
+	{
+		return add(new JMenu(text));
+	}
 
 	private static JMenuItem createItem(String actionkey)
 	{

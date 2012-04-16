@@ -55,7 +55,7 @@ public class TaskRetrieve implements Runnable
 	{
 		try
 		{
-			String syntax = target.getQueryModel().toString(false);
+			String syntax = target.getQuery();
 			if(target.getHandlerKey()!=null)
 			{
 				ConnectionHandler ch = ConnectionAssistant.getHandler(target.getHandlerKey());

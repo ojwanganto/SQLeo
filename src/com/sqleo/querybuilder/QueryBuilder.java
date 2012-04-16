@@ -31,6 +31,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Hashtable;
 
+import javax.swing.AbstractButton;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -408,5 +409,9 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		}
 		else
 			syntax.setText(this.getQueryModel().toString(true));
+	}
+
+	public TextView getSyntax() {
+		return syntax;
 	}	
 }

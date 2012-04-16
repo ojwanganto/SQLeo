@@ -101,11 +101,19 @@ public class ClientContent extends MDIClientWithCRActions
 	
 	private ClientContent(String keycah, QueryModel qmodel, UpdateModel umodel, boolean retrieve)
 	{
+		this(new ContentPane(keycah,qmodel,umodel),retrieve);
+	}
+	public ClientContent(String keycah, String query, boolean retrieve)
+	{
+		this(new ContentPane(keycah,query),retrieve);
+	}
+	private ClientContent(ContentPane control2,boolean retrieve){
 		super(DEFAULT_TITLE);
 		setMaximizable(true);
 		setResizable(true);
 		
-		setComponentCenter(control = new ContentPane(keycah,qmodel,umodel));
+		control = control2;
+		setComponentCenter(control);
 		control.setBorder(new EmptyBorder(2,2,2,2));
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -139,7 +147,9 @@ public class ClientContent extends MDIClientWithCRActions
 		};
 		addInternalFrameListener(ifl);
 		
-		createToolbar();
+		if(control.getQueryModel()!=null){
+			createToolbar();
+		}
 		initMenuActions();
 		
 		if(retrieve)
@@ -215,6 +225,8 @@ public class ClientContent extends MDIClientWithCRActions
 			null,
 			MDIMenubar.createItem(control.getActionMap().get("task-go"))
 		};
+		m_actions[0].setEnabled(control.getQueryModel()!=null);
+		m_actions[1].setEnabled(control.getQueryModel()!=null);
 	}
 	
 	public final void dispose()

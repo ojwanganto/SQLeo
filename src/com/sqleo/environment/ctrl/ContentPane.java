@@ -61,14 +61,25 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 	private String keycah;
 	private QueryModel qmodel;
 	private UpdateModel umodel;
+	private String query;
 	
 	public ContentPane(String keycah, QueryModel qmodel, UpdateModel umodel)
+	{
+		this(keycah,qmodel,umodel,qmodel.toString(false));	
+	}
+	public ContentPane(String keycah, String query)
+	{
+		this(keycah,null,null,query);
+	}
+	
+	private ContentPane(String keycah, QueryModel qmodel, UpdateModel umodel, String query)
 	{
 		super(2,2);
 		
 		this.keycah = keycah;
 		this.qmodel = qmodel;
 		this.umodel = umodel;
+		this.query = query;
 				
 		this.getActionMap().put("changes-save"	,new ActionSaveChanges());
 		this.getActionMap().put("record-insert"	,new ActionInsertRecord());
@@ -90,7 +101,7 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 		JScrollPane scroll = new JScrollPane(syntax = new JTextArea());
 		syntax.setRows(3);
 		
-		syntax.setText(qmodel.toString(false));
+		syntax.setText(query);
 		syntax.setWrapStyleWord(true);
 		syntax.setLineWrap(true);
 		syntax.setEditable(false);
@@ -126,6 +137,9 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 		return qmodel;
 	}
 
+	public String getQuery() {
+		return query;
+	}
 	public UpdateModel getUpdateModel()
 	{
 		return umodel;
@@ -315,7 +329,7 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 		{
 			if(!ContentPane.this.isBusy())
 			{
-				ContentPane.this.syntax.setText(ContentPane.this.getQueryModel().toString(false));
+				ContentPane.this.syntax.setText(ContentPane.this.getQuery());
 				ContentPane.this.view.reset();
 				ContentPane.this.doRetrieve();
 			}
