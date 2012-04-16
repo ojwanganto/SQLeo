@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.sql.Date;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -74,7 +75,9 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		add("save record").setEnabled(false);
 		
 		addSeparator(); // 15
-		add(new ActionJump());
+		Action jump = new ActionJump();
+		jump.setEnabled(view.getControl().getQueryModel()!=null);
+		add(jump);
 		
 		addSeparator(); // 17
 		add(new ActionSortAsc());
