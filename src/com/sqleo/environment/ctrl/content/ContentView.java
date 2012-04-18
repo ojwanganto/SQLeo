@@ -65,8 +65,10 @@ public class ContentView extends JPanel implements ListSelectionListener
 	    this.control = control;
 	    
 		data = new JTable();
-		data.setModel(model = new ContentModel());
-		data.addMouseListener(popup = new ContentPopup(this));
+		data.setModel(model = new ContentModel(getControl().getQueryModel()==null));
+		if(getControl().getQueryModel()!=null){
+			data.addMouseListener(popup = new ContentPopup(this));
+		}
 		data.addKeyListener(new KeyAdapter()
 		{
 			public void keyPressed(KeyEvent key)
@@ -116,12 +118,15 @@ public class ContentView extends JPanel implements ListSelectionListener
 		data.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		data.setDefaultRenderer(Object.class,new InternalCellRenderer());
-		
-		data.getTableHeader().addMouseListener(popup);
+		if(getControl().getQueryModel()!=null){
+			data.getTableHeader().addMouseListener(popup);
+		}
 		data.getTableHeader().setReorderingAllowed(false);
 		
 		lines = new LineNumberView();
-		lines.addMouseListener(popup);
+		if(getControl().getQueryModel()!=null){
+			lines.addMouseListener(popup);
+		}
 		lines.setSelectionModel(data.getSelectionModel());
 		scroll.setRowHeaderView(lines);
 		
@@ -136,26 +141,31 @@ public class ContentView extends JPanel implements ListSelectionListener
 		
 		data.getColumnModel().getSelectionModel().addListSelectionListener(this);
 		
-		data.getActionMap().put("copy", ((JMenuItem)popup.getSubElementsAt(1)).getAction());
-		data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C,InputEvent.CTRL_MASK),"copy");
+		if(getControl().getQueryModel()!=null){
+			
+			data.getActionMap().put("copy", ((JMenuItem)popup.getSubElementsAt(1)).getAction());
+			data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C,InputEvent.CTRL_MASK),"copy");
+			
+			data.getActionMap().put("paste", ((JMenuItem)popup.getSubElementsAt(2)).getAction());
+			data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V,InputEvent.CTRL_MASK),"paste");
+					
+			data.getActionMap().put("set-null", ((JMenuItem)popup.getSubElementsAt(3)).getAction());
+			data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"set-null");
+
 		
-		data.getActionMap().put("paste", ((JMenuItem)popup.getSubElementsAt(2)).getAction());
-		data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V,InputEvent.CTRL_MASK),"paste");
-				
-		data.getActionMap().put("set-null", ((JMenuItem)popup.getSubElementsAt(3)).getAction());
-		data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"set-null");
-		
-		MouseAdapter ma = new MouseAdapter()
-		{
-			public void mousePressed(MouseEvent me)
+			MouseAdapter ma = new MouseAdapter()
 			{
-				ContentView.this.data.setColumnSelectionAllowed(me.getSource() == ContentView.this.data.getTableHeader());
-				ContentView.this.data.setRowSelectionAllowed(me.getSource() == ContentView.this.lines);
-			}
-		};
-		data.getTableHeader().addMouseListener(ma);
-		data.addMouseListener(ma);
-		lines.addMouseListener(ma);
+				public void mousePressed(MouseEvent me)
+				{
+					ContentView.this.data.setColumnSelectionAllowed(me.getSource() == ContentView.this.data.getTableHeader());
+					ContentView.this.data.setRowSelectionAllowed(me.getSource() == ContentView.this.lines);
+				}
+			};
+			
+			data.getTableHeader().addMouseListener(ma);
+			data.addMouseListener(ma);
+			lines.addMouseListener(ma);
+		}
 	}
 	
 	ContentPane getControl()

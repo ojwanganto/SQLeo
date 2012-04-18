@@ -75,9 +75,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		add("save record").setEnabled(false);
 		
 		addSeparator(); // 15
-		Action jump = new ActionJump();
-		jump.setEnabled(view.getControl().getQueryModel()!=null);
-		add(jump);
+		add(new ActionJump());
 		
 		addSeparator(); // 17
 		add(new ActionSortAsc());

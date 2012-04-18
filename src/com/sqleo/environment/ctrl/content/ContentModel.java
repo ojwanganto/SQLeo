@@ -41,6 +41,14 @@ public class ContentModel implements TableModel
 	
 	private long ridcounter = 0;
 	private int block = 1;
+	private boolean readOnly = false; 
+	
+	public ContentModel(boolean readOnly){
+		this.readOnly = readOnly; 
+	}
+	public ContentModel(){
+		this.readOnly = false; 
+	}
 	
 	public ContentChanges getChanges()
 	{
@@ -133,7 +141,7 @@ public class ContentModel implements TableModel
 
 	public boolean isCellEditable(int row, int col)
 	{
-		return true;
+		return !readOnly;
 	}
 
 	public int getRowCount()

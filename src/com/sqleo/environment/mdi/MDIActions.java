@@ -208,6 +208,10 @@ public abstract class MDIActions implements _Constants
 		public void actionPerformed(ActionEvent ae)
 		{
 			String fileName = ae.getActionCommand();
+			if(!new File(fileName).exists()){
+				Application.alert(Application.getVersion2(),"File not found : "+fileName);
+				return;
+			}
 			if(!ConnectionAssistant.getHandlers().isEmpty())
 			{
 				Object keycah = null;

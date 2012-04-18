@@ -146,10 +146,8 @@ public class ClientContent extends MDIClientWithCRActions
 			}
 		};
 		addInternalFrameListener(ifl);
-		
-		if(control.getQueryModel()!=null){
-			createToolbar();
-		}
+
+		createToolbar();
 		initMenuActions();
 		
 		if(retrieve)
@@ -181,24 +179,27 @@ public class ClientContent extends MDIClientWithCRActions
 	private void createToolbar()
 	{
 		toolbar = new Toolbar(Toolbar.HORIZONTAL);
-		toolbar.add(control.getActionMap().get("changes-save"));
+		if(control.getQueryModel()!=null){
+			toolbar.add(control.getActionMap().get("changes-save"));
+		}
 		toolbar.add(control.getActionMap().get("task-stop"));
-		toolbar.addSeparator();
-		toolbar.add(control.getActionMap().get("record-insert"));
-		toolbar.add(control.getActionMap().get("record-delete"));
-		toolbar.addSeparator();
-		toolbar.add(new ActionShowFilter());
-		toolbar.add(new ActionShowFindReplace());
+		if(control.getQueryModel()!=null){
+			toolbar.addSeparator();
+			toolbar.add(control.getActionMap().get("record-insert"));
+			toolbar.add(control.getActionMap().get("record-delete"));
+			toolbar.addSeparator();
+			toolbar.add(new ActionShowFilter());
+			toolbar.add(new ActionShowFindReplace());
 
-		toolbar.addSeparator();
-		Action commit = new ActionCommit(control.getHandlerKey().toString());
-		Action rollback = new ActionRollback(control.getHandlerKey().toString());
-		toolbar.getActionMap().put("action-commit",commit);
-		toolbar.getActionMap().put("action-rollback",rollback);
-		toolbar.add(commit);
-		toolbar.add(rollback);
-		toolbar.addSeparator();
-		
+			toolbar.addSeparator();
+			Action commit = new ActionCommit(control.getHandlerKey().toString());
+			Action rollback = new ActionRollback(control.getHandlerKey().toString());
+			toolbar.getActionMap().put("action-commit",commit);
+			toolbar.getActionMap().put("action-rollback",rollback);
+			toolbar.add(commit);
+			toolbar.add(rollback);
+			toolbar.addSeparator();
+		}
 		setComponentEast(toolbar);
 	}
 	@Override
@@ -227,6 +228,7 @@ public class ClientContent extends MDIClientWithCRActions
 		};
 		m_actions[0].setEnabled(control.getQueryModel()!=null);
 		m_actions[1].setEnabled(control.getQueryModel()!=null);
+		m_actions[4].setEnabled(control.getQueryModel()!=null);
 	}
 	
 	public final void dispose()
