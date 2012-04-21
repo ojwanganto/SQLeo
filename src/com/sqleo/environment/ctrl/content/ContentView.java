@@ -66,9 +66,7 @@ public class ContentView extends JPanel implements ListSelectionListener
 	    
 		data = new JTable();
 		data.setModel(model = new ContentModel(getControl().getQueryModel()==null));
-		if(getControl().getQueryModel()!=null){
-			data.addMouseListener(popup = new ContentPopup(this));
-		}
+		data.addMouseListener(popup = new ContentPopup(this));
 		data.addKeyListener(new KeyAdapter()
 		{
 			public void keyPressed(KeyEvent key)
@@ -118,15 +116,11 @@ public class ContentView extends JPanel implements ListSelectionListener
 		data.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		data.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		data.setDefaultRenderer(Object.class,new InternalCellRenderer());
-		if(getControl().getQueryModel()!=null){
-			data.getTableHeader().addMouseListener(popup);
-		}
+		data.getTableHeader().addMouseListener(popup);
 		data.getTableHeader().setReorderingAllowed(false);
 		
 		lines = new LineNumberView();
-		if(getControl().getQueryModel()!=null){
-			lines.addMouseListener(popup);
-		}
+		lines.addMouseListener(popup);
 		lines.setSelectionModel(data.getSelectionModel());
 		scroll.setRowHeaderView(lines);
 		
@@ -141,8 +135,6 @@ public class ContentView extends JPanel implements ListSelectionListener
 		
 		data.getColumnModel().getSelectionModel().addListSelectionListener(this);
 		
-		if(getControl().getQueryModel()!=null){
-			
 			data.getActionMap().put("copy", ((JMenuItem)popup.getSubElementsAt(1)).getAction());
 			data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C,InputEvent.CTRL_MASK),"copy");
 			
@@ -165,9 +157,12 @@ public class ContentView extends JPanel implements ListSelectionListener
 			data.getTableHeader().addMouseListener(ma);
 			data.addMouseListener(ma);
 			lines.addMouseListener(ma);
-		}
 	}
 	
+	public boolean isReadOnly(){
+		return model.isReadOnly();
+	}
+
 	ContentPane getControl()
 	{
 		return control;

@@ -143,6 +143,9 @@ public class ContentModel implements TableModel
 	{
 		return !readOnly;
 	}
+	public boolean isReadOnly(){
+		return readOnly;
+	}
 
 	public int getRowCount()
 	{

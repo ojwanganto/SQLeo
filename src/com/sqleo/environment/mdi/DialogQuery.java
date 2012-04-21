@@ -179,6 +179,9 @@ public class DialogQuery extends AbstractDialogWizard
 				return false;
 
 			mkp.setDiagramLayout(layout);
+			if(filename.toLowerCase().endsWith(".sql")){
+				mkp.setText(FileStreamSQL.readSQL(filename));
+			}
 			return true;
 		}
 		catch(Exception e)
@@ -312,6 +315,10 @@ public class DialogQuery extends AbstractDialogWizard
 			
 			if(layout.getQueryModel()!=null)
 				txt.setText(layout.getQueryModel().toString(true));			
+		}
+		void setText(String text)
+		{
+			txt.setText(text);			
 		}
 
 		public void itemStateChanged(ItemEvent ie)

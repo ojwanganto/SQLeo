@@ -36,6 +36,11 @@ public class FileStreamSQL
 	public static QueryModel read(String filename)
 		throws IOException, ClassNotFoundException
 	{
+		String sqlRead = readSQL(filename);
+		return SQLParser.toQueryModel(sqlRead);
+	}
+	
+	public static String readSQL(String filename) throws IOException {
 		Reader in = new FileReader(filename);
 		StringBuffer sb = new StringBuffer();
 		
@@ -46,8 +51,7 @@ public class FileStreamSQL
 			sb.append(new String(buff, 0, nch));
 		}
 		in.close();
-		
-		return SQLParser.toQueryModel(sb.toString());
+		return sb.toString();
 	}
 	
 	/* writer */

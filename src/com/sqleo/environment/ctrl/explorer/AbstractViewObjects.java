@@ -303,7 +303,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 				schema = AbstractViewObjects.this.getTableSchema();
 			}
 			QueryTokens.Table token = new QueryTokens.Table(schema,name);
-			DiagramLoader.run(DiagramLoader.DEFAULT,client.getBuilder(), token, true);
+			DiagramLoader.run(DiagramLoader.DEFAULT,client.getQueryBuilder(), token, true);
 			
 			AbstractViewObjects.this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}

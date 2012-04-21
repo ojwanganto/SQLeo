@@ -138,7 +138,7 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 	}
 
 	public String getQuery() {
-		return query;
+		return getQueryModel()!=null?getQueryModel().toString(false):query;
 	}
 	public UpdateModel getUpdateModel()
 	{

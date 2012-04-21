@@ -151,8 +151,8 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 			// record
 			getComponent(9).setVisible(bAllCols);
 			getComponent(10).setVisible(bAllCols);
-			getComponent(11).setVisible(bAllCols);
-			getComponent(12).setVisible(bAllCols);
+			getComponent(11).setVisible(bAllCols && !view.isReadOnly());
+			getComponent(12).setVisible(bAllCols && !view.isReadOnly());
 			getComponent(13).setVisible(bAllCols);
 			getComponent(14).setVisible(bAllCols);
 			
@@ -271,7 +271,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		ActionPaste()
 		{
 			super("paste");
-//			setEnabled(!ContentPopup.this.view.getControl().isReadOnly());
+			setEnabled(!view.isReadOnly());
 		}
 		
 		Object getValue()
@@ -299,7 +299,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		ActionClone()
 		{
 			this.putValue(NAME,"clone record");
-//			setEnabled(!ContentPopup.this.view.getControl().isReadOnly());
+			setEnabled(!view.isReadOnly());
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -322,7 +322,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		ActionTrim()
 		{
 			this.putValue(NAME,"trim trailing spaces");
-//			setEnabled(!ContentPopup.this.view.getControl().isReadOnly());
+			setEnabled(!view.isReadOnly());
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -371,7 +371,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		AbstractActionSet(String name)
 		{
 			this.putValue(NAME,name);
-//			setEnabled(!ContentPopup.this.view.getControl().isReadOnly());
+			setEnabled(!view.isReadOnly());
 		}
 		
 		abstract Object getValue();
@@ -425,7 +425,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		ActionResetOldValue()
 		{
 			this.putValue(NAME,"reset <old-value>");
-//			setEnabled(!ContentPopup.this.view.getControl().isReadOnly());
+			setEnabled(!view.isReadOnly());
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -497,7 +497,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		ActionJump()
 		{
 			this.putValue(NAME,"jump...");
-//			setEnabled(!ContentPopup.this.view.getControl().isReadOnly());
+			setEnabled(!view.isReadOnly());
 		}
 
 		public void actionPerformed(ActionEvent ae)

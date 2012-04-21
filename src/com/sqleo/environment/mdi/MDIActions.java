@@ -24,12 +24,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
+import com.sqleo.common.gui.TextView;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.I18n;
@@ -38,7 +40,10 @@ import com.sqleo.environment.Preferences;
 import com.sqleo.environment._Constants;
 import com.sqleo.environment.ctrl.content.AbstractActionContent;
 import com.sqleo.environment.ctrl.define.TableMetaData;
+import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
+import com.sqleo.environment.io.FileStreamSQL;
 import com.sqleo.querybuilder.DiagramLayout;
+import com.sqleo.querybuilder.QueryStyledDocument;
 import com.sqleo.querybuilder.syntax.QueryExpression;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
@@ -159,13 +164,16 @@ public abstract class MDIActions implements _Constants
 				ClientQueryBuilder cqb = new ClientQueryBuilder(ret[2].toString());
 				String fileName = ret[0].toString();
 				cqb.setFileName(fileName);
-				
-				DiagramLayout dl = (DiagramLayout)ret[1];
+				final boolean isSQLFile = cqb.isSQLFile();
+				DiagramLayout dl = null;
+				if(!isSQLFile){
+				 dl = (DiagramLayout)ret[1];
+				}
 				
 				/* gestire schema */
 				if(Preferences.getBoolean("querybuilder.use-schema"))
 				{
-					if(dl.getQueryModel().getSchema()==null)
+					if(dl!=null && dl.getQueryModel().getSchema()==null)
 					{
 						if(ret[3]!=null)
 						{
@@ -180,22 +188,33 @@ public abstract class MDIActions implements _Constants
 				}
 				else
 				{
-					if(dl.getQueryModel().getSchema()==null)
-					{
-						if(ret[3]!=null)
+					if(dl!=null){
+						if(dl.getQueryModel().getSchema()==null)
 						{
-							dl.getQueryModel().setSchema(ret[3].toString());
-							setSchema(null,dl.getQueryModel().getQueryExpression());
+							if(ret[3]!=null)
+							{
+								dl.getQueryModel().setSchema(ret[3].toString());
+								setSchema(null,dl.getQueryModel().getQueryExpression());
+							}
 						}
+						else if(ret[3]!=null)
+							dl.getQueryModel().setSchema(ret[3].toString());
+					}else if(ret[3]!=null){
+						cqb.setSchema(ret[3].toString());
 					}
-					else if(ret[3]!=null)
-						dl.getQueryModel().setSchema(ret[3].toString());
 				}
 
 				Application.window.add(cqb);
-				cqb.setDiagramLayout(dl);
-				if(fileName.toLowerCase().endsWith(".sql")){
-					cqb.getBuilder().setSelectedIndex(1);
+				
+				if(!isSQLFile){
+					cqb.setDiagramLayout(dl);
+				}else {
+					cqb.getQueryBuilder().setSelectedIndex(1);
+					try {
+						cqb.getQueryBuilder().getSyntax().setText(FileStreamSQL.readSQL(fileName));
+					} catch (IOException e) {
+						e.printStackTrace();
+					} 
 				}
 			}
 		}
@@ -225,8 +244,11 @@ public abstract class MDIActions implements _Constants
 
 					ClientQueryBuilder cqb = new ClientQueryBuilder(keycah.toString());
 					cqb.setFileName(fileName);
-
-					DiagramLayout dl = DialogQuery.getDiagramLayoutForFile(fileName);
+					final boolean isSQLFile = cqb.isSQLFile();
+					DiagramLayout dl = null;
+					if(!isSQLFile){
+						dl = DialogQuery.getDiagramLayoutForFile(fileName);
+					}
 					if(!Preferences.getBoolean("querybuilder.use-schema"))
 					{
 						ConnectionHandler ch = ConnectionAssistant.getHandler(keycah.toString());
@@ -235,14 +257,24 @@ public abstract class MDIActions implements _Constants
 						{
 							Object schema = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.schema","schema:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,schemas.toArray(),null);
 							if(schema == null) return;
-							dl.getQueryModel().setSchema(schema.toString());
+							if(!isSQLFile){
+							 dl.getQueryModel().setSchema(schema.toString());
+							}else{
+								cqb.setSchema(schema.toString());
+							}
 						}
 					}
 					Application.window.menubar.addMenuItemAtFirst(fileName);
 					Application.window.add(cqb);
-					cqb.setDiagramLayout(dl);
-					if(fileName.toLowerCase().endsWith(".sql")){
-						cqb.getBuilder().setSelectedIndex(1);
+					if(!isSQLFile){
+						cqb.setDiagramLayout(dl);
+					}else {
+						cqb.getQueryBuilder().setSelectedIndex(1);
+						try {
+							cqb.getQueryBuilder().getSyntax().setText(FileStreamSQL.readSQL(fileName));
+						} catch (IOException e) {
+							e.printStackTrace();
+						} 
 					}
 				}
 			}else{

@@ -41,6 +41,8 @@ import javax.swing.event.ChangeListener;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.TextView;
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
+import com.sqleo.environment.mdi.ClientQueryBuilder;
 import com.sqleo.querybuilder.BrowserItems.DefaultTreeItem;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.SQLFormatter;
@@ -66,6 +68,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 	public static int maxColumnNameLength = 0;
 	
 	private DiagramLayout layout;
+	private ClientQueryBuilder cqb;
 	
 	private TextView syntax;
 	ViewBrowser browser;
@@ -379,6 +382,19 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 
 		if(this.getSelectedIndex() == 0)
 		{
+			final ClientQueryBuilder cqb = getClientQueryBuilder();
+			final boolean isSQLFile = cqb.isSQLFile() && "SELECT".equals(layout.getQueryModel().toString(true));
+			if(isSQLFile ){
+				try {
+					QueryModel model = SQLParser.toQueryModel(syntax.getText());
+					model.setSchema(cqb.getSchema());
+					layout.setQueryModel(model);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			
 			String msql = layout.getQueryModel().toString(true);
 			String tsql = syntax.getText();
 			
@@ -395,6 +411,9 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 							while(!QueryBuilder.this.getComponentAt(0).isVisible());
 							try
 							{
+								if(isSQLFile){
+									cqb.setDiagramLayout(layout);
+								}
 								QueryModel qm = SQLParser.toQueryModel(syntax.getText());
 								qm.setSchema(QueryBuilder.this.layout.getQueryModel().getSchema());
 								QueryBuilder.this.setQueryModel(qm);
@@ -405,6 +424,8 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 						}
 					}).start();
 				}
+			}else if(isSQLFile){
+				cqb.setDiagramLayout(layout);
 			}
 		}
 		else
@@ -413,5 +434,13 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 
 	public TextView getSyntax() {
 		return syntax;
-	}	
+	}
+
+	public ClientQueryBuilder getClientQueryBuilder() {
+		return cqb;
+	}
+
+	public void setClientQueryBuilder(ClientQueryBuilder cqb) {
+		this.cqb = cqb;
+	}
 }

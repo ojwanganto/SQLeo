@@ -58,8 +58,9 @@ public class ClientQueryBuilder extends MDIClient {
 
 	private String keycah = null;
 	private String filename = null;
+	private String schema = null;
 
-	public QueryBuilder getBuilder() {
+	public QueryBuilder getQueryBuilder() {
 		return builder;
 	}
 	public ClientQueryBuilder(String keycah) {
@@ -67,6 +68,7 @@ public class ClientQueryBuilder extends MDIClient {
 		setMaximizable(true);
 		setResizable(true);
 		setComponentCenter(builder = new QueryBuilder());
+		builder.setClientQueryBuilder(this);
 
 		this.keycah = keycah;
 
@@ -142,6 +144,18 @@ public class ClientQueryBuilder extends MDIClient {
 				: filename;
 		super.setTitle(getID() + " - " + DEFAULT_TITLE + " : " + filename2
 				+ " : " + keycah);
+	}
+	public String getFilename(){
+		return filename;
+	}
+	public boolean isSQLFile(){
+		return filename!=null && filename.toLowerCase().endsWith(".sql");
+	}
+	public void setSchema(String schema){
+		this.schema = schema;
+	}
+	public String getSchema(){
+		return schema;
 	}
 
 	public final void setDiagramLayout(DiagramLayout layout) {
