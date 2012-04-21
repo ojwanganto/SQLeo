@@ -23,12 +23,43 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2012.03Beta01.zip: 2012-04-22
+
+	for users of version 2012.01Beta please rename .sqleonardo file to .sqleo (in USERPROFILE/HOME dir)
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2012.03Beta/
+	12 	Group by Alias (from sqleonardo opened bugs)
+	13 	reverse SQL for mixed aliased and non-aliased columns (from sqleonardo opened bugs)
+	14 	Query, syntax windows execution
+	22 	switch between Content windows
+	31 	java.lang.StringIndexOutOfBoundsException: String index out of range: -20
+	33 	Definition window: add constraints definition (workarround)
+	37 	Metadata explorer: propose to add to DEFINITION windows
+	39 	Raise exception when Join definition file is not found
+	40 	keep least recently used queries list 	2012.03Beta 	accepted 		 
+	47 	query builder: group or order by expression with alias is wrong
+
+
+
+
 SQLeoVQB.2012.01Beta02.zip: 2012-03-06
 
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2012.01Beta/
+	1  	JRE 1.6  	
+	2 	resizable windows
+	3 	send objects from metadata explorer to query builder
+	4 	explicit commit-rollback mode
+	5 	added table is not displayed
+	6 	removed table from graph remains in SQL text
+	9 	Add firebird in the (default) driver list
+	29 	Support for natural join (workarround)
+	30 	Oracle: performance problem when adding tables to graph (workarround)
+	8 	storing joins informations in a csv flat file
 
-  Join definition in a csv file is available now:
+
+  Exemple of using Join definition in a csv file:
 	
     - customize FKdefinition.csv regarding your database 
       or use create_table.sql exemple.
@@ -64,18 +95,4 @@ SQLeoVQB.2012.01Beta02.zip: 2012-03-06
 	a new window with "referenced data" (using joins and filters)
 
     - SQLeo needs to be restarted to take FKdefinition.csv changes into account.
-
-  For any remark, thanks to post at
-    http://sourceforge.net/p/sqleo/discussion/general/thread/40383554/
-
-
-SQLeoVQB.2012.01Beta01.zip: 2012-02-04
-
-  Join definition in a csv file (partly) available.
-
-
-SQLeoVQB.2012.01Beta00.zip: 2012-01-27
-
-  Development is not finished, but the application is usable for most parts.
-  Join definition in a csv file is not available today.
 
