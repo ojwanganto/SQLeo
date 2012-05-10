@@ -655,6 +655,8 @@ public class SQLParser
 	{
 		StreamTokenizer stream = new StreamTokenizer(r);
 		stream.ordinaryChar('.');
+		stream.ordinaryChar('/'); // fix for ticket #48
+		stream.wordChars('$','$'); // fix for ticket #48
 		stream.wordChars('_','_');
 		
 		if(!QueryBuilder.identifierQuoteString.equals("\""))

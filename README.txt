@@ -23,7 +23,7 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
-SQLeoVQB.2012.03Beta01.zip: 2012-04-22
+SQLeoVQB.2012.03Beta02.zip: 2012-05-10
 
 	for users of version 2012.01Beta please rename .sqleonardo file to .sqleo (in USERPROFILE/HOME dir)
 
@@ -37,10 +37,9 @@ SQLeoVQB.2012.03Beta01.zip: 2012-04-22
 	33 	Definition window: add constraints definition (workarround)
 	37 	Metadata explorer: propose to add to DEFINITION windows
 	39 	Raise exception when Join definition file is not found
-	40 	keep least recently used queries list 	2012.03Beta 	accepted 		 
+	40 	keep least recently used queries list
 	47 	query builder: group or order by expression with alias is wrong
-
-
+	48	query builder: Incorrect SQL generated when sign "/" or "$" is used
 
 
 SQLeoVQB.2012.01Beta02.zip: 2012-03-06
