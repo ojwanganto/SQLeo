@@ -460,6 +460,11 @@ public class SQLParser
 				qs.removeSelectList(selectList[i]);
 				qs.addSelectList(c);				
 			}
+			else // added for ticket #49
+			{
+				qs.removeSelectList(selectList[i]);
+				qs.addSelectList(selectList[i]);				
+			} 
 		}
 	}
 	

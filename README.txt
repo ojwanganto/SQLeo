@@ -29,6 +29,13 @@ SQLeoVQB.2012.03Beta02.zip: 2012-05-10
 
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2012.03Beta/
+	48	query builder: Incorrect SQL generated when sign "/" or "$" is used
+	49	query builder: Order of selected columns is lost when reversing functions
+
+SQLeoVQB.2012.03Beta01.zip: 2012-04-22
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2012.03Beta/
 	12 	Group by Alias (from sqleonardo opened bugs)
 	13 	reverse SQL for mixed aliased and non-aliased columns (from sqleonardo opened bugs)
 	14 	Query, syntax windows execution
@@ -39,7 +46,6 @@ SQLeoVQB.2012.03Beta02.zip: 2012-05-10
 	39 	Raise exception when Join definition file is not found
 	40 	keep least recently used queries list
 	47 	query builder: group or order by expression with alias is wrong
-	48	query builder: Incorrect SQL generated when sign "/" or "$" is used
 
 
 SQLeoVQB.2012.01Beta02.zip: 2012-03-06
