@@ -46,6 +46,7 @@ import com.sqleo.environment.io.FileStreamLQY;
 import com.sqleo.environment.io.FileStreamSQL;
 import com.sqleo.environment.io.FileStreamXLQ;
 import com.sqleo.querybuilder.DiagramLayout;
+import com.sqleo.querybuilder.QueryBuilder;
 
 
 public class DialogQuery extends AbstractDialogWizard
@@ -55,6 +56,7 @@ public class DialogQuery extends AbstractDialogWizard
 	
 	private AbstractMaskChooser mkc;
 	private MaskPreview mkp;
+	private QueryBuilder queryBuilder;
 	
 	private boolean terminated;
 
@@ -87,6 +89,15 @@ public class DialogQuery extends AbstractDialogWizard
 	public static Object[] showSave(DiagramLayout layout)
 	{
 		DialogQuery dlg = new DialogQuery(SAVE,layout);
+		dlg.setVisible(true);
+		
+		return onDispose(dlg);
+	}
+	
+	public static Object[] showSave(QueryBuilder builder)
+	{
+		DialogQuery dlg = new DialogQuery(SAVE,builder.getDiagramLayout());
+		dlg.queryBuilder = builder;
 		dlg.setVisible(true);
 		
 		return onDispose(dlg);
@@ -153,6 +164,10 @@ public class DialogQuery extends AbstractDialogWizard
 			mkc = new DefaultMaskChooser(AbstractMaskChooser.SAVE_DIALOG,AbstractMaskChooser.FILES_ONLY,false);
 			addStep(mkp);
 			addStep(mkc);
+			if(queryBuilder!=null && queryBuilder.getSelectedIndex()==1){
+				//save from syntax view
+				mkp.setText(queryBuilder.getSyntax().getText());
+			}
 		}
 		mkc.setFileFilter(new XLQFilter());
 		mkc.setFileFilter(new SQLFilter());
@@ -228,8 +243,16 @@ public class DialogQuery extends AbstractDialogWizard
 		{
 			if(filter.getPerformType() == 1) // xlq
 				FileStreamXLQ.write(filename,mkp.layout);
-			else if(filter.getPerformType() == 2) // sql
-				FileStreamSQL.write(filename,mkp.layout.getQueryModel());
+			else if(filter.getPerformType() == 2) {// sql 
+				if(queryBuilder!=null && queryBuilder.getSelectedIndex()==1){
+					//save from syntax view
+					FileStreamSQL.writeSQL(filename,queryBuilder.getSyntax().getText());
+				}else {
+					//save from design view
+					FileStreamSQL.write(filename,mkp.layout.getQueryModel());
+				}
+				
+			}
 			else
 				return false;
 				

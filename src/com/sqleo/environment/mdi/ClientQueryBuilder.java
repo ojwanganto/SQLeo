@@ -256,8 +256,7 @@ public class ClientQueryBuilder extends MDIClient {
 		}
 
 		private void saveAs() {
-			Object[] ret = DialogQuery.showSave(ClientQueryBuilder.this.builder
-					.getDiagramLayout());
+			Object[] ret = DialogQuery.showSave(ClientQueryBuilder.this.builder);
 			if (ret[0] != null) {
 				setFileName(ret[0].toString());
 			}
@@ -269,7 +268,14 @@ public class ClientQueryBuilder extends MDIClient {
 
 				String fn = ClientQueryBuilder.this.filename;
 				if (fn.endsWith(".sql")) {
-					FileStreamSQL.write(fn, qm);
+					if(ClientQueryBuilder.this.builder.getSelectedIndex()==1){
+						//save from syntax view
+						FileStreamSQL.writeSQL(fn,ClientQueryBuilder.this.builder.getSyntax().getText());
+					}else {
+						//save from design view
+						FileStreamSQL.write(fn, qm);
+					}
+					
 				} else {
 					if (!fn.endsWith(".xlq")) {
 						fn += ".xlq";

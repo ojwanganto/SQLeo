@@ -58,9 +58,14 @@ public class FileStreamSQL
 	public static void write(String filename, QueryModel model)
 		throws IOException
 	{
+		writeSQL(filename,model.toString(true));
+	}
+	
+	public static void writeSQL(String filename,String sql) throws IOException {
 		Writer out = new FileWriter(filename);
-		out.write(model.toString(true));
+		out.write(sql);
 		out.flush();
 		out.close();
 	}
+	
 }
