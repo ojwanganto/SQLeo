@@ -23,7 +23,7 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
-SQLeoVQB.2012.03Beta02.zip: 2012-05-10
+SQLeoVQB.2012.03Beta02.zip: 2012-06-25
 
 	for users of version 2012.01Beta please rename .sqleonardo file to .sqleo (in USERPROFILE/HOME dir)
 
