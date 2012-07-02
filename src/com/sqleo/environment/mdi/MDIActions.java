@@ -20,11 +20,14 @@
 
 package com.sqleo.environment.mdi;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -85,7 +88,38 @@ public abstract class MDIActions implements _Constants
 			Application.alert(Application.PROGRAM,"not implemented!");
 		}
 	}
-    
+
+	public final static class HowToUse extends AbstractAction
+	{
+		public HowToUse(){super(I18n.getString("application.menu.help.howtouse","how to use..."));}
+		private static final String howtouseLink = "http://sqleo.sourceforge.net/";
+		public void actionPerformed(ActionEvent ae)
+		{
+
+			URI uri = null;
+			try {
+				uri = new URI(howtouseLink);
+			} catch (URISyntaxException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if (Desktop.isDesktopSupported() && uri!=null) {
+				Desktop desktop = Desktop.getDesktop();
+				try {
+					desktop.browse(uri);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null,
+							"Failed to launch the link, " +
+							"your computer is likely misconfigured.",
+							"Cannot Launch Link",JOptionPane.WARNING_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Java is not able to launch links on your computer.",
+						"Cannot Launch Link",JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
 	public static class NewQuery extends AbstractBase
 	{
 		public NewQuery(){super(I18n.getString("application.menu.newQuery","new query"));}

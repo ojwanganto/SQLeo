@@ -37,6 +37,8 @@ public interface _Constants
 	public static final String ACTION_EXIT			= "action.051";
 	public static final String ACTION_NEW_QUERY		= "action.052";
 	public static final String ACTION_LOAD_QUERY	= "action.053";
+	public static final String ACTION_HOWTOUSE		= "action.054";
+	
 	
 	public static final String ACTION_SHOW_PREFERENCES	= "action.100";
 	public static final String ACTION_MDI_SHOW_EXPLORER	= "action.101";
