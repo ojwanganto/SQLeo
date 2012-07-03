@@ -23,6 +23,25 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+
+SQLeoVQB.2012.03Beta03.zip: 2012-07-03
+
+   First release of the docs:
+
+   - Help in pdf,docx format:
+     http://svn.code.sf.net/p/sqleo/code/trunk/doc/howtouse/
+
+   - javadoc from here: 
+     http://svn.code.sf.net/p/sqleo/code/trunk/doc/sqleo-javadoc.zip
+
+   - html version of the help document is availabile online from SQLeo website 
+     http://sqleo.sourceforge.net/ 
+
+   Adapted SQLeo app menubar > help > howtouse to 
+     http://sqleo.sourceforge.net/ site.
+
+
+
 SQLeoVQB.2012.03Beta02.zip: 2012-06-25
 
 	for users of version 2012.01Beta please rename .sqleonardo file to .sqleo (in USERPROFILE/HOME dir)
@@ -99,5 +118,6 @@ SQLeoVQB.2012.01Beta02.zip: 2012-03-06
 	see the specific feature "jump" that permits to open in a click
 	a new window with "referenced data" (using joins and filters)
 
-    - SQLeo needs to be restarted to take FKdefinition.csv changes into account.
+    - connection to the corresponding database needs to be restarted to 
+      take FKdefinition.csv changes into account.
 
