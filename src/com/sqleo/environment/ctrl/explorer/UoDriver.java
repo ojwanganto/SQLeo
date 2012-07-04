@@ -47,7 +47,7 @@ public class UoDriver
 	
 	public static void loadDefaults(MetadataExplorer explorer)
 	{
-		UoDriver[] drivers = new UoDriver[11];
+		UoDriver[] drivers = new UoDriver[12];
 
 		drivers[0] = new UoDriver();
 		drivers[0].name			= "ODBC Bridge";
@@ -87,12 +87,12 @@ public class UoDriver
 		drivers[7] = new UoDriver();
 		drivers[7].name			= "Oracle Thin";
 		drivers[7].classname	= "oracle.jdbc.OracleDriver";
-		drivers[7].example		= "jdbc:oracle:thin@<host>:<port1521>:<SID>";
+		drivers[7].example		= "jdbc:oracle:thin:@<host>:<port1521>:<SID>";
 
 		drivers[8] = new UoDriver();
 		drivers[8].name			= "Oracle OCI";
 		drivers[8].classname	= "oracle.jdbc.OracleDriver";
-		drivers[8].example		= "jdbc:oracle:oci@<host>:<port1521>:<SID>";
+		drivers[8].example		= "jdbc:oracle:oci:@<host>:<port1521>:<SID>";
 
 		drivers[9] = new UoDriver();
 		drivers[9].name			= "PostgreSQL";
@@ -104,6 +104,11 @@ public class UoDriver
 		drivers[10].classname	= "org.firebirdsql.jdbc.FBDriver";
 		drivers[10].example		= "jdbc:firebirdsql://<host>:<port3050>/<database>";
 				
+		drivers[11] = new UoDriver();
+		drivers[11].name			= "CsvJdbc";
+		drivers[11].classname	= "org.relique.jdbc.csv.CsvDriver";
+		drivers[11].example		= "jdbc:relique:csv:<directory_path>?raiseUnsupportedOperationException=false&separator=;";
+
 		for(int i=0; i<drivers.length; i++)
 		{
 			try
