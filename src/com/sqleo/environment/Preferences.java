@@ -61,7 +61,16 @@ public class Preferences
     
 	public static boolean getBoolean(String key)
 	{
-		return ((Boolean)get().get(key)).booleanValue();
+	  try{	
+		Boolean value = ((Boolean)get().get(key)).booleanValue();		
+		return value;
+	  }
+	  catch(NullPointerException npe)
+	  {
+		  // Fix for ticket #50 by Alan Shiers
+		  //System.out.println("Preferences.getBoolean() - NullPointerException: returning false");
+		  return false;
+	  }
 	}
 	
 	public static boolean getBoolean(String key, boolean defaultValue)
