@@ -47,7 +47,7 @@ public class UoDriver
 	
 	public static void loadDefaults(MetadataExplorer explorer)
 	{
-		UoDriver[] drivers = new UoDriver[12];
+		UoDriver[] drivers = new UoDriver[13];
 
 		drivers[0] = new UoDriver();
 		drivers[0].name			= "ODBC Bridge";
@@ -100,14 +100,19 @@ public class UoDriver
 		drivers[9].example		= "jdbc:postgresql://<host>:<port5432>/<database>";
 		
 		drivers[10] = new UoDriver();
-		drivers[10].name			= "Firebird";
+		drivers[10].name		= "Firebird";
 		drivers[10].classname	= "org.firebirdsql.jdbc.FBDriver";
 		drivers[10].example		= "jdbc:firebirdsql://<host>:<port3050>/<database>";
 				
 		drivers[11] = new UoDriver();
-		drivers[11].name			= "CsvJdbc";
+		drivers[11].name		= "CsvJdbc";
 		drivers[11].classname	= "org.relique.jdbc.csv.CsvDriver";
 		drivers[11].example		= "jdbc:relique:csv:<directory_path>?raiseUnsupportedOperationException=false&separator=;";
+
+		drivers[12] = new UoDriver();
+		drivers[12].name		= "Apache Derby - Embedded";
+		drivers[12].classname	= "org.apache.derby.jdbc.EmbeddedDriver";
+		drivers[12].example		= "jdbc:derby:<derbyDB>;create=true";
 
 		for(int i=0; i<drivers.length; i++)
 		{
