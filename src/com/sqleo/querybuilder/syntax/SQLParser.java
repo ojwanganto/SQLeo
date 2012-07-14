@@ -172,6 +172,99 @@ public class SQLParser
 		}
 	}
 
+	private static void doParseGroupBy(ListIterator li, QuerySpecification qs)
+		throws IOException
+	{
+		int surrounds = 0;
+		String value = new String();
+		
+		while(li.hasNext())
+		{
+			Object next = li.next();
+			
+			if(next.toString().equals(",") && surrounds == 0 || next.toString().equals(";"))
+			{
+				qs.addGroupByClause(new QueryTokens.Group(value.trim()));
+				value = new String();
+			}
+			else if(isClauseWord(next.toString()))
+			{
+				li.previous();
+				if(!value.trim().equals("")) qs.addGroupByClause(new QueryTokens.Group(value.trim()));
+				break;
+			}
+			else
+			{
+				if(next.toString().equals("(")) surrounds++;
+				if(next.toString().equals(")")) surrounds--;
+				
+				if(value.length()>0 && next instanceof String)
+				{
+					char last = value.charAt(value.length()-1);
+					if(Character.isLetter(last) || String.valueOf(last).equals(QueryBuilder.identifierQuoteString))
+						value = value + SQLFormatter.SPACE;
+				}
+				value = value + next.toString().trim();
+			}
+		}
+	}
+
+
+	private static void doParseOrderBy(ListIterator li, QueryModel qm)
+	throws IOException
+	{
+		int surrounds = 0;
+		boolean isDescendingPrevious = false;
+		String value = new String();
+
+		while(li.hasNext())
+		{
+			Object next = li.next();
+
+			if(next.toString().equals(",") && surrounds == 0 || next.toString().equals(";"))
+			{
+				QueryTokens.Sort token = new QueryTokens.Sort(new QueryTokens.DefaultExpression(value.trim()));
+				if(isDescendingPrevious){
+					token.setType(QueryTokens.Sort.DESCENDING);
+					isDescendingPrevious = false;
+				}
+				qm.addOrderByClause(token);
+				value = new String();
+
+			}
+			else if(isClauseWord(next.toString()))
+			{
+				li.previous();
+				if(!value.trim().equals("")) qm.addOrderByClause(new QueryTokens.Sort(new QueryTokens.DefaultExpression(value.trim())));
+				break;
+			}
+			else if(next.toString().equalsIgnoreCase("DESC"))
+			{
+				isDescendingPrevious = true;
+			}
+			else if(next.toString().equalsIgnoreCase("ASC"))
+			{
+				// nothing to do
+			}
+			else
+			{
+				if(next.toString().equals("(")) surrounds++;
+				if(next.toString().equals(")")) surrounds--;
+
+
+				if(value.length()>0 && next instanceof String)
+				{
+					char last = value.charAt(value.length()-1);
+					if(Character.isLetter(last) || String.valueOf(last).equals(QueryBuilder.identifierQuoteString))
+						value = value + SQLFormatter.SPACE;
+				}
+				value = value + next.toString().trim();
+
+			}
+		}
+	}
+
+
 	private static void doParseFrom(ListIterator li, QuerySpecification qs)
 	{
 		int joinType = -1;
@@ -290,46 +383,6 @@ public class SQLParser
 					t = new QueryTokens.Table(schema,name);
 				else
 					t.setAlias(next.toString());
-			}
-		}
-	}
-
-	private static void doParseGroupBy(ListIterator li, QuerySpecification qs)
-	{
-		while(li.hasNext())
-		{
-			Object next = li.next();
-			if(isReservedWord(next.toString()) || next.toString().equals(";"))
-			{
-				li.previous();
-				break;
-			}
-			else if(next instanceof String)
-			{
-				qs.addGroupByClause(new QueryTokens.Group(next.toString()));
-			}
-		}		
-	}
-	
-	private static void doParseOrderBy(ListIterator li, QueryModel qm)
-	{
-		QueryTokens.Sort token = null;
-		while(li.hasNext())
-		{
-			Object next = li.next();
-			if(next.toString().equals(",") || next.toString().equals(";"))
-			{
-				qm.addOrderByClause(token);
-				token = null;
-			}
-			else
-			{
-				if(token==null)
-					token = new QueryTokens.Sort(new QueryTokens.DefaultExpression(next.toString()));
-				else if(next.toString().equalsIgnoreCase("ASC"))
-					token.setType(QueryTokens.Sort.ASCENDING);
-				else if(next.toString().equalsIgnoreCase("DESC"))
-					token.setType(QueryTokens.Sort.DESCENDING);
 			}
 		}
 	}
