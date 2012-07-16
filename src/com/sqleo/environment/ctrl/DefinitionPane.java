@@ -124,7 +124,8 @@ public class DefinitionPane extends BorderLayoutPanel implements ChangeListener
 		ConnectionHandler ch = this.getConnection();
 		
 		String catalog = table.getSchema() == null ? null : ch.get().getCatalog();
-		ResultSet rs = ch.get().getMetaData().getIndexInfo(catalog,table.getSchema(),table.getName(),false,false);
+// Ticket #58		ResultSet rs = ch.get().getMetaData().getIndexInfo(catalog,table.getSchema(),table.getName(),false,false);
+		ResultSet rs = ch.get().getMetaData().getIndexInfo(catalog,table.getSchema(),table.getName(),false,true);
 		
 		list("indices",lvIndexInfo,rs);
 		tp.setTitleAt(2,"indices (" + lvIndexInfo.getRowCount() + ")");
