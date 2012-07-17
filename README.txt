@@ -24,18 +24,30 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2012.03Beta04.zip: 2012-07-18
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2012.03Beta/
+	50  	NullPointerException at com.sqleo.environment.Preferences.getBoolean
+	51 	Add CsvJdbc in the (default) driver list
+	52 	Metadata explorer: java.sqj.SQLException: l' URL oracle indiquée n'est pas valide
+	53 	Query Builder: reverse SQL group by t1.a||t2.b is wrong
+	57 	Add Apache Derby Embedded in the (default) driver list
+	58 	Definition > Indices runs analyze on Oracle to display Indexes
+
+
 SQLeoVQB.2012.03Beta03.zip: 2012-07-03
 
    First release of the docs:
 
-   - Help in pdf,docx format:
+   - Help in pdf,docx,html format:
      http://svn.code.sf.net/p/sqleo/code/trunk/doc/howtouse/
 
    - javadoc from here: 
      http://svn.code.sf.net/p/sqleo/code/trunk/doc/sqleo-javadoc.zip
 
    - html version of the help document is availabile online from SQLeo website 
-     http://sqleo.sourceforge.net/ 
+     http://sqleo.sourceforge.net/guide.html
 
    Adapted SQLeo app menubar > help > howtouse to 
      http://sqleo.sourceforge.net/ site.
@@ -44,14 +56,14 @@ SQLeoVQB.2012.03Beta03.zip: 2012-07-03
 
 SQLeoVQB.2012.03Beta02.zip: 2012-06-25
 
-	for users of version 2012.01Beta please rename .sqleonardo file to .sqleo (in USERPROFILE/HOME dir)
-
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2012.03Beta/
 	48	query builder: Incorrect SQL generated when sign "/" or "$" is used
 	49	query builder: Order of selected columns is lost when reversing functions
 
 SQLeoVQB.2012.03Beta01.zip: 2012-04-22
+
+	for users of version 2012.01Beta please rename .sqleonardo file to .sqleo (in USERPROFILE/HOME dir)
 
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2012.03Beta/
