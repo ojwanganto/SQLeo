@@ -41,8 +41,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 import javax.swing.text.SimpleAttributeSet;
@@ -50,6 +53,9 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.TabSet;
 import javax.swing.text.TabStop;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
 
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.querybuilder.QueryStyledDocument;
@@ -62,9 +68,15 @@ public class TextView extends BorderLayoutPanel
 	public TextView(StyledDocument doc)
 	{
 		editor = new JTextPane();
+		editor.setDocument(doc);
+		if(doc instanceof QueryStyledDocument){
+			//request view 
+			addUndoRedoActions();
+			registerUndoRedoListenerToDocument();
+		}
 		editor.addMouseListener(new InternalPopup());
 		editor.setFont(new Font("monospaced", Font.PLAIN, 12));
-		editor.setDocument(doc);
+		
 		
 		editor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT,KeyEvent.SHIFT_MASK),DefaultEditorKit.pasteAction);
 		editor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT,KeyEvent.CTRL_MASK),DefaultEditorKit.copyAction);
@@ -77,7 +89,52 @@ public class TextView extends BorderLayoutPanel
 		scroll.getVerticalScrollBar().setUnitIncrement(25);
 		setComponentCenter(scroll);
 		
-		this.setTabSize(4);		
+		this.setTabSize(4);
+		
+	}
+	final UndoManager undo = new UndoManager();
+	private void addUndoRedoActions(){
+		// Create an undo action and add it to the text component
+	    editor.getActionMap().put("Undo",
+	        new AbstractAction("Undo") {
+	            public void actionPerformed(ActionEvent evt) {
+	                try {
+	                    if (undo.canUndo()) {
+	                        undo.undo();
+	                    }
+	                } catch (CannotUndoException e) {
+	                }
+	            }
+	       });
+	    
+	    // Bind the undo action to ctrl-Z
+	    editor.getInputMap().put(KeyStroke.getKeyStroke("control Z"), "Undo");
+	    
+	    // Create a redo action and add it to the text component
+	    editor.getActionMap().put("Redo",
+	        new AbstractAction("Redo") {
+	            public void actionPerformed(ActionEvent evt) {
+	                try {
+	                    if (undo.canRedo()) {
+	                        undo.redo();
+	                    }
+	                } catch (CannotRedoException e) {
+	                }
+	            }
+	        });
+	    
+	    // Bind the redo action to ctrl-Y
+	    editor.getInputMap().put(KeyStroke.getKeyStroke("control Y"), "Redo");
+
+	}
+	private void registerUndoRedoListenerToDocument(){
+	    Document doc = editor.getDocument();
+	    // Listen for undo and redo events
+	    doc.addUndoableEditListener(new UndoableEditListener() {
+	        public void undoableEditHappened(UndoableEditEvent evt) {
+	            undo.addEdit(evt.getEdit());
+	        }
+	    });
 	}
 	
 	public void setEditable(boolean b)
@@ -165,6 +222,9 @@ public class TextView extends BorderLayoutPanel
 	public void setDocument(StyledDocument doc)
 	{
 		editor.setDocument(doc);
+		if(doc instanceof QueryStyledDocument){
+			registerUndoRedoListenerToDocument();
+		}
 	}
 	
 	public int getLineCount()
@@ -278,6 +338,10 @@ public class TextView extends BorderLayoutPanel
 					}
 				}
 			}));
+			if(editor.getDocument() instanceof QueryStyledDocument){
+				add(createItem("undo","undoMouse",editor.getActionMap().get("Undo")));
+				add(createItem("redo","redoMouse",editor.getActionMap().get("Redo")));
+			}
 		}
 
 		private JMenuItem createItem(String text, String key, Action[] actions)
