@@ -26,6 +26,7 @@ package com.sqleo.environment.mdi;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
@@ -86,7 +87,19 @@ public class ClientQueryBuilder extends MDIClient {
 			public void internalFrameActivated(InternalFrameEvent ife) {
 				ClientQueryBuilder.this.setQueryParameters();
 			}
+			@Override
+			public void internalFrameClosing(InternalFrameEvent e) {
+				openSaveQueryDialog();
+			}
 		});
+	}
+	private void openSaveQueryDialog(){
+		if(builder.getSyntax().getDocument().getLength()>0){
+			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
+			if(option == JOptionPane.YES_OPTION){
+				toolbar.getActionMap().get("save").actionPerformed(null);
+			}
+		}
 	}
 	private void createToolbar() {
 		JButton btn = new JButton(builder.getActionMap().get(
@@ -98,7 +111,9 @@ public class ClientQueryBuilder extends MDIClient {
 
 		toolbar = new Toolbar(Toolbar.HORIZONTAL);
 		toolbar.add(new ActionLaunch());
-		toolbar.add(new ActionSave());
+		Action saveAction = new ActionSave();
+		toolbar.getActionMap().put("save",saveAction);
+		toolbar.add(saveAction);
 		toolbar.add(btn);
 
 		setComponentEast(toolbar);

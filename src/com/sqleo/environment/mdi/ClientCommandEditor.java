@@ -107,6 +107,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 			}
 			@Override
 			public void internalFrameClosing(InternalFrameEvent e) {
+				openSaveQueryDialog();
 				openCommitNotifyDialog(null);
 			}
 			
@@ -114,6 +115,15 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		addInternalFrameListener(ifl);
 
 		Application.window.addListener(this);
+	}
+	
+	private void openSaveQueryDialog(){
+		if(control.getDocument().getLength()>0){
+			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
+			if(option == JOptionPane.YES_OPTION){
+				toolbar.getActionMap().get("save").actionPerformed(null);
+			}
+		}
 	}
 
 	private void openCommitNotifyDialog(String currentConnection){
@@ -166,7 +176,9 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 		toolbar = new Toolbar(Toolbar.HORIZONTAL);
 		toolbar.add(new ActionOpen());
-		toolbar.add(new ActionSave());
+		Action saveAction = new ActionSave();
+		toolbar.getActionMap().put("save",saveAction);
+		toolbar.add(saveAction);
 		toolbar.addSeparator();
 		toolbar.add(new ActionShowFindReplace());
 		toolbar.addSeparator();
