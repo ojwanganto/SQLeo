@@ -24,8 +24,14 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment.Application;
+import com.sqleo.environment.ctrl.content.AbstractActionContent;
+import com.sqleo.environment.ctrl.define.TableMetaData;
+import com.sqleo.environment.ctrl.explorer.AbstractViewObjects;
+import com.sqleo.environment.mdi.ClientContent;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
 
@@ -46,9 +52,48 @@ public class DiagramEntity extends DiagramAbstractEntity
 		getHeaderMenu().add(new ActionOpenAllPrimaryTables());
 		getHeaderMenu().addSeparator();
 		getHeaderMenu().add(new ActionReferences());
+		getHeaderMenu().add(new ActionShowContent(builder.getConnectionHandlerKey()));
 		
 		setQueryToken(qtoken);
 	}
+	protected class ActionShowContent extends AbstractActionContent
+	{
+		private String keych;
+		ActionShowContent(String keych){this.putValue(NAME,"show content");this.keych = keych;}
+		
+		protected TableMetaData getTableMetaData()
+		{
+			return new TableMetaData(keych, querytoken.getSchema(), querytoken.getName(), null);
+		}
+		
+		protected void onActionPerformed(int records, int option)
+		{
+			if((option != JOptionPane.YES_OPTION && option != JOptionPane.NO_OPTION)
+			|| (records == 0 && option == JOptionPane.NO_OPTION)) return;
+			
+			boolean retrieve = records > 0 && option == JOptionPane.YES_OPTION;
+			
+			ClientContent client = new ClientContent(this.getTableMetaData(),retrieve);
+			client.setTitle(ClientContent.DEFAULT_TITLE+" : " + this.getTableMetaData() + " : " + this.getTableMetaData().getHandlerKey());
+			
+			Application.window.add(client);
+		}
+		
+		protected int showConfirmDialog(int records)
+		{
+			if(records == 0)
+			{
+				String message = this.getDefaultMessage(records) + "\ndo you want continue?";
+				return JOptionPane.showConfirmDialog(Application.window,message,"show content",JOptionPane.YES_NO_OPTION);
+			}
+			else
+			{
+				String message = this.getDefaultMessage(records) + "\ndo you want retrieve?";
+				return JOptionPane.showConfirmDialog(Application.window,message,"show content",JOptionPane.YES_NO_CANCEL_OPTION);
+			}
+		}
+	}
+
 	
 	void onCreate()
 	{
