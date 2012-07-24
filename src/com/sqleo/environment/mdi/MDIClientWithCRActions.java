@@ -68,7 +68,6 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 				try {
 					if(!ConnectionAssistant.getAutoCommitPrefered()){
 						ch.get().commit();
-						ch.setUncommittedTransactionExists(false);
 						notifyResponseToView(true);
 						System.out.println("Commit successfull");
 					}
@@ -103,7 +102,6 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 				try {
 					if(!ConnectionAssistant.getAutoCommitPrefered()){
 						ch.get().rollback();
-						ch.setUncommittedTransactionExists(false);
 						notifyResponseToView(false);
 						System.out.println("Rollback successfull");
 					}

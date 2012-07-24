@@ -108,7 +108,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 			@Override
 			public void internalFrameClosing(InternalFrameEvent e) {
 				openSaveQueryDialog();
-				openCommitNotifyDialog(null);
+				ClientCommandEditor.this.dispose();
 			}
 			
 		};
@@ -119,36 +119,13 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	
 	private void openSaveQueryDialog(){
 		if(control.getDocument().getLength()>0){
-			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_OPTION);
 			if(option == JOptionPane.YES_OPTION){
 				toolbar.getActionMap().get("save").actionPerformed(null);
 			}
 		}
 	}
 
-	private void openCommitNotifyDialog(String currentConnection){
-		if (getActiveConnection() != null && ConnectionAssistant.hasHandler(getActiveConnection())
-				&& ConnectionAssistant.getHandler(getActiveConnection()).isUncommittedTransactionExists()) {
-			int option = JOptionPane.showConfirmDialog(Application.window,"Commit Y/N ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
-			if(option == JOptionPane.YES_OPTION){
-				toolbar.getActionMap().get("action-commit").actionPerformed(null);
-				ClientCommandEditor.this.dispose();
-			}else if(option == JOptionPane.NO_OPTION){
-				toolbar.getActionMap().get("action-rollback").actionPerformed(null);
-				ClientCommandEditor.this.dispose();
-			}
-			else {
-//				if(currentConnection!=null){
-//					cbx.setSelectedItem(currentConnection);
-//				}
-				return;
-			}
-	   }else{
-			ClientCommandEditor.this.dispose();
-	   }
-
-	}
-	
 	private void createToolbar() {
 		cbx = new JComboBox(ConnectionAssistant.getHandlers().toArray());
 		cbxLimit = new JCheckBox("limit rows:", true);

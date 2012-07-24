@@ -50,8 +50,8 @@ public class DiagramEntity extends DiagramAbstractEntity
 		getHeaderMenu().addSeparator();
 		getHeaderMenu().add(new ActionOpenAllForeignTables());
 		getHeaderMenu().add(new ActionOpenAllPrimaryTables());
-		getHeaderMenu().addSeparator();
 		getHeaderMenu().add(new ActionReferences());
+		getHeaderMenu().addSeparator();
 		getHeaderMenu().add(new ActionShowContent(builder.getConnectionHandlerKey()));
 		
 		setQueryToken(qtoken);

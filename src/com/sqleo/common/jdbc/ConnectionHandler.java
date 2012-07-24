@@ -35,7 +35,6 @@ public class ConnectionHandler
 {
     private Connection connection;
     private Hashtable metacache;
-    private boolean uncommittedTransactionExists = false;
     
     public ConnectionHandler(Connection connection)
     {
@@ -165,11 +164,4 @@ public class ConnectionHandler
 		return metacache.get(key);
 	}
 
-	public void setUncommittedTransactionExists(boolean uncommittedTransactionExists) {
-		this.uncommittedTransactionExists = uncommittedTransactionExists;
-	}
-
-	public boolean isUncommittedTransactionExists() {
-		return uncommittedTransactionExists;
-	}
 }

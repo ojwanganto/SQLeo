@@ -47,6 +47,7 @@ import com.sqleo.querybuilder.QueryActions;
 import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.QueryModel;
 import com.sqleo.querybuilder.syntax.QueryTokens;
+import com.sqleo.querybuilder.syntax._ReservedWords;
 
 
 public class ClientQueryBuilder extends MDIClient {
@@ -94,8 +95,10 @@ public class ClientQueryBuilder extends MDIClient {
 		});
 	}
 	private void openSaveQueryDialog(){
-		if(builder.getSyntax().getDocument().getLength()>0){
-			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
+		int selectLength = _ReservedWords.SELECT.length();
+		if(builder.getSyntax().getDocument().getLength()>selectLength ||
+				builder.getDiagramLayout().getQueryModel().toString().length() > selectLength ){
+			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_OPTION);
 			if(option == JOptionPane.YES_OPTION){
 				toolbar.getActionMap().get("save").actionPerformed(null);
 			}

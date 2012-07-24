@@ -80,7 +80,6 @@ public class Task implements Runnable {
 								|| sqlcmd.startsWith("INSERT")
 								|| sqlcmd.startsWith("UPDATE")) {
 							target.write(rows + " row(s) affected");
-							ch.setUncommittedTransactionExists(true && !ConnectionAssistant.getAutoCommitPrefered());
 						} else {
 							target.write("command has been executed successfully");
 						}
