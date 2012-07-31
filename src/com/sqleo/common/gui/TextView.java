@@ -53,9 +53,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.TabSet;
 import javax.swing.text.TabStop;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoManager;
 
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.querybuilder.QueryStyledDocument;
@@ -64,6 +61,7 @@ import com.sqleo.querybuilder.QueryStyledDocument;
 public class TextView extends BorderLayoutPanel
 {
 	private JTextPane editor;
+	private CompoundUndoManager undoManager;
 	
 	public TextView(StyledDocument doc)
 	{
@@ -71,8 +69,7 @@ public class TextView extends BorderLayoutPanel
 		editor.setDocument(doc);
 		if(doc instanceof QueryStyledDocument){
 			//request view 
-			addUndoRedoActions();
-			registerUndoRedoListenerToDocument();
+			undoManager = new CompoundUndoManager(editor);
 		}
 		editor.addMouseListener(new InternalPopup());
 		editor.setFont(new Font("monospaced", Font.PLAIN, 12));
@@ -91,50 +88,6 @@ public class TextView extends BorderLayoutPanel
 		
 		this.setTabSize(4);
 		
-	}
-	final UndoManager undo = new UndoManager();
-	private void addUndoRedoActions(){
-		// Create an undo action and add it to the text component
-	    editor.getActionMap().put("Undo",
-	        new AbstractAction("Undo") {
-	            public void actionPerformed(ActionEvent evt) {
-	                try {
-	                    if (undo.canUndo()) {
-	                        undo.undo();
-	                    }
-	                } catch (CannotUndoException e) {
-	                }
-	            }
-	       });
-	    
-	    // Bind the undo action to ctrl-Z
-	    editor.getInputMap().put(KeyStroke.getKeyStroke("control Z"), "Undo");
-	    
-	    // Create a redo action and add it to the text component
-	    editor.getActionMap().put("Redo",
-	        new AbstractAction("Redo") {
-	            public void actionPerformed(ActionEvent evt) {
-	                try {
-	                    if (undo.canRedo()) {
-	                        undo.redo();
-	                    }
-	                } catch (CannotRedoException e) {
-	                }
-	            }
-	        });
-	    
-	    // Bind the redo action to ctrl-Y
-	    editor.getInputMap().put(KeyStroke.getKeyStroke("control Y"), "Redo");
-
-	}
-	private void registerUndoRedoListenerToDocument(){
-	    Document doc = editor.getDocument();
-	    // Listen for undo and redo events
-	    doc.addUndoableEditListener(new UndoableEditListener() {
-	        public void undoableEditHappened(UndoableEditEvent evt) {
-	            undo.addEdit(evt.getEdit());
-	        }
-	    });
 	}
 	
 	public void setEditable(boolean b)
@@ -223,7 +176,7 @@ public class TextView extends BorderLayoutPanel
 	{
 		editor.setDocument(doc);
 		if(doc instanceof QueryStyledDocument){
-			registerUndoRedoListenerToDocument();
+		    undoManager.registerListener(editor.getDocument());
 		}
 	}
 	
