@@ -22,9 +22,11 @@
 package com.sqleo.environment.io;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
@@ -51,6 +53,11 @@ public class ManualDBMetaData {
  	//key = tableschema+"-"+table; tableowner = schema or catalog TODO
  	private Map<String,ManualTableMetaData> relationsStore = new HashMap<String,ManualTableMetaData>();
 	
+ 	private String fkDefFileName;
+ 	public String getFKDefFileName(){
+ 		return this.fkDefFileName;
+ 	}
+ 	
 	public ManualTableMetaData getManualTableMetaData(String catalog,String schema,String table){
 		schema = schema == null ?"": schema;
 		String key = schema + "-" + table;
@@ -78,19 +85,20 @@ public class ManualDBMetaData {
 		if("INNER".equals(csvJoinType)){
 			return _ReservedWords.INNER_JOIN;
 		}
-		if("LEFT".equals(csvJoinType)){
+		else if("LEFT".equals(csvJoinType)){
 			return _ReservedWords.LEFT_OUTER_JOIN;
 		}
-		if("RIGHT".equals(csvJoinType)){
+		else if("RIGHT".equals(csvJoinType)){
 			return _ReservedWords.RIGHT_OUTER_JOIN;
 		}
-		if("FULL".equals(csvJoinType)){
+		else if("FULL".equals(csvJoinType)){
 			return _ReservedWords.FULL_OUTER_JOIN;
 		}
 		return csvJoinType;
 	}
 	
 	public ManualDBMetaData(String fkDefFileName){
+		this.fkDefFileName = fkDefFileName;
 		BufferedReader in = null;
 		try {
 			in = new BufferedReader(new FileReader(fkDefFileName));
@@ -136,14 +144,67 @@ public class ManualDBMetaData {
 				updateMap(rdef);
 			}
 			
-			in.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
 		}
+	}
+	public static boolean saveDefinitionToFile(CSVRelationDefinition rdef,String fkDefFileName){
+		BufferedWriter out = null;
+		boolean saveSuccess = false;
+		try {
+			out = new BufferedWriter(new FileWriter(fkDefFileName,true));
+			
+			String[] columns = new String[10];
+			columns[IDX_FKT_SCHEMA] = rdef.getFktSchema();
+			columns[IDX_FKT_NAME] = rdef.getFktName();
+			columns[IDX_FKT_COLUMN] = rdef.getFktColumnName();
+			columns[IDX_PKT_SCHEMA] = rdef.getPktSchema();
+			columns[IDX_PKT_NAME] = rdef.getPktName();
+			columns[IDX_PKT_COLUMN] = rdef.getPktColumnName();
+			String[] split = rdef.getJoinType().split(" ");
+			columns[IDX_JOIN_TYPE] = split[0];
+			columns[IDX_PK_TABLE_ALIAS] = rdef.getPktAlias();
+			columns[IDX_RELATION] = rdef.getPkName();
+			columns[IDX_REL_COMMENT]=rdef.getComment();
+			
+			StringBuilder builder = new StringBuilder();
+			for(int i=0;i<10;i++){
+				if(null == columns[i]){
+					columns[i]="";
+				}
+			}
+			builder.append("\n");
+			builder.append(columns[0]);
+			for(int i = 1; i < 10;i++){
+				builder.append(CSV_SEPARATOR);
+				builder.append(columns[i]);
+			}
+			out.write(builder.toString());
+			saveSuccess = true;
+		} catch (FileNotFoundException e) {
+			saveSuccess = false;
+			e.printStackTrace();
+		} catch (IOException e) {
+			saveSuccess = false;
+			e.printStackTrace();
+		}finally{
+			try {
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
+		}
+		return saveSuccess;
 	}
 	
 }

@@ -35,15 +35,25 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 
 import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
+import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment.Application;
+import com.sqleo.environment.io.CSVRelationDefinition;
+import com.sqleo.environment.io.ManualDBMetaData;
+import com.sqleo.environment.io.ManualTableMetaData;
+import com.sqleo.environment.mdi.ClientMetadataExplorer;
 import com.sqleo.querybuilder.syntax.QueryTokens;
+import com.sqleo.querybuilder.syntax.QueryTokens.Column;
 
 
 public class DiagramRelation extends JPanel
@@ -335,6 +345,7 @@ public class DiagramRelation extends JPanel
 				popup.add(new ActionEdit());
 				popup.addSeparator();
 				popup.add(new ActionRemove());
+				popup.add(new ActionSaveToDefinitionFile());
 
 				popup.show(this, me.getX(), me.getY());
 			}
@@ -362,7 +373,53 @@ public class DiagramRelation extends JPanel
 		{
 		}
 	}
+	private class ActionSaveToDefinitionFile extends AbstractAction
+	{
+		private String fkDefFileName = null;
+		private boolean alreadyExist = false;
+		ActionSaveToDefinitionFile()
+		{
+			super(I18n.getString("querybuilder.menu.savejoin", "save to definition file..."));
+			ManualDBMetaData md = ConnectionAssistant.getManualDBMetaData(owner.getBuilder().getConnectionHandlerKey());
+			setEnabled(md!=null);
+			if(md!=null){
+				fkDefFileName = md.getFKDefFileName();
+				alreadyExist = getName()!=null;	
+			}
+		}
 
+		public void actionPerformed(ActionEvent e)
+		{
+			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to add join to definition file ?",Application.PROGRAM,JOptionPane.YES_NO_OPTION);
+			if(option == JOptionPane.YES_OPTION){
+				if(fkDefFileName!=null){
+					
+					CSVRelationDefinition rdef = new CSVRelationDefinition();
+					rdef.setJoinType(querytoken.getTypeName());
+					
+					Column fk = foreignField.querytoken;
+					rdef.setFktSchema(fk.getTable().getSchema());
+					rdef.setFktName(fk.getTable().getName());
+					rdef.setFktColumnName(fk.getName());
+				
+					Column pk = primaryField.querytoken;
+					rdef.setPktSchema(pk.getTable().getSchema());
+					rdef.setPktName(pk.getTable().getName());
+					rdef.setPktColumnName(pk.getName());
+					rdef.setPktAlias(pk.getTable().getAlias());
+					
+					String relName= rdef.getFktName().toUpperCase()+"_"+rdef.getPktName().toUpperCase();
+					if(alreadyExist){
+						relName="SQLeo_"+relName;
+					}
+					rdef.setFkName(relName);
+					rdef.setPkName(relName);
+					
+					ManualDBMetaData.saveDefinitionToFile(rdef, fkDefFileName);
+				}
+			}
+		}
+	}
 	private class ActionEdit extends AbstractAction
 	{
 		ActionEdit()
