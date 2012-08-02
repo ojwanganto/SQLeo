@@ -32,6 +32,7 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sqleo.environment.Application;
 import com.sqleo.querybuilder.syntax._ReservedWords;
 
 
@@ -104,6 +105,9 @@ public class ManualDBMetaData {
 			in = new BufferedReader(new FileReader(fkDefFileName));
 			String row= null;
 			while((row  = in.readLine())!=null){
+				if(row.trim().isEmpty()){
+					continue;
+				}
 				String[] columns = row.split(CSV_SEPARATOR);
 				String fktSchema = columns[IDX_FKT_SCHEMA];
 				String fktName = columns[IDX_FKT_NAME];
@@ -145,14 +149,16 @@ public class ManualDBMetaData {
 			}
 			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			Application.println(e, true);
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Application.println(e, true);
 			e.printStackTrace();
 		}finally{
 			try {
-				in.close();
+				if(in!=null){
+					in.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}			
@@ -183,23 +189,27 @@ public class ManualDBMetaData {
 					columns[i]="";
 				}
 			}
-			builder.append("\n");
 			builder.append(columns[0]);
 			for(int i = 1; i < 10;i++){
 				builder.append(CSV_SEPARATOR);
 				builder.append(columns[i]);
 			}
+			builder.append("\n");
 			out.write(builder.toString());
 			saveSuccess = true;
 		} catch (FileNotFoundException e) {
 			saveSuccess = false;
+			Application.println(e, true);
 			e.printStackTrace();
 		} catch (IOException e) {
 			saveSuccess = false;
+			Application.println(e, true);
 			e.printStackTrace();
 		}finally{
 			try {
-				out.close();
+				if(out!=null){
+					out.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}			

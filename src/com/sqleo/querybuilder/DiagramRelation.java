@@ -376,7 +376,6 @@ public class DiagramRelation extends JPanel
 	private class ActionSaveToDefinitionFile extends AbstractAction
 	{
 		private String fkDefFileName = null;
-		private boolean alreadyExist = false;
 		ActionSaveToDefinitionFile()
 		{
 			super(I18n.getString("querybuilder.menu.savejoin", "save to definition file..."));
@@ -384,7 +383,6 @@ public class DiagramRelation extends JPanel
 			setEnabled(md!=null);
 			if(md!=null){
 				fkDefFileName = md.getFKDefFileName();
-				alreadyExist = getName()!=null;	
 			}
 		}
 
@@ -409,7 +407,9 @@ public class DiagramRelation extends JPanel
 					rdef.setPktAlias(pk.getTable().getAlias());
 					
 					String relName= rdef.getFktName().toUpperCase()+"_"+rdef.getPktName().toUpperCase();
-					if(alreadyExist){
+					if(getName()!=null){
+						relName="SQLeo_"+getName();
+					}else{
 						relName="SQLeo_"+relName;
 					}
 					rdef.setFkName(relName);

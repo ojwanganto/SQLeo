@@ -72,8 +72,8 @@ public class DiagramLayout
         		{
     				if(entities[j].getHeaderMenu().getText().equalsIgnoreCase(reference))
     				{
-    					entities[i].setLocation(extras[i].getLocation());
-    					entities[i].setPack(extras[i].isPack());
+    					entities[j].setLocation(extras[i].getLocation());
+    					entities[j].setPack(extras[i].isPack());
     					break;
     				}
         		}
