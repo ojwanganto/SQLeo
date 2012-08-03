@@ -23,20 +23,18 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
-
-SQLeoVQB.2012.03Beta04.zip: 2012-07-18
+SQLeoVQB.2012.07Beta01.zip: 2012-08-03
 
   For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2012.03Beta/
-	50  	NullPointerException at com.sqleo.environment.Preferences.getBoolean
-	51 	Add CsvJdbc in the (default) driver list
-	52 	Metadata explorer: java.sqj.SQLException: l' URL oracle indiquée n'est pas valide
-	53 	Query Builder: reverse SQL group by t1.a||t2.b is wrong
-	57 	Add Apache Derby Embedded in the (default) driver list
-	58 	Definition > Indices runs analyze on Oracle to display Indexes
+     http://sourceforge.net/p/sqleo/tickets/milestone/2012.07Beta/
+	7 	After saving / restoring from xlq tables locations have change (permuttated)
+	21 	Save joins from query builder to CSV
+	32 	Command Editor: ask to save on exit
+	41 	Propose Content from query designer rigth click
+	56 	"Undo CTRL-Z/ Redo CTRL-Y" text on command editor/ syntax editor 
 
 
-SQLeoVQB.2012.03Beta03.zip: 2012-07-03
+SQLeoVQB.2012.03Beta04.zip: 2012-07-18
 
    First release of the docs:
 
@@ -52,21 +50,16 @@ SQLeoVQB.2012.03Beta03.zip: 2012-07-03
    Adapted SQLeo app menubar > help > howtouse to 
      http://sqleo.sourceforge.net/ site.
 
-
-
-SQLeoVQB.2012.03Beta02.zip: 2012-06-25
-
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2012.03Beta/
+	50  	NullPointerException at com.sqleo.environment.Preferences.getBoolean
+	51 	Add CsvJdbc in the (default) driver list
+	52 	Metadata explorer: java.sqj.SQLException: l' URL oracle indiquée n'est pas valide
+	53 	Query Builder: reverse SQL group by t1.a||t2.b is wrong
+	57 	Add Apache Derby Embedded in the (default) driver list
+	58 	Definition > Indices runs analyze on Oracle to display Indexes
 	48	query builder: Incorrect SQL generated when sign "/" or "$" is used
 	49	query builder: Order of selected columns is lost when reversing functions
-
-SQLeoVQB.2012.03Beta01.zip: 2012-04-22
-
-	for users of version 2012.01Beta please rename .sqleonardo file to .sqleo (in USERPROFILE/HOME dir)
-
-  For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2012.03Beta/
 	12 	Group by Alias (from sqleonardo opened bugs)
 	13 	reverse SQL for mixed aliased and non-aliased columns (from sqleonardo opened bugs)
 	14 	Query, syntax windows execution
