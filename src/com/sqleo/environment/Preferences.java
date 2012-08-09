@@ -43,10 +43,12 @@ public class Preferences
 		}
 		
 		QueryBuilder.autoJoin = getBoolean("querybuilder.auto-join",true);
-		QueryBuilder.autoAlias = getBoolean("querybuilder.auto-alias",true);
-		QueryBuilder.useAlwaysQuote	= getBoolean("querybuilder.use-quote",true);
 		QueryBuilder.loadObjectsAtOnce = getBoolean("querybuilder.load-objects-at-once",true);
-		QueryBuilder.selectAllColumns = getBoolean("querybuilder.select-all-columns",true);
+
+		// fix for Ticket #63
+		QueryBuilder.autoAlias = getBoolean("querybuilder.auto-alias",false);
+		QueryBuilder.useAlwaysQuote	= getBoolean("querybuilder.use-quote",false);
+		QueryBuilder.selectAllColumns = getBoolean("querybuilder.select-all-columns",false);
 	}
 	
 	private static Hashtable get()
