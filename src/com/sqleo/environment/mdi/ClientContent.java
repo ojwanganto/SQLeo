@@ -39,7 +39,6 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
 import com.sqleo.common.gui.Toolbar;
-import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.ContentPane;
 import com.sqleo.environment.ctrl.content.DialogFilters;
@@ -139,10 +138,8 @@ public class ClientContent extends MDIClientWithCRActions
 						return;
 				  }
 				}
-				if(showAutoCommitPopup()==0){
-					ClientContent.this.control.doStop();
-					ClientContent.this.dispose();
-				}
+				ClientContent.this.control.doStop();
+				ClientContent.this.dispose();
 			}
 		};
 		addInternalFrameListener(ifl);
@@ -156,26 +153,6 @@ public class ClientContent extends MDIClientWithCRActions
 			control.doStop();
 	}
     
-	private int showAutoCommitPopup(){
-		if(!ConnectionAssistant.getAutoCommitPrefered() && isContentChanged()){
-			int acoption = JOptionPane.showConfirmDialog(Application.window,"Commit Y/N ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
-			if(acoption == JOptionPane.YES_OPTION){
-				toolbar.getActionMap().get("action-commit").actionPerformed(null);
-				//control.getActionMap().get("task-go").actionPerformed(null);
-				return 0;
-			}else if(acoption == JOptionPane.NO_OPTION){
-				toolbar.getActionMap().get("action-rollback").actionPerformed(null);
-				//control.getActionMap().get("task-go").actionPerformed(null);
-				ClientContent.this.dispose();
-				return 0;
-			}
-			else {
-				return -1;
-			}
-		}
-		return 0;
-	}
-	
 	private void createToolbar()
 	{
 		toolbar = new Toolbar(Toolbar.HORIZONTAL);

@@ -205,11 +205,6 @@ public class Task implements Runnable {
 	}
 
 	public int getColumnDisplaySize(int index) throws SQLException {
-		int type = rs.getMetaData().getColumnType(index);
-		if (type == Types.TIMESTAMP) {
-			return 21;
-		}
-
 		return rs.getMetaData().getColumnDisplaySize(index);
 	}
 
