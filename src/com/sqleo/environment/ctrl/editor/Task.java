@@ -46,6 +46,7 @@ public class Task implements Runnable {
 
 	private Statement stmt = null;
 	private ResultSet rs = null;
+	private static final int TIMESTAMP_WITH_TIMEZONE = -101;
 
 	public Task(_TaskSource source, _TaskTarget target, int limit) {
 		this.source = source;
@@ -205,6 +206,11 @@ public class Task implements Runnable {
 	}
 
 	public int getColumnDisplaySize(int index) throws SQLException {
+		int type = rs.getMetaData().getColumnType(index);
+		if (type == Types.TIMESTAMP || type == TIMESTAMP_WITH_TIMEZONE || type == Types.DATE || type == Types.TIME) {
+			return 35;
+		}
+
 		return rs.getMetaData().getColumnDisplaySize(index);
 	}
 
