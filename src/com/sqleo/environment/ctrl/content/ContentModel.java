@@ -189,6 +189,16 @@ public class ContentModel implements TableModel
 		return rowdata[col] instanceof Object[] ? ((Object[])rowdata[col])[0]: rowdata[col];		
 	}
 	
+	public Object[] getFlatValues(int row){
+		Object[] rowdata = getValues(row);
+		for(int i=0;i<rowdata.length;i++){
+			if( rowdata[i] instanceof Object[] ){
+				rowdata[i] =((Object[])rowdata[i])[0];
+			} 
+		}
+		return rowdata;
+	}
+	
 	public boolean isFlatCellChanged(int row, int col)
 	{
 		Long rid = (Long)rows.elementAt(row);

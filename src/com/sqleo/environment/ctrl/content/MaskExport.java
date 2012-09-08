@@ -93,7 +93,7 @@ public class MaskExport extends AbstractMaskPerform
 	
 	void next()
 	{
-		eChoice.handle(view.getValues(progress.getValue() + eChoice.getFirstRow() - 1));
+		eChoice.handle(view.getFlatValues(progress.getValue() + eChoice.getFirstRow() - 1));
 		progress.setValue(progress.getValue()+1);
 	}
 	

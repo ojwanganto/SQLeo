@@ -284,6 +284,10 @@ public class ContentView extends JPanel implements ListSelectionListener
 	{
 		return model.getValues(row);
 	}
+	
+	public Object[] getFlatValues(int row){
+		return model.getFlatValues(row);
+	}
 
 	Object[] getValues(Long rid)
 	{
