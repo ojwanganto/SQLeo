@@ -68,10 +68,12 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	private JTextArea jLabelAutoCommitInfo = new JTextArea();
 	private JComboBox jComboBoxLanguage = new JComboBox();
 	private JCheckBox jCheckBoxTrace = new JCheckBox();
-	//private JTextField jTextFieldMaxRowFetchSize = new JTextField();
+	private JTextField jTextFieldMaxRowFetchSize = new JTextField();
 
 	private JTextField jTextFieldMaxColSize = new JTextField();
 	private JCheckBox jCheckBoxAutoCommit = new JCheckBox();
+
+	public static final String CONTENT_MAX_ROWS_FETCH_SIZE_KEY = "content.maxrowfetchsize";
 
 	public DialogPreferences() {
 		super(Application.window, Application.PROGRAM + ".preferences", 350,
@@ -204,23 +206,22 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		pnlGeneral.add(jLabelLanguage);
 		pnlGeneral.add(jComboBoxLanguage);
 		pnlGeneral.add(jCheckBoxTrace);
-		//TODO add max rows fetch size
-		//pnlGeneral.add(new JSeparator());
-//		pnlGeneral.add(new JLabel(I18n.getString(
-//				"application.preferences.maxrowfetchsize", "Maximum rows fetch size:")));
-//		jTextFieldMaxRowFetchSize.setText(String.valueOf(Preferences.getInteger(
-//				"application.maxrowfetchsize", 20)));
-//		pnlGeneral.add(jTextFieldMaxRowFetchSize);
 		pnlGeneral.add(jLabelAutoCommitInfo);
 		pnlGeneral.add(jCheckBoxAutoCommit);
 
 		JPanel pnlCommand = new JPanel(new GridLayout(0, 1));
-		pnlCommand.setBorder(new EmptyBorder(10, 5, 210, 5));
+		pnlCommand.setBorder(new EmptyBorder(10, 5, 150, 5));
 		pnlCommand.add(new JLabel(I18n.getString(
 				"application.preferences.maxcolsize", "Maximum column size:")));
 		jTextFieldMaxColSize.setText(String.valueOf(Preferences.getInteger(
 				"editor.maxcolsize", 50)));
 		pnlCommand.add(jTextFieldMaxColSize);
+		// add max rows fetch size
+		pnlCommand.add(new JLabel(I18n.getString(
+				"application.preferences.maxrowfetchsize", "Maximum rows fetch size:")));
+		jTextFieldMaxRowFetchSize.setText(String.valueOf(Preferences.getInteger(
+				CONTENT_MAX_ROWS_FETCH_SIZE_KEY, 100)));
+		pnlCommand.add(jTextFieldMaxRowFetchSize);
 
 		JTabbedPane options = new JTabbedPane();
 		options.addTab("general", pnlGeneral);
@@ -285,8 +286,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				jCheckBoxAutoCommit.isSelected()));
 		Preferences.set("editor.maxcolsize",
 				new Integer(jTextFieldMaxColSize.getText()));
-//		Preferences.set("application.maxrowfetchsize",
-//				new Integer(jTextFieldMaxRowFetchSize.getText()));
+		Preferences.set(CONTENT_MAX_ROWS_FETCH_SIZE_KEY,
+				new Integer(jTextFieldMaxRowFetchSize.getText()));
 
 		return true;
 	}

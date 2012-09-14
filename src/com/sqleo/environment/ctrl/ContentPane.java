@@ -30,13 +30,10 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.jdbc.ConnectionAssistant;
@@ -50,9 +47,8 @@ import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.QueryModel;
 
 
-public class ContentPane extends BorderLayoutPanel implements ChangeListener
+public class ContentPane extends BorderLayoutPanel 
 {
-	private JSlider sld;
 	private JLabel status;
 	private JTextArea syntax;
 	private ContentView view;
@@ -62,6 +58,7 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 	private QueryModel qmodel;
 	private UpdateModel umodel;
 	private String query;
+	private TaskRetrieve retrievingTask;
 	
 	public ContentPane(String keycah, QueryModel qmodel, UpdateModel umodel)
 	{
@@ -87,14 +84,6 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 		this.getActionMap().put("task-stop"		,new ActionStopTask());
 		this.getActionMap().put("task-go"		,new ActionRelaunch());
 		
-		sld = new JSlider(JSlider.VERTICAL);
-		sld.addChangeListener(this);
-		sld.setSnapToTicks(true);
-		sld.setInverted(true);
-		sld.setValue(0);
-		sld.setMinimum(0);
-		sld.setMaximum(0);
-		
 		status = new JLabel("...");
 		status.setBorder(new CompoundBorder(LineBorder.createGrayLineBorder(), new EmptyBorder(2,4,2,4)));
 		
@@ -111,7 +100,6 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 		pnlSouth.setComponentCenter(status);
 		pnlSouth.setComponentNorth(scroll);
 		
-		setComponentWest(sld);
 		setComponentSouth(pnlSouth);
 		setComponentCenter(view = new ContentView(this));		
 	}
@@ -150,11 +138,6 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 		umodel = model;
 	}
 
-	public JSlider getSlider()
-	{
-		return sld;
-	}
-	
 	public ContentView getView()
 	{
 		return view;
@@ -162,7 +145,7 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 
 	public boolean isBusy()
 	{
-		return task!=null;
+		return task!=null && this.getActionMap().get("task-stop").isEnabled();
 	}
 
 	public void doStop()
@@ -170,10 +153,22 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 		// gestire cancel dello statement se attivo!!!
 		onEndTask();
 	}
+	public void doSuspend()
+	{
+		onSuspendTask();
+	}
 	
 	public void doRetrieve()
 	{
-		onBeginTask(new TaskRetrieve(this));
+		retrievingTask = new TaskRetrieve(this);
+		onBeginTask(retrievingTask);
+	}
+	
+	public void fetchNextRecords(){
+		if(retrievingTask!=null){
+			onResumeTask();
+			retrievingTask.setNextResultSet();
+		}
 	}
 	
 	public void doRetrieve(int limit)
@@ -200,6 +195,18 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 		task.start();		
 	}
 	
+	private void onResumeTask()
+	{
+		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		
+		this.getActionMap().get("task-go").setEnabled(false);
+		this.getActionMap().get("task-stop").setEnabled(true);
+		this.getActionMap().get("changes-save").setEnabled(false);
+		this.getActionMap().get("record-insert").setEnabled(false);
+		this.getActionMap().get("record-delete").setEnabled(false);
+		
+	}
+	
 	private void onEndTask()
 	{
 		task = null;
@@ -212,15 +219,27 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 		
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
+	
+	private void onSuspendTask()
+	{
+		this.getActionMap().get("task-go").setEnabled(true);
+		this.getActionMap().get("task-stop").setEnabled(false);
+		this.getActionMap().get("changes-save").setEnabled(true);
+		this.getActionMap().get("record-insert").setEnabled(true);
+		this.getActionMap().get("record-delete").setEnabled(true);
+		
+		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	}
+	
 
 	public void doRefreshStatus()
 	{
-		sld.setMaximum(view.getBlockCount()==0?0:view.getBlockCount()-1);
-		
-		if(view.getRowCount() > 0)
-			status.setText(	"block " + view.getBlock() + " of " + view.getBlockCount() +
-							" | record " + view.getLineAt(0) + " to " + view.getLineAt(view.getRowCount()-1) + " of " + view.getFlatRowCount() +
-							" | changes " + view.getChanges().count());
+
+
+		if(view.getRowCount() > 0){
+			status.setText(	" record " + view.getLineAt(0) + " to " + view.getLineAt(view.getRowCount()-1) + " of " + view.getFlatRowCount() +
+					" | changes " + view.getChanges().count());
+		}
 		else
 			status.setText("0 records");
 	}
@@ -228,21 +247,6 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 	public void setStatus(String text)
 	{
 		status.setText(text);
-	}
-	
-	public void stateChanged(ChangeEvent e)
-	{
-	    JSlider source = (JSlider)e.getSource();
-	    if (!source.getValueIsAdjusting())
-		{
-			int block = source.getValue()+1;
-			
-			if(view!=null && block!=view.getBlock())
-			{
-				view.setBlock(block);
-				doRefreshStatus();
-			}
-	    }
 	}
 	
 	private class ActionInsertRecord extends AbstractAction
@@ -265,7 +269,6 @@ public class ContentPane extends BorderLayoutPanel implements ChangeListener
 			if(row == ContentModel.MAX_BLOCK_RECORDS)
 			{
 				row = 0;
-				ContentPane.this.sld.setValue(ContentPane.this.sld.getValue()+1);
 			}
 			ContentPane.this.view.setSelectedCell(row,(col == -1 ? 0 : col));
 		}

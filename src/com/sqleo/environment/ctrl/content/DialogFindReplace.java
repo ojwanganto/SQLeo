@@ -134,7 +134,6 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		flag.row = row - (ContentModel.MAX_BLOCK_RECORDS * (flag.block-1));
 		flag.col = col;
 				
-		view.getControl().getSlider().setValue(flag.block-1);
 		view.mark(flag);
 	}
 	
@@ -221,7 +220,6 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		Object value = txtReplace.getText();
 		if(chxNullReplace.isSelected()) value = null;
 		
-		view.getControl().getSlider().setValue(flag.block-1);
 		view.setValueAt(value,flag.row,flag.col);
 		view.mark(null);
 		

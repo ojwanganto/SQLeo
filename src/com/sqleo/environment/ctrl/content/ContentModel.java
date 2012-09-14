@@ -26,12 +26,14 @@ import java.util.Vector;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import com.sqleo.environment.Preferences;
+import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
 
 public class ContentModel implements TableModel
 {
-	public static int MAX_BLOCK_RECORDS = 75;
+	public static int MAX_BLOCK_RECORDS = Preferences.getInteger(DialogPreferences.CONTENT_MAX_ROWS_FETCH_SIZE_KEY);
 	
 	private Vector columns	= new Vector();
 	private Vector rows		= new Vector();
@@ -149,11 +151,7 @@ public class ContentModel implements TableModel
 
 	public int getRowCount()
 	{
-		int count = rows.size();
-		if(count == 0) return 0;
-		
-		count = count - (MAX_BLOCK_RECORDS*(block-1));
-		return count > MAX_BLOCK_RECORDS ? MAX_BLOCK_RECORDS : count;
+		return rows.size();
 	}
 	
 	public Object getValueAt(int row, int col)

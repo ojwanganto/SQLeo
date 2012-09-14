@@ -27,6 +27,10 @@ import java.awt.event.ItemListener;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 
 import javax.swing.ButtonGroup;
@@ -38,13 +42,17 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
+import com.sqleo.common.jdbc.ConnectionAssistant;
+import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.ctrl.ContentPane;
 
 
 public class MaskExport extends AbstractMaskPerform
 {
 	private AbstractChoice eChoice;
+	private ResultSet rs = null;
 
 	public void setEnabled(boolean b)
 	{
@@ -87,10 +95,72 @@ public class MaskExport extends AbstractMaskPerform
 		
 		progress.setValue(0);
 		progress.setMaximum(eChoice.getLastRow() - eChoice.getFirstRow() + 1);
-		
-		eChoice.open();
+
+		if(!eChoice.isExportFromGrid()){
+			executeContentViewQuery();
+			try {
+				eChoice.open(rs.getMetaData());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			eChoice.open();
+		}
 	}
-	
+
+	public void export(){
+		try {
+			int cols= rs.getMetaData().getColumnCount();
+			Object[] vals = null;
+			while(rs.next()){
+				vals = new Object[cols];
+				for(int i=1; i<=cols;i++)				{
+					vals[i-1] = rs.getString(i);
+				}
+				eChoice.handle(vals);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		progress.setValue(progress.getMaximum());
+
+	}
+
+	private void executeContentViewQuery(){
+		try
+		{
+			Statement stmt = null;
+			ContentPane target = view.getControl();
+			String syntax = target.getQuery();
+			if(target.getHandlerKey()!=null){
+				ConnectionHandler ch = ConnectionAssistant.getHandler(target.getHandlerKey());
+				stmt = ch.get().createStatement();
+				rs = stmt.executeQuery(syntax);
+			}
+		}
+		catch(SQLException sqle)
+		{
+			Application.println(sqle,true);
+			if(rs!=null){
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					Application.println(sqle,true);
+				}
+			}
+		} 
+	}
+
+
 	void next()
 	{
 		eChoice.handle(view.getFlatValues(progress.getValue() + eChoice.getFirstRow() - 1));
@@ -111,6 +181,11 @@ public class MaskExport extends AbstractMaskPerform
 		
 		return false;
 	}
+	
+	public boolean isExportFromGrid(){
+		return eChoice.isExportFromGrid();
+	}
+	
 //	-----------------------------------------------------------------------------------------
 //	-----------------------------------------------------------------------------------------
 	private abstract class AbstractChoice extends BorderLayoutPanel
@@ -123,17 +198,26 @@ public class MaskExport extends AbstractMaskPerform
 		
 		JTextField txtInterval;
 
+		private JCheckBox cbxFromGrid;
+
 		AbstractChoice()
 		{
 			setBorder(new TitledBorder("options"));
 			initComponents();
 		}
 		
+		public boolean isExportFromGrid(){
+			return cbxFromGrid.isSelected();
+		}
+
+		abstract void open(ResultSetMetaData metaData);
+
 		void initComponents()
 		{
 			JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			setComponentSouth(pnl);
-
+			pnl.add(cbxFromGrid = new JCheckBox("from grid"));
+			cbxFromGrid.setSelected(false);
 			pnl.add(new JLabel("records:"));
 			pnl.add(rbAll	= new JRadioButton("all",true));
 			pnl.add(rbBlock	= new JRadioButton("current block"));
@@ -250,6 +334,28 @@ public class MaskExport extends AbstractMaskPerform
 			}
 		}
 
+		void open(ResultSetMetaData mtd)
+		{
+			super.open();
+			println("<html><body><table border=1>");
+
+			if(cbxHeader.isSelected())
+			{
+				print("<tr>");
+				try {
+					for(int col=1; col<=mtd.getColumnCount(); col++)
+					{
+						print("<th>" + mtd.getColumnName(col) + "</th>");
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}		
+				println("</tr>");
+			}
+		}
+
+
 		void handle(Object[] vals)
 		{
 			print("<tr>");
@@ -313,6 +419,29 @@ public class MaskExport extends AbstractMaskPerform
 			for(int col=0; col<view.getColumnCount(); col++)
 			{
 				buffer.append(view.getColumnName(col) + ",");
+			}
+			buffer.deleteCharAt(buffer.length()-1);
+			insert = buffer.toString() + ")";
+		}
+
+		void open(ResultSetMetaData mtd)
+		{
+			super.open();
+			if(cbxDelete.isSelected())
+			{
+				println("DELETE FROM " + txtTable.getText() + ";");
+			}
+
+			StringBuffer buffer = new StringBuffer("INSERT INTO " + txtTable.getText() + " (");
+			try {
+
+				for(int col=1; col<=mtd.getColumnCount(); col++)
+				{
+					buffer.append(mtd.getColumnName(col) + ",");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			buffer.deleteCharAt(buffer.length()-1);
 			insert = buffer.toString() + ")";
@@ -423,6 +552,27 @@ public class MaskExport extends AbstractMaskPerform
 				println(buffer.toString());
 			}
 		}
+		void open(ResultSetMetaData mtd)
+		{
+			super.open();
+
+			if(cbxHeader.isSelected())
+			{
+				StringBuffer buffer = new StringBuffer();
+				try {
+					for(int col=1; col<=mtd.getColumnCount(); col++)
+					{
+						buffer.append(mtd.getColumnName(col) + getDelimiter());
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
+				println(buffer.toString());
+			}
+		}
+
 
 		void handle(Object[] vals)
 		{

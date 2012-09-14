@@ -23,16 +23,20 @@ package com.sqleo.environment.ctrl.content;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.sql.Types;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -53,13 +57,14 @@ import com.sqleo.environment.ctrl.ContentPane;
 public class ContentView extends JPanel implements ListSelectionListener
 {
 	private JTable data;
+	private JScrollBar jsb;
 	private LineNumberView lines;
 	
 	private ContentModel model;
 	private ContentPopup popup;
 	private ContentPane control;
     
-	public ContentView(ContentPane control)
+	public ContentView(final ContentPane control)
 	{
 		super(new GridLayout(1,1));
 	    this.control = control;
@@ -71,20 +76,15 @@ public class ContentView extends JPanel implements ListSelectionListener
 		{
 			public void keyPressed(KeyEvent key)
 			{
-				if(key.getKeyCode() == KeyEvent.VK_DOWN)
+				if(key.getKeyCode() == KeyEvent.VK_DOWN || key.getKeyCode() == KeyEvent.VK_PAGE_DOWN)
 				{
 					if(ContentView.this.data.getSelectedRow() == ContentView.this.data.getRowCount()-1)
 					{
-						if(ContentView.this.getBlock() < ContentView.this.getBlockCount())
-						{
 							int col = ContentView.this.data.getSelectedColumn();
-							
-							ContentView.this.control.getSlider().setValue(ContentView.this.getBlock());
-							
-							ContentView.this.data.setRowSelectionInterval(0,0);
-							ContentView.this.data.scrollRectToVisible(ContentView.this.data.getCellRect(0,col,true));
+							int row = ContentView.this.data.getRowCount()-1;
+							ContentView.this.data.setRowSelectionInterval(row,row);
+							ContentView.this.data.scrollRectToVisible(ContentView.this.data.getCellRect(row,col,true));
 							key.consume();
-						}
 					}
 				}
 				else if(key.getKeyCode() == KeyEvent.VK_UP)
@@ -95,7 +95,6 @@ public class ContentView extends JPanel implements ListSelectionListener
 						{
 							int col = ContentView.this.data.getSelectedColumn();
 
-							ContentView.this.control.getSlider().setValue(ContentView.this.getBlock()-2);
 							int row = ContentView.this.data.getRowCount()-1;
 							
 							ContentView.this.data.setRowSelectionInterval(row,row);
@@ -111,6 +110,9 @@ public class ContentView extends JPanel implements ListSelectionListener
 		JScrollPane scroll = new JScrollPane(data);
 		scroll.getViewport().setBackground(UIManager.getDefaults().getColor("Table.background"));
 		add(scroll);
+		jsb = scroll.getVerticalScrollBar();
+		jsb.addAdjustmentListener(new ListenerScrollBar());
+
 		
 		data.setRowSelectionAllowed(false);
 		data.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -445,6 +447,20 @@ public class ContentView extends JPanel implements ListSelectionListener
 				super.setHorizontalAlignment(LEFT);
 		
 			return this;
+		}
+	}
+	
+	private class ListenerScrollBar implements AdjustmentListener
+	{
+		public void adjustmentValueChanged(AdjustmentEvent e)
+		{
+			if (jsb.getMaximum() != 0 && e.getValue()>0)
+			{
+				if ((jsb.getMaximum() - jsb.getVisibleAmount()) <= e.getValue())
+				{
+					control.fetchNextRecords();
+				}
+			}
 		}
 	}
 }

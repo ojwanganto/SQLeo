@@ -20,11 +20,14 @@
 
 package com.sqleo.environment.ctrl.content;
 
+import java.awt.Cursor;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+
+import javax.swing.JSlider;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
@@ -72,7 +75,6 @@ public class TaskRetrieve implements Runnable
 
 				for(int i=1; i<=this.getColumnCount(); i++)
 				{
-//					String t = this.getColumnLabel(i) + " : " + this.getColumnTypeName(i) + this.getColumnSize(i) + " " + this.getColumnNullable(i);
 					String t = this.getColumnLabel(i) + " : " + this.getColumnTypeName(i) + " " + this.getColumnNullable(i);
 					target.getView().setToolTipText(i-1,t);
 				}
@@ -86,24 +88,48 @@ public class TaskRetrieve implements Runnable
 					}
 					target.getView().addRow(rowdata,false);
 					
-					if(row == ContentModel.MAX_BLOCK_RECORDS)
-						target.getView().onTableChanged(true);
-					
-					if(row%ContentModel.MAX_BLOCK_RECORDS == 0)
-						target.doRefreshStatus();
+					if(row == ContentModel.MAX_BLOCK_RECORDS){
+						break;
+					}
 				}
-				rs.close();
 			}
 		}
 		catch(SQLException sqle)
 		{
 			Application.println(sqle,true);
-		}
+		} 
 		finally
 		{
 			target.getView().onTableChanged(true);
 			
-			target.doStop();
+			target.doSuspend();
+			target.doRefreshStatus();
+		}
+	}
+	
+	public void setNextResultSet(){
+		try
+		{
+			int lastRow = rs.getRow() + ContentModel.MAX_BLOCK_RECORDS;
+			while(target.isBusy() && rs.next())
+			{
+				Object[] rowdata = new Object[this.getColumnCount()];
+				for(int i=1; i<=this.getColumnCount(); i++)
+				{
+					rowdata[i-1] = rs.getString(i);
+				}
+				target.getView().addRow(rowdata,false);
+				
+				if(rs.getRow() == lastRow){
+					break;
+				}
+			}
+		}
+		catch (SQLException sqle){
+			Application.println(sqle,true);
+		}finally{
+			target.getView().onTableChanged(true);
+			target.doSuspend();
 			target.doRefreshStatus();
 		}
 	}

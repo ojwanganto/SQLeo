@@ -131,11 +131,24 @@ public class DialogStream extends AbstractDialogWizard
 		{
 			DialogStream.this.setBarEnabled(false);
 			DialogStream.this.mkp.setEnabled(false);
-			
 			DialogStream.this.mkp.init();
-			while(DialogStream.this.task != null && !DialogStream.this.mkp.aborted() && !DialogStream.this.mkp.finished())
-			{
-				DialogStream.this.mkp.next();
+			
+			if(DialogStream.this.mkp instanceof MaskExport){
+				MaskExport exporter = (MaskExport)DialogStream.this.mkp;
+				if(!exporter.isExportFromGrid()){
+					exporter.export();
+				}else{
+					while(DialogStream.this.task != null && !DialogStream.this.mkp.aborted() && !DialogStream.this.mkp.finished())
+					{
+						DialogStream.this.mkp.next();
+					}
+				}
+				
+			}else{
+				while(DialogStream.this.task != null && !DialogStream.this.mkp.aborted() && !DialogStream.this.mkp.finished())
+				{
+					DialogStream.this.mkp.next();
+				}
 			}
 			
 			DialogStream.this.mkp.setEnabled(true);
