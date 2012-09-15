@@ -82,6 +82,10 @@ public class QueryModel implements Cloneable
 		orderClause.remove(token);
 	}
 	
+	public void removeAllOrderByClauses(){
+		orderClause.clear();
+	}
+	
 	public QueryExpression getQueryExpression()
 	{
 		return queryExpression;

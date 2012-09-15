@@ -54,6 +54,27 @@ public class TaskRetrieve implements Runnable
 		this.limit = limit;
 	}
 	
+	private boolean isAfterLastRow(){
+		boolean afterLastRow = false;
+		try{
+			if(rs.isClosed()){
+				return true;
+			}
+			afterLastRow = null == rs || rs.isAfterLast();
+		}catch(SQLException sqle){
+			Application.println(sqle,true);
+		}finally{
+			if(rs!=null && afterLastRow){
+				try{
+					rs.close();
+				}catch(SQLException sqle){
+					Application.println(sqle,true);
+				}
+			}
+		}
+		return afterLastRow;
+	}
+	
 	public void run()
 	{
 		try
@@ -103,13 +124,16 @@ public class TaskRetrieve implements Runnable
 			target.getView().onTableChanged(true);
 			
 			target.doSuspend();
-			target.doRefreshStatus();
+			target.doRefreshStatus(isAfterLastRow());
 		}
 	}
 	
 	public void setNextResultSet(){
 		try
 		{
+			if(rs.isClosed()){
+				return;
+			}
 			int lastRow = rs.getRow() + ContentModel.MAX_BLOCK_RECORDS;
 			while(target.isBusy() && rs.next())
 			{
@@ -130,7 +154,7 @@ public class TaskRetrieve implements Runnable
 		}finally{
 			target.getView().onTableChanged(true);
 			target.doSuspend();
-			target.doRefreshStatus();
+			target.doRefreshStatus(isAfterLastRow());
 		}
 	}
 	

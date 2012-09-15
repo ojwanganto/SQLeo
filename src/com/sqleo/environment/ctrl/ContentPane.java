@@ -244,6 +244,17 @@ public class ContentPane extends BorderLayoutPanel
 			status.setText("0 records");
 	}
 	
+	public void doRefreshStatus(boolean lastFetch)
+	{
+		if(view.getRowCount() > 0){
+			String appendOf = !lastFetch ? "...." : ""+view.getFlatRowCount();
+			status.setText(	" record " + view.getLineAt(0) + " to " + view.getLineAt(view.getRowCount()-1) + " of " + appendOf +
+					" | changes " + view.getChanges().count());
+		}
+		else
+			status.setText("0 records");
+	}
+	
 	public void setStatus(String text)
 	{
 		status.setText(text);

@@ -370,7 +370,11 @@ public abstract class MDIActions implements _Constants
 			tmd = null;
 			super.actionPerformed(e);
 		}
-        
+		
+		protected boolean isShowCountRecordsPopup(){
+			return false;
+		}
+		
 		protected void onActionPerformed(int records, int option)
 		{
 			if(option == JOptionPane.CANCEL_OPTION || (records == 0 && option == JOptionPane.NO_OPTION)) return;

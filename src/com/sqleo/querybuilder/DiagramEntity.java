@@ -61,6 +61,10 @@ public class DiagramEntity extends DiagramAbstractEntity
 		private String keych;
 		ActionShowContent(String keych){this.putValue(NAME,"show content");this.keych = keych;}
 		
+		protected boolean isShowCountRecordsPopup(){
+			return false;
+		}
+		
 		protected TableMetaData getTableMetaData()
 		{
 			return new TableMetaData(keych, querytoken.getSchema(), querytoken.getName(), null);

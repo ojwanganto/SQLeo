@@ -136,6 +136,10 @@ public class ClientDefinition extends MDIClient
 	{
 		ActionShowContent(){this.putValue(NAME,"show content");}
 		
+		protected boolean isShowCountRecordsPopup(){
+			return false;
+		}
+		
 		protected TableMetaData getTableMetaData()
 		{
 			int i = ClientDefinition.this.getTitle().indexOf(':');

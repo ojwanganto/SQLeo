@@ -52,6 +52,8 @@ import com.sqleo.common.gui.CustomLineBorder;
 import com.sqleo.common.gui.HeaderCellRenderer;
 import com.sqleo.common.util.Appearance;
 import com.sqleo.environment.ctrl.ContentPane;
+import com.sqleo.querybuilder.QueryModel;
+import com.sqleo.querybuilder.syntax.QueryTokens;
 
 
 public class ContentView extends JPanel implements ListSelectionListener
@@ -386,7 +388,12 @@ public class ContentView extends JPanel implements ListSelectionListener
 	
 	public void sort(int col,short type)
 	{
-		model.sort(col,type);
+		control.doStop();
+		QueryTokens.Sort token = new QueryTokens.Sort((QueryTokens._Expression)new QueryTokens.DefaultExpression(""+(col+1)),type);
+		control.getQueryModel().removeAllOrderByClauses();
+		control.getQueryModel().addOrderByClause(token);
+		reset();
+		control.doRetrieve();
 	}
 	
 	public void onTableChanged(boolean onlyData)

@@ -474,7 +474,6 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 			ContentPopup.this.view.getControl().setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			
 			ContentPopup.this.view.sort(ContentPopup.this.view.getColumn(),this.getType());
-			ContentPopup.this.view.onTableChanged(true);
 					
 			ContentPopup.this.view.getControl().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}

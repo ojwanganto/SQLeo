@@ -355,6 +355,10 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	{
 		ActionDeleteContent(){this.putValue(NAME,"delete content");}
 		
+		protected boolean isShowCountRecordsPopup(){
+			return true;
+		}
+		
 		protected TableMetaData getTableMetaData()
 		{
 			return new TableMetaData(AbstractViewObjects.this.getHandlerKey(),
@@ -384,6 +388,10 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	protected class ActionDropObject extends AbstractActionContent
 	{
 		ActionDropObject(){this.putValue(NAME,"drop <object>");}
+		
+		protected boolean isShowCountRecordsPopup(){
+			return true;
+		}
 		
 		protected TableMetaData getTableMetaData()
 		{
@@ -417,6 +425,11 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	{
 		ActionShowContent(){this.putValue(NAME,"show content");}
 		
+		protected boolean isShowCountRecordsPopup(){
+			return false;
+		}
+		
+
 		protected TableMetaData getTableMetaData()
 		{
 			return new TableMetaData(AbstractViewObjects.this.getHandlerKey(),

@@ -40,6 +40,7 @@ public abstract class AbstractActionContent extends AbstractAction
 {	
 	protected abstract void onActionPerformed(int records, int option);
 	protected abstract TableMetaData getTableMetaData();
+	protected abstract boolean isShowCountRecordsPopup();
 	
 	protected final String getDefaultMessage(int records)
 	{
@@ -57,24 +58,28 @@ public abstract class AbstractActionContent extends AbstractAction
 		if(this.getTableMetaData() == null
 		|| this.getTableMetaData().getHandlerKey() == null) return;
 		
-		try
-		{
-			ConnectionHandler ch = ConnectionAssistant.getHandler(this.getTableMetaData().getHandlerKey());
-			String identifierQuoteString = ConnectionAssistant.getHandler(this.getTableMetaData().getHandlerKey()).getObject("$identifierQuoteString").toString();
-			
-			Statement stmt = ch.get().createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT count(*) FROM " + SQLFormatter.ensureQuotes(this.getTableMetaData().toString(),identifierQuoteString,true));
-			
-			int records = rs.next() ? rs.getInt(1) : 0;
-			
-			rs.close();
-			stmt.close();
-			
-			onActionPerformed(records,showConfirmDialog(records));
-		}
-		catch(SQLException sqle)
-		{
-			Application.println(sqle,true);
+		if(isShowCountRecordsPopup()){
+			try
+			{
+				ConnectionHandler ch = ConnectionAssistant.getHandler(this.getTableMetaData().getHandlerKey());
+				String identifierQuoteString = ConnectionAssistant.getHandler(this.getTableMetaData().getHandlerKey()).getObject("$identifierQuoteString").toString();
+				
+				Statement stmt = ch.get().createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT count(*) FROM " + SQLFormatter.ensureQuotes(this.getTableMetaData().toString(),identifierQuoteString,true));
+				
+				int records = rs.next() ? rs.getInt(1) : 0;
+				
+				rs.close();
+				stmt.close();
+				
+				onActionPerformed(records,showConfirmDialog(records));
+			}
+			catch(SQLException sqle)
+			{
+				Application.println(sqle,true);
+			}
+		}else{
+			onActionPerformed(1,JOptionPane.YES_OPTION);
 		}
 	}
 }
