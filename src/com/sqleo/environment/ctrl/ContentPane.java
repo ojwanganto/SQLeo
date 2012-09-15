@@ -164,10 +164,12 @@ public class ContentPane extends BorderLayoutPanel
 		onBeginTask(retrievingTask);
 	}
 	
-	public void fetchNextRecords(){
+	public boolean fetchNextRecords(){
 		if(retrievingTask!=null){
 			onResumeTask();
-			retrievingTask.setNextResultSet();
+			return retrievingTask.setNextResultSet();
+		}else{
+			return true;
 		}
 	}
 	
@@ -348,7 +350,11 @@ public class ContentPane extends BorderLayoutPanel
 				ContentPane.this.doRetrieve();
 			}
 		}
-	}	
+	}
+	
+	public void relaunchQuery(){
+		new ActionRelaunch().actionPerformed(null);
+	}
 	
 	private class ActionStopTask extends AbstractAction
 	{

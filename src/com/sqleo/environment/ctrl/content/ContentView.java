@@ -30,7 +30,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.sql.Types;
 
 import javax.swing.JLabel;
@@ -52,7 +51,6 @@ import com.sqleo.common.gui.CustomLineBorder;
 import com.sqleo.common.gui.HeaderCellRenderer;
 import com.sqleo.common.util.Appearance;
 import com.sqleo.environment.ctrl.ContentPane;
-import com.sqleo.querybuilder.QueryModel;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
 
@@ -65,6 +63,7 @@ public class ContentView extends JPanel implements ListSelectionListener
 	private ContentModel model;
 	private ContentPopup popup;
 	private ContentPane control;
+	private boolean allRowsFetched = false;
     
 	public ContentView(final ContentPane control)
 	{
@@ -80,7 +79,7 @@ public class ContentView extends JPanel implements ListSelectionListener
 			{
 				if(key.getKeyCode() == KeyEvent.VK_DOWN || key.getKeyCode() == KeyEvent.VK_PAGE_DOWN)
 				{
-					if(ContentView.this.data.getSelectedRow() == ContentView.this.data.getRowCount()-1)
+					if((ContentView.this.data.getSelectedRow() == ContentView.this.data.getRowCount()-1) && !allRowsFetched)
 					{
 							int col = ContentView.this.data.getSelectedColumn();
 							int row = ContentView.this.data.getRowCount()-1;
@@ -392,8 +391,7 @@ public class ContentView extends JPanel implements ListSelectionListener
 		QueryTokens.Sort token = new QueryTokens.Sort((QueryTokens._Expression)new QueryTokens.DefaultExpression(""+(col+1)),type);
 		control.getQueryModel().removeAllOrderByClauses();
 		control.getQueryModel().addOrderByClause(token);
-		reset();
-		control.doRetrieve();
+		control.relaunchQuery();
 	}
 	
 	public void onTableChanged(boolean onlyData)
@@ -465,7 +463,7 @@ public class ContentView extends JPanel implements ListSelectionListener
 			{
 				if ((jsb.getMaximum() - jsb.getVisibleAmount()) <= e.getValue())
 				{
-					control.fetchNextRecords();
+					allRowsFetched = control.fetchNextRecords();
 				}
 			}
 		}

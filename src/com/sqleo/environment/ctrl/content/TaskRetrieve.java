@@ -127,12 +127,13 @@ public class TaskRetrieve implements Runnable
 			target.doRefreshStatus(isAfterLastRow());
 		}
 	}
-	
-	public void setNextResultSet(){
+	// Returns a boolean if all rows are fetched
+	public boolean setNextResultSet(){
+		boolean allFetched = false;
 		try
 		{
 			if(rs.isClosed()){
-				return;
+				return true;
 			}
 			int lastRow = rs.getRow() + ContentModel.MAX_BLOCK_RECORDS;
 			while(target.isBusy() && rs.next())
@@ -154,8 +155,10 @@ public class TaskRetrieve implements Runnable
 		}finally{
 			target.getView().onTableChanged(true);
 			target.doSuspend();
-			target.doRefreshStatus(isAfterLastRow());
+			allFetched = isAfterLastRow();
+			target.doRefreshStatus(allFetched);
 		}
+		return allFetched;
 	}
 	
 	private int getColumnCount() throws SQLException
