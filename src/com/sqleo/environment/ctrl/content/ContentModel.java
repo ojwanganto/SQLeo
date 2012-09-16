@@ -33,7 +33,7 @@ import com.sqleo.querybuilder.syntax.QueryTokens;
 
 public class ContentModel implements TableModel
 {
-	public static int MAX_BLOCK_RECORDS = Preferences.getInteger(DialogPreferences.CONTENT_MAX_ROWS_FETCH_SIZE_KEY);
+	public static int MAX_BLOCK_RECORDS = Preferences.getInteger(DialogPreferences.CONTENT_MAX_ROWS_FETCH_SIZE_KEY,100);
 	
 	private Vector columns	= new Vector();
 	private Vector rows		= new Vector();
