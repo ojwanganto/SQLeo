@@ -23,6 +23,19 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2012.07Beta02.zip: 2012-09-17
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2012.07Beta/
+	10  	Content window should fetch only first rows  
+	38 	Content/Preview: remove left scrolling bar
+	63 	Preferences: defaults modification
+	64 	Content: exporting modified field from grid is wrong
+	66 	use csvjdbc version 1.0-11 (bundled with SQLeo)
+		see https://sourceforge.net/p/sqleo/discussion/general/thread/325d5cd1/
+	68 	Command editor: Increase column display size for DATES and TIMESTAMPS types.
+
+
 SQLeoVQB.2012.07Beta01.zip: 2012-08-03
 
   For changes included see tickets at  
