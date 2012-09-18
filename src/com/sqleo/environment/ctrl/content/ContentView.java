@@ -63,7 +63,6 @@ public class ContentView extends JPanel implements ListSelectionListener
 	private ContentModel model;
 	private ContentPopup popup;
 	private ContentPane control;
-	private boolean allRowsFetched = false;
     
 	public ContentView(final ContentPane control)
 	{
@@ -79,7 +78,7 @@ public class ContentView extends JPanel implements ListSelectionListener
 			{
 				if(key.getKeyCode() == KeyEvent.VK_DOWN || key.getKeyCode() == KeyEvent.VK_PAGE_DOWN)
 				{
-					if((ContentView.this.data.getSelectedRow() == ContentView.this.data.getRowCount()-1) && !allRowsFetched)
+					if((ContentView.this.data.getSelectedRow() == ContentView.this.data.getRowCount()-1) )
 					{
 							int col = ContentView.this.data.getSelectedColumn();
 							int row = ContentView.this.data.getRowCount()-1;
@@ -463,7 +462,7 @@ public class ContentView extends JPanel implements ListSelectionListener
 			{
 				if ((jsb.getMaximum() - jsb.getVisibleAmount()) <= e.getValue())
 				{
-					allRowsFetched = control.fetchNextRecords();
+					 control.fetchNextRecords();
 				}
 			}
 		}

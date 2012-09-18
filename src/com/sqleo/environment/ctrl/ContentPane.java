@@ -164,12 +164,10 @@ public class ContentPane extends BorderLayoutPanel
 		onBeginTask(retrievingTask);
 	}
 	
-	public boolean fetchNextRecords(){
+	public void fetchNextRecords(){
 		if(retrievingTask!=null){
 			onResumeTask();
-			return retrievingTask.setNextResultSet();
-		}else{
-			return true;
+			retrievingTask.setNextResultSet();
 		}
 	}
 	

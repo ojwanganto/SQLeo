@@ -42,6 +42,7 @@ public class TaskRetrieve implements Runnable
 	
 	private Statement stmt = null;
 	private ResultSet rs = null;
+	private int currentRow = 0;
 
 	public TaskRetrieve(ContentPane target)
 	{
@@ -52,27 +53,7 @@ public class TaskRetrieve implements Runnable
 	{
 		this.target = target;
 		this.limit = limit;
-	}
-	
-	private boolean isAfterLastRow(){
-		boolean afterLastRow = false;
-		try{
-			if(rs.isClosed()){
-				return true;
-			}
-			afterLastRow = null == rs || rs.isAfterLast();
-		}catch(SQLException sqle){
-			Application.println(sqle,true);
-		}finally{
-			if(rs!=null && afterLastRow){
-				try{
-					rs.close();
-				}catch(SQLException sqle){
-					Application.println(sqle,true);
-				}
-			}
-		}
-		return afterLastRow;
+		this.currentRow = 0;
 	}
 	
 	public void run()
@@ -100,7 +81,7 @@ public class TaskRetrieve implements Runnable
 					target.getView().setToolTipText(i-1,t);
 				}
 
-				for(int row=1;target.isBusy() && rs.next();row++)
+				for(currentRow=1;target.isBusy() && rs.next();currentRow++)
 				{
 					Object[] rowdata = new Object[this.getColumnCount()];
 					for(int i=1; i<=this.getColumnCount(); i++)
@@ -109,7 +90,7 @@ public class TaskRetrieve implements Runnable
 					}
 					target.getView().addRow(rowdata,false);
 					
-					if(row == ContentModel.MAX_BLOCK_RECORDS){
+					if(currentRow == ContentModel.MAX_BLOCK_RECORDS){
 						break;
 					}
 				}
@@ -124,18 +105,17 @@ public class TaskRetrieve implements Runnable
 			target.getView().onTableChanged(true);
 			
 			target.doSuspend();
-			target.doRefreshStatus(isAfterLastRow());
+			target.doRefreshStatus();
 		}
 	}
-	// Returns a boolean if all rows are fetched
-	public boolean setNextResultSet(){
-		boolean allFetched = false;
+	
+	public void setNextResultSet(){
 		try
 		{
-			if(rs.isClosed()){
-				return true;
+			if(null == rs){
+				return;
 			}
-			int lastRow = rs.getRow() + ContentModel.MAX_BLOCK_RECORDS;
+			int lastRow = (currentRow-1) + ContentModel.MAX_BLOCK_RECORDS;
 			while(target.isBusy() && rs.next())
 			{
 				Object[] rowdata = new Object[this.getColumnCount()];
@@ -145,9 +125,10 @@ public class TaskRetrieve implements Runnable
 				}
 				target.getView().addRow(rowdata,false);
 				
-				if(rs.getRow() == lastRow){
+				if(currentRow == lastRow){
 					break;
 				}
+				currentRow++;
 			}
 		}
 		catch (SQLException sqle){
@@ -155,10 +136,8 @@ public class TaskRetrieve implements Runnable
 		}finally{
 			target.getView().onTableChanged(true);
 			target.doSuspend();
-			allFetched = isAfterLastRow();
-			target.doRefreshStatus(allFetched);
+			target.doRefreshStatus();
 		}
-		return allFetched;
 	}
 	
 	private int getColumnCount() throws SQLException
