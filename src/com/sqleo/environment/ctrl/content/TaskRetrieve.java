@@ -43,6 +43,7 @@ public class TaskRetrieve implements Runnable
 	private Statement stmt = null;
 	private ResultSet rs = null;
 	private int currentRow = 0;
+	private boolean rowsToFetchExists = true;
 
 	public TaskRetrieve(ContentPane target)
 	{
@@ -54,6 +55,11 @@ public class TaskRetrieve implements Runnable
 		this.target = target;
 		this.limit = limit;
 		this.currentRow = 0;
+		this.rowsToFetchExists = true;
+	}
+	
+	public boolean areAllRowsFetched(){
+		return !rowsToFetchExists;
 	}
 	
 	public void run()
@@ -81,7 +87,7 @@ public class TaskRetrieve implements Runnable
 					target.getView().setToolTipText(i-1,t);
 				}
 
-				for(currentRow=1;target.isBusy() && rs.next();currentRow++)
+				for(currentRow=1;target.isBusy() && (rowsToFetchExists=rs.next());currentRow++)
 				{
 					Object[] rowdata = new Object[this.getColumnCount()];
 					for(int i=1; i<=this.getColumnCount(); i++)
@@ -105,7 +111,7 @@ public class TaskRetrieve implements Runnable
 			target.getView().onTableChanged(true);
 			
 			target.doSuspend();
-			target.doRefreshStatus();
+			target.doRefreshStatus(!rowsToFetchExists);
 		}
 	}
 	
@@ -116,7 +122,7 @@ public class TaskRetrieve implements Runnable
 				return;
 			}
 			int lastRow = (currentRow-1) + ContentModel.MAX_BLOCK_RECORDS;
-			while(target.isBusy() && rs.next())
+			while(target.isBusy() && (rowsToFetchExists=rs.next()))
 			{
 				Object[] rowdata = new Object[this.getColumnCount()];
 				for(int i=1; i<=this.getColumnCount(); i++)
@@ -136,7 +142,7 @@ public class TaskRetrieve implements Runnable
 		}finally{
 			target.getView().onTableChanged(true);
 			target.doSuspend();
-			target.doRefreshStatus();
+			target.doRefreshStatus(!rowsToFetchExists);
 		}
 	}
 	

@@ -171,6 +171,10 @@ public class ContentPane extends BorderLayoutPanel
 		}
 	}
 	
+	public boolean areAllRowsFetched(){
+		return retrievingTask!=null? retrievingTask.areAllRowsFetched(): false;
+	}
+	
 	public void doRetrieve(int limit)
 	{
 		onBeginTask(new TaskRetrieve(this,limit));

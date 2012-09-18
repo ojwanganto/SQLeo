@@ -78,7 +78,7 @@ public class ContentView extends JPanel implements ListSelectionListener
 			{
 				if(key.getKeyCode() == KeyEvent.VK_DOWN || key.getKeyCode() == KeyEvent.VK_PAGE_DOWN)
 				{
-					if((ContentView.this.data.getSelectedRow() == ContentView.this.data.getRowCount()-1) )
+					if((ContentView.this.data.getSelectedRow() == ContentView.this.data.getRowCount()-1) && !control.areAllRowsFetched())
 					{
 							int col = ContentView.this.data.getSelectedColumn();
 							int row = ContentView.this.data.getRowCount()-1;
