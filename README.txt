@@ -23,6 +23,15 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+
+SQLeoVQB.2012.07Beta03.zip: 2012-09-19
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2012.07Beta/
+	70  	Exception: ResultSet.isAfterLast() unsupported at org.relique.jdbc.csv.CsvResultSet.isAfterLast
+	69 	Exception: oracle.jdbc.driver.OracleResultSetImpl.isClosed()Z
+
+
 SQLeoVQB.2012.07Beta02.zip: 2012-09-17
 
   For changes included see tickets at  
