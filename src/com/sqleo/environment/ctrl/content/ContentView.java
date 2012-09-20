@@ -82,27 +82,11 @@ public class ContentView extends JPanel implements ListSelectionListener
 					{
 							int col = ContentView.this.data.getSelectedColumn();
 							int row = ContentView.this.data.getRowCount()-1;
-							ContentView.this.data.setRowSelectionInterval(row,row);
 							ContentView.this.data.scrollRectToVisible(ContentView.this.data.getCellRect(row,col,true));
+							ContentView.this.data.setRowSelectionInterval(row+1,row+1);
+							ContentView.this.data.scrollRectToVisible(ContentView.this.data.getCellRect(row+1,col,true));
 							key.consume();
 					}
-				}
-				else if(key.getKeyCode() == KeyEvent.VK_UP)
-				{
-					if(ContentView.this.data.getSelectedRow() == 0)
-					{
-						if(ContentView.this.getBlock() > 1)
-						{
-							int col = ContentView.this.data.getSelectedColumn();
-
-							int row = ContentView.this.data.getRowCount()-1;
-							
-							ContentView.this.data.setRowSelectionInterval(row,row);
-							ContentView.this.data.scrollRectToVisible(ContentView.this.data.getCellRect(row,col,true));
-							key.consume();
-						}
-					}
-
 				}
 			}
 		});
