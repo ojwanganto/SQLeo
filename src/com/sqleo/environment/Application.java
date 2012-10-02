@@ -139,27 +139,30 @@ public class Application extends Appearance implements _Constants,_Version
 	
 	public static void shutdown()
 	{
-		Application.window.dispose();
-		try
-		{
-			session.mount(ENTRY_INFO);
-			session.home();
-			session.jump("version");
-			
-			if(session.jump().size() == 0)
-				session.jump().add(getVersion());
-			else
-				session.jump().set(0,getVersion());
-			
-			session.save(sessionFilename());
-		}
-		catch (IOException e)
-		{
-			println(e,false);
-		}
-		finally
-		{
-			System.exit(0);
+		final String message = I18n.getString("application.message.quit","Do you really want to quit SQLeo?");
+		if(confirm(PROGRAM, message)){
+			Application.window.dispose();
+			try
+			{
+				session.mount(ENTRY_INFO);
+				session.home();
+				session.jump("version");
+				
+				if(session.jump().size() == 0)
+					session.jump().add(getVersion());
+				else
+					session.jump().set(0,getVersion());
+				
+				session.save(sessionFilename());
+			}
+			catch (IOException e)
+			{
+				println(e,false);
+			}
+			finally
+			{
+				System.exit(0);
+			}
 		}
 	}	
 	
