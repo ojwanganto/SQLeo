@@ -35,6 +35,7 @@ import javax.swing.Action;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.WindowConstants;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.UWindow;
@@ -132,6 +133,7 @@ public class MDIWindow extends JFrame implements _Constants
         setJMenuBar(menubar = new MDIMenubar());
         setContentPane(content);
         setTitle(null);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
     
     public final void show()
