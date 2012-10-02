@@ -46,9 +46,11 @@ public class ContentModel implements TableModel
 	private boolean readOnly = false; 
 	
 	public ContentModel(boolean readOnly){
+		MAX_BLOCK_RECORDS = Preferences.getInteger(DialogPreferences.CONTENT_MAX_ROWS_FETCH_SIZE_KEY,100);
 		this.readOnly = readOnly; 
 	}
 	public ContentModel(){
+		MAX_BLOCK_RECORDS = Preferences.getInteger(DialogPreferences.CONTENT_MAX_ROWS_FETCH_SIZE_KEY,100);
 		this.readOnly = false; 
 	}
 	

@@ -372,8 +372,22 @@ public class ContentView extends JPanel implements ListSelectionListener
 	{
 		control.doStop();
 		QueryTokens.Sort token = new QueryTokens.Sort((QueryTokens._Expression)new QueryTokens.DefaultExpression(""+(col+1)),type);
-		control.getQueryModel().removeAllOrderByClauses();
-		control.getQueryModel().addOrderByClause(token);
+		if(control.getQueryModel()!=null){
+			control.getQueryModel().removeAllOrderByClauses();
+			control.getQueryModel().addOrderByClause(token);
+		}else {
+			//when launched from syntax view of query builder, query model is null
+			String query = control.getQuery();
+			if(query!=null){
+				if(query.contains("ORDER BY")){
+					String[] splitQuery = query.split("ORDER BY");
+					control.setQuery(splitQuery[0]+ "ORDER BY " + token.toString());
+				}else {
+					control.setQuery(query+ "\nORDER BY " + token.toString());
+				}
+				
+			}
+		}
 		control.relaunchQuery();
 	}
 	

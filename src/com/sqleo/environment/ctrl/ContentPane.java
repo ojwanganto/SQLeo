@@ -128,6 +128,11 @@ public class ContentPane extends BorderLayoutPanel
 	public String getQuery() {
 		return getQueryModel()!=null?getQueryModel().toString(false):query;
 	}
+	
+	public void setQuery(String query){
+		this.query = query;
+	}
+	
 	public UpdateModel getUpdateModel()
 	{
 		return umodel;
