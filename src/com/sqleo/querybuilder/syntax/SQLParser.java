@@ -715,6 +715,7 @@ public class SQLParser
 		stream.ordinaryChar('.');
 		stream.ordinaryChar('/'); // fix for ticket #48
 		stream.wordChars('$','$'); // fix for ticket #48
+		stream.wordChars('#','#'); // fix for ticket #86
 		stream.wordChars('_','_');
 		
 		if(!QueryBuilder.identifierQuoteString.equals("\""))
