@@ -144,7 +144,9 @@ public class SQLParser
 					break;
 				}
 			}
-			else if(next.toString().equalsIgnoreCase("AS") && li.hasNext())
+			// ticket #87 for cast (x as ...) 
+			// else if(next.toString().equalsIgnoreCase("AS") && li.hasNext())
+			else if(next.toString().equalsIgnoreCase("AS") && li.hasNext() && surrounds == 0)
 			{
 				alias = li.next().toString().trim();
 			}
@@ -155,9 +157,10 @@ public class SQLParser
 				
 				if(value.length()>0 && next instanceof String)
 				{
-					char last = value.charAt(value.length()-1);
-					if(Character.isLetter(last) || String.valueOf(last).equals(QueryBuilder.identifierQuoteString))
-						value = value + SQLFormatter.SPACE;
+					// ticket #54
+					// char last = value.charAt(value.length()-1);
+					// if(Character.isLetter(last) || String.valueOf(last).equals(QueryBuilder.identifierQuoteString))
+					value = value + SQLFormatter.SPACE;
 				}
 				value = value + next.toString().trim();
 				
