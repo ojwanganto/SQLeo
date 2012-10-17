@@ -24,6 +24,18 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2012.07Beta04.zip: 2012-10-12
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2012.07Beta/
+	30  	Oracle: performance problem when adding tables to graph
+		use ojdbc14_10.2.0.5.jar (bundled with SQLeo) found in lib directory
+	74	SQLeo application confirm dialog before exit
+	81  	Preview windows: NPE at com.sqleo.environment.ctrl.content.ContentView.sort  	2012.07Beta  	open  	 	 
+	82 	Content Window: key down going up to grid (when having next n rows to fetch)
+	86 	Query Builder : fix reverse SQL for table and columns with # char
+
+
 SQLeoVQB.2012.07Beta03.zip: 2012-09-19
 
   For changes included see tickets at  

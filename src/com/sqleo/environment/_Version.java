@@ -31,5 +31,5 @@ public interface _Version
     public static final String WEB = "http://sourceforge.net/projects/sqleo/";  
     
     public static final String MAJOR = "2012";
-    public static final String MINOR = "07Beta03";
+    public static final String MINOR = "07Beta04";
 }
