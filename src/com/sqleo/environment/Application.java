@@ -31,8 +31,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URL;
 import java.util.Locale;
 
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JWindow;
@@ -274,6 +277,10 @@ public class Application extends Appearance implements _Constants,_Version
 		Application.loadIcons();
 		Application.println("loading window...");
         Application.window = new MDIWindow();
+		//set icon
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		URL imgUrl = ClassLoader.getSystemResource("images/sqleo.png");
+		Application.window.setIconImage(new ImageIcon(imgUrl).getImage());
 		Application.window.show();
 		
 		JWindow wait = new JWindow(window);
