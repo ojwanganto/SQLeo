@@ -407,6 +407,10 @@ public class SQLParser
 			
 			if(next.toString().equalsIgnoreCase("EXISTS") || next.toString().equalsIgnoreCase("NOT EXISTS"))
 			{
+				// ticket #93
+				if(token == null) token = new QueryTokens.Condition();
+				// end #93
+
 				SubQuery sub = new SubQuery();
 				doParseQuery(li,sub);
 				
