@@ -269,15 +269,28 @@ public class SQLParser
 
 
 	private static void doParseFrom(ListIterator li, QuerySpecification qs)
+		throws IOException
 	{
 		int joinType = -1;
 		QueryTokens.Table t = null;
+		DerivedTable dt = null;
 		Hashtable tables = new Hashtable();
 		
 		for(int surrounds = 0; li.hasNext();)
 		{
 			String next = li.next().toString();
-			if(isClauseWord(next) || next.equals(";"))
+			// ticket #80 Derived tables 
+			if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
+			{
+//				System.out.println("Derived Table");
+				dt = new DerivedTable();
+				li.previous();
+				doParseQuery(li,dt);
+				qs.addFromClause(dt);		
+
+			}
+			// end #80
+			else if(isClauseWord(next) || next.equals(";"))
 			{
 //				System.out.println("end.");
 				
@@ -292,6 +305,7 @@ public class SQLParser
 				
 				if(t!=null) qs.addFromClause(t);
 				t=null;
+				dt=null;
 			}
 			else if(isJoinWord(next))
 			{
@@ -299,6 +313,7 @@ public class SQLParser
 
 				if(t!=null) tables.put(SQLFormatter.stripQuote(t.getReference()),t);
 				t=null;
+				dt=null;
 				
 				joinType = QueryTokens.Join.getTypeInt(next);
 			}
@@ -347,6 +362,8 @@ public class SQLParser
 					else
 						tables.put(SQLFormatter.stripQuote(tr.getReference()),tr);
 
+					// to be checked for #80 Derived table ?
+
 					if(side==0)
 						tcl = new QueryTokens.Column(tr,e.substring(dot+1));
 					else
@@ -371,6 +388,7 @@ public class SQLParser
 					li.previous();
 					break;
 				}
+
 			}
 			else if(!next.toString().equalsIgnoreCase("AS"))
 			{
@@ -382,10 +400,16 @@ public class SQLParser
 				int i = name.lastIndexOf(SQLFormatter.DOT);
 				if(i>0) {schema = name.substring(0,i); name = name.substring(i+1); }
 
-				if(t==null)
-					t = new QueryTokens.Table(schema,name);
+				if(dt==null) // added for #80
+				{
+					if(t==null) 
+						t = new QueryTokens.Table(schema,name);
+					else
+						t.setAlias(next.toString()); 
+				}
 				else
-					t.setAlias(next.toString());
+					dt.setAlias(next.toString()); 
+				
 			}
 		}
 	}
@@ -505,6 +529,9 @@ public class SQLParser
 				tables.put(SQLFormatter.stripQuote(((QueryTokens.Join)token).getPrimary().getTable().getReference()),((QueryTokens.Join)token).getPrimary().getTable());
 				tables.put(SQLFormatter.stripQuote(((QueryTokens.Join)token).getForeign().getTable().getReference()),((QueryTokens.Join)token).getForeign().getTable());
 			}
+			else if(token instanceof DerivedTable) // added for #80 derived table
+			{
+				tables.put(SQLFormatter.stripQuote(((DerivedTable)token).getAlias()),token);			}
 			else
 			{
 				tables.put(SQLFormatter.stripQuote(((QueryTokens.Table)token).getReference()),token);

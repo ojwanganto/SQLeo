@@ -48,6 +48,7 @@ import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.SQLFormatter;
 import com.sqleo.querybuilder.syntax.SQLParser;
 import com.sqleo.querybuilder.syntax.SubQuery;
+import com.sqleo.querybuilder.syntax.DerivedTable;
 
 
 public class QueryBuilder extends JTabbedPane implements ChangeListener
@@ -243,7 +244,13 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 			{
 				DiagramLoader.run(DiagramLoader.DEFAULT,this,(QueryTokens.Table)tokens[i],false);
 			}
+			else if(tokens[i] instanceof DerivedTable) // added for ticket #80
+			{
+				// to do ? #80
+				// DiagramLoader.run(DiagramLoader.DEFAULT,this,(DerivedTable)tokens[i],false);
+			}
 			else
+
 			{
 				doJoin((QueryTokens.Join)tokens[i]);
 			}
