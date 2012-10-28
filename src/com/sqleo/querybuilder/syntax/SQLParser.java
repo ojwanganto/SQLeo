@@ -37,7 +37,9 @@ public class SQLParser
 	public static QueryModel toQueryModel(String sql)
 		throws IOException
 	{
-		return toQueryModel(new StringReader(sql));
+		// ticket #83 remove -- comment
+		// return toQueryModel(new StringReader(sql));
+		return toQueryModel(new StringReader(sql.replace("--","//")));
 	}
 
 	private static QueryModel toQueryModel(Reader r)
@@ -101,6 +103,7 @@ public class SQLParser
 			}
 			else if(next.toString().equals(")"))
 			{
+				li.previous(); // ticket #80
 				break;
 			}
 		}
@@ -287,10 +290,9 @@ public class SQLParser
 				li.previous();
 				doParseQuery(li,dt);
 				qs.addFromClause(dt);		
-
 			}
 			// end #80
-			else if(isClauseWord(next) || next.equals(";"))
+			else if(isClauseWord(next) || next.equals(";") )
 			{
 //				System.out.println("end.");
 				
@@ -311,9 +313,20 @@ public class SQLParser
 			{
 //				System.out.println("join");
 
-				if(t!=null) tables.put(SQLFormatter.stripQuote(t.getReference()),t);
-				t=null;
-				dt=null;
+				if(t!=null) 
+				{
+					tables.put(SQLFormatter.stripQuote(t.getReference()),t);
+					t=null;
+				}
+
+				if(dt!=null) 
+				{
+					// to do #80 
+					// raise exception "unsupported feature"
+					// tables.put(SQLFormatter.stripQuote(dt.getReference()),dt);
+					System.out.println("!!! reverse SQL for Derived table with ANSI JOIN is not supported yet !!!");
+					dt=null;
+				}
 				
 				joinType = QueryTokens.Join.getTypeInt(next);
 			}
@@ -745,13 +758,15 @@ public class SQLParser
 	
 	private static StreamTokenizer createTokenizer(Reader r)
 	{
+
 		StreamTokenizer stream = new StreamTokenizer(r);
 		stream.ordinaryChar('.');
 		stream.ordinaryChar('/'); // fix for ticket #48
 		stream.wordChars('$','$'); // fix for ticket #48
 		stream.wordChars('#','#'); // fix for ticket #86
 		stream.wordChars('_','_');
-		
+
+	
 		if(!QueryBuilder.identifierQuoteString.equals("\""))
 		{
 			stream.quoteChar(QueryBuilder.identifierQuoteString.charAt(0));
