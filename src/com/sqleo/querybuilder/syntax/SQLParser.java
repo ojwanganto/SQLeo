@@ -199,6 +199,14 @@ public class SQLParser
 				if(!value.trim().equals("")) qs.addGroupByClause(new QueryTokens.Group(value.trim()));
 				break;
 			}
+			// added for ticket #80
+			else if(next.toString().equals(")") && surrounds == 0)
+			{
+				li.previous();
+				if(!value.trim().equals("")) qs.addGroupByClause(new QueryTokens.Group(value.trim()));
+				break;
+			}
+			// ticket #80 end
 			else
 			{
 				if(next.toString().equals("(")) surrounds++;
@@ -467,6 +475,13 @@ public class SQLParser
 				{
 					expr = new SubQuery();
 					doParseQuery(li,(SubQuery)expr);
+					
+					// bug reverse IN (subquery)
+					token.setRight(expr);
+					tokens.add(token);
+					token = null;
+					expr = null;
+					// end bug reverse IN (subquery)
 				}
 				else
 				{
