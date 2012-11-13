@@ -38,8 +38,12 @@ public class SQLParser
 		throws IOException
 	{
 		// ticket #83 remove -- comment
-		// return toQueryModel(new StringReader(sql));
-		return toQueryModel(new StringReader(sql.replace("--","//")));
+		sql = sql.replace("--","//");
+
+		// ticket #73 oracle (+) join support
+		sql = sql.replace("(+)"," ORACLE_OUTER_JOIN");
+
+		return toQueryModel(new StringReader(sql));
 	}
 
 	private static QueryModel toQueryModel(Reader r)
@@ -518,6 +522,14 @@ public class SQLParser
 				
 				expr = null;
 			}
+			// ticket #73 oracle (+) join support
+			else if(next.toString().equals("ORACLE_OUTER_JOIN"))
+			{
+				// to do Change JOIN TYPE !
+				// raise exception 
+				System.out.println("!!!" + expr + "(+) changed to INNER join !!!");
+			}
+			// end #73
 			else
 			{
 				String value = expr == null ? new String() : expr.toString();
