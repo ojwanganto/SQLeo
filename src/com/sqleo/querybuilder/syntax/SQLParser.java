@@ -331,12 +331,9 @@ public class SQLParser
 					t=null;
 				}
 
-				if(dt!=null) 
+				if(dt!=null) // #80
 				{
-					// to do #80 
-					// raise exception "unsupported feature"
-					// tables.put(SQLFormatter.stripQuote(dt.getReference()),dt);
-					System.out.println("!!! reverse SQL for Derived table with ANSI JOIN is not supported yet !!!");
+					tables.put(SQLFormatter.stripQuote(dt.getAlias()),dt);
 					dt=null;
 				}
 				
@@ -379,21 +376,44 @@ public class SQLParser
 					int dot = e.lastIndexOf(SQLFormatter.DOT);
 					String ref = dot==-1 ? new String() : e.substring(0,dot);
 
+					// to do fix #80 for derived tables
 					QueryTokens.Table tr = new QueryTokens.Table(null,ref);
+
 					if(tables.containsKey(ref))
 					{
-						tr = (QueryTokens.Table)tables.get(ref);
+						if (tables.get(ref) instanceof QueryTokens.Table)
+						{
+							tr = (QueryTokens.Table)tables.get(ref);
+						}
+						else
+						{
+							// to do Derived Table
+							System.out.println("!!! TO DO: join with Derived Table for: " + ref + "!!!");
+						}
+					}
+					// fix #92 (to do: change containsKey to make it case insensitive)
+					else if(tables.containsKey(ref.toUpperCase()))
+					{
+						tr = (QueryTokens.Table)tables.get(ref.toUpperCase());
+					}
+					else if(tables.containsKey(ref.toLowerCase()))
+					{
+						tr = (QueryTokens.Table)tables.get(ref.toLowerCase());
 					}
 					else
-						tables.put(SQLFormatter.stripQuote(tr.getReference()),tr);
+					{	
+						// to do raise exception
+						System.out.println("!!! Table or alias in condition Not found: " + ref + "!!!");
 
-					// to be checked for #80 Derived table ?
+					} // end #92
 
 					if(side==0)
 						tcl = new QueryTokens.Column(tr,e.substring(dot+1));
+
 					else
 						tcr = new QueryTokens.Column(tr,e.substring(dot+1));
 				}
+		 				
 				qs.addFromClause(new QueryTokens.Join(joinType,tcl,op,tcr));
 				joinType = -1;
 			}
@@ -629,11 +649,43 @@ public class SQLParser
 					String owner = ref.substring(0,dot);
 					String cname = ref.substring(dot+1);
 					
+					// to do fix #80 for derived tables
 					if(tables.containsKey(owner))
 					{
-						c = new QueryTokens.Column((QueryTokens.Table)tables.get(owner),cname);
+						if (tables.get(owner) instanceof QueryTokens.Table)
+						{
+							c = new QueryTokens.Column((QueryTokens.Table)tables.get(owner),cname);
+							if(alias!=null) c.setAlias(alias);
+						}
+						else
+						{
+							// to do 
+							// c = new QueryTokens.Column((DerivedTable)tables.get(owner),cname);
+							// if(alias!=null) c.setAlias(alias);
+
+
+							System.out.println("!!! TO DO: Colum belongs to Derived Table: " + owner + "." + cname + "!!!");
+						}
+
+					}
+					// fix #92
+					else if(tables.containsKey(owner.toUpperCase()))
+					{
+						c = new QueryTokens.Column((QueryTokens.Table)tables.get(owner.toUpperCase()),cname);
 						if(alias!=null) c.setAlias(alias);
 					}
+					else if(tables.containsKey(owner.toLowerCase()))
+					{
+						c = new QueryTokens.Column((QueryTokens.Table)tables.get(owner.toLowerCase()),cname);
+						if(alias!=null) c.setAlias(alias);
+					}
+					else
+					{
+						// to do raise exception
+						System.out.println("!!! Table or alias Not found: " + owner + "!!!");
+
+					}
+					// end fix #92
 				}
 				break;
 			}

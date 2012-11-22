@@ -246,8 +246,8 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 			}
 			else if(tokens[i] instanceof DerivedTable) // added for ticket #80
 			{
-				// to do #80
-				// DiagramLoader.run(DiagramLoader.DEFAULT,this,(DerivedTable)tokens[i],false);
+				DiagramQuery entity = new DiagramQuery(this,(DerivedTable)tokens[i]);
+				this.diagram.addEntity(entity);
 				System.out.println("!!! Displaying reversed SQL for Derived table is not finished yet !!!");
 			}
 			else
