@@ -133,9 +133,11 @@ public class DiagramEntity extends DiagramAbstractEntity
 	{
 		this.querytoken = querytoken;
 		
-		getHeaderMenu().setText(querytoken.getReference());
-		getHeaderMenu().setToolTipText(querytoken.isAliasSet() ? querytoken.toString() : null);
-		
+		// ticket #55 (display table AND alias in header)
+		// getHeaderMenu().setText(querytoken.getReference());
+		// getHeaderMenu().setToolTipText(querytoken.isAliasSet() ? querytoken.toString() : null);
+		getHeaderMenu().setText(querytoken.isAliasSet() ? querytoken.toString() : querytoken.getReference());
+
 		pack();
 	}	
 	
