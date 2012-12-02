@@ -25,6 +25,7 @@ public interface _ReservedWords
 	public static final String ALL		= "ALL";
 	public static final String DISTINCT	= "DISTINCT";
 	
+	public static final String WITH		= "WITH";
 	public static final String SELECT	= "SELECT";
 	public static final String FROM		= "FROM";
 	public static final String WHERE	= "WHERE";

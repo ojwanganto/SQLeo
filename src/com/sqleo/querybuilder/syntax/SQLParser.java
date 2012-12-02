@@ -34,6 +34,8 @@ import com.sqleo.querybuilder.QueryModel;
 
 public class SQLParser
 {
+	public static Hashtable cte;
+
 	public static QueryModel toQueryModel(String sql)
 		throws IOException
 	{
@@ -69,7 +71,11 @@ public class SQLParser
 		while(li.hasNext())
 		{
 			Object next = li.next();
-			if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
+			if(next.toString().equalsIgnoreCase(_ReservedWords.WITH))
+			{
+				doParseCTE(li,qe.getQuerySpecification());
+			}
+			else if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
 			{
 				doParseSelect(li,qe.getQuerySpecification());
 			}
@@ -113,6 +119,48 @@ public class SQLParser
 		}
 	}
 	
+
+	private static void doParseCTE(ListIterator li, QuerySpecification qs)
+		throws IOException
+	{
+		String alias = null;
+		DerivedTable dt = null;
+		cte = new Hashtable(); 
+
+		while(li.hasNext())
+		{
+			Object next = li.next();
+			
+			if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
+			{
+				li.previous();
+				if(alias!=null)
+				{
+					dt = new DerivedTable();
+					doParseQuery(li,dt);
+					dt.setAlias(alias);
+					cte.put(SQLFormatter.stripQuote(dt.getAlias()),dt);
+					alias=null;
+				}
+				else
+				{
+					// let doParseQuery do the work
+					break;
+				}
+			}
+			else if(next.toString().equalsIgnoreCase("(") || next.toString().equalsIgnoreCase(")") || next.toString().equalsIgnoreCase(",") || next.toString().equalsIgnoreCase("AS"))
+			{
+				// do nothing
+			}
+			else
+			{
+				alias=next.toString();
+			}
+		}
+				
+	}
+
+
 	private static void doParseSelect(ListIterator li, QuerySpecification qs)
 		throws IOException
 	{
@@ -388,7 +436,7 @@ public class SQLParser
 						else
 						{
 							// to do Derived Table
-							System.out.println("!!! TO DO: join with Derived Table for: " + ref + "!!!");
+							System.out.println("!!! TO DO: join with Derived Table for: " + ref + " !!!");
 						}
 					}
 					// fix #92 (to do: change containsKey to make it case insensitive)
@@ -448,9 +496,13 @@ public class SQLParser
 				if(dt==null) // added for #80
 				{
 					if(t==null) 
-						t = new QueryTokens.Table(schema,name);
+						// CTE fix #99, make cte visible from there
+						 if (cte !=null && cte.containsKey(next.toString()))
+							qs.addFromClause((DerivedTable)cte.get(next.toString()));
+						 else
+							t = new QueryTokens.Table(schema,name);
 					else
-						t.setAlias(next.toString()); 
+							t.setAlias(next.toString()); 
 				}
 				else
 					dt.setAlias(next.toString()); 
@@ -683,9 +735,9 @@ public class SQLParser
 					}
 					else
 					{
-						// to do raise exception
-						System.out.println("!!! Table or alias Not found: " + owner + "!!!");
-
+						// to do raise and display error message
+						System.out.println("Table or alias not found: " + owner);
+						//JOptionPane.showMessageDialog(this,I18n.getString("querybuilder.message.tableorAliasNotFound","Table or alias not found: "), owner, JOptionPane.WARNING_MESSAGE);
 					}
 					// end fix #92
 				}
