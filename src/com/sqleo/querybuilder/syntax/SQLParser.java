@@ -182,6 +182,12 @@ public class SQLParser
 				value = new String();
 				alias = null; // added to fix bug #13
 			}
+			else if(next.toString().equalsIgnoreCase(_ReservedWords.ORDER_BY) )
+			{
+				// ticket #102: Specific for Oracle syntax 
+				// ROW_NUMBER() OVER (PARTITION BY ... ORDER BY ... ASC) as Y
+				value = value + " Order by";
+			}
 			else if(isClauseWord(next.toString()))
 			{
 				li.previous();
@@ -439,19 +445,12 @@ public class SQLParser
 							System.out.println("!!! TO DO: join with Derived Table for: " + ref + " !!!");
 						}
 					}
-					// fix #92 (to do: change containsKey to make it case insensitive)
-					else if(tables.containsKey(ref.toUpperCase()))
-					{
-						tr = (QueryTokens.Table)tables.get(ref.toUpperCase());
-					}
-					else if(tables.containsKey(ref.toLowerCase()))
-					{
-						tr = (QueryTokens.Table)tables.get(ref.toLowerCase());
-					}
+					// fix #92 
 					else
 					{	
+						// let contaisKey case sensitive but raise exception if Alias or Table not fount
 						// to do raise exception
-						System.out.println("!!! Table or alias in condition Not found: " + ref + "!!!");
+						System.out.println("!!! Condition Table or alias Not found: " + ref + " !!!");
 
 					} // end #92
 
@@ -716,28 +715,15 @@ public class SQLParser
 							// to do 
 							// c = new QueryTokens.Column((DerivedTable)tables.get(owner),cname);
 							// if(alias!=null) c.setAlias(alias);
-
-
-							System.out.println("!!! TO DO: Colum belongs to Derived Table: " + owner + "." + cname + "!!!");
+							System.out.println("!!! TO DO: Colum belongs to Derived Table: " + owner + "." + cname + " !!!");
 						}
 
 					}
 					// fix #92
-					else if(tables.containsKey(owner.toUpperCase()))
-					{
-						c = new QueryTokens.Column((QueryTokens.Table)tables.get(owner.toUpperCase()),cname);
-						if(alias!=null) c.setAlias(alias);
-					}
-					else if(tables.containsKey(owner.toLowerCase()))
-					{
-						c = new QueryTokens.Column((QueryTokens.Table)tables.get(owner.toLowerCase()),cname);
-						if(alias!=null) c.setAlias(alias);
-					}
 					else
 					{
 						// to do raise and display error message
 						System.out.println("Table or alias not found: " + owner);
-						//JOptionPane.showMessageDialog(this,I18n.getString("querybuilder.message.tableorAliasNotFound","Table or alias not found: "), owner, JOptionPane.WARNING_MESSAGE);
 					}
 					// end fix #92
 				}
