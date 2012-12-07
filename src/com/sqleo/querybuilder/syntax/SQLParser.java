@@ -533,7 +533,7 @@ public class SQLParser
 				doParseQuery(li,sub);
 				
 				token.setLeft(null);
-				token.setOperator(next.toString());
+				token.setOperator(next.toString().toUpperCase());
 				token.setRight(sub);
 				
 				tokens.add(token);
