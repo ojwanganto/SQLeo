@@ -136,7 +136,10 @@ public class DiagramLoader extends JDialog implements Runnable
 		message.setText( I18n.getFormattedString("querybuilder.message.loading","Loading: {0}", new Object[]{"" + table.getIdentifier()}));
 		checkTable(table);
 		
-		if((QueryBuilder.autoAlias || (builder.browser.getQueryItem() instanceof BrowserItems.DiagramQueryTreeItem)) && table.getAlias()==null)
+
+		// fix #78 do not autoalias fields in subqueries
+		// if(( QueryBuilder.autoAlias || (builder.browser.getQueryItem() instanceof BrowserItems.DiagramQueryTreeItem)) && table.getAlias()==null)
+		if( QueryBuilder.autoAlias && table.getAlias()==null)
 		{
 			table.setAlias(table.getName());
 		

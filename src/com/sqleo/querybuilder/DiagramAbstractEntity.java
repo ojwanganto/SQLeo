@@ -82,7 +82,9 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 	
 	void addField(DiagramField field)
 	{
-		if(QueryBuilder.autoAlias || queryItem instanceof BrowserItems.DiagramQueryTreeItem)
+		// fix #78 do not autoalias fields in subqueries	
+		// if(QueryBuilder.autoAlias || queryItem instanceof BrowserItems.DiagramQueryTreeItem)
+		if(QueryBuilder.autoAlias )
 		{
 			String alias = this.getQueryToken().getReference() + "." + field.querytoken.getName();
 			if (alias.length() > QueryBuilder.maxColumnNameLength && QueryBuilder.maxColumnNameLength > 0)
@@ -163,11 +165,21 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 			DiagramQuery entityUp = ((BrowserItems.DiagramQueryTreeItem)queryItem).getDiagramObject();
 			if(field.isSelected())
 			{
-				entityUp.addField(field.querytoken.getAlias());
+				// fix #78 do not autoalias fields in subqueries
+				// entityUp.addField(field.querytoken.getAlias());
+				if(field.querytoken.getAlias()==null)
+					entityUp.addField(field.querytoken.getName());
+				else
+					entityUp.addField(field.querytoken.getAlias());
+
 			}
 			else
 			{
-				entityUp.removeField(field.querytoken.getAlias());
+				if(field.querytoken.getAlias()==null)
+					entityUp.removeField(field.querytoken.getName());
+				else
+					entityUp.removeField(field.querytoken.getAlias());
+
 			}
 			entityUp.pack();
 		}

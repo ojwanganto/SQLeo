@@ -201,6 +201,8 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 	
 	public Connection getConnection()
 	{
+            	// do do fo ticket #84
+		// check if Connection.isClosed() before getMetaData	
 		return connection;
 	}
 	
@@ -248,6 +250,8 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 			{
 				DiagramQuery entity = new DiagramQuery(this,(DerivedTable)tokens[i]);
 				this.diagram.addEntity(entity);
+				// to do display derived table fields
+	entity.setColumnSelections(true);
 				System.out.println("!!! Displaying reversed SQL for Derived table is not finished yet !!!");
 			}
 			else
