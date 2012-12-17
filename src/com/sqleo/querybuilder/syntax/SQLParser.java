@@ -68,9 +68,11 @@ public class SQLParser
 	private static void doParseQuery(ListIterator li, QueryExpression qe)
 		throws IOException
 	{
+
 		while(li.hasNext())
 		{
 			Object next = li.next();
+
 			if(next.toString().equalsIgnoreCase(_ReservedWords.WITH))
 			{
 				doParseCTE(li,qe.getQuerySpecification());
@@ -176,9 +178,9 @@ public class SQLParser
 			{
 				qs.setQuantifier(QuerySpecification.DISTINCT);
 			}
-			else if(next.toString().equals(",") && surrounds == 0)
+			else if(next.toString().equals(",") && surrounds == 0 )
 			{
-				qs.addSelectList(new QueryTokens.DefaultExpression(value.trim(),alias));
+				if(!value.trim().equals("")) qs.addSelectList(new QueryTokens.DefaultExpression(value.trim(),alias));
 				value = new String();
 				alias = null; // added to fix bug #13
 			}
@@ -198,12 +200,17 @@ public class SQLParser
 
 					qs.addSelectList(sub);
 					value = new String();
+
 				}
-				else
+				else 
 				{
 					if(!value.trim().equals("")) qs.addSelectList(new QueryTokens.DefaultExpression(value.trim(),alias));
 					break;
 				}
+			}
+			else if(next.toString().equals(")") && value.trim().equals("")) // for last ")" after subquery
+			{
+				surrounds--;
 			}
 			// ticket #87 for cast (x as ...) 
 			// else if(next.toString().equalsIgnoreCase("AS") && li.hasNext())
@@ -213,8 +220,9 @@ public class SQLParser
 			}
 			else
 			{
-				if(next.toString().equals("(")) surrounds++;
 				if(next.toString().equals(")")) surrounds--;
+				if(next.toString().equals("(")) surrounds++;
+
 				
 				if(value.length()>0 && next instanceof String)
 				{
