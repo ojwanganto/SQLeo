@@ -20,6 +20,10 @@
 
 package com.sqleo.common.util;
 
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,6 +35,8 @@ import java.util.Hashtable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import com.sqleo.environment.Application;
 
 public class Store
 {
@@ -215,6 +221,68 @@ public class Store
 			zout.closeEntry();
 		}
 		zout.close();
+	}
+	public void loadXMLAndMetaviews(String filename,String metaviewFileName) throws IOException, ClassNotFoundException
+	{
+		XMLDecoder decoder = new XMLDecoder(
+                new BufferedInputStream(
+                    new FileInputStream(filename)));
+		ZipInputStream zin = new ZipInputStream(new FileInputStream(metaviewFileName));
+		Object zipContent = null; 
+		for(ZipEntry entry = null; (entry = zin.getNextEntry())!=null;)
+		{
+			zipContent = new ObjectInputStream(zin).readObject();
+		}
+		
+		try{
+			while(true)
+			{
+				Object name = decoder.readObject();
+				String nameStr = (String)name;
+				Object[] content = new Object[3];
+				if(Application.ENTRY_PREFERENCES.equals(nameStr)){
+					content[INDEX_DATA] = decoder.readObject();
+					content[INDEX_SUBS] = zipContent;
+				}else {
+					content[INDEX_DATA] = decoder.readObject();
+					content[INDEX_SUBS] = decoder.readObject();
+				}
+				this.put(nameStr,content);
+			}
+		}catch(ArrayIndexOutOfBoundsException e){
+			//REACHED END OF FILE
+		}finally{
+			decoder.close();
+			zin.close();
+		}
+	}
+	
+	public void saveXMLAndMetaviews(String filename,String metaviewFileName) throws IOException
+	{
+	   XMLEncoder encoder = new XMLEncoder(
+                   new BufferedOutputStream(
+                       new FileOutputStream(filename)));
+		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(metaviewFileName));
+
+		for(Enumeration e = mounts(); e.hasMoreElements();)
+		{
+			String name = e.nextElement().toString();
+			encoder.writeObject(name);
+			Object[] content = this.get(name);
+			if(Application.ENTRY_PREFERENCES.equals(name)){
+				encoder.writeObject(content[INDEX_DATA]);
+				zout.putNextEntry(new ZipEntry(name));
+				new ObjectOutputStream(zout).writeObject(content[INDEX_SUBS]);
+				zout.closeEntry();
+			}else {
+				encoder.writeObject(content[INDEX_DATA]);
+				encoder.writeObject(content[INDEX_SUBS]);
+			}
+			
+		}
+		encoder.close();
+		zout.close();
+		
 	}
 
 	private void print()

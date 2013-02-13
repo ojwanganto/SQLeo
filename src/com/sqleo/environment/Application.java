@@ -115,8 +115,9 @@ public class Application extends Appearance implements _Constants,_Version
 	{
 		try
 		{
-			if(new File(sessionFilename()).exists())
-			{
+			if(new File(sessionXMLFilename()).exists() || new File(sessionMetaviewFilename()).exists())	{
+				session.loadXMLAndMetaviews(sessionXMLFilename(),sessionMetaviewFilename());
+			}else if(new File(sessionFilename()).exists()){
 				session.load(sessionFilename());
 			}
 			Preferences.loadDefaults();
@@ -156,7 +157,7 @@ public class Application extends Appearance implements _Constants,_Version
 				else
 					session.jump().set(0,getVersion());
 				
-				session.save(sessionFilename());
+				session.saveXMLAndMetaviews(sessionXMLFilename(),sessionMetaviewFilename());
 			}
 			catch (IOException e)
 			{
@@ -172,6 +173,16 @@ public class Application extends Appearance implements _Constants,_Version
 	private static String sessionFilename()
 	{
 		return System.getProperty("user.home") + File.separator + ".sqleo";
+	}
+	
+	private static String sessionXMLFilename()
+	{
+		return System.getProperty("user.home") + File.separator + ".sqleo.xml";
+	}
+	
+	private static String sessionMetaviewFilename()
+	{
+		return System.getProperty("user.home") + File.separator + ".sqleo.metaview";
 	}
 	
     public static String getVersion()
