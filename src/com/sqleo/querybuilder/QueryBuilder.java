@@ -41,6 +41,7 @@ import javax.swing.event.ChangeListener;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.TextView;
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.mdi.ClientQueryBuilder;
 import com.sqleo.querybuilder.BrowserItems.DefaultTreeItem;
@@ -251,8 +252,8 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				DiagramQuery entity = new DiagramQuery(this,(DerivedTable)tokens[i]);
 				this.diagram.addEntity(entity);
 				// to do display derived table fields
-	entity.setColumnSelections(true);
-				System.out.println("!!! Displaying reversed SQL for Derived table is not finished yet !!!");
+				entity.setColumnSelections(true);
+				Application.alert("!!! Displaying reversed SQL for Derived table is not finished yet !!!");
 			}
 			else
 			{

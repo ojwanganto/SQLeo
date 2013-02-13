@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.ListIterator;
 
+import com.sqleo.environment.Application;
 import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.QueryModel;
 
@@ -450,7 +451,7 @@ public class SQLParser
 						else
 						{
 							// to do Derived Table
-							System.out.println("!!! TO DO: join with Derived Table for: " + ref + " !!!");
+							Application.alert("!!! join with derived table for: " + ref + " !!!");
 						}
 					}
 					// fix #92 
@@ -458,7 +459,7 @@ public class SQLParser
 					{	
 						// let contaisKey case sensitive but raise exception if Alias or Table not fount
 						// to do raise exception
-						System.out.println("!!! Condition Table or alias Not found: " + ref + " !!!");
+						Application.alert("!!! condition table or alias not found: " + ref + " !!!");
 
 					} // end #92
 
@@ -608,7 +609,7 @@ public class SQLParser
 			{
 				// to do Change JOIN TYPE !
 				// raise exception 
-				System.out.println("!!!" + expr + "(+) changed to INNER join !!!");
+				Application.alert("!!!" + expr + "(+) changed to INNER join !!!");
 			}
 			// end #73
 			else
@@ -723,7 +724,7 @@ public class SQLParser
 							// to do 
 							// c = new QueryTokens.Column((DerivedTable)tables.get(owner),cname);
 							// if(alias!=null) c.setAlias(alias);
-							System.out.println("!!! TO DO: Colum belongs to Derived Table: " + owner + "." + cname + " !!!");
+							Application.alert("!!! Column belongs to derived table: " + owner + "." + cname + " !!!");
 						}
 
 					}
@@ -731,7 +732,7 @@ public class SQLParser
 					else
 					{
 						// to do raise and display error message
-						System.out.println("Table or alias not found: " + owner);
+						Application.alert("Table or alias not found: " + owner);
 					}
 					// end fix #92
 				}

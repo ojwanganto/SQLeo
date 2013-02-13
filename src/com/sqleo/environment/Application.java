@@ -204,6 +204,11 @@ public class Application extends Appearance implements _Constants,_Version
     {
        	JOptionPane.showMessageDialog(window,message,title,JOptionPane.WARNING_MESSAGE);
     }
+	
+	public static void alert(String message)
+    {
+       	JOptionPane.showMessageDialog(window,message,PROGRAM,JOptionPane.WARNING_MESSAGE);
+    }
     
 	public static boolean confirm(String title,String message)
 	{
