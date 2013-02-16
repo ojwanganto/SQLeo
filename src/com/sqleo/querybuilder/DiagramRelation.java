@@ -391,24 +391,30 @@ public class DiagramRelation extends JPanel
 			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to add join to definition file ?",Application.PROGRAM,JOptionPane.YES_NO_OPTION);
 			if(option == JOptionPane.YES_OPTION){
 				if(fkDefFileName!=null){
+					String joinName = getName();
+					Column fk = foreignField.querytoken;
+					Column pk = primaryField.querytoken;
+					if(null == joinName) {
+						String tabColName = fk.getTable().getName()+"."+fk.getName();
+						int option2 = JOptionPane.showConfirmDialog(Application.window,"Does "+tabColName+" belongs to PK ?",Application.PROGRAM,JOptionPane.YES_NO_OPTION);
+						if(option2 == JOptionPane.YES_OPTION){
+							pk = foreignField.querytoken;
+							fk = primaryField.querytoken;
+						}
+					}
 					
 					CSVRelationDefinition rdef = new CSVRelationDefinition();
 					rdef.setJoinType(querytoken.getTypeName());
-					
-					Column fk = foreignField.querytoken;
 					rdef.setFktSchema(fk.getTable().getSchema());
 					rdef.setFktName(fk.getTable().getName());
 					rdef.setFktColumnName(fk.getName());
-				
-					Column pk = primaryField.querytoken;
 					rdef.setPktSchema(pk.getTable().getSchema());
 					rdef.setPktName(pk.getTable().getName());
 					rdef.setPktColumnName(pk.getName());
 					rdef.setPktAlias(pk.getTable().getAlias());
-					
 					String relName= rdef.getFktName().toUpperCase()+"_"+rdef.getPktName().toUpperCase();
-					if(getName()!=null){
-						relName="SQLeo_"+getName();
+					if(joinName!=null){
+						relName="SQLeo_"+joinName;
 					}else{
 						relName="SQLeo_"+relName;
 					}
