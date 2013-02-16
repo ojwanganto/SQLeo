@@ -32,6 +32,7 @@ import com.sqleo.environment.ctrl.content.AbstractActionContent;
 import com.sqleo.environment.ctrl.define.TableMetaData;
 import com.sqleo.environment.ctrl.explorer.AbstractViewObjects;
 import com.sqleo.environment.mdi.ClientContent;
+import com.sqleo.environment.mdi.ClientDefinition;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
 
@@ -53,6 +54,7 @@ public class DiagramEntity extends DiagramAbstractEntity
 		getHeaderMenu().add(new ActionReferences());
 		getHeaderMenu().addSeparator();
 		getHeaderMenu().add(new ActionShowContent(builder.getConnectionHandlerKey()));
+		getHeaderMenu().add(new ActionShowDefinition(builder.getConnectionHandlerKey()));
 		
 		setQueryToken(qtoken);
 	}
@@ -98,7 +100,22 @@ public class DiagramEntity extends DiagramAbstractEntity
 		}
 	}
 
-	
+	protected class ActionShowDefinition extends AbstractAction
+	{
+		private String keych;
+		ActionShowDefinition(String keych)
+		{
+			super("show definition");
+			this.keych = keych;
+		}
+		
+		public void actionPerformed(ActionEvent e)
+		{
+			Application.window.add(new ClientDefinition(keych, 
+					new QueryTokens.Table(querytoken.getSchema(),querytoken.getName()), null));
+		}
+	}
+
 	void onCreate()
 	{
 		builder.browser.addFromClause(querytoken);
