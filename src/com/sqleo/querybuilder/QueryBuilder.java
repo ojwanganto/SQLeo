@@ -40,6 +40,8 @@ import javax.swing.event.ChangeListener;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.TextView;
+import com.sqleo.common.jdbc.ConnectionAssistant;
+import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
@@ -202,8 +204,19 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 	
 	public Connection getConnection()
 	{
-            	// do do fo ticket #84
-		// check if Connection.isClosed() before getMetaData	
+        // ticket #84 check if Connection.isClosed() before getMetaData
+		try {
+			if(connection!=null && connection.isClosed()){
+				ConnectionHandler ch = ConnectionAssistant.getHandler(keycah);
+				if(ch!=null){
+					setConnection(ch.get());
+				}else{
+					Application.alert("No connection exists!");
+				}
+			}
+		} catch (SQLException sqle) {
+			System.out.println("[ QueryBuilder::getConnection ]\n" + sqle);
+		}
 		return connection;
 	}
 	
