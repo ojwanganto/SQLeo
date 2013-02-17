@@ -20,6 +20,9 @@
 
 package com.sqleo.environment.ctrl.content;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.swing.JScrollPane;
 
 import com.sqleo.common.gui.AbstractDialogConfirm;
@@ -47,6 +50,18 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 
 	protected boolean onConfirm()
 	{
+		Set<Integer> emptyRows = new HashSet<Integer>();
+		int totalRows =where.getModel().getRowCount()-1; 
+		for(int i=0; i<totalRows; i++)
+		{
+			Object[] rowdata = new Object[4];
+			for(int j=0; j<4;j++) rowdata[j] = where.getModel().getValueAt(i,j+1);
+			if (rowdata[0] == null && rowdata[2] == null){
+				emptyRows.add(Integer.valueOf(i));
+			}
+		}
+		modified = totalRows>0 ? emptyRows.size() != totalRows : modified;
+		
 		if(modified)
 		{
 			QueryTokens.Condition[] qtokens = content.getQueryModel().getQueryExpression().getQuerySpecification().getWhereClause();
@@ -56,8 +71,10 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 			}
 
 			String append = null;
-			for(int i=0; i<where.getModel().getRowCount()-1; i++)
+			for(int i=0; i<totalRows; i++)
 			{
+				if(emptyRows.contains(Integer.valueOf(i)))
+					continue;
 				Object[] rowdata = new Object[4];
 				for(int j=0; j<4;j++) rowdata[j] = where.getModel().getValueAt(i,j+1);
 

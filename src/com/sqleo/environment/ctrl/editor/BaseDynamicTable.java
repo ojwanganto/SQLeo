@@ -26,8 +26,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.AbstractCellEditor;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -72,6 +74,10 @@ public class BaseDynamicTable extends JTable
 		tableColumn.setPreferredWidth(15);
 		tableColumn.setMaxWidth(15);
 		tableColumn.setResizable(false);
+		
+		DefaultCellEditor singleclick = new DefaultCellEditor(new JTextField());
+		singleclick.setClickCountToStart(1);
+		this.getColumn(col-1).setCellEditor(singleclick);
 	}
 	
 	protected TableColumn getColumn(int index)
