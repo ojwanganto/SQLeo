@@ -26,25 +26,39 @@ package com.sqleo.environment.ctrl;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.jdbc.ConnectionAssistant;
+import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.content.ContentModel;
 import com.sqleo.environment.ctrl.content.ContentView;
 import com.sqleo.environment.ctrl.content.TaskRetrieve;
 import com.sqleo.environment.ctrl.content.TaskUpdate;
 import com.sqleo.environment.ctrl.content.UpdateModel;
+import com.sqleo.environment.mdi.MDIClient;
 import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.QueryModel;
+import com.sqleo.querybuilder.syntax.SQLFormatter;
 
 
 public class ContentPane extends BorderLayoutPanel 
@@ -96,12 +110,54 @@ public class ContentPane extends BorderLayoutPanel
 		syntax.setEditable(false);
 		syntax.setOpaque(false);
 		
-		BorderLayoutPanel pnlSouth = new BorderLayoutPanel(2,2);
+		final BorderLayoutPanel pnlSouth = new BorderLayoutPanel(2,2);
 		pnlSouth.setComponentCenter(status);
+		pnlSouth.setComponentEast(new JButton(new ActionCountRows()));
 		pnlSouth.setComponentNorth(scroll);
 		
 		setComponentSouth(pnlSouth);
 		setComponentCenter(view = new ContentView(this));		
+	}
+	
+	private class ActionCountRows extends AbstractAction {
+
+		ActionCountRows(){this.putValue(NAME,"count records");}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			
+			
+			new Thread((new Runnable() {
+				@Override
+				public void run() {
+					
+					try
+					{
+						ConnectionHandler ch = ConnectionAssistant.getHandler(keycah);
+						Statement stmt = ch.get().createStatement();
+						String[] querySplitted = getQuery().split("FROM");
+						String countQuery = "SELECT count(*) FROM " + querySplitted[1];
+						ResultSet rs = stmt.executeQuery(countQuery);
+						
+						int records = rs.next() ? rs.getInt(1) : 0;
+						
+						rs.close();
+						stmt.close();
+						
+						JOptionPane.showMessageDialog(Application.window,"Total records count : "+records);
+						
+					}
+					catch(SQLException sqle)
+					{
+						Application.println(sqle,true);
+					}
+					
+				}
+			})).start();
+			
+		}
+		
 	}
 	
 	public boolean isReadOnly()
