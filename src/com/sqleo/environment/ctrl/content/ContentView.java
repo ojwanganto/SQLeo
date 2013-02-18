@@ -382,7 +382,11 @@ public class ContentView extends JPanel implements ListSelectionListener
 				if(query.contains("ORDER BY")){
 					String[] splitQuery = query.split("ORDER BY");
 					control.setQuery(splitQuery[0]+ "ORDER BY " + token.toString());
-				}else {
+				}else if(query.contains("order by")){
+					String[] splitQuery = query.split("order by");
+					control.setQuery(splitQuery[0]+ "order by " + token.toString());
+				}
+				else {
 					control.setQuery(query+ "\nORDER BY " + token.toString());
 				}
 				

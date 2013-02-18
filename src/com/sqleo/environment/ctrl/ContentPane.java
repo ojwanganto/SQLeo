@@ -136,17 +136,38 @@ public class ContentPane extends BorderLayoutPanel
 					{
 						ConnectionHandler ch = ConnectionAssistant.getHandler(keycah);
 						Statement stmt = ch.get().createStatement();
-						String[] querySplitted = getQuery().split("FROM");
-						String countQuery = "SELECT count(*) FROM " + querySplitted[1];
-						ResultSet rs = stmt.executeQuery(countQuery);
-						
-						int records = rs.next() ? rs.getInt(1) : 0;
-						
-						rs.close();
-						stmt.close();
-						
-						JOptionPane.showMessageDialog(Application.window,"Total records count : "+records);
-						
+						String originalQuery = getQuery();
+						String[] querySplitted = null;
+						if(originalQuery.contains("FROM")){
+							querySplitted = originalQuery.split("FROM");
+						}else if (originalQuery.contains("from")){
+							querySplitted = originalQuery.split("from");
+						}
+						if(querySplitted!=null && querySplitted.length>1){
+							String suffix = querySplitted[1];
+							String[] countQuerySplitted = null;
+							if(suffix.contains("ORDER BY")){
+								countQuerySplitted = suffix.split("ORDER BY");
+							}else if(suffix.contains("order by")){
+								countQuerySplitted = suffix.split("order by");
+							}
+							String countQuerySuffix;
+							if(countQuerySplitted!=null && countQuerySplitted.length > 1){
+								countQuerySuffix = countQuerySplitted[0];
+							}else {
+								countQuerySuffix = suffix;
+							}
+							String countQuery = "SELECT count(*) FROM " + countQuerySuffix;
+							ResultSet rs = stmt.executeQuery(countQuery);
+							
+							int records = rs.next() ? rs.getInt(1) : 0;
+							
+							rs.close();
+							stmt.close();
+							
+							JOptionPane.showMessageDialog(Application.window,"Total records count : "+records);
+							
+						}
 					}
 					catch(SQLException sqle)
 					{
