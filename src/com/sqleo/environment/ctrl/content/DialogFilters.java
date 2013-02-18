@@ -60,7 +60,6 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 				emptyRows.add(Integer.valueOf(i));
 			}
 		}
-		modified = totalRows>0 ? emptyRows.size() != totalRows : modified;
 		
 		if(modified)
 		{
