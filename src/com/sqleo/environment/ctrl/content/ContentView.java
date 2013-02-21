@@ -379,14 +379,24 @@ public class ContentView extends JPanel implements ListSelectionListener
 			//when launched from syntax view of query builder, query model is null
 			String query = control.getQuery();
 			if(query!=null){
+				String orderByKeyword = null;
 				if(query.contains("ORDER BY")){
-					String[] splitQuery = query.split("ORDER BY");
-					control.setQuery(splitQuery[0]+ "ORDER BY " + token.toString());
+					orderByKeyword = "ORDER BY";
 				}else if(query.contains("order by")){
-					String[] splitQuery = query.split("order by");
-					control.setQuery(splitQuery[0]+ "order by " + token.toString());
+					orderByKeyword = "order by";
 				}
-				else {
+				if(orderByKeyword!=null){
+					int lastOrderByindex = query.lastIndexOf(orderByKeyword);
+					int lastclosingindex = query.lastIndexOf(')');
+					String prefix;
+					if(lastOrderByindex>lastclosingindex){
+						// derived table 
+						prefix = query.substring(0, lastOrderByindex-1);
+					}else {
+						prefix = query;
+					}
+					control.setQuery(prefix+ "\n"+orderByKeyword+" " + token.toString());
+				}else {
 					control.setQuery(query+ "\nORDER BY " + token.toString());
 				}
 				

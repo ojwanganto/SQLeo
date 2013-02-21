@@ -78,6 +78,7 @@ public class BaseDynamicTable extends JTable
 		DefaultCellEditor singleclick = new DefaultCellEditor(new JTextField());
 		singleclick.setClickCountToStart(1);
 		this.getColumn(col-1).setCellEditor(singleclick);
+		this.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 	}
 	
 	protected TableColumn getColumn(int index)
