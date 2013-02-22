@@ -137,7 +137,7 @@ public class ContentPane extends BorderLayoutPanel
 						ConnectionHandler ch = ConnectionAssistant.getHandler(keycah);
 						Statement stmt = ch.get().createStatement();
 						String originalQuery = getQuery();
-						String countQuery = "SELECT count(*) FROM ( " + originalQuery +" ) as count ";
+						String countQuery = "SELECT count(*) FROM ( " + originalQuery +" ) X ";
 						ResultSet rs = stmt.executeQuery(countQuery);
 						int records = rs.next() ? rs.getInt(1) : 0;
 						rs.close();
