@@ -24,13 +24,59 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2013.02.rc01.zip: 2013-02-22
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.02/
+	55 Query Builder: Table name is not displayed in graph when table alias is used 
+	67 change property file .sqleo to xml clear text
+		Two files are now used for configuration:
+			.sqleo.xml
+			.sqleo.metaview
+		Don't forget to save them on a regular basis
+ 
+	71 Content window: add filter value show null 
+	73 Query Builder: reverse SQL, add Oracle join type (+) support
+		Warning message when transforming a(+) join to INNER join
+ 
+	78 Query builder: do not auto alias fields in (derived table) subqueries 
+	79 Content / preview window: add row count on content window
+	80 Query builder: reverse SQL, add derived tables subqueries support
+		support for CTE (Common Table expression) added to ANSI and SQL92 style
+		Not finished yet (joins with Drived tables are not drawned in grap)
+
+	83 Query builder: reverse SQL, remove -- comments 
+	84 Query builder still broken after reconnect 
+	85 Query Builder: check for PK when saving join to file
+	88 Propose Definition from query designer rigth click
+	92 Query Builder: reverse SQL syntax for table ALIAS in joins is case sensitiv
+	93 Query Builder: reverse SQL for WHERE (NOT) EXISTS to be added 
+	100 Content Window: "sort by" doesn't override initial order by from syntax
+	102 Query builder: reverse SQL, support OVER( PARTITION ... ORDER BY ...) 
+
+
+
 SQLeoVQB.2012.07Beta04.zip: 2012-10-19
 
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2012.07Beta/
+	7 	After saving / restoring from xlq tables locations have change (permuttated)
+	10  	Content window should fetch only first rows  
+	21 	Save joins from query builder to CSV
 	30  	Oracle: performance problem when adding tables to graph
 			ask for ojdbc14_10.2.0.5.jar (not bundled with SQLeo)
+	32 	Command Editor: ask to save on exit
+	38 	Content/Preview: remove left scrolling bar
+	41 	Propose Content from query designer rigth click
 	54  	Query Builder: reverse "sum(c) col_alias" is wrong 
+	56 	"Undo CTRL-Z/ Redo CTRL-Y" text on command editor/ syntax editor 
+	63 	Preferences: defaults modification
+	64 	Content: exporting modified field from grid is wrong
+	66 	use csvjdbc version 1.0-11 (bundled with SQLeo)
+		see https://sourceforge.net/p/sqleo/discussion/general/thread/325d5cd1/
+	68 	Command editor: Increase column display size for DATES and TIMESTAMPS types.
+	69 	Exception: oracle.jdbc.driver.OracleResultSetImpl.isClosed()Z
+	70  	Exception: ResultSet.isAfterLast() unsupported at org.relique.jdbc.csv.CsvResultSet.isAfterLast
 	74	SQLeo application confirm dialog before exit
 	81  	Preview windows: NPE at com.sqleo.environment.ctrl.content.ContentView.sort
 	82 	Content Window: key down going up to grid (when having next n rows to fetch)
@@ -39,36 +85,6 @@ SQLeoVQB.2012.07Beta04.zip: 2012-10-19
 	89  	SQLeo application GUI enhancements (see sqleo-start.bat for Look and Feel modification)
 
 
-SQLeoVQB.2012.07Beta03.zip: 2012-09-19
-
-  For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2012.07Beta/
-	70  	Exception: ResultSet.isAfterLast() unsupported at org.relique.jdbc.csv.CsvResultSet.isAfterLast
-	69 	Exception: oracle.jdbc.driver.OracleResultSetImpl.isClosed()Z
-
-
-SQLeoVQB.2012.07Beta02.zip: 2012-09-17
-
-  For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2012.07Beta/
-	10  	Content window should fetch only first rows  
-	38 	Content/Preview: remove left scrolling bar
-	63 	Preferences: defaults modification
-	64 	Content: exporting modified field from grid is wrong
-	66 	use csvjdbc version 1.0-11 (bundled with SQLeo)
-		see https://sourceforge.net/p/sqleo/discussion/general/thread/325d5cd1/
-	68 	Command editor: Increase column display size for DATES and TIMESTAMPS types.
-
-
-SQLeoVQB.2012.07Beta01.zip: 2012-08-03
-
-  For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2012.07Beta/
-	7 	After saving / restoring from xlq tables locations have change (permuttated)
-	21 	Save joins from query builder to CSV
-	32 	Command Editor: ask to save on exit
-	41 	Propose Content from query designer rigth click
-	56 	"Undo CTRL-Z/ Redo CTRL-Y" text on command editor/ syntax editor 
 
 
 SQLeoVQB.2012.03Beta04.zip: 2012-07-18
