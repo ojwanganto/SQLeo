@@ -24,9 +24,15 @@
 
 package com.sqleo.environment.mdi;
 
+import java.awt.Desktop;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,14 +41,29 @@ import java.util.Vector;
 
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
+import javax.swing.JEditorPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 
@@ -134,7 +155,99 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		menu.add(createItem(MDIActions.ACTION_HOWTOUSE));
 		menu.addSeparator();
 		menu.add(createItem(MDIActions.ACTION_ABOUT));
+
+		addLink(I18n.getString("application.menu.donate","Donate"), Application.DONATE_URL);
+
+		String version = getLatestVersionName();
+		if(version!=null){
+			addLink(I18n.getString("application.menu.newversion","New version available")
+					,Application.SF_WEB);
+		}
 	}
+
+	private void addLink(String linkName,String url){
+		JEditorPane content = new JEditorPane();
+		content.setContentType("text/html");
+		content.setEditable(false);
+		content.setToolTipText(url);
+		String text = "<html><a href=\""+url+"\">"+linkName+"</a></html>";
+		content.setText(text);
+		content.addHyperlinkListener(new HyperlinkListener() {
+			@Override
+			public void hyperlinkUpdate(HyperlinkEvent e) {
+				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+					try {
+						Desktop.getDesktop().browse(e.getURL().toURI());
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(null,"Cannot connect to url",
+								"Error opening link "+e.getURL(), JOptionPane.WARNING_MESSAGE);
+					}
+				}
+			}
+		});
+		add(content);
+
+	}
+
+	private String getLatestVersionName(){
+		String version = null;
+		try {
+			final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			final DocumentBuilder builder = factory.newDocumentBuilder();
+			final Document document = builder.parse(Application.SVN_BUILD_XML_FILE);
+			if(document!=null){
+				NodeList props = document.getElementsByTagName("property");
+				boolean foundAttribute = false;
+				for(int i=0; i<props.getLength() && !foundAttribute;i++) {
+					Node node = props.item(i);
+					if (node.getNodeType() == Node.ELEMENT_NODE) {
+						Element element = (Element)node;
+						NamedNodeMap attributes = element.getAttributes();
+						for (int j = 0; j < attributes.getLength(); j++) {
+							Node attrNode = attributes.item(j);
+							if ("name".equals(attrNode.getNodeName()) && "version".equals(attrNode.getNodeValue())) {
+								foundAttribute = true;
+							}
+							if (foundAttribute && "value".equals(attrNode.getNodeName())) {
+								version = attrNode.getNodeValue();
+								break;
+							}
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		}
+		if(null == version){
+			return null;
+		}
+		System.out.println("Server version:" + version);
+		String[] v = version.split("\\.");
+		String vMajor = v[0];
+		String vMinor = v[1];
+		String vRelease = v[2];
+		if(Integer.parseInt(vMajor) > Integer.parseInt(Application.MAJOR) ){
+			return version;
+		}else {
+			String[] x = Application.MINOR.split("\\.");
+			String lMinor = x[0];
+			if(Integer.parseInt(vMinor)>Integer.parseInt(lMinor)){
+				return version;
+			}else {
+				String lRelease = x[1];
+				if(vRelease.compareTo(lRelease)>0){
+					return version;
+				}
+			}
+		}
+		return null;
+	}
+
 
 	public void addMenuItemAtFirst(String text){
 		MDIActions.LoadGivenQuery action = new MDIActions.LoadGivenQuery(); 

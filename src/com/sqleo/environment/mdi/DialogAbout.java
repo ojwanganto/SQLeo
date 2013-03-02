@@ -48,7 +48,7 @@ public class DialogAbout extends AbstractDialogModal
 		txt.setWrapStyleWord(true);
 		
 		txt.append("SQLeo Visual Query Builder :: java database frontend\n");
-		txt.append("Copyright (C) 2012 " + Application.AUTHOR + "\n");
+		txt.append("Copyright (C) "+Application.MAJOR + Application.AUTHOR + "\n");
 		txt.append("Project website: "+Application.WEB+"\n");
 		txt.append("\n");
 		txt.append("This program is free software; you can redistribute it and/or\n");

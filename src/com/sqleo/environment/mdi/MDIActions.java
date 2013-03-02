@@ -92,15 +92,13 @@ public abstract class MDIActions implements _Constants
 	public final static class HowToUse extends AbstractAction
 	{
 		public HowToUse(){super(I18n.getString("application.menu.help.howtouse","how to use..."));}
-		private static final String howtouseLink = "http://sqleo.sourceforge.net/";
 		public void actionPerformed(ActionEvent ae)
 		{
 
 			URI uri = null;
 			try {
-				uri = new URI(howtouseLink);
+				uri = new URI(Application.WEB);
 			} catch (URISyntaxException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			if (Desktop.isDesktopSupported() && uri!=null) {
@@ -111,12 +109,12 @@ public abstract class MDIActions implements _Constants
 					JOptionPane.showMessageDialog(null,
 							"Failed to launch the link, " +
 							"your computer is likely misconfigured.",
-							"Cannot Launch Link",JOptionPane.WARNING_MESSAGE);
+							"Cannot Launch Link "+Application.WEB,JOptionPane.WARNING_MESSAGE);
 				}
 			} else {
 				JOptionPane.showMessageDialog(null,
 						"Java is not able to launch links on your computer.",
-						"Cannot Launch Link",JOptionPane.WARNING_MESSAGE);
+						"Cannot Launch Link "+Application.WEB,JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}

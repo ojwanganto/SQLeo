@@ -28,7 +28,11 @@ public interface _Version
 {
     public static final String PROGRAM = "SQLeoVQB";
     public static final String AUTHOR = ""; //TODO 
-    public static final String WEB = "http://sourceforge.net/projects/sqleo/";  
+    public static final String WEB = "http://sqleo.sourceforge.net/";
+    public static final String SVN_BUILD_XML_FILE = "http://svn.code.sf.net/p/sqleo/code/trunk/build.xml";
+    public static final String SF_WEB = "http://sourceforge.net/projects/sqleo/";
+    public static final String DONATE_URL = "https://www.paypal.com/fr/cgi-bin/webscr?cmd=_flow&SESSION=Dft4tPkh5BMB-qrP0DaR3QMbbVOgo-95Piuun3JPua2a_jQUyXYD4Ei4thu&dispatch=5885d80a13c0db1f8e263663d3faee8dd75b1e1ec3ad97b7af62835dd81d5d52";
+//    https://sourceforge.net/p/sqleo/donate/
     
     public static final String MAJOR = "2013";
     public static final String MINOR = "02.rc1";
