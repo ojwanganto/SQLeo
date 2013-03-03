@@ -46,6 +46,7 @@ import com.sqleo.common.util.Resources;
 import com.sqleo.common.util.Store;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.mdi.ClientMetadataExplorer;
+import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.environment.mdi.MDIWindow;
 
 
@@ -284,6 +285,17 @@ public class Application extends Appearance implements _Constants,_Version
             {
                 e.printStackTrace();
             }
+        }else{
+        	// By default, SQLeo uses  Metal LAF instead of OS native LAF  
+        	try
+            {
+                javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+            }
+            catch (Exception e)
+            {
+                 e.printStackTrace();
+            }
+        	
         }
         System.out.println("SystemLookAndFeel: "+javax.swing.UIManager.getSystemLookAndFeelClassName());
         
@@ -308,5 +320,11 @@ public class Application extends Appearance implements _Constants,_Version
 		ClientMetadataExplorer cme = (ClientMetadataExplorer)window.getClient(ClientMetadataExplorer.DEFAULT_TITLE);
 		cme.getControl().getNavigator().onFireAutoConnect();
 		wait.dispose();
+		
+		if(Preferences.getBoolean(DialogPreferences.CHECK_FOR_UPDATE_KEY, true)){
+			// add version link on menubar after window loading
+			Application.window.menubar.addVersionLink();
+		}
+		
     }
 }

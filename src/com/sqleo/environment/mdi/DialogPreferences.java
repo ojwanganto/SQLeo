@@ -72,12 +72,14 @@ public class DialogPreferences extends AbstractDialogConfirm {
 
 	private JTextField jTextFieldMaxColSize = new JTextField();
 	private JCheckBox jCheckBoxAutoCommit = new JCheckBox();
+	private JCheckBox jCheckBoxCheckUpdate = new JCheckBox();
 
 	public static final String CONTENT_MAX_ROWS_FETCH_SIZE_KEY = "content.maxrowfetchsize";
+	public static final String CHECK_FOR_UPDATE_KEY = "application.checkforupdate";
 
 	public DialogPreferences() {
 		super(Application.window, Application.PROGRAM + ".preferences", 350,
-				INITIAL_HEIGHT);
+				390);
 
 		JPanel pnlQB = new JPanel(new GridLayout(0, 1));
 		pnlQB.setBorder(new EmptyBorder(10, 5, 90, 5));
@@ -113,7 +115,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				"application.preferences.autoCommitInfo",
 				I18n.getString(
 						"application.preferences.autoCommitWarning",
-						"Warning:Commit in a window affects all openend windows for a connection when autocommit disabled")		
+						"Warning:Commit in a window affects all opened windows for a connection when auto commit disabled!")		
 		));
 		jLabelAutoCommitInfo.setForeground(Color.RED);
 		jLabelAutoCommitInfo.setFont(new Font(jLabelAutoCommitInfo.getFont().getName(),Font.BOLD,jLabelAutoCommitInfo.getFont().getSize()));
@@ -148,6 +150,10 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				"trace log (need restart)"));
 		jCheckBoxTrace.setSelected(Preferences.getBoolean("application.trace",
 				true));
+		jCheckBoxCheckUpdate.setText(I18n.getString("application.preferences.checkforupdate",
+		"Check for update on startup"));
+		jCheckBoxCheckUpdate.setSelected(Preferences.getBoolean(CHECK_FOR_UPDATE_KEY,
+		true));
 		jCheckBoxAutoCommit.setText(I18n.getString(
 				"application.preferences.autoCommit", "auto commit"));
 		jCheckBoxAutoCommit.setSelected(Preferences.getBoolean(
@@ -206,6 +212,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		pnlGeneral.add(jLabelLanguage);
 		pnlGeneral.add(jComboBoxLanguage);
 		pnlGeneral.add(jCheckBoxTrace);
+		pnlGeneral.add(jCheckBoxCheckUpdate);
 		pnlGeneral.add(jLabelAutoCommitInfo);
 		pnlGeneral.add(jCheckBoxAutoCommit);
 
@@ -282,6 +289,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 
 		Preferences.set("application.trace",
 				new Boolean(jCheckBoxTrace.isSelected()));
+		Preferences.set(CHECK_FOR_UPDATE_KEY,
+				new Boolean(jCheckBoxCheckUpdate.isSelected()));
 		Preferences.set("application.autoCommit", new Boolean(
 				jCheckBoxAutoCommit.isSelected()));
 		Preferences.set("editor.maxcolsize",

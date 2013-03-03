@@ -31,8 +31,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -48,6 +50,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.InternalFrameEvent;
@@ -158,11 +161,6 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 
 		addLink(I18n.getString("application.menu.donate","Donate"), Application.DONATE_URL);
 
-		String version = getLatestVersionName();
-		if(version!=null){
-			addLink(I18n.getString("application.menu.newversion","New version available")
-					,Application.SF_WEB);
-		}
 	}
 
 	private void addLink(String linkName,String url){
@@ -186,11 +184,40 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 			}
 		});
 		add(content);
-
+	}
+	
+	public void addVersionLink(){
+		SwingUtilities.invokeLater( new Runnable() {
+			@Override
+			public void run() {
+				String version = getLatestVersionName();
+				if(version!=null){
+					addLink(I18n.getString("application.menu.newversion","New version available")
+							,Application.SF_WEB);
+					revalidate();
+					repaint();
+				}
+			}
+		});
 	}
 
 	private String getLatestVersionName(){
-		String version = null;
+		try {
+			// check if sf url can be reached first 
+             URL url = new URL(Application.WEB);
+             HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
+             urlConnect.setConnectTimeout(5000);//max time out 5 seconds
+             urlConnect.connect();
+         } catch (UnknownHostException e) {
+             e.printStackTrace();
+             return null;
+         }
+         catch (IOException e) {
+             e.printStackTrace();
+             return null;
+         }
+		// if sf connection made then we will be here to process build.xml file 
+        String version = null; 
 		try {
 			final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			final DocumentBuilder builder = factory.newDocumentBuilder();
