@@ -109,8 +109,11 @@ public class TaskRetrieve implements Runnable
 		finally
 		{
 			target.getView().onTableChanged(true);
-			
-			target.doSuspend();
+			if(rowsToFetchExists){
+				target.doSuspend();
+			}else{
+				target.doStop();
+			}
 			target.doRefreshStatus(!rowsToFetchExists);
 		}
 	}
@@ -141,7 +144,11 @@ public class TaskRetrieve implements Runnable
 			Application.println(sqle,true);
 		}finally{
 			target.getView().onTableChanged(true);
-			target.doSuspend();
+			if(rowsToFetchExists){
+				target.doSuspend();
+			}else{
+				target.doStop();
+			}
 			target.doRefreshStatus(!rowsToFetchExists);
 		}
 	}

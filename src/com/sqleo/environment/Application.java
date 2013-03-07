@@ -298,6 +298,8 @@ public class Application extends Appearance implements _Constants,_Version
         	
         }
         System.out.println("SystemLookAndFeel: "+javax.swing.UIManager.getSystemLookAndFeelClassName());
+        System.out.println("SQLeoUsingLookAndFeel: "+javax.swing.UIManager.getLookAndFeel());
+
         
 		Application.loadSession();
 		Application.initI18n();

@@ -470,6 +470,9 @@ public class ContentView extends JPanel implements ListSelectionListener
 	{
 		public void adjustmentValueChanged(AdjustmentEvent e)
 		{
+			if(e.getValueIsAdjusting() || getRowCount()==0){
+				return;
+			}
 			if (jsb.getMaximum() != 0 && e.getValue()>0)
 			{
 				if ((jsb.getMaximum() - jsb.getVisibleAmount()) <= e.getValue())
