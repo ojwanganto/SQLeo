@@ -10,9 +10,10 @@ java -Dcom.sqleo.laf.class=com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel -jar
 :: Other available look and feels from jdk,replace the class name below mentioned in above command 
 :: javax.swing.plaf.metal.MetalLookAndFeel (this is default one)
 :: com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel
-:: com.sun.java.swing.plaf.windows.WindowsLookAndFeel
+:: com.sun.java.swing.plaf.windows.WindowsLookAndFeel(Windows)
 :: com.sun.java.swing.plaf.motif.MotifLookAndFeel
 :: com.sun.java.swing.plaf.gtk.GTKLookAndFeel (For some linux variants like Ubuntu)
+:: com.apple.laf.AquaLookAndFeel(MacOS)
 
 :: This one is external look and feel similar to Nimbus but more MacOS styled  
 :: download the seaglasslookandfeel-0.2.jar from http://seaglass.googlecode.com/svn/doc/downloads.html
