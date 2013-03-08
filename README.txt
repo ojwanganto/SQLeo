@@ -18,10 +18,31 @@ To run SQLeo Visual Query Builder, launch:
 
   java -jar SQLeoVQB.jar
 
+or launch
+
+  sqleo-start.bat 
+  sqleo-start.sh
+  sqleo-start.command
+
+With the expected LookAndFeel 
+(Warning Metal is set by default because it is the only one that has been fully tested)
+
+
 These instructions assume that the 1.6 version of the java
 command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
+
+
+SQLeoVQB.2013.02.rc02.zip: 2013-03-08
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.02/
+	96 	Content window: refresh (F5) when all rows are fetched returns blank screen
+	103 	Improve SQLeo to check for new version available on server
+		and Add donate shortcut
+	104 	Query Builder: Fails to save .sql on Mac OS X
+			LookAndFeel forced by default to Metal for all OS
 
 
 SQLeoVQB.2013.02.rc01.zip: 2013-02-22
