@@ -319,7 +319,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 								browser.getQuerySpecification().setSelectList(k,token);
 								child.setUserObject(token);
 								browser.reload(child);
-								
+								field.setSelected(true);
 							}
 						}
 					}

@@ -26,7 +26,9 @@ package com.sqleo.environment.mdi;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -39,7 +41,11 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
 import com.sqleo.common.gui.Toolbar;
+import com.sqleo.common.jdbc.ConnectionAssistant;
+import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.ContentPane;
 import com.sqleo.environment.ctrl.content.DialogFilters;
 import com.sqleo.environment.ctrl.content.DialogFindReplace;
@@ -48,7 +54,9 @@ import com.sqleo.environment.ctrl.content.DialogStream;
 import com.sqleo.environment.ctrl.content.DialogUpdateCriteria;
 import com.sqleo.environment.ctrl.content.UpdateModel;
 import com.sqleo.environment.ctrl.define.TableMetaData;
+import com.sqleo.querybuilder.DiagramLayout;
 import com.sqleo.querybuilder.QueryModel;
+import com.sqleo.querybuilder.syntax.SQLParser;
 
 
 public class ClientContent extends MDIClientWithCRActions
@@ -201,11 +209,56 @@ public class ClientContent extends MDIClientWithCRActions
 			MDIMenubar.createItem(new ActionShowExport()),
 			MDIMenubar.createItem(new ActionShowImport()),
 			null,
-			MDIMenubar.createItem(control.getActionMap().get("task-go"))
+			MDIMenubar.createItem(control.getActionMap().get("task-go")),
+			MDIMenubar.createItem(new ActionReverseSyntax())
 		};
 		m_actions[0].setEnabled(control.getQueryModel()!=null);
 		m_actions[1].setEnabled(control.getQueryModel()!=null);
 		m_actions[4].setEnabled(control.getQueryModel()!=null);
+	}
+	
+	private class ActionReverseSyntax extends AbstractAction {
+		ActionReverseSyntax() {
+			putValue(NAME, "reverse syntax");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			String sql = control.getQuery();
+			if (Text.isEmpty(sql)) {
+				Application.alert(Application.PROGRAM, "No query exists to reverse!");
+				return;
+			}
+			try {
+				QueryModel qm = SQLParser.toQueryModel(sql);
+				if (!Preferences.getBoolean("querybuilder.use-schema")) {
+					ConnectionHandler ch = ConnectionAssistant
+							.getHandler(control.getHandlerKey());
+					ArrayList schemas = (ArrayList) ch
+							.getObject("$schema_names");
+					if (schemas.size() > 0) {
+						Object schema = JOptionPane.showInputDialog(
+								Application.window, "schema:",
+								Application.PROGRAM, JOptionPane.PLAIN_MESSAGE,
+								null, schemas.toArray(), null);
+						if (schema == null) {
+							return;
+						}
+						qm.setSchema(schema.toString());
+					}
+				}
+	
+				DiagramLayout dl = new DiagramLayout();
+				dl.setQueryModel(qm);
+	
+				ClientQueryBuilder cqb = new ClientQueryBuilder(
+						control.getHandlerKey());
+				Application.window.add(cqb);
+				cqb.setDiagramLayout(dl);
+			} catch (IOException e) {
+				Application.println(e, true);
+			}
+		}
 	}
 	
 	public final void dispose()

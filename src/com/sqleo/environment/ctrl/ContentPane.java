@@ -73,6 +73,7 @@ public class ContentPane extends BorderLayoutPanel
 	private UpdateModel umodel;
 	private String query;
 	private TaskRetrieve retrievingTask;
+	private Integer retrievedRowCount;
 	
 	public ContentPane(String keycah, QueryModel qmodel, UpdateModel umodel)
 	{
@@ -140,6 +141,8 @@ public class ContentPane extends BorderLayoutPanel
 						String countQuery = "SELECT count(*) FROM ( " + originalQuery +" ) X ";
 						ResultSet rs = stmt.executeQuery(countQuery);
 						int records = rs.next() ? rs.getInt(1) : 0;
+						retrievedRowCount = Integer.valueOf(records);
+						doRefreshStatus(false);
 						rs.close();
 						stmt.close();
 						JOptionPane.showMessageDialog(Application.window,"Total records count : "+records);
@@ -218,6 +221,7 @@ public class ContentPane extends BorderLayoutPanel
 	
 	public void doRetrieve()
 	{
+		retrievedRowCount = null;
 		retrievingTask = new TaskRetrieve(this);
 		onBeginTask(retrievingTask);
 	}
@@ -310,6 +314,9 @@ public class ContentPane extends BorderLayoutPanel
 	{
 		if(view.getRowCount() > 0){
 			String appendOf = !lastFetch ? "...." : ""+view.getFlatRowCount();
+			if(retrievedRowCount!=null){
+				appendOf =""+retrievedRowCount;
+			}
 			status.setText(	" record " + view.getLineAt(0) + " to " + view.getLineAt(view.getRowCount()-1) + " of " + appendOf +
 					" | changes " + view.getChanges().count());
 		}
