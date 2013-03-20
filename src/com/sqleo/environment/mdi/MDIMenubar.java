@@ -260,12 +260,12 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		String vRelease = v[2];
 		if(Integer.parseInt(vMajor) > Integer.parseInt(Application.MAJOR) ){
 			return version;
-		}else {
+		}else if(Integer.parseInt(vMajor) == Integer.parseInt(Application.MAJOR) ){
 			String[] x = Application.MINOR.split("\\.");
 			String lMinor = x[0];
 			if(Integer.parseInt(vMinor)>Integer.parseInt(lMinor)){
 				return version;
-			}else {
+			}else if(Integer.parseInt(vMinor)==Integer.parseInt(lMinor)){
 				String lRelease = x[1];
 				if(vRelease.compareTo(lRelease)>0){
 					return version;
