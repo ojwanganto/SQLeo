@@ -34,6 +34,15 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2013.02.rc03.zip: 2013-03-23
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.02/
+	105 	Content window: propose "reverse syntax"
+	109 	Content window: display rowcount when known
+	103 	Fix when checking for new version available on server
+
+
 SQLeoVQB.2013.02.rc02.zip: 2013-03-08
 
   For changes included see tickets at  
