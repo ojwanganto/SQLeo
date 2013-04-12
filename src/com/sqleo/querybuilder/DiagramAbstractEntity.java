@@ -122,6 +122,7 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 		{
 			DiagramField field = (DiagramField)fields.getComponent(i);
 			if(field.getLabel().equalsIgnoreCase(label)) return i;
+			if(field.getQueryToken().toString().equalsIgnoreCase(label)) return i;
 		}
 		
 		return -1;		
@@ -276,7 +277,7 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 			for(int i=0; i<fields.getComponentCount(); i++)
 			{
 				DiagramField field = (DiagramField)fields.getComponent(i);
-				if(!field.isSelected() && !field.isJoined())
+				if(!field.isSelected() && !field.isJoined() &&!field.isInWhereClause())
 				{
 					filterdFields.add(field);
 					fields.remove(field);

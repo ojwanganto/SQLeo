@@ -29,9 +29,10 @@ import java.awt.event.ComponentEvent;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
-import javax.swing.AbstractButton;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -44,10 +45,12 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
-import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.mdi.ClientQueryBuilder;
 import com.sqleo.querybuilder.BrowserItems.DefaultTreeItem;
 import com.sqleo.querybuilder.syntax.QueryTokens;
+import com.sqleo.querybuilder.syntax.QueryTokens.Column;
+import com.sqleo.querybuilder.syntax.QueryTokens.Condition;
+import com.sqleo.querybuilder.syntax.QueryTokens.DefaultExpression;
 import com.sqleo.querybuilder.syntax.SQLFormatter;
 import com.sqleo.querybuilder.syntax.SQLParser;
 import com.sqleo.querybuilder.syntax.SubQuery;
@@ -246,12 +249,52 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		
 		load(browser.getQuerySpecification().getFromClause());
 		load(browser.getQuerySpecification().getSelectList());
+		load(browser.getQuerySpecification().getWhereClause());
 		
 		loading = false;
 		
 		convertJoins(browser.getQuerySpecification().getWhereClause());
 	}
 	
+	
+	private void load(Condition[] whereClauses) {
+		for(Condition whereClause : whereClauses){
+			for(DiagramField field : getDiagramFieldsFromWhereClause(whereClause)){
+				if(field!=null) field.setWhereIcon();
+			}
+		}
+	}
+	public List<DiagramField> getDiagramFieldsFromWhereClause(Condition whereClause){
+		List<DiagramField> fields = new ArrayList<DiagramField>(2);
+		DiagramField left = getDiagramFieldFromWhereToken(whereClause.getLeft());
+		DiagramField right = getDiagramFieldFromWhereToken(whereClause.getRight());
+		fields.add(left);
+		fields.add(right);
+		return fields;
+	}
+	private DiagramField getDiagramFieldFromWhereToken(QueryTokens._Expression whereToken){
+		if(whereToken!=null){
+			if(whereToken instanceof Column){
+				QueryTokens.Column token = (QueryTokens.Column)whereToken;
+				DiagramEntity entity = diagram.getEntity(token.getTable());
+				if(entity!=null){
+					return entity.getField(token.getName());
+				}
+			}else if (whereToken instanceof DefaultExpression){
+				DiagramAbstractEntity[] entities = diagram.getEntities();
+				for(int j=0; j<entities.length; j++){
+					if(!(entities[j] instanceof DiagramEntity)) continue;
+					DiagramEntity entity = (DiagramEntity)entities[j];
+					DiagramField field =  entity.getField(whereToken.toString());
+					if(field!=null){
+						return field;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	private void load(QueryTokens._TableReference[] tokens)
 	{
 		for(int i=0; i<tokens.length; i++)

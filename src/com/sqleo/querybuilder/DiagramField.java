@@ -59,6 +59,8 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 	
 	int position;
 	static ImageIcon keyIcon = null;
+	private boolean primaryKey = false;
+	private boolean inWhereClause = false;
 
 	QueryTokens.Column querytoken;
 	private DiagramAbstractEntity owner;
@@ -95,6 +97,7 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 		}
 		else
 		{
+			primaryKey = true;
 			f = new Font(f.getName(), Font.BOLD, f.getSize());
 			labelComponent.setIcon(keyIcon);
 		}
@@ -306,12 +309,26 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 		void add(QueryTokens.Condition token)
 		{
 			getOwner().builder.browser.addWhereClause(token);
+			setWhereIcon();
+
 		}
 
 		boolean isFirst()
 		{
 			return getOwner().builder.browser.getQuerySpecification().getWhereClause().length == 0;
 		}
+	}
+	
+	public void setWhereIcon(){
+		inWhereClause = true;
+		labelComponent.setIcon(primaryKey? QueryModelTreeCellRenderer.keyAndWhereIcon : QueryModelTreeCellRenderer.whereIcon);
+	}
+	public void resetWhereIcon(){
+		inWhereClause = false;
+		labelComponent.setIcon(primaryKey ? keyIcon : null);
+	}
+	public boolean isInWhereClause(){
+		return inWhereClause;
 	}
 
 	private class ActionAddHaving extends ActionAddCondition

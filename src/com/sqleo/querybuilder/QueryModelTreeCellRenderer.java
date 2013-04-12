@@ -48,6 +48,7 @@ public class QueryModelTreeCellRenderer extends DefaultTreeCellRenderer
 {
     static ImageIcon queryIcon;
     static ImageIcon whereIcon;
+    static ImageIcon keyAndWhereIcon;
     static ImageIcon fromIcon;
     static ImageIcon selectIcon;
     
@@ -65,7 +66,8 @@ public class QueryModelTreeCellRenderer extends DefaultTreeCellRenderer
         super();
         
         if (queryIcon == null) queryIcon = new javax.swing.ImageIcon(getClass().getResource("/images/page_white_database.png"));
-        if (whereIcon == null) whereIcon = new javax.swing.ImageIcon(getClass().getResource("/images/filter.png"));
+        if (whereIcon == null) whereIcon = new javax.swing.ImageIcon(getClass().getResource("/images/filter_where.png"));
+        if (keyAndWhereIcon == null) keyAndWhereIcon = new javax.swing.ImageIcon(getClass().getResource("/images/bullet_key_filter.png"));
         if (fromIcon == null) fromIcon = new javax.swing.ImageIcon(getClass().getResource("/images/table_relationship.png"));
         if (selectIcon == null) selectIcon = new javax.swing.ImageIcon(getClass().getResource("/images/layout.png"));
         if (tableIcon == null) tableIcon = new javax.swing.ImageIcon(getClass().getResource("/images/database_table.png"));

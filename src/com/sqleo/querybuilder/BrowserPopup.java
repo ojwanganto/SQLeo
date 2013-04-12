@@ -291,6 +291,9 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 		void add(QueryTokens.Condition token)
 		{
 			BrowserPopup.this.builder.browser.addWhereClause(token);
+			for(DiagramField field : BrowserPopup.this.builder.getDiagramFieldsFromWhereClause(token)){
+				if(field!=null) field.setWhereIcon();
+			}
 		}
 		
 		QueryTokens.Condition createQueryToken()
@@ -361,7 +364,21 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 			}
 			else if(BrowserPopup.this.token instanceof QueryTokens.Condition)
 			{
-				if(new MaskCondition((QueryTokens.Condition)BrowserPopup.this.token,BrowserPopup.this.builder).showDialog()) ret = 0;
+				QueryTokens.Condition condition = (QueryTokens.Condition)BrowserPopup.this.token;
+				QueryTokens.Condition oldConditionClone = new QueryTokens.Condition(condition.getAppend(),condition.getLeft(),condition.getOperator(),condition.getRight()); 
+				MaskCondition mask = new MaskCondition(condition,BrowserPopup.this.builder);
+				if(mask.showDialog()) { 
+					ret = 0;
+					if(node.getParent().toString().indexOf(_ReservedWords.WHERE)!=-1){
+						for(DiagramField field : BrowserPopup.this.builder.getDiagramFieldsFromWhereClause(oldConditionClone)){
+							if(field!=null) field.resetWhereIcon();
+						}
+						for(DiagramField field : BrowserPopup.this.builder.getDiagramFieldsFromWhereClause(condition)){
+							if(field!=null) field.setWhereIcon();
+						}
+					}
+				}
+				
 			}
 			else if(BrowserPopup.this.token instanceof QueryTokens.DefaultExpression)
 			{
@@ -393,8 +410,13 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 		{
 			if(BrowserPopup.this.token instanceof QueryTokens.Condition)
 			{
-				if(node.getParent().toString().indexOf(_ReservedWords.WHERE)!=-1)
+				if(node.getParent().toString().indexOf(_ReservedWords.WHERE)!=-1){
 					BrowserPopup.this.builder.browser.removeWhereClause((QueryTokens.Condition)token);
+					QueryTokens.Condition condition = (QueryTokens.Condition)BrowserPopup.this.token;
+					for(DiagramField field : BrowserPopup.this.builder.getDiagramFieldsFromWhereClause(condition)){
+						if(field!=null) field.resetWhereIcon();
+					}
+				}
 				else
 					BrowserPopup.this.builder.browser.removeHavingClause((QueryTokens.Condition)token);
 			}
@@ -474,10 +496,15 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 			{
 				BrowserItems.DefaultTreeItem item = (BrowserItems.DefaultTreeItem)where.getFirstChild();
 				BrowserPopup.this.builder.browser.setSelectedItem(item);
+				QueryTokens.Condition condition = null;
 				if(item instanceof BrowserItems.ConditionQueryTreeItem)
-					BrowserPopup.this.builder.browser.removeWhereClause(((BrowserItems.ConditionQueryTreeItem)item).getCondition());
+					condition = ((BrowserItems.ConditionQueryTreeItem)item).getCondition();
 				else
-					BrowserPopup.this.builder.browser.removeWhereClause((QueryTokens.Condition)item.getUserObject());
+					condition = (QueryTokens.Condition)item.getUserObject();
+				BrowserPopup.this.builder.browser.removeWhereClause(condition);
+				for(DiagramField field : BrowserPopup.this.builder.getDiagramFieldsFromWhereClause(condition)){
+					if(field!=null) field.resetWhereIcon();
+				}
 			}
 		}
 

@@ -55,6 +55,7 @@ public class ClientQueryBuilder extends MDIClient {
 	public static int counter = 0;
 
 	private QueryBuilder builder;
+	private ClientContent client;
 	private JMenuItem[] m_actions;
 	private Toolbar toolbar;
 
@@ -235,16 +236,19 @@ public class ClientQueryBuilder extends MDIClient {
 					}
 				}
 			}
-
-			ClientContent client = new ClientContent(
-					ClientQueryBuilder.this.keycah, qm, um);
-			client.setTitle(ClientContent.PREVIEW_TITLE+" : " + subtitle);
-			Application.window.add(client);
+			onLaunch(subtitle, new ClientContent(ClientQueryBuilder.this.keycah, qm, um));
 		}
 		
 		private void onLaunchFromSyntax(String subtitle){
 			String query = ClientQueryBuilder.this.builder.getSyntax().getText();
-			ClientContent client = new ClientContent(ClientQueryBuilder.this.keycah, query,true);
+			onLaunch(subtitle, new ClientContent(ClientQueryBuilder.this.keycah, query,true));
+		}
+		
+		private void onLaunch(String subtitle,ClientContent newClient){
+			if(client!=null){
+				client.dispose();
+			}
+			client = newClient;
 			client.setTitle(ClientContent.PREVIEW_TITLE+" : " + subtitle);
 			Application.window.add(client);
 		}
