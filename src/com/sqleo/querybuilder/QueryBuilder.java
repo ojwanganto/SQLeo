@@ -268,6 +268,10 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		List<DiagramField> fields = new ArrayList<DiagramField>(2);
 		DiagramField left = getDiagramFieldFromWhereToken(whereClause.getLeft());
 		DiagramField right = getDiagramFieldFromWhereToken(whereClause.getRight());
+		if(left!=null && right!=null){
+			//don't set icons if both left and right clause belongs to diagram field
+			return fields;
+		}
 		fields.add(left);
 		fields.add(right);
 		return fields;
