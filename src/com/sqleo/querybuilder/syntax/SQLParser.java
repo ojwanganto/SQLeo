@@ -771,7 +771,9 @@ public class SQLParser
 	public static boolean isJoinWord(String s)
 	{
 		return s.equalsIgnoreCase(_ReservedWords.INNER_JOIN) || s.equalsIgnoreCase(_ReservedWords.FULL_OUTER_JOIN)
-			|| s.equalsIgnoreCase(_ReservedWords.LEFT_OUTER_JOIN) || s.equalsIgnoreCase(_ReservedWords.RIGHT_OUTER_JOIN);
+			|| s.equalsIgnoreCase(_ReservedWords.LEFT_OUTER_JOIN) || s.equalsIgnoreCase(_ReservedWords.RIGHT_OUTER_JOIN)
+			|| s.equalsIgnoreCase(_ReservedWords.JOIN) || s.equalsIgnoreCase(_ReservedWords.FULL_JOIN)
+			|| s.equalsIgnoreCase(_ReservedWords.LEFT_JOIN) || s.equalsIgnoreCase(_ReservedWords.RIGHT_JOIN);
 	}
 	
 	public static boolean isClauseWord(String s)
@@ -799,7 +801,11 @@ public class SQLParser
 			}
 			else if(al.get(i).toString().equalsIgnoreCase("JOIN"))
 			{
-				if(al.get(i-1).toString().equalsIgnoreCase("INNER"))
+				if(al.get(i-1).toString().equalsIgnoreCase("INNER")
+					||al.get(i-1).toString().equalsIgnoreCase("CROSS")
+					||al.get(i-1).toString().equalsIgnoreCase("LEFT")
+					||al.get(i-1).toString().equalsIgnoreCase("RIGHT")
+					||al.get(i-1).toString().equalsIgnoreCase("FULL"))
 				{	
 					al.set(i-1, al.get(i-1).toString().toUpperCase() + SQLFormatter.SPACE + "JOIN");
 					al.remove(i--);

@@ -129,6 +129,10 @@ public class QueryStyledDocument extends DefaultStyledDocument implements _Reser
 		checkKeyword(line, LEFT_OUTER_JOIN  , startOffset);
 		checkKeyword(line, RIGHT_OUTER_JOIN , startOffset);
 		checkKeyword(line, FULL_OUTER_JOIN  , startOffset);
+		checkKeyword(line, JOIN       , startOffset);
+		checkKeyword(line, LEFT_JOIN  , startOffset);
+		checkKeyword(line, RIGHT_JOIN , startOffset);
+		checkKeyword(line, FULL_JOIN  , startOffset);
 	}
 
 	protected void checkKeyword(String line, String keyword, int offsetgap)

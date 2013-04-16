@@ -223,8 +223,9 @@ public abstract class QueryTokens
 	{
 		public static final int INNER		= 0;
 		public static final int LEFT_OUTER	= 1;
-		public static final int RIGHT_OUTER = 2;
+		public static final int RIGHT_OUTER 	= 2;
 		public static final int FULL_OUTER	= 3;
+
 		
 		private int type;
 		private Condition condition;
@@ -252,9 +253,9 @@ public abstract class QueryTokens
 
 		public static int getTypeInt(String type)
 		{
-			if(type.toUpperCase().equals(_ReservedWords.LEFT_OUTER_JOIN)) return LEFT_OUTER;
-			if(type.toUpperCase().equals(_ReservedWords.RIGHT_OUTER_JOIN)) return RIGHT_OUTER;
-			if(type.toUpperCase().equals(_ReservedWords.FULL_OUTER_JOIN)) return FULL_OUTER;
+			if(type.toUpperCase().equals(_ReservedWords.LEFT_OUTER_JOIN)||type.toUpperCase().equals(_ReservedWords.LEFT_JOIN)) return LEFT_OUTER;
+			if(type.toUpperCase().equals(_ReservedWords.RIGHT_OUTER_JOIN)||type.toUpperCase().equals(_ReservedWords.RIGHT_JOIN)) return RIGHT_OUTER;
+			if(type.toUpperCase().equals(_ReservedWords.FULL_OUTER_JOIN)||type.toUpperCase().equals(_ReservedWords.FULL_JOIN)) return FULL_OUTER;
 			
 			return INNER;
 		}

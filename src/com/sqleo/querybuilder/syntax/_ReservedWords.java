@@ -44,4 +44,10 @@ public interface _ReservedWords
 	public static final String LEFT_OUTER_JOIN  = "LEFT OUTER JOIN";
 	public static final String RIGHT_OUTER_JOIN = "RIGHT OUTER JOIN";
 	public static final String FULL_OUTER_JOIN  = "FULL OUTER JOIN";
+
+	public static final String JOIN       = "JOIN";
+	public static final String LEFT_JOIN  = "LEFT JOIN";
+	public static final String RIGHT_JOIN = "RIGHT JOIN";
+	public static final String FULL_JOIN  = "FULL JOIN";
+
 }
