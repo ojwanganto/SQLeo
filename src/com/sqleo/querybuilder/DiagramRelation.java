@@ -105,6 +105,7 @@ public class DiagramRelation extends JPanel
 		// anchor.setBorder(new LineBorder(getForeground(),1));
 
 		this.highlight = b;
+		this.doResize();
 		this.repaint();
 	}
 
@@ -203,8 +204,8 @@ public class DiagramRelation extends JPanel
 	
 			if (px2 < fx1)
 			{
-				plusColor = this.isLeft() || this.isFull() ? Color.green : Color.black;
-				minusColor = this.isRight() || this.isFull() ? Color.green : Color.black;
+				plusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+				minusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
 
 				serie[0].x = px2;
 				serie[0].y = py;
@@ -218,8 +219,8 @@ public class DiagramRelation extends JPanel
 			}
 			else if (px1 > fx2)
 			{
-				plusColor = this.isRight() || this.isFull() ? Color.green : Color.black;
-				minusColor = this.isLeft() || this.isFull() ? Color.green : Color.black;
+				plusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
+				minusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
 
 				serie[0].x = fx2;
 				serie[0].y = fy;
@@ -233,8 +234,8 @@ public class DiagramRelation extends JPanel
 			}
 			else
 			{
-				plusColor = this.isLeft() || this.isFull() ? Color.green : Color.black;
-				minusColor = this.isRight() || this.isFull() ? Color.green : Color.black;
+				plusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
+				minusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
 
 				serie[0].x = px2;
 				serie[0].y = py;
@@ -287,7 +288,6 @@ public class DiagramRelation extends JPanel
 
 	protected void paintChildren(Graphics g)
 	{
-		g.setColor(isHighlight() ? highlightColor : normalColor);
 		((Graphics2D) g).setStroke(isHighlight() ? highlightStroke : normalStroke);
 
 		int arc_w = serie[2].x - serie[0].x;
