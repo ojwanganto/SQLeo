@@ -49,5 +49,6 @@ public interface _ReservedWords
 	public static final String LEFT_JOIN  = "LEFT JOIN";
 	public static final String RIGHT_JOIN = "RIGHT JOIN";
 	public static final String FULL_JOIN  = "FULL JOIN";
+	public static final String CROSS_JOIN  = "CROSS JOIN";
 
 }

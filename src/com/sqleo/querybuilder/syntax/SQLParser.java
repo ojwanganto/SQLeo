@@ -801,8 +801,12 @@ public class SQLParser
 			}
 			else if(al.get(i).toString().equalsIgnoreCase("JOIN"))
 			{
-				if(al.get(i-1).toString().equalsIgnoreCase("INNER")
-					||al.get(i-1).toString().equalsIgnoreCase("CROSS")
+				if (al.get(i-1).toString().equalsIgnoreCase("CROSS"))
+				{	
+					al.set(i-1, ",");
+					al.remove(i--);
+				}
+				else if(al.get(i-1).toString().equalsIgnoreCase("INNER")
 					||al.get(i-1).toString().equalsIgnoreCase("LEFT")
 					||al.get(i-1).toString().equalsIgnoreCase("RIGHT")
 					||al.get(i-1).toString().equalsIgnoreCase("FULL"))
