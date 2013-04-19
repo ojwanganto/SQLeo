@@ -54,6 +54,7 @@ import com.sqleo.environment.io.ManualTableMetaData;
 import com.sqleo.environment.mdi.ClientMetadataExplorer;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Column;
+import com.sqleo.querybuilder.syntax.QueryTokens.Join;
 
 
 public class DiagramRelation extends JPanel
@@ -145,6 +146,9 @@ public class DiagramRelation extends JPanel
 		default:
 			anchor.setBackground(Color.red);
 		}
+		
+		this.doResize();
+		this.repaint();
 	}
 
 	void onCreate(QueryBuilder builder,QueryTokens.Join join)
@@ -164,6 +168,9 @@ public class DiagramRelation extends JPanel
 
 		builder.browser.removeFromClause(querytoken);
 	}
+	
+	Color plusColor;
+	Color minusColor;
 
 	/**
 	 * Updates the serie array accordely to the fields positions.
@@ -196,6 +203,9 @@ public class DiagramRelation extends JPanel
 	
 			if (px2 < fx1)
 			{
+				plusColor = this.isLeft() || this.isFull() ? Color.green : Color.black;
+				minusColor = this.isRight() || this.isFull() ? Color.green : Color.black;
+
 				serie[0].x = px2;
 				serie[0].y = py;
 				serie[2].x = fx1;
@@ -208,6 +218,9 @@ public class DiagramRelation extends JPanel
 			}
 			else if (px1 > fx2)
 			{
+				plusColor = this.isRight() || this.isFull() ? Color.green : Color.black;
+				minusColor = this.isLeft() || this.isFull() ? Color.green : Color.black;
+
 				serie[0].x = fx2;
 				serie[0].y = fy;
 				serie[2].x = px1;
@@ -220,6 +233,9 @@ public class DiagramRelation extends JPanel
 			}
 			else
 			{
+				plusColor = this.isLeft() || this.isFull() ? Color.green : Color.black;
+				minusColor = this.isRight() || this.isFull() ? Color.green : Color.black;
+
 				serie[0].x = px2;
 				serie[0].y = py;
 				serie[2].x = fx2;
@@ -249,6 +265,18 @@ public class DiagramRelation extends JPanel
         	// BUG: 1929659
         }
 	}
+	
+	private boolean isLeft(){
+		return QueryTokens.Join.LEFT_OUTER == querytoken.getType();
+	}
+	
+	private boolean isRight(){
+		return QueryTokens.Join.RIGHT_OUTER == querytoken.getType();
+	}
+	
+	private boolean isFull(){
+		return QueryTokens.Join.FULL_OUTER == querytoken.getType();
+	}
 
 	/**
 	 * array of points to draw the connection line. It is updated by the method
@@ -272,16 +300,28 @@ public class DiagramRelation extends JPanel
 		{
 			if (arc_h == 0)
 			{
-				g.drawLine(serie[0].x, serie[0].y, serie[2].x, serie[2].y);
+				int midx = (serie[0].x+serie[2].x)/2;
+				int midy = (serie[0].y+serie[2].y)/2;
+				g.setColor(plusColor);
+				g.drawLine(serie[0].x, serie[0].y, midx, midy) ;
+				
+				g.setColor(minusColor);
+				g.drawLine(midx, midy, serie[2].x, serie[2].y);
 			}
 			else if (arc_h < 0) // __/--
 			{
+				g.setColor(plusColor);
 				g.drawArc(serie[0].x - arc_w / 2, serie[0].y + arc_h, arc_w, -arc_h, 270, 90);
+				
+				g.setColor(minusColor);
 				g.drawArc(serie[0].x + arc_w / 2, serie[0].y + arc_h, arc_w, -arc_h, 180, -90);
 			}
 			else if (arc_h > 0) // --\_
 			{
+				g.setColor(plusColor);
 				g.drawArc(serie[0].x - arc_w / 2, serie[0].y, arc_w, arc_h, 0, 90);
+				
+				g.setColor(minusColor);
 				g.drawArc(serie[0].x + arc_w / 2, serie[0].y, arc_w, arc_h, 180, 90);
 			}
 		}
@@ -290,18 +330,27 @@ public class DiagramRelation extends JPanel
 
 			if (arc_h == 0)
 			{
-				g.drawLine(serie[0].x, serie[0].y, serie[2].x, serie[2].y);
+				int midx = (serie[0].x+serie[2].x)/2;
+				int midy = (serie[0].y+serie[2].y)/2;
+				g.setColor(plusColor);
+				g.drawLine(serie[0].x, serie[0].y, midx, midy) ;
+				
+				g.setColor(minusColor);
+				g.drawLine(midx, midy, serie[2].x, serie[2].y);
+				
 			}
 			else if (arc_h < 0) // ]
 			{
 				arc_w = serie[1].x - serie[0].x;
 				arc_h = serie[0].y - serie[1].y;
 
+				g.setColor(plusColor);
 				g.drawArc(serie[0].x - arc_w, serie[1].y - arc_h, arc_w * 2, arc_h * 2, 270, 90);
 
 				arc_w = serie[1].x - serie[2].x;
 				arc_h = serie[1].y - serie[2].y;
 
+				g.setColor(minusColor);
 				g.drawArc(serie[2].x - arc_w, serie[2].y, arc_w * 2, arc_h * 2, 90, -90);
 
 			}
@@ -309,11 +358,14 @@ public class DiagramRelation extends JPanel
 			{
 				arc_w = serie[1].x - serie[0].x;
 				arc_h = serie[1].y - serie[0].y;
+				
+				g.setColor(plusColor);
 				g.drawArc(serie[0].x - arc_w, serie[0].y, arc_w * 2, arc_h * 2, 90, -90);
 
 				arc_w = serie[1].x - serie[2].x;
 				arc_h = serie[2].y - serie[1].y;
 
+				g.setColor(minusColor);
 				g.drawArc(serie[2].x - arc_w, serie[1].y - arc_h, arc_w * 2, arc_h * 2, 270, 90);
 
 			}
