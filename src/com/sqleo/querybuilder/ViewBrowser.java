@@ -33,6 +33,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
+import com.sqleo.querybuilder.BrowserItems.AbstractQueryTreeItem;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryExpression;
 import com.sqleo.querybuilder.syntax.QuerySpecification;
@@ -441,7 +442,11 @@ public class ViewBrowser extends BorderLayoutPanel implements TreeSelectionListe
 			onLoad(itemU);
 		}
 		
-		queryItem = null;
+		if(qi.getParent()!=null && qi.getParent().getParent()!=null){
+			queryItem = qi.getParent().getParent() instanceof AbstractQueryTreeItem ?  (AbstractQueryTreeItem)qi.getParent().getParent() : null;
+		}else {
+			queryItem = null;
+		}
 	}
 
 	void onModelChanged()
