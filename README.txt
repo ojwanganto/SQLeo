@@ -34,30 +34,24 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2013.04.rc01.zip: 2013-04-23
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.04/
+
+	26 Reverse SQL syntax problems, support added for: 
+		JOIN , LEFT JOIN, RIGHT JOIN, FULL JOIN, CROSS JOIN 
+	75 Query Builder: Highlight columns with where conditions using a flag or color
+	106 Query Builder: reuse same Content window on successives executions
+	108 Reverse query: graph for nested derived queries is wrong
+	113 Designer: display the direction of the join in graph
+
+
 SQLeoVQB.2013.02.rc03.zip: 2013-03-23
 
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2013.02/
-	105 	Content window: propose "reverse syntax"
-	109 	Content window: display rowcount when known
-	103 	Fix when checking for new version available on server
 
-
-SQLeoVQB.2013.02.rc02.zip: 2013-03-08
-
-  For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2013.02/
-	96 	Content window: refresh (F5) when all rows are fetched returns blank screen
-	103 	Improve SQLeo to check for new version available on server
-		and Add donate shortcut
-	104 	Query Builder: Fails to save .sql on Mac OS X
-			LookAndFeel forced by default to Metal for all OS
-
-
-SQLeoVQB.2013.02.rc01.zip: 2013-02-22
-
-  For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2013.02/
 	55 Query Builder: Table name is not displayed in graph when table alias is used 
 	67 change property file .sqleo to xml clear text
 		Two files are now used for configuration:
@@ -73,7 +67,7 @@ SQLeoVQB.2013.02.rc01.zip: 2013-02-22
 	79 Content / preview window: add row count on content window
 	80 Query builder: reverse SQL, add derived tables subqueries support
 		support for CTE (Common Table expression) added to ANSI and SQL92 style
-		Not finished yet (joins with Drived tables are not drawned in grap)
+		Not finished yet (joins with Derived tables are not drawned in graph)
 
 	83 Query builder: reverse SQL, remove -- comments 
 	84 Query builder still broken after reconnect 
@@ -81,9 +75,18 @@ SQLeoVQB.2013.02.rc01.zip: 2013-02-22
 	88 Propose Definition from query designer rigth click
 	92 Query Builder: reverse SQL syntax for table ALIAS in joins is case sensitiv
 	93 Query Builder: reverse SQL for WHERE (NOT) EXISTS to be added 
+	96 Content window: refresh (F5) when all rows are fetched returns blank screen
 	100 Content Window: "sort by" doesn't override initial order by from syntax
 	102 Query builder: reverse SQL, support OVER( PARTITION ... ORDER BY ...) 
+	103 Improve SQLeo to check for new version available on server
+		and Add donate shortcut
 
+	104 Query Builder: Fails to save .sql on Mac OS X
+		LookAndFeel forced by default to Metal for all OS
+
+	103 Fix when checking for new version available on server
+	105 Content window: propose "reverse syntax"
+	109 Content window: display rowcount when known
 
 
 SQLeoVQB.2012.07Beta04.zip: 2012-10-19
@@ -113,8 +116,6 @@ SQLeoVQB.2012.07Beta04.zip: 2012-10-19
 	86 	Query Builder : fix reverse SQL for table and columns with # char
 	87  	Query Builder : fix reverse SQL for "cast (x as ...) as Z"
 	89  	SQLeo application GUI enhancements (see sqleo-start.bat for Look and Feel modification)
-
-
 
 
 SQLeoVQB.2012.03Beta04.zip: 2012-07-18
