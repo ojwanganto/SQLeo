@@ -54,6 +54,8 @@ import com.sqleo.common.util.I18n;
 import com.sqleo.querybuilder.dnd.EntityDropTargetListener;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryTokens;
+
+// replace with import javax.imageio.ImageIO ?
 import com.sun.image.codec.jpeg.ImageFormatException;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
@@ -95,8 +97,9 @@ public class ViewDiagram extends BorderLayoutPanel
 		setComponentCenter(scroll);
                 
         jPopupMenuDiagram = new JPopupMenu();
-        jPopupMenuDiagram.add(builder.getActionMap().get(QueryActions.ENTITIES_ARRANGE));
 		jPopupMenuDiagram.add(builder.getActionMap().get(QueryActions.ENTITIES_PACK));
+	        jPopupMenuDiagram.add(builder.getActionMap().get(QueryActions.ENTITIES_ARRANGE_GRID));
+	        jPopupMenuDiagram.add(builder.getActionMap().get(QueryActions.ENTITIES_ARRANGE_SPRING));
 		jPopupMenuDiagram.add(builder.getActionMap().get(QueryActions.ENTITIES_REMOVE));
 		jPopupMenuDiagram.addSeparator();
 		jPopupMenuDiagram.add(builder.getActionMap().get(QueryActions.DIAGRAM_SAVE_AS_IMAGE));
@@ -449,7 +452,7 @@ public class ViewDiagram extends BorderLayoutPanel
 		out.close();
 	}	
 	
-	void doArrangeEntities()
+	void doArrangeEntitiesGrid()
 	{
 		Dimension full = new Dimension(10,10);
 		Dimension view = scroll.getVisibleRect().getSize();
@@ -472,6 +475,153 @@ public class ViewDiagram extends BorderLayoutPanel
 			full.width = next.x + entities[i].getWidth() + FRAME_OFFSET;
 			full.height = next.y;
 		}
+		doResize();
+	}
+
+	void doArrangeEntitiesSpring()
+	{
+
+		double SPRING_NATURAL_LENGTH = 3000;	// original 30
+		double SPRING_STIFFNESS = 300000;	// original was 150
+		double GRAVITY_REPULSION = 200;	// original was 2
+
+		int loops = 100;
+
+		Dimension window = new Dimension(1000,1000);
+			
+		// iter loop
+		for(int iter = 0; iter < loops; iter++)
+		{
+
+		// for each node i
+		DiagramAbstractEntity[] entities = this.getEntities();
+
+		int[] NewX = new int[entities.length];
+		int[] NewY = new int[entities.length];
+
+		for(int i = 0; i < entities.length; i++)
+		{
+
+
+		double vx = 0;
+	    	double vy = 0;
+
+		double dx = 0;
+	    	double dy = 0;
+
+		DiagramEntity tab;
+
+		// spring force
+		DiagramRelation[] relations = ViewDiagram.this.getRelations();
+		for(int k=0; k<relations.length; k++)
+		{
+
+			// keep only one join per nodes pair
+			// TO DO
+
+			if (relations[k].querytoken.getPrimary().getTable().equals(entities[i].getQueryToken()) )			{
+				tab = (DiagramEntity)getEntity(relations[k].querytoken.getForeign().getTable());
+			}
+			else if (relations[k].querytoken.getForeign().getTable().equals(entities[i].getQueryToken()) )
+			{
+				tab = (DiagramEntity)getEntity(relations[k].querytoken.getPrimary().getTable());
+			}
+			else
+				continue;
+
+			// take the shortest legnth between nodes sides
+			double vx1 = entities[i].getX() - tab.getX();
+			double vx2 = entities[i].getX() - (tab.getX()+tab.getWidth());
+			double vx3 = entities[i].getX()+entities[i].getWidth() - tab.getX();
+			double vx4 = entities[i].getX()+entities[i].getWidth() - (tab.getX()+tab.getWidth());
+			if (Math.abs(vx1) > Math.abs(vx2) )
+				vx = vx2;
+			else
+				vx = vx1;
+
+			if (Math.abs(vx) > Math.abs(vx3) )
+				vx = vx3;
+
+			if (Math.abs(vx) > Math.abs(vx4) )
+				vx = vx4;
+
+			vy = (entities[i].getY()+entities[i].getHeight()/2) - (tab.getY()+tab.getHeight()/2);
+
+			double len = Math.sqrt(vx * vx + vy * vy);
+	    
+			double f = (len - SPRING_NATURAL_LENGTH) / SPRING_STIFFNESS;
+
+			dx += f * vx;
+			dy += f * vy;
+	    
+		}
+
+		// Magnetic forces
+		for(int j = 0; j < entities.length; j++)
+		{
+
+			// same node
+			if (i == j)
+				continue;
+
+			// two nodes to compare
+			vx = (entities[i].getX()+entities[i].getWidth()/2) - (entities[j].getX()+entities[j].getWidth()/2);
+			vy = (entities[i].getY()+entities[i].getHeight()/2) - (entities[j].getY()+entities[j].getHeight()/2);
+
+			double len_sq = vx * vx + vy * vy;
+		
+			if (len_sq <1 ) {
+			    // "jiggle" if they're on top of each other
+			    dx += Math.random()*SPRING_NATURAL_LENGTH/2;
+			    dy += Math.random()*SPRING_NATURAL_LENGTH/2;
+			} else {
+			    dx += GRAVITY_REPULSION * vx / len_sq;
+			    dy += GRAVITY_REPULSION * vy / len_sq;
+			}
+
+
+		} // end j node loop
+						
+
+		// Wall effect
+		if (entities[i].getY() > 0)
+			dy += GRAVITY_REPULSION / entities[i].getY();
+		else 
+			dy += GRAVITY_REPULSION ;
+	    	if (entities[i].getY() < window.height)
+			dy += - GRAVITY_REPULSION / (window.height - entities[i].getY());
+	    	else
+			dy += - GRAVITY_REPULSION ;
+	    	if (entities[i].getX() > 0)
+			dx += GRAVITY_REPULSION / entities[i].getX();
+	    	else 
+			dx += GRAVITY_REPULSION;
+	    	if (entities[i].getX() < window.width)
+			dx += - GRAVITY_REPULSION / (window.width - entities[i].getX());
+	    	else 
+			dx += - GRAVITY_REPULSION;
+
+
+		// store new node position
+		double dlen_sq = dx * dx + dy * dy;
+	    	if (dlen_sq > 0)  
+		{
+			double dlen = Math.sqrt(dlen_sq) / 10; // strange !!! but works
+			NewX[i] = entities[i].getX() + (int)(dx/dlen);
+			NewY[i] = entities[i].getY() + (int)(dy/dlen);
+	    	}			
+
+		System.out.println("node=" + i + " x=" + NewX[i] + " y=" + NewY[i]);
+
+		} // end i node loop
+
+		// affect new node position
+		for(int i = 0; i < entities.length; i++)
+		{
+			entities[i].setLocation(NewX[i],NewY[i]);
+		}
+
+		} // end iter loop
 		doResize();
 	}
 

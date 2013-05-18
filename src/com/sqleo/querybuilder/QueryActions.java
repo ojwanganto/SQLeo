@@ -42,7 +42,8 @@ public abstract class QueryActions
 {
 	public static final String COPY_SYNTAX				= "copy-syntax";
 	public static final String FIELDS_DRAGGABLE			= "fields-draggable";
-	public static final String ENTITIES_ARRANGE			= "entities-arrange";
+	public static final String ENTITIES_ARRANGE_GRID		= "entities-arrange-grid";
+	public static final String ENTITIES_ARRANGE_SPRING		= "entities-arrange-spring";
 	public static final String ENTITIES_PACK			= "entities-pack";
 	public static final String ENTITIES_REMOVE			= "entities-remove";
 	public static final String DIAGRAM_SAVE_AS_IMAGE	= "diagram-save-as-image";
@@ -51,7 +52,8 @@ public abstract class QueryActions
 	{
 		builder.getActionMap().put(COPY_SYNTAX			,new ActionCopySyntax(builder));
 		builder.getActionMap().put(FIELDS_DRAGGABLE		,new ActionDragAndDrop(builder));
-		builder.getActionMap().put(ENTITIES_ARRANGE		,new ActionArrangeEntities(builder));
+		builder.getActionMap().put(ENTITIES_ARRANGE_GRID	,new ActionArrangeEntitiesGrid(builder));
+		builder.getActionMap().put(ENTITIES_ARRANGE_SPRING	,new ActionArrangeEntitiesSpring(builder));
 		builder.getActionMap().put(ENTITIES_PACK		,new ActionPackEntities(builder));
 		builder.getActionMap().put(ENTITIES_REMOVE		,new ActionRemoveEntities(builder));
 		builder.getActionMap().put(DIAGRAM_SAVE_AS_IMAGE,new ActionSaveDiagramAsImage(builder));
@@ -100,20 +102,34 @@ public abstract class QueryActions
 		}
 	}
 
-	static class ActionArrangeEntities extends AbstractQueryAction
+	static class ActionArrangeEntitiesGrid extends AbstractQueryAction
 	{
-		ActionArrangeEntities(QueryBuilder builder)
+		ActionArrangeEntitiesGrid(QueryBuilder builder)
 		{
 			super(builder);
-			putValue(NAME,I18n.getString("querybuilder.action.arrangeEntities","arrange entities"));
+			putValue(NAME,I18n.getString("querybuilder.action.arrangeentitiesgrid","arrange grid"));
 		}
         
 		public void actionPerformed(ActionEvent e)
 		{
-			builder.diagram.doArrangeEntities();
+			builder.diagram.doArrangeEntitiesGrid();
 		}
 	}
 	
+	static class ActionArrangeEntitiesSpring extends AbstractQueryAction
+	{
+		ActionArrangeEntitiesSpring(QueryBuilder builder)
+		{
+			super(builder);
+			putValue(NAME,I18n.getString("querybuilder.action.arrangeentitiesspring","arrange spring"));
+		}
+        
+		public void actionPerformed(ActionEvent e)
+		{
+			builder.diagram.doArrangeEntitiesSpring();
+		}
+	}
+
 	static class ActionPackEntities extends AbstractQueryAction
 	{
 		ActionPackEntities(QueryBuilder builder)

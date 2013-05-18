@@ -132,9 +132,11 @@ public class ClientQueryBuilder extends MDIClient {
 				cbxm,
 				null,
 				MDIMenubar.createItem(builder.getActionMap().get(
-						QueryActions.ENTITIES_ARRANGE)),
-				MDIMenubar.createItem(builder.getActionMap().get(
 						QueryActions.ENTITIES_PACK)),
+				MDIMenubar.createItem(builder.getActionMap().get(
+						QueryActions.ENTITIES_ARRANGE_GRID)),
+				MDIMenubar.createItem(builder.getActionMap().get(
+						QueryActions.ENTITIES_ARRANGE_SPRING)),
 				MDIMenubar.createItem(builder.getActionMap().get(
 						QueryActions.ENTITIES_REMOVE)),
 				null,
