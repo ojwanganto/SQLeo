@@ -481,14 +481,15 @@ public class ViewDiagram extends BorderLayoutPanel
 	void doArrangeEntitiesSpring()
 	{
 
-		double SPRING_NATURAL_LENGTH = 3000;	// original 30
-		double SPRING_STIFFNESS = 300000;	// original was 150
-		double GRAVITY_REPULSION = 200;	// original was 2
+		double SPRING_NATURAL_LENGTH = 3000;	// original 30, 3000
+		double SPRING_STIFFNESS = 300000;	// original was 150,300000
+		double GRAVITY_REPULSION = 200;	// original was 2,200
 
-		int loops = 100;
+		int loops = 200;
 
-		Dimension window = new Dimension(1000,1000);
-			
+		Dimension window = new Dimension(5000,5000);
+		Dimension view = scroll.getVisibleRect().getSize();
+
 		// iter loop
 		for(int iter = 0; iter < loops; iter++)
 		{
@@ -509,31 +510,40 @@ public class ViewDiagram extends BorderLayoutPanel
 		double dx = 0;
 	    	double dy = 0;
 
-		DiagramEntity tab;
 
 		// spring force
 		DiagramRelation[] relations = ViewDiagram.this.getRelations();
+
+		DiagramEntity[] tab = new DiagramEntity[relations.length];
+
 		for(int k=0; k<relations.length; k++)
 		{
 
-			// keep only one join per nodes pair
-			// TO DO
-
-			if (relations[k].querytoken.getPrimary().getTable().equals(entities[i].getQueryToken()) )			{
-				tab = (DiagramEntity)getEntity(relations[k].querytoken.getForeign().getTable());
+			if (relations[k].querytoken.getPrimary().getTable().equals(entities[i].getQueryToken()) )
+			{
+				tab[k] = (DiagramEntity)getEntity(relations[k].querytoken.getForeign().getTable());
 			}
 			else if (relations[k].querytoken.getForeign().getTable().equals(entities[i].getQueryToken()) )
 			{
-				tab = (DiagramEntity)getEntity(relations[k].querytoken.getPrimary().getTable());
+				tab[k] = (DiagramEntity)getEntity(relations[k].querytoken.getPrimary().getTable());
 			}
 			else
 				continue;
 
-			// take the shortest legnth between nodes sides
-			double vx1 = entities[i].getX() - tab.getX();
-			double vx2 = entities[i].getX() - (tab.getX()+tab.getWidth());
-			double vx3 = entities[i].getX()+entities[i].getWidth() - tab.getX();
-			double vx4 = entities[i].getX()+entities[i].getWidth() - (tab.getX()+tab.getWidth());
+			boolean alreadyjoined = false;
+			// keep only one join per node pair
+			for(int z=0; z<k; z++)
+			{
+				if ( tab[z]==tab[k] ) alreadyjoined=true;
+			}
+			if (alreadyjoined) continue;			
+
+			// take the shortest length between nodes sides
+			double vx1 = entities[i].getX() - tab[k].getX();
+			double vx2 = entities[i].getX() - (tab[k].getX()+tab[k].getWidth());
+			double vx3 = entities[i].getX()+entities[i].getWidth() - tab[k].getX();
+			double vx4 = entities[i].getX()+entities[i].getWidth() - (tab[k].getX()+tab[k].getWidth());
+
 			if (Math.abs(vx1) > Math.abs(vx2) )
 				vx = vx2;
 			else
@@ -545,7 +555,7 @@ public class ViewDiagram extends BorderLayoutPanel
 			if (Math.abs(vx) > Math.abs(vx4) )
 				vx = vx4;
 
-			vy = (entities[i].getY()+entities[i].getHeight()/2) - (tab.getY()+tab.getHeight()/2);
+			vy = (entities[i].getY()+entities[i].getHeight()/2) - (tab[k].getY()+tab[k].getHeight()/2);
 
 			double len = Math.sqrt(vx * vx + vy * vy);
 	    
@@ -574,7 +584,7 @@ public class ViewDiagram extends BorderLayoutPanel
 			    // "jiggle" if they're on top of each other
 			    dx += Math.random()*SPRING_NATURAL_LENGTH/2;
 			    dy += Math.random()*SPRING_NATURAL_LENGTH/2;
-			} else {
+			} else if (len_sq < view.width*view.height/4){
 			    dx += GRAVITY_REPULSION * vx / len_sq;
 			    dy += GRAVITY_REPULSION * vy / len_sq;
 			}
@@ -584,16 +594,18 @@ public class ViewDiagram extends BorderLayoutPanel
 						
 
 		// Wall effect
-		if (entities[i].getY() > 0)
-			dy += GRAVITY_REPULSION / entities[i].getY();
+		if (entities[i].getY() > 10)
+			// dy += GRAVITY_REPULSION / entities[i].getY();
+			dy += 0;
 		else 
 			dy += GRAVITY_REPULSION ;
 	    	if (entities[i].getY() < window.height)
 			dy += - GRAVITY_REPULSION / (window.height - entities[i].getY());
 	    	else
 			dy += - GRAVITY_REPULSION ;
-	    	if (entities[i].getX() > 0)
-			dx += GRAVITY_REPULSION / entities[i].getX();
+	    	if (entities[i].getX() > 10)
+			// dx += GRAVITY_REPULSION / entities[i].getX();
+			dx += 0;
 	    	else 
 			dx += GRAVITY_REPULSION;
 	    	if (entities[i].getX() < window.width)
@@ -611,7 +623,7 @@ public class ViewDiagram extends BorderLayoutPanel
 			NewY[i] = entities[i].getY() + (int)(dy/dlen);
 	    	}			
 
-		System.out.println("node=" + i + " x=" + NewX[i] + " y=" + NewY[i]);
+		//System.out.println("node=" + i + " x=" + NewX[i] + " y=" + NewY[i]);
 
 		} // end i node loop
 
