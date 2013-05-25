@@ -33,6 +33,15 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2013.05.rc01.zip: 2013-04-25
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.05/
+	#43 Improve Entity-relation Graph display 
+		In graph designer "arrange entities" has been renamed to "arrange grid".
+		"arrange spring" added to permit entities arrangement based on a 
+		spring/magnetic layout model.
+
 
 SQLeoVQB.2013.04.rc01.zip: 2013-04-23
 
