@@ -481,9 +481,14 @@ public class ViewDiagram extends BorderLayoutPanel
 	void doArrangeEntitiesSpring()
 	{
 
-		double SPRING_NATURAL_LENGTH = 3000;	// original 30, 3000
-		double SPRING_STIFFNESS = 300000;	// original was 150,300000
-		double GRAVITY_REPULSION = 200;	// original was 2,200
+		double SPRING_NATURAL_LENGTH = 150;	// original 30
+		double SPRING_STIFFNESS = 3000;	// original was 150
+		double GRAVITY_REPULSION = 200;	// original was 2
+		double WALL_REPULSION = 100;	// original was 2
+		
+		// equilibrium is arround :
+		// (SPRING_LENGTH-SPRING_NATURAL_LENGTH)/SPRING_STIFFNESS=
+		// GRAVITY_REPULSION/(SPRING_LENGTH*SPRING_LENGTH)
 
 		int loops = 200;
 
@@ -539,9 +544,20 @@ public class ViewDiagram extends BorderLayoutPanel
 			if (alreadyjoined) continue;			
 
 			// take the shortest length between nodes sides
-			double vx1 = entities[i].getX() - tab[k].getX();
+			//
+			//     X,Y_____
+			//      |      |       X,Y_____
+			//      A [i]  B        |      |
+			//      |______|        C [k]  D
+			//			|______|
+
+			// AC
+			double vx1 = entities[i].getX() - tab[k].getX();	
+			// AD
 			double vx2 = entities[i].getX() - (tab[k].getX()+tab[k].getWidth());
+			// BC
 			double vx3 = entities[i].getX()+entities[i].getWidth() - tab[k].getX();
+			// BD
 			double vx4 = entities[i].getX()+entities[i].getWidth() - (tab[k].getX()+tab[k].getWidth());
 
 			if (Math.abs(vx1) > Math.abs(vx2) )
@@ -559,7 +575,7 @@ public class ViewDiagram extends BorderLayoutPanel
 
 			double len = Math.sqrt(vx * vx + vy * vy);
 	    
-			double f = (len - SPRING_NATURAL_LENGTH) / SPRING_STIFFNESS;
+			double f = - (len - SPRING_NATURAL_LENGTH) / SPRING_STIFFNESS;
 
 			dx += f * vx;
 			dy += f * vy;
@@ -585,6 +601,7 @@ public class ViewDiagram extends BorderLayoutPanel
 			    dx += Math.random()*SPRING_NATURAL_LENGTH/2;
 			    dy += Math.random()*SPRING_NATURAL_LENGTH/2;
 			} else if (len_sq < view.width*view.height/4){
+			    //
 			    dx += GRAVITY_REPULSION * vx / len_sq;
 			    dy += GRAVITY_REPULSION * vy / len_sq;
 			}
@@ -595,23 +612,24 @@ public class ViewDiagram extends BorderLayoutPanel
 
 		// Wall effect
 		if (entities[i].getY() > 10)
-			// dy += GRAVITY_REPULSION / entities[i].getY();
+			// dy += WALL_REPULSION / entities[i].getY();
 			dy += 0;
 		else 
-			dy += GRAVITY_REPULSION ;
+			dy += WALL_REPULSION ;
 	    	if (entities[i].getY() < window.height)
-			dy += - GRAVITY_REPULSION / (window.height - entities[i].getY());
+			dy += - WALL_REPULSION / (window.height - entities[i].getY());
 	    	else
-			dy += - GRAVITY_REPULSION ;
+			dy += - WALL_REPULSION ;
 	    	if (entities[i].getX() > 10)
-			// dx += GRAVITY_REPULSION / entities[i].getX();
+			// dx += WALL_REPULSION / entities[i].getX();
 			dx += 0;
 	    	else 
-			dx += GRAVITY_REPULSION;
+			dx += WALL_REPULSION;
 	    	if (entities[i].getX() < window.width)
-			dx += - GRAVITY_REPULSION / (window.width - entities[i].getX());
+			dx += - WALL_REPULSION / (window.width - entities[i].getX());
 	    	else 
-			dx += - GRAVITY_REPULSION;
+			dx += - WALL_REPULSION;
+
 
 
 		// store new node position
