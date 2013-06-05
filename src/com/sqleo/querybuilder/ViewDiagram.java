@@ -481,10 +481,10 @@ public class ViewDiagram extends BorderLayoutPanel
 	void doArrangeEntitiesSpring()
 	{
 
-		double SPRING_NATURAL_LENGTH = 150;	// original 30
-		double SPRING_STIFFNESS = 3000;	// original was 150
-		double GRAVITY_REPULSION = 200;	// original was 2
-		double WALL_REPULSION = 100;	// original was 2
+		double SPRING_NATURAL_LENGTH = 150;	// original 30,150
+		double SPRING_STIFFNESS = 600;	// original was 150,3000
+		double GRAVITY_REPULSION = 2000;// original was 2,200
+		double WALL_REPULSION = 100;	// original was 2,100
 		
 		// equilibrium is arround :
 		// (SPRING_LENGTH-SPRING_NATURAL_LENGTH)/SPRING_STIFFNESS=

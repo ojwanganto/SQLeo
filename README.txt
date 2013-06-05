@@ -33,11 +33,20 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
-SQLeoVQB.2013.05.rc01.zip: 2013-04-25
+SQLeoVQB.2013.06.rc01.zip: 2013-06-05
 
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2013.05/
-	#43 Improve Entity-relation Graph display 
+	118 Designer: arrange spring has wrong effect
+
+	Note: Saving to XLQ format will be desupported soon, and be replaced by:
+	76 Query builder: keep table position, sort and pack information as a comment in SQL 
+
+SQLeoVQB.2013.05.rc01.zip: 2013-05-25
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.05/
+	43 Improve Entity-relation Graph display 
 		In graph designer "arrange entities" has been renamed to "arrange grid".
 		"arrange spring" added to permit entities arrangement based on a 
 		spring/magnetic layout model.
