@@ -309,7 +309,10 @@ public class Application extends Appearance implements _Constants,_Version
         Application.window = new MDIWindow();
 		//set icon
 		JFrame.setDefaultLookAndFeelDecorated(true);
-		URL imgUrl = ClassLoader.getSystemResource("images/sqleo.png");
+		// ticket #126: Compatibility Java Web Start
+		//URL imgUrl = ClassLoader.getSystemResource("images/sqleo.png");
+		// check if compatible with PNSPlugin 
+                URL imgUrl = Resources.class.getResource("/images/sqleo.png");
 		Application.window.setIconImage(new ImageIcon(imgUrl).getImage());
 		Application.window.show();
 		
