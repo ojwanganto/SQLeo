@@ -36,7 +36,6 @@ import javax.swing.filechooser.FileFilter;
 
 import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Preferences;
-import com.sun.image.codec.jpeg.ImageFormatException;
 
 public abstract class QueryActions
 {
@@ -200,10 +199,6 @@ public abstract class QueryActions
 				try
 				{
 					builder.diagram.saveAsImage(filename);
-				}
-				catch(ImageFormatException e1)
-				{
-					e1.printStackTrace();
 				}
 				catch(IOException e1)
 				{

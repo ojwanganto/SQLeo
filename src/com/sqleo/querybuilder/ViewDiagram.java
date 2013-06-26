@@ -48,18 +48,13 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
-
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.util.I18n;
 import com.sqleo.querybuilder.dnd.EntityDropTargetListener;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
-// replace with import javax.imageio.ImageIO ?
-import com.sun.image.codec.jpeg.ImageFormatException;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import javax.imageio.ImageIO;
 
 public class ViewDiagram extends BorderLayoutPanel
 {
@@ -427,7 +422,7 @@ public class ViewDiagram extends BorderLayoutPanel
 		}
 	}
 
-	void saveAsImage(String filename) throws ImageFormatException, IOException
+	void saveAsImage(String filename) throws IOException
 	{
 		BufferedImage image = null;
 		Image capture = desktop.createImage(desktop.getWidth(),desktop.getHeight());
@@ -439,14 +434,7 @@ public class ViewDiagram extends BorderLayoutPanel
 		image = (BufferedImage)capture;
 		if (image != null)
 		{
-			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-			JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(image);
-			
-			//the first parameter here is the "quality v file size" trade-off
-			//play with this value (0-1) to determine the best results for you
-			
-			param.setQuality(1f, true);
-			encoder.encode(image, param);
+			ImageIO.write(image, "jpeg", out);
 			out.flush();
 		}
 		out.close();
