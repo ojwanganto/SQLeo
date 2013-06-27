@@ -448,7 +448,7 @@ public class DiagramRelation extends JPanel
 					Column pk = primaryField.querytoken;
 					if(null == joinName) {
 						String tabColName = fk.getTable().getName()+"."+fk.getName();
-						int option2 = JOptionPane.showConfirmDialog(Application.window,"Does "+tabColName+" belongs to PK ?",Application.PROGRAM,JOptionPane.YES_NO_OPTION);
+						int option2 = JOptionPane.showConfirmDialog(Application.window,"Does "+tabColName+" belongs to Primary Table ?",Application.PROGRAM,JOptionPane.YES_NO_OPTION);
 						if(option2 == JOptionPane.YES_OPTION){
 							pk = foreignField.querytoken;
 							fk = primaryField.querytoken;
@@ -463,7 +463,8 @@ public class DiagramRelation extends JPanel
 					rdef.setPktSchema(pk.getTable().getSchema());
 					rdef.setPktName(pk.getTable().getName());
 					rdef.setPktColumnName(pk.getName());
-					rdef.setPktAlias(pk.getTable().getAlias());
+					// Alias is too much difficult to use
+					// rdef.setPktAlias(pk.getTable().getAlias());
 					String relName= rdef.getFktName().toUpperCase()+"_"+rdef.getPktName().toUpperCase();
 					if(joinName!=null){
 						relName="SQLeo_"+joinName;
