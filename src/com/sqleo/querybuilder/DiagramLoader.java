@@ -44,6 +44,7 @@ import javax.swing.SwingUtilities;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.io.ManualDBMetaData;
 import com.sqleo.environment.io.ManualTableMetaData;
@@ -447,6 +448,10 @@ public class DiagramLoader extends JDialog implements Runnable
 		}
 		catch (SQLException sqle)
 		{
+			String msg = "" + sqle; msg = msg.substring(msg.indexOf("Table"));
+			if (0 <= msg.indexOf("Table") && 0 < msg.indexOf("doesn't exist"))
+				Application.alert(Application.PROGRAM,msg);
+
 			System.out.println("[ DiagramLoader::getPrimaryKeys ]\n" + sqle);
 		}
 		
