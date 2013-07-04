@@ -124,6 +124,10 @@ public class DiagramLoader extends JDialog implements Runnable
 		catch(SQLException sqle)
 		{
 			System.out.println("[ DiagramLoader::run ]\n" + sqle);
+			
+			String msg = "" + sqle; msg = msg.substring(msg.indexOf("Table"));
+			if (0 <= msg.indexOf("Table") && 0 < msg.indexOf("doesn't exists"))
+				Application.alert(Application.PROGRAM,msg);
 		}
 		finally
 		{
@@ -393,6 +397,7 @@ public class DiagramLoader extends JDialog implements Runnable
 					table.setSchema(schema);
 			}
 			rs.close();
+			if(!exists) throw new SQLException("Table " + table.getIdentifier() + " doesn't exists!");
 		}
 		
 //		if(!exists) throw new SQLException("Object " + table.getIdentifier() + " doesn't exists!");
@@ -448,10 +453,6 @@ public class DiagramLoader extends JDialog implements Runnable
 		}
 		catch (SQLException sqle)
 		{
-			String msg = "" + sqle; msg = msg.substring(msg.indexOf("Table"));
-			if (0 <= msg.indexOf("Table") && 0 < msg.indexOf("doesn't exist"))
-				Application.alert(Application.PROGRAM,msg);
-
 			System.out.println("[ DiagramLoader::getPrimaryKeys ]\n" + sqle);
 		}
 		
