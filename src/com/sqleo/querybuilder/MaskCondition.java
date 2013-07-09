@@ -55,7 +55,7 @@ public class MaskCondition extends BaseMask implements ItemListener ,ChangeListe
 		querytoken = token;
 
 		predicate = new JComboBox(new String[]{_ReservedWords.AND,_ReservedWords.OR});
-		operator = new JComboBox(new String[]{"=","<",">","<=",">=","<>","LIKE","NOT LIKE","IS","IS NOT","IN","NOT IN","EXISTS","NOT EXISTS","BETWEEN","NOT BETWEEN"});
+		operator = new JComboBox(new String[]{"=","<",">","<=",">=","<>","!=","LIKE","NOT LIKE","IS","IS NOT","IN","NOT IN","EXISTS","NOT EXISTS","BETWEEN","NOT BETWEEN"});
 		subquery = new JCheckBox("<html><i>SUBQUERY");
 		subquery.setEnabled(false);
 		subquery.setSelected(querytoken.getRight() instanceof SubQuery);

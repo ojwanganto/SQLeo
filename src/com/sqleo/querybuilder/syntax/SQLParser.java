@@ -760,7 +760,8 @@ public class SQLParser
 	
 	public static boolean isOperatorSimbol(String s)
 	{
-		return s.equals("<") || s.equals(">") || s.equals("=") || s.equals("<=") || s.equals(">=")  || s.equals("<>");
+		return s.equals("<") || s.equals(">") || s.equals("=") || s.equals("<=") || s.equals("=>") || s.equals("<=") || s.equals(">=") 
+			|| s.equals("<>")  || s.equals("!=");
 	}
 	
 	public static boolean isReservedWord(String s)
@@ -839,15 +840,25 @@ public class SQLParser
 			}
 			else if(al.get(i).toString().equals("="))
 			{
-				if(al.get(i-1).toString().equals("<") || al.get(i-1).toString().equals(">"))
+				if(al.get(i-1).toString().equals("<") || al.get(i-1).toString().equals(">") || al.get(i-1).toString().equals("!"))
 				{
 					al.set(i-1, al.get(i-1).toString() + "=");
 					al.remove(i--);
 				}
 			}
+			else if(al.get(i).toString().equals(">") && al.get(i-1).toString().equals("="))
+			{
+				al.set(i-1, ">=");
+				al.remove(i--);
+			}
 			else if(al.get(i).toString().equals(">") && al.get(i-1).toString().equals("<"))
 			{
 				al.set(i-1,"<>");
+				al.remove(i--);
+			}
+			else if(al.get(i).toString().equals("<") && al.get(i-1).toString().equals("="))
+			{
+				al.set(i-1, "<=");
 				al.remove(i--);
 			}
 			else if(al.get(i).toString().equals("."))
