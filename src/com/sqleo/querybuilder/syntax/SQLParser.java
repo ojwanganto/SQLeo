@@ -175,7 +175,7 @@ public class SQLParser
 		{
 			Object next = li.next();
 			
-			if(next.toString().equalsIgnoreCase(_ReservedWords.DISTINCT))
+			if(next.toString().equalsIgnoreCase(_ReservedWords.DISTINCT) && surrounds == 0 )
 			{
 				qs.setQuantifier(QuerySpecification.DISTINCT);
 			}
