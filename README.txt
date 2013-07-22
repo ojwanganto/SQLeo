@@ -33,10 +33,26 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2013.07.rc01.zip: 2013-07-22
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.07/
+
+	127 Query Builder: don't take table alias to csv file when saving join 
+	126 Java Web Start compatibility
+
+  A special thank to Bao Nguyen for his contribution:
+
+	119 Reverse query: raise warning when table not found
+	117 Reverse query: where a != b is wrong
+	116 Reverse query: select count(distinct x) is wrong
+	115 replace class com/sun/image/codec/jpeg/* for java7 support on Linux
+
+
 SQLeoVQB.2013.06.rc01.zip: 2013-06-05
 
   For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2013.05/
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.06/
 	118 Designer: arrange spring has wrong effect
 
 	Note: Saving to XLQ format will be desupported soon, and be replaced by:
