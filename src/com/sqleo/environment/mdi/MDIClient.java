@@ -24,23 +24,26 @@
 
 package com.sqleo.environment.mdi;
 
-import java.awt.event.ActionEvent;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 
 import com.sqleo.common.gui.ClientFrame;
 import com.sqleo.common.gui.Toolbar;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
-import com.sqleo.environment.Application;
+import com.sqleo.common.util.SQLHelper;
+import com.sqleo.common.util.Trie;
 import com.sqleo.environment.Preferences;
-
+import com.sqleo.querybuilder.syntax._ReservedWords;
 
 public abstract class MDIClient extends ClientFrame {
 	private static int counter = 0;
 	private int id = -1;
+	protected Trie prefixTree;
 
 	public MDIClient(String title) {
 		super(title);
@@ -64,5 +67,55 @@ public abstract class MDIClient extends ClientFrame {
 	public abstract Toolbar getSubToolbar();
 
 	protected abstract void setPreferences();
+
+	public Trie getPrefixTree() {
+		return prefixTree;
+	}
+
+	protected void loadPrefixTree(final String chKey) {
+		if (Preferences.isAutoCompleteEnabled()) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					loadAllTableNames(chKey);
+				}
+			});
+		}
+	}
+
+	private void loadAllTableNames(final String chKey) {
+		final ConnectionHandler ch = ConnectionAssistant.getHandler(chKey);
+		if (ch != null) {
+			try {
+				String schemaPrefix = SQLHelper.getSchemaFromUser(chKey);
+				if (null == schemaPrefix) {
+					final ArrayList schemaNames = ch.getArrayList("$schema_names");
+					if (schemaNames != null) {
+						schemaPrefix = (String) schemaNames.get(0);
+					}
+				}
+				final ResultSet rs =
+						ch.get()
+								.getMetaData()
+								.getTables(null, schemaPrefix != null ? schemaPrefix + "%" : "PUBLIC%", "%",
+										new String[] { "TABLE", "SYNONYM", "VIEW" });
+				if (rs != null) {
+					prefixTree = new Trie();
+					for (final String word : _ReservedWords.allReservedWords) {
+						prefixTree.addWord(word.toLowerCase());
+					}
+					while (rs.next()) {
+						final String name = rs.getString(3);
+						if (name != null) {
+							prefixTree.addWord(name.toLowerCase());
+						}
+					}
+					rs.close();
+				}
+			} catch (final SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 }

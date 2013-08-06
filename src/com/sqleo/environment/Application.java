@@ -145,7 +145,8 @@ public class Application extends Appearance implements _Constants,_Version
 	public static void shutdown()
 	{
 		final String message = I18n.getString("application.message.quit","Do you really want to quit SQLeo?");
-		if(confirm(PROGRAM, message)){
+		final boolean askBeforeExit = Preferences.getBoolean(DialogPreferences.ASK_BEFORE_EXIT_KEY,true);
+		if(!askBeforeExit || confirm(PROGRAM, message)){
 			Application.window.dispose();
 			try
 			{

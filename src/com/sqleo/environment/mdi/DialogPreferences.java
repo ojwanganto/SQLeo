@@ -39,6 +39,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -72,10 +73,14 @@ public class DialogPreferences extends AbstractDialogConfirm {
 
 	private JTextField jTextFieldMaxColSize = new JTextField();
 	private JCheckBox jCheckBoxAutoCommit = new JCheckBox();
+	private JCheckBox jCheckBoxAutoComplete = new JCheckBox();
+	private JCheckBox jCheckBoxAskBeforeExit = new JCheckBox();
 	private JCheckBox jCheckBoxCheckUpdate = new JCheckBox();
 
 	public static final String CONTENT_MAX_ROWS_FETCH_SIZE_KEY = "content.maxrowfetchsize";
 	public static final String CHECK_FOR_UPDATE_KEY = "application.checkforupdate";
+	public static final String ASK_BEFORE_EXIT_KEY = "application.askBeforeExit";
+	public static final String AUTO_COMPLETE_KEY = "application.autoComplete";
 
 	public DialogPreferences() {
 		super(Application.window, Application.PROGRAM + ".preferences", 350,
@@ -117,10 +122,13 @@ public class DialogPreferences extends AbstractDialogConfirm {
 						"application.preferences.autoCommitWarning",
 						"Warning:Commit in a window affects all opened windows for a connection when auto commit disabled!")		
 		));
+		jLabelAutoCommitInfo.setEditable(false);
 		jLabelAutoCommitInfo.setForeground(Color.RED);
 		jLabelAutoCommitInfo.setFont(new Font(jLabelAutoCommitInfo.getFont().getName(),Font.BOLD,jLabelAutoCommitInfo.getFont().getSize()));
 		jLabelAutoCommitInfo.setLineWrap(true);
 		jLabelAutoCommitInfo.setWrapStyleWord(true);
+		jLabelAutoCommitInfo.setCaretPosition(0);
+		JScrollPane scrollV = new JScrollPane (jLabelAutoCommitInfo);
 		
 		// Add all the available languages...
 		java.util.List list = I18n.getListOfAvailLanguages();
@@ -154,6 +162,14 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		"Check for update on startup"));
 		jCheckBoxCheckUpdate.setSelected(Preferences.getBoolean(CHECK_FOR_UPDATE_KEY,
 		true));
+		jCheckBoxAutoComplete.setText(I18n.getString(
+				"application.preferences.autoComplete", "Auto complete"));
+		jCheckBoxAutoComplete.setSelected(Preferences.getBoolean(
+				AUTO_COMPLETE_KEY, false));
+		jCheckBoxAskBeforeExit.setText(I18n.getString(
+				"application.preferences.askBeforeExit", "Always ask before exit"));
+		jCheckBoxAskBeforeExit.setSelected(Preferences.getBoolean(
+				ASK_BEFORE_EXIT_KEY, true));
 		jCheckBoxAutoCommit.setText(I18n.getString(
 				"application.preferences.autoCommit", "auto commit"));
 		jCheckBoxAutoCommit.setSelected(Preferences.getBoolean(
@@ -213,7 +229,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		pnlGeneral.add(jComboBoxLanguage);
 		pnlGeneral.add(jCheckBoxTrace);
 		pnlGeneral.add(jCheckBoxCheckUpdate);
-		pnlGeneral.add(jLabelAutoCommitInfo);
+		pnlGeneral.add(jCheckBoxAskBeforeExit);
+		pnlGeneral.add(scrollV);
 		pnlGeneral.add(jCheckBoxAutoCommit);
 
 		JPanel pnlCommand = new JPanel(new GridLayout(0, 1));
@@ -229,6 +246,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		jTextFieldMaxRowFetchSize.setText(String.valueOf(Preferences.getInteger(
 				CONTENT_MAX_ROWS_FETCH_SIZE_KEY, 100)));
 		pnlCommand.add(jTextFieldMaxRowFetchSize);
+		pnlCommand.add(jCheckBoxAutoComplete);
 
 		JTabbedPane options = new JTabbedPane();
 		options.addTab("general", pnlGeneral);
@@ -293,6 +311,10 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				new Boolean(jCheckBoxCheckUpdate.isSelected()));
 		Preferences.set("application.autoCommit", new Boolean(
 				jCheckBoxAutoCommit.isSelected()));
+		Preferences.set(ASK_BEFORE_EXIT_KEY, new Boolean(
+				jCheckBoxAskBeforeExit.isSelected()));
+		Preferences.set(AUTO_COMPLETE_KEY, new Boolean(
+				jCheckBoxAutoComplete.isSelected()));
 		Preferences.set("editor.maxcolsize",
 				new Integer(jTextFieldMaxColSize.getText()));
 		Preferences.set(CONTENT_MAX_ROWS_FETCH_SIZE_KEY,

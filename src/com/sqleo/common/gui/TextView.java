@@ -41,11 +41,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 import javax.swing.text.SimpleAttributeSet;
@@ -54,6 +51,7 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.TabSet;
 import javax.swing.text.TabStop;
 
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.querybuilder.QueryStyledDocument;
 
@@ -70,6 +68,9 @@ public class TextView extends BorderLayoutPanel
 		if(doc instanceof QueryStyledDocument){
 			//request view 
 			undoManager = new CompoundUndoManager(editor);
+			if (Preferences.isAutoCompleteEnabled()) {
+				new SuggestionsView(editor, doc instanceof SQLStyledDocument);
+			}
 		}
 		editor.addMouseListener(new InternalPopup());
 		editor.setFont(new Font("monospaced", Font.PLAIN, 12));

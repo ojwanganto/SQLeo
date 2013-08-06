@@ -20,6 +20,9 @@
 
 package com.sqleo.querybuilder.syntax;
 
+import java.util.Arrays;
+import java.util.List;
+
 public interface _ReservedWords
 {
 	public static final String ALL		= "ALL";
@@ -50,5 +53,9 @@ public interface _ReservedWords
 	public static final String RIGHT_JOIN = "RIGHT JOIN";
 	public static final String FULL_JOIN  = "FULL JOIN";
 	public static final String CROSS_JOIN  = "CROSS JOIN";
+
+	public static List<String> allReservedWords = Arrays.asList(ALL, DISTINCT, WITH, SELECT, FROM, WHERE, GROUP_BY,
+			HAVING, UNION, ORDER_BY, BETWEEN, AS, AND, OR, ON, INNER_JOIN, LEFT_OUTER_JOIN, RIGHT_OUTER_JOIN,
+			FULL_OUTER_JOIN, JOIN, INNER_JOIN, LEFT_JOIN, RIGHT_JOIN, FULL_JOIN, CROSS_JOIN);
 
 }

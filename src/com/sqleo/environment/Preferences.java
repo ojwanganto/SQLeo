@@ -22,6 +22,7 @@ package com.sqleo.environment;
 
 import java.util.Hashtable;
 
+import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.QueryBuilder;
 
 
@@ -73,6 +74,10 @@ public class Preferences
 		  //System.out.println("Preferences.getBoolean() - NullPointerException: returning false");
 		  return false;
 	  }
+	}
+	
+	public static boolean isAutoCompleteEnabled(){
+		return getBoolean(DialogPreferences.AUTO_COMPLETE_KEY, false);
 	}
 	
 	public static boolean getBoolean(String key, boolean defaultValue)

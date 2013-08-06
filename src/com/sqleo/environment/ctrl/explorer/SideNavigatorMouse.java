@@ -274,15 +274,12 @@ public class SideNavigatorMouse extends MouseAdapter
 				if(this.isSelected() && !uoDs.isConnected())
 				{
 					uoDs.connect();
-					Application.window.connectionOpened(uoDs.getKey());
 				}
 				else if(!this.isSelected() && uoDs.isConnected())
 				{
 					uoDs.disconnect();
-					Application.window.connectionClosed(uoDs.getKey());
 				}
 			
-				navigator.reloadSelection();
 			}
 			catch(Exception e)
 			{
@@ -290,7 +287,14 @@ public class SideNavigatorMouse extends MouseAdapter
 			}
 			finally
 			{
-				this.setSelected(uoDs.isConnected());
+				final boolean connected = uoDs.isConnected();
+				if(connected){
+					Application.window.connectionOpened(uoDs.getKey());
+				}else{
+					Application.window.connectionClosed(uoDs.getKey());
+				}
+				navigator.reloadSelection();
+				this.setSelected(connected);
 			}
 		}
 	}

@@ -81,6 +81,7 @@ public class ClientQueryBuilder extends MDIClient {
 		if (keycah != null) {
 			builder.setConnection(ConnectionAssistant.getHandler(keycah).get());
 			builder.setConnectionHandlerKey(keycah);
+			loadPrefixTree(keycah);
 		}
 		setFileName(null);
 
