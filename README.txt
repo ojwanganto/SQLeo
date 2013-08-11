@@ -33,6 +33,21 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2013.08.rc01.zip: 2013-08-11
+
+  Thanks to Anudeep Gade for this new feature and fixes.
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.08/
+
+	129 	Command editor connections dropdown has duplicates when socket read timeout occurs.
+	128 	Add a preference to disable asking "ask before exit" everytime.
+	110 	Auto-complete(intelli-sense) SQL in editor
+		  works with connected user schema objects, 
+		  or db objects if db doesn't support schema (MySQL, Firebird)
+		  supported syntax is (lowercase) in command editor and query builder (syntax tab)
+			select table.col from table where table.col ... 
+
+
 SQLeoVQB.2013.07.rc01.zip: 2013-07-22
 
   For changes included see tickets at  
@@ -41,7 +56,7 @@ SQLeoVQB.2013.07.rc01.zip: 2013-07-22
 	127 Query Builder: don't take table alias to csv file when saving join 
 	126 Java Web Start compatibility
 
-  A special thank to Bao Nguyen for his contribution:
+  Thanks to Bao Nguyen for his contribution:
 
 	119 Reverse query: raise warning when table not found
 	117 Reverse query: where a != b is wrong
