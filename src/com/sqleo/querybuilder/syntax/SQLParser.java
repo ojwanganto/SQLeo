@@ -225,7 +225,8 @@ public class SQLParser
 				if(next.toString().equals("(")) surrounds++;
 
 				
-				if(value.length()>0 && next instanceof String)
+				if(value.length()>0)
+					if(next instanceof String || next instanceof Character || next instanceof Integer)
 				{
 					// ticket #54
 					// char last = value.charAt(value.length()-1);
