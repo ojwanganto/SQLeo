@@ -170,6 +170,7 @@ public class SQLParser
 		int surrounds = 0;
 		String alias = null;
 		String value = new String();
+		boolean seenSubquery = false;
 		
 		while(li.hasNext())
 		{
@@ -184,6 +185,7 @@ public class SQLParser
 				if(!value.trim().equals("")) qs.addSelectList(new QueryTokens.DefaultExpression(value.trim(),alias));
 				value = new String();
 				alias = null; // added to fix bug #13
+				seenSubquery = false;
 			}
 			else if(next.toString().equalsIgnoreCase(_ReservedWords.ORDER_BY) )
 			{
@@ -212,6 +214,7 @@ public class SQLParser
 			else if(next.toString().equals(")") && value.trim().equals("")) // for last ")" after subquery
 			{
 				surrounds--;
+				seenSubquery = true;
 			}
 			// ticket #87 for cast (x as ...) 
 			// else if(next.toString().equalsIgnoreCase("AS") && li.hasNext())
@@ -241,6 +244,11 @@ public class SQLParser
 	            {
 	            	qs.addSelectList(new QueryTokens.DefaultExpression(value.substring(0,value.length()-1)));
 	            	value = new String();
+	            }
+	            if (seenSubquery && !value.equals(""))
+	            {
+	            	Application.alert("Alias: name on subquery is not supported yet.");
+	            	throw new IOException("Alias: name on subquery is not supported yet.");
 	            }
 			}
 		}
