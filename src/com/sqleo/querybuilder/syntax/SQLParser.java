@@ -247,8 +247,8 @@ public class SQLParser
 	            }
 	            if (seenSubquery && !value.equals(""))
 	            {
-	            	Application.alert("Alias: name on subquery is not supported yet.");
-	            	throw new IOException("Alias: name on subquery is not supported yet.");
+	            	Application.alert("Alias: '"+ value +"' on scalar subquery is not supported yet.");
+			value = "";			
 	            }
 			}
 		}
