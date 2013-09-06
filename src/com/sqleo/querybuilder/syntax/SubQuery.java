@@ -24,6 +24,12 @@ public class SubQuery extends QueryExpression implements QueryTokens._Expression
 {
 	private String alias;
 	
+	public SubQuery()
+	{
+		super();
+		alias=null;
+	}
+	
 	public boolean isAliasSet()
 	{
 		return alias!=null && !alias.equals("");
