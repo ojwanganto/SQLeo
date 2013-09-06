@@ -170,6 +170,7 @@ public class SQLParser
 		int surrounds = 0;
 		String alias = null;
 		String value = new String();
+		SubQuery sub=null;
 		boolean seenSubquery = false;
 		
 		while(li.hasNext())
@@ -198,7 +199,7 @@ public class SQLParser
 				li.previous();
 				if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
 				{
-					SubQuery sub = new SubQuery();
+					sub = new SubQuery();
 					doParseQuery(li,sub);
 
 					qs.addSelectList(sub);
@@ -221,6 +222,7 @@ public class SQLParser
 			else if(next.toString().equalsIgnoreCase("AS") && li.hasNext() && surrounds == 0)
 			{
 				alias = li.next().toString().trim();
+				if (seenSubquery && sub!=null) sub.setAlias(alias);
 			}
 			else
 			{
@@ -247,8 +249,8 @@ public class SQLParser
 	            }
 	            if (seenSubquery && !value.equals(""))
 	            {
-	            	Application.alert("Alias: '"+ value +"' on scalar subquery is not supported yet.");
-			value = "";			
+	            	sub.setAlias(value);
+	            	value = new String();
 	            }
 			}
 		}

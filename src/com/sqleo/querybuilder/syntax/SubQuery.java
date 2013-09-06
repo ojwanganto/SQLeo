@@ -20,11 +20,33 @@
 
 package com.sqleo.querybuilder.syntax;
 
-public class SubQuery extends QueryExpression implements QueryTokens._Expression
+public class SubQuery extends QueryExpression implements QueryTokens._Expression, QueryTokens._Alias
 {
+	private String alias;
+	
+	public boolean isAliasSet()
+	{
+		return alias!=null && !alias.equals("");
+	}
+	
+	public String getAlias()
+	{
+		return alias;
+	}
+	
+	public void setAlias(String alias)
+	{
+		if(alias!=null)
+		{
+			alias = alias.replace(' ','_');
+			alias = alias.replace('.','_');
+		}
+		this.alias = alias;
+	}
+	
 	public String toString(boolean wrap)
 	{
-		return "( " + super.toString(wrap) + " )";
+		return "( " + super.toString(wrap) + " )" + (isAliasSet() ? SQLFormatter.SPACE + _ReservedWords.AS +  SQLFormatter.SPACE + this.getAlias() : "");
 	}
 	
 	public String toString()
