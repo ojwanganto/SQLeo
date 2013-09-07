@@ -38,6 +38,7 @@ import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryExpression;
 import com.sqleo.querybuilder.syntax.QuerySpecification;
 import com.sqleo.querybuilder.syntax.QueryTokens;
+import com.sqleo.querybuilder.syntax.SQLFormatter;
 import com.sqleo.querybuilder.syntax.SubQuery;
 import com.sqleo.querybuilder.syntax._ReservedWords;
 
@@ -132,8 +133,14 @@ public class ViewBrowser extends BorderLayoutPanel implements TreeSelectionListe
 			item.add(new BrowserItems.TableTreeItem(token));
 		else if(token instanceof DerivedTable)
 			item.add(qi = new BrowserItems.DiagramQueryTreeItem((DerivedTable)token));
-		else if(token instanceof SubQuery)
-			item.add(qi = new BrowserItems.QueryTreeItem("SUBQUERY",(SubQuery)token));
+		else if(token instanceof SubQuery) {
+			SubQuery sub = (SubQuery)token;
+			String label = "SUBQUERY";
+			if (sub.isAliasSet())
+				item.add(qi = new BrowserItems.QueryTreeItem(label + SQLFormatter.SPACE + sub.getAlias(),(SubQuery)token));
+			else
+				item.add(qi = new BrowserItems.QueryTreeItem(label,(SubQuery)token));
+		}
 		else if(token instanceof QueryTokens.Condition && ((QueryTokens.Condition)token).getRight() instanceof SubQuery)
 			item.add(qi = new BrowserItems.ConditionQueryTreeItem((QueryTokens.Condition)token));
 		else
