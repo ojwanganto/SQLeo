@@ -22,14 +22,25 @@ package com.sqleo.querybuilder.syntax;
 
 public class SubQuery extends QueryExpression implements QueryTokens._Expression, QueryTokens._Alias
 {
-	private String alias;
+	public String alias;
+	public boolean AS;
 	
 	public SubQuery()
 	{
 		super();
-		alias=null;
+		alias=null; AS=false;
 	}
-	
+
+	public boolean isAsSet()
+	{
+		return AS;
+	}
+
+	public void setAs(boolean val)
+	{
+		AS=val;
+	}
+
 	public boolean isAliasSet()
 	{
 		return alias!=null && !alias.equals("");
@@ -52,7 +63,14 @@ public class SubQuery extends QueryExpression implements QueryTokens._Expression
 	
 	public String toString(boolean wrap)
 	{
-		return "( " + super.toString(wrap) + " )" + (isAliasSet() ? SQLFormatter.SPACE + _ReservedWords.AS +  SQLFormatter.SPACE + this.getAlias() : "");
+		if (this instanceof DerivedTable)
+			return "( " + super.toString(wrap) + " )";
+		else if(!isAsSet())
+			return "( " + super.toString(wrap) + " )" + (isAliasSet() ? SQLFormatter.SPACE + this.getAlias() : "");
+		else if(isAsSet())
+			return "( " + super.toString(wrap) + " )" + (isAliasSet() ? SQLFormatter.SPACE + _ReservedWords.AS + SQLFormatter.SPACE + this.getAlias() : "");
+		else
+			return ""; //for future use
 	}
 	
 	public String toString()

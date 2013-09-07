@@ -222,7 +222,7 @@ public class SQLParser
 			else if(next.toString().equalsIgnoreCase("AS") && li.hasNext() && surrounds == 0)
 			{
 				alias = li.next().toString().trim();
-				if (seenSubquery && sub!=null) sub.setAlias(alias);
+				if (seenSubquery && sub!=null) {sub.setAlias(alias); sub.setAs(true);}
 			}
 			else
 			{
@@ -250,6 +250,7 @@ public class SQLParser
 	            if (seenSubquery && !value.equals(""))
 	            {
 	            	sub.setAlias(value);
+	            	sub.setAs(false);
 	            	value = new String();
 	            }
 			}

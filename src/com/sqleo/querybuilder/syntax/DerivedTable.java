@@ -25,26 +25,10 @@ import com.sqleo.querybuilder.syntax.QueryTokens._TableReference;
 public class DerivedTable extends SubQuery implements _TableReference
 {
 	private static long counter = 0;
-	private String alias;
-
-	public boolean isAliasSet()
-	{
-		return alias!=null && !alias.equals("");
-	}
 	
 	public final String getAlias()
 	{
 		return alias == null ? alias = "SUBQUERY_" + (++counter) : alias;
-	}
-	
-	public final void setAlias(String alias)
-	{
-		if(alias!=null)
-		{
-			alias = alias.replace(' ','_');
-			alias = alias.replace('.','_');
-		}
-		this.alias = alias;
 	}
 	
 	public String toString(boolean wrap)
