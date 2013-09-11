@@ -457,10 +457,14 @@ public class DiagramRelation extends JPanel
 					
 					CSVRelationDefinition rdef = new CSVRelationDefinition();
 					rdef.setJoinType(querytoken.getTypeName());
+					// ticket #134 help needed
+					//rdef.setFktSchema(jComboBoxSchemas.isEnabled() ? jComboBoxSchemas.getSelectedItem() : fk.getTable().getSchema());
 					rdef.setFktSchema(fk.getTable().getSchema());
 					rdef.setFktName(fk.getTable().getName());
 					rdef.setFktColumnName(fk.getName());
-					rdef.setPktSchema(pk.getTable().getSchema());
+					// ticket # 134 help needed 
+					// rdef.setPktSchema(jComboBoxSchemas.isEnabled() ? jComboBoxSchemas.getSelectedItem() : pk.getTable().getSchema());
+					rdef.setPktSchema( pk.getTable().getSchema());
 					rdef.setPktName(pk.getTable().getName());
 					rdef.setPktColumnName(pk.getName());
 					// Alias is too much difficult to use
