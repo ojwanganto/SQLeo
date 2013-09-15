@@ -51,7 +51,7 @@ public class ViewObjects extends BorderLayoutPanel implements ItemListener
 	private QueryBuilder builder;
 
 	private JList jListObjects;
-	private JComboBox jComboBoxSchemas;
+	public JComboBox jComboBoxSchemas;
 	private JComboBox jComboBoxTypes;
 
 	ViewObjects(QueryBuilder builder)
