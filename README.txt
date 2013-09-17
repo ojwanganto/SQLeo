@@ -33,6 +33,17 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+
+SQLeoVQB.2013.09.rc01.zip: 2013-09-16
+
+  Thanks to Bao Nguyen for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.09/
+	134 	save join to file: schema is forgotten with option "no schema in query" 
+	123 	Reverse query: select (subquery) x from ... looses alias
+	72 	Query Builder: reverse "case when ..." is wrong 
+
+
 SQLeoVQB.2013.08.rc01.zip: 2013-08-11
 
   Thanks to Anudeep Gade for this new feature and fixes.
