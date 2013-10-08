@@ -420,6 +420,7 @@ public abstract class QueryTokens
 		
 		public String toString()
 		{
+			if(expr instanceof Extract) return expr.toString();
 // fix for ticket #12   return expr instanceof Column ? ((Column)expr).getReference() : expr.toString();
 // fix for ticket #47	return expr instanceof Column ? ((Column)expr).getIdentifier() : expr.toString();
 			return expr instanceof Column ? ((Column)expr).getIdentifier() : ((DefaultExpression)expr).getValue();
