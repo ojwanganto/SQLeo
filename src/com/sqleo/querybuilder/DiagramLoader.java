@@ -447,7 +447,8 @@ public class DiagramLoader extends JDialog implements Runnable
 
 			ResultSet rsPK = dbmetadata.getPrimaryKeys(catalog, schema, name);
 			while(rsPK.next())
-				primary.put(rsPK.getString(4).trim(), rsPK.getString(6));
+				// catch null for SQLite
+				primary.put(rsPK.getString(4).trim(), rsPK.getString(6)== null ? "PRIMARY" : rsPK.getString(6));
 			rsPK.close();
 		}
 		catch (SQLException sqle)

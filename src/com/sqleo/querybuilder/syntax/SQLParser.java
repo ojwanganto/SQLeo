@@ -46,6 +46,7 @@ public class SQLParser
 		// ticket #73 oracle (+) join support
 		sql = sql.replace("(+)"," ORACLE_OUTER_JOIN");
 
+
 		return toQueryModel(new StringReader(sql));
 	}
 
@@ -390,6 +391,7 @@ public class SQLParser
 		for(int surrounds = 0; li.hasNext();)
 		{
 			String next = li.next().toString();
+
 			// ticket #80 Derived tables 
 			if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
 			{
@@ -998,6 +1000,7 @@ public class SQLParser
 	{
 
 		StreamTokenizer stream = new StreamTokenizer(r);
+
 		stream.ordinaryChar('.');
 		stream.ordinaryChar('/'); // fix for ticket #48
 		stream.wordChars('$','$'); // fix for ticket #48
@@ -1007,7 +1010,9 @@ public class SQLParser
 	
 		if(!QueryBuilder.identifierQuoteString.equals("\""))
 		{
-			stream.quoteChar(QueryBuilder.identifierQuoteString.charAt(0));
+			if ((int)QueryBuilder.identifierQuoteString.charAt(0) != 32)	
+				// QuoteString=" " with SQLite ...
+				stream.quoteChar(QueryBuilder.identifierQuoteString.charAt(0));
 			
 //			for(int i=0; i<QueryBuilder.identifierQuoteString.length(); i++)
 //			{
