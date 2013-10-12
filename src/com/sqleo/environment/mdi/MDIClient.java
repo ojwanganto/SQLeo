@@ -101,7 +101,7 @@ public abstract class MDIClient extends ClientFrame {
 										new String[] { "TABLE", "SYNONYM", "VIEW" });
 				if (rs != null) {
 					prefixTree = new Trie();
-					for (final String word : _ReservedWords.allReservedWords) {
+					for (final String word : _ReservedWords.ALL_RESERVED_WORDS) {
 						prefixTree.addWord(word.toLowerCase());
 					}
 					while (rs.next()) {

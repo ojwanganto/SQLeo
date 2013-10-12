@@ -107,33 +107,10 @@ public class QueryStyledDocument extends DefaultStyledDocument implements _Reser
 	protected void checkKeywords(String content, int startOffset, int endOffset)
 	{
 		String line = content.substring(startOffset,endOffset);
-
-		checkKeyword(line, ALL		, startOffset);
-		checkKeyword(line, DISTINCT	, startOffset);
-
-		checkKeyword(line, SELECT	, startOffset);
-		checkKeyword(line, FROM		, startOffset);
-		checkKeyword(line, WHERE	, startOffset);
-		checkKeyword(line, GROUP_BY	, startOffset);
-		checkKeyword(line, HAVING	, startOffset);
-		checkKeyword(line, UNION	, startOffset);
-		checkKeyword(line, ORDER_BY	, startOffset);
-
-		checkKeyword(line, BETWEEN	, startOffset);
-		checkKeyword(line, AS		, startOffset);
-		checkKeyword(line, AND		, startOffset);
-		checkKeyword(line, OR		, startOffset);
-		checkKeyword(line, ON		, startOffset);
-
-		checkKeyword(line, INNER_JOIN       , startOffset);
-		checkKeyword(line, LEFT_OUTER_JOIN  , startOffset);
-		checkKeyword(line, RIGHT_OUTER_JOIN , startOffset);
-		checkKeyword(line, FULL_OUTER_JOIN  , startOffset);
-		checkKeyword(line, JOIN       , startOffset);
-		checkKeyword(line, LEFT_JOIN  , startOffset);
-		checkKeyword(line, RIGHT_JOIN , startOffset);
-		checkKeyword(line, FULL_JOIN  , startOffset);
-		checkKeyword(line, CROSS_JOIN  , startOffset);
+		
+		for(String keyword : ALL_RESERVED_WORDS){
+			checkKeyword(line, keyword , startOffset);
+		}
 	}
 
 	protected void checkKeyword(String line, String keyword, int offsetgap)
