@@ -171,6 +171,7 @@ public class SQLParser
 		String alias = null;
 		String value = new String();
 		SubQuery sub=null;
+		DerivedTable dt = null;
 		boolean seenSubquery = false;
 		
 		while(li.hasNext())
@@ -208,11 +209,21 @@ public class SQLParser
 			else if(isClauseWord(next.toString()))
 			{
 				li.previous();
+				// for scalar subqueries
+				if(next.toString().equalsIgnoreCase(_ReservedWords.WITH))
+				{
+					//to to ticket #138
+					//sub = new SubQuery();
+					//doParseQuery(li,sub);
+					//qs.addSelectList(sub);
+
+					//value = new String();
+
+				}
 				if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
 				{
 					sub = new SubQuery();
 					doParseQuery(li,sub);
-
 					qs.addSelectList(sub);
 					value = new String();
 
@@ -393,7 +404,8 @@ public class SQLParser
 			String next = li.next().toString();
 
 			// ticket #80 Derived tables 
-			if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
+			// ticket #135 add CTE support in derived tables
+			if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT)||next.toString().equalsIgnoreCase(_ReservedWords.WITH))
 			{
 //				System.out.println("Derived Table");
 				dt = new DerivedTable();
