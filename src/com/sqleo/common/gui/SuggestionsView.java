@@ -30,6 +30,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -50,6 +52,7 @@ import com.sqleo.environment.Application;
 import com.sqleo.environment.mdi.ClientCommandEditor;
 import com.sqleo.environment.mdi.ClientQueryBuilder;
 import com.sqleo.environment.mdi.MDIClient;
+import com.sqleo.querybuilder.syntax._ReservedWords;
 
 public class SuggestionsView {
 
@@ -117,8 +120,15 @@ public class SuggestionsView {
 			String[] namesStartingWith = null;
 			if (subWord.endsWith(".")) {
 				final String tempSubWord = subWord + "xxx";
-				final String[] tableName = tempSubWord.split("\\.");
-				namesStartingWith = SQLHelper.getColumns(connection, schema, tableName[0].toUpperCase());
+				final String tableOrAliasName = tempSubWord.split("\\.")[0];
+				namesStartingWith = SQLHelper.getColumns(connection, schema, tableOrAliasName.toUpperCase());
+				if(null == namesStartingWith ||  namesStartingWith.length ==0){
+					// means find the table from alias tableOrAliasName
+					final String tableNameFromAlias = getTableNameFromAlias(tableOrAliasName);
+					if(tableNameFromAlias!=null){
+						namesStartingWith = SQLHelper.getColumns(connection, schema, tableNameFromAlias.toUpperCase());
+					}
+				}
 				columnMode = true;
 			} else if (prefixTree != null) {
 				final List<String> foundValues = prefixTree.getWordsForPrefix(subWord);
@@ -192,6 +202,50 @@ public class SuggestionsView {
 		});
 	}
 
+	public String getTableNameFromAlias(final String alias) {
+		final String text = textPane.getText();
+		final String regex = "\\b"+alias+"\\b";
+		final Matcher matcher = Pattern.compile(regex).matcher(text);
+		//find first matching alias
+		if(matcher.find() == true){
+			int aliasIndex = matcher.start();
+			//Extract last 2 words before alias 
+			int[] startEndIndexes2 = getWordStartEndPositions(aliasIndex-1,text);
+			String word2 = text.substring(startEndIndexes2[0],startEndIndexes2[1]);
+			if(_ReservedWords.AS.equals(word2.toUpperCase())){
+				// If AS keyword found then find word before AS.
+				int[] startEndIndexes = getWordStartEndPositions(startEndIndexes2[0]-1,text);
+				return text.substring(startEndIndexes[0],startEndIndexes[1]);
+			}else{
+				return word2;
+			}
+		}
+		return null;
+	}
+	final int[] getWordStartEndPositions(final int index, final String text){
+		int end = index;
+		//skip blanks
+		while(end > 0){
+			final char charAt = text.charAt(end);
+			if (Character.isWhitespace(charAt)) {
+				end--;
+			}else{
+				break;
+			}
+		}
+		//now stop when blank occurs 
+		int start = end;
+		while(start > 0){
+			final char charAt = text.charAt(start);
+			if (!Character.isWhitespace(charAt)) {
+				start--;
+			}else{
+				break;
+			}
+		}
+		return new int[]{start+1, end+1};
+	}
+
 	private void showSuggestion() {
 		hideSuggestion();
 		final int position = textPane.getCaretPosition();
@@ -217,7 +271,7 @@ public class SuggestionsView {
 			return;
 		}
 		final String subWord = text.substring(start, position);
-		if (subWord.length() < 2) {
+		if (subWord.length() < 1) {
 			return;
 		}
 		suggestion = new SuggestionPanel(textPane, position, subWord, location);
