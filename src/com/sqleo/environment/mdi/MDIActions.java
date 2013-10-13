@@ -146,8 +146,7 @@ public abstract class MDIActions implements _Constants
 						}
 					}
 				
-					ClientQueryBuilder cqb = new ClientQueryBuilder(keycah.toString());
-					cqb.setDiagramLayout(dl);
+					ClientQueryBuilder cqb = new ClientQueryBuilder(keycah.toString(),dl);
 					Application.window.add(cqb);
 				}
 			}

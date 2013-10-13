@@ -94,7 +94,11 @@ public class SuggestionsView {
 						prefixTree = ce.getPrefixTree();
 						connection =
 								ConnectionAssistant.getHandler(ce.getQueryBuilder().getConnectionHandlerKey()).get();
-						schema = SQLHelper.getSchemaFromUser(ce.getQueryBuilder().getConnectionHandlerKey());
+						if (ce.getQueryBuilder().getDiagramLayout().getQueryModel().getSchema()!=null){
+							schema = ce.getQueryBuilder().getDiagramLayout().getQueryModel().getSchema();
+						}else {
+							schema = SQLHelper.getSchemaFromUser(ce.getQueryBuilder().getConnectionHandlerKey());
+						}
 					}
 				}
 

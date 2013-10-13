@@ -72,26 +72,31 @@ public abstract class MDIClient extends ClientFrame {
 		return prefixTree;
 	}
 
-	protected void loadPrefixTree(final String chKey) {
+	protected void loadPrefixTree(final String chKey,final String schema) {
 		if (Preferences.isAutoCompleteEnabled()) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					loadAllTableNames(chKey);
+					loadAllTableNames(chKey,schema);
 				}
 			});
 		}
 	}
 
-	private void loadAllTableNames(final String chKey) {
+	private void loadAllTableNames(final String chKey,final String schema) {
 		final ConnectionHandler ch = ConnectionAssistant.getHandler(chKey);
 		if (ch != null) {
 			try {
-				String schemaPrefix = SQLHelper.getSchemaFromUser(chKey);
-				if (null == schemaPrefix) {
-					final ArrayList schemaNames = ch.getArrayList("$schema_names");
-					if (schemaNames != null) {
-						schemaPrefix = (String) schemaNames.get(0);
+				String schemaPrefix;
+				if(schema!=null){
+					schemaPrefix = schema;
+				}else {
+					schemaPrefix = SQLHelper.getSchemaFromUser(chKey);
+					if (null == schemaPrefix) {
+						final ArrayList schemaNames = ch.getArrayList("$schema_names");
+						if (schemaNames != null) {
+							schemaPrefix = (String) schemaNames.get(0);
+						}
 					}
 				}
 				final ResultSet rs =
