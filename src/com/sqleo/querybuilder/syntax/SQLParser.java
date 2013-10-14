@@ -193,6 +193,13 @@ public class SQLParser
                 }
                 else { value=next.toString(); li.previous(); }
 			}
+			else if(next.toString().equals("("))
+			{
+				Function f = new Function(value,new QueryTokens.DefaultExpression());
+				qs.addSelectList(f);
+				doParseFunction(li,f);
+				value = new String("");
+			}
 			else if(next.toString().equals(",") && surrounds == 0 )
 			{
 				if(!value.trim().equals("")) qs.addSelectList(new QueryTokens.DefaultExpression(value.trim(),alias));
@@ -291,7 +298,7 @@ public class SQLParser
 			
 			if(next.toString().equals(",") && surrounds == 0 || next.toString().equals(";"))
 			{
-				qs.addGroupByClause(new QueryTokens.Group(value.trim()));
+				if(!value.trim().equals("")) qs.addGroupByClause(new QueryTokens.Group(value.trim()));
 				value = new String();
 			}
 			else if(isClauseWord(next.toString()))
@@ -316,6 +323,7 @@ public class SQLParser
 					Extract e = new Extract();
 					qs.addGroupByClause(new QueryTokens.Group(e));
 					doParseExtract(li,e);
+					value=new String();
 				}
 				else { value = value + next.toString().trim(); li.previous(); }
 			}
@@ -696,6 +704,42 @@ public class SQLParser
 		return (QueryTokens.Condition[])tokens.toArray(new QueryTokens.Condition[tokens.size()]);
 	}
 
+	private static void doParseFunction(ListIterator li, Function f)
+		throws IOException
+	{
+		char surround=1;
+		String value = new String();
+		while(li.hasNext())
+		{
+			Object next = li.next();
+			if(next.toString().equalsIgnoreCase(_ReservedWords.EXTRACT))
+			{
+				Object n = li.next();
+                if(n.toString().equals("("))
+                {
+                	Extract e = new Extract();
+                	f.setFunction(e);
+                	doParseExtract(li,e);
+                }
+                else { value=next.toString(); li.previous(); }
+				
+			}
+			else if(isClauseWord(next.toString())) {li.previous(); break; }
+			else if(next.toString().equals("(")) surround++;
+			else if(next.toString().equals(")")) surround--;
+			else
+			{
+				value = value + next;
+			}
+			if(surround==0) 
+				if(!value.equals(""))
+				{
+					f.setFunction(new QueryTokens.DefaultExpression(value));
+					break;
+				}
+		}
+	}
+
 	private static void doParseExtract(ListIterator li, Extract e)
 		throws IOException
 	{
@@ -717,14 +761,21 @@ public class SQLParser
 					if(surround==0)
 					{
 						Object n = li.next();
-						if(n.toString().equals(",") || n.toString().equals(";"))
+						if(n.toString().equals(",") || n.toString().equals(";") || n.toString().equals(")"))
 						{
 							e.setExtract(value,expr,null);
+							li.previous();
 						}
 						else if(isClauseWord(n.toString()) || isOperatorSimbol(n.toString())) 
 						{
 							e.setExtract(value,expr,null);
 							li.previous();
+						}
+						else if(n.toString().equalsIgnoreCase(_ReservedWords.AS))
+						{
+							e.setExtract(value,expr,li.next().toString());
+							e.setAS(true);
+							break;
 						}
 						else 
 						{

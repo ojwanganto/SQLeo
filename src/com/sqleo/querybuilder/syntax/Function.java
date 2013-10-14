@@ -20,40 +20,23 @@
 
 package com.sqleo.querybuilder.syntax;
 
-public class Extract implements QueryTokens._Expression
+public class Function implements QueryTokens._Expression
 {
-	private String word;
-	private String expr;
-	private String alias;
-	private boolean AS;
+	private String name;
+	private QueryTokens._Expression expr;
 	
-	public Extract()
+	public Function(String n, QueryTokens._Expression e)
 	{
-		word=new String(); expr=new String(); alias=new String();
+		expr=e; name=n;
 	}
 
-	public void setExtract(String w, String xpr, String a)
+	public void setFunction(QueryTokens._Expression e)
 	{
-		word=w; expr=xpr; alias=a;
-	}
-
-	public boolean isAliasSet()
-	{
-		return alias!=null && !alias.equals("");
-	}
-	
-	public void setAS(boolean f)
-	{
-		AS=f;
+		expr=e ;
 	}
 	
 	public String toString()
 	{
-		if(AS)
-			return "EXTRACT (" + word + SQLFormatter.SPACE + _ReservedWords.FROM + SQLFormatter.SPACE + expr +") AS " + alias;
-	    else if(isAliasSet())
-			return "EXTRACT (" + word + SQLFormatter.SPACE + _ReservedWords.FROM + SQLFormatter.SPACE + expr +") " + alias;
-		else 
-			return "EXTRACT (" + word + SQLFormatter.SPACE + _ReservedWords.FROM + SQLFormatter.SPACE + expr +")";
+		return name + "(" + expr.toString() +")";
 	}
 }
