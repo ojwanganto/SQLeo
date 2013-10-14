@@ -69,12 +69,11 @@ public class ClientQueryBuilder extends MDIClient {
 	public ClientQueryBuilder(String keycah) {
 		this(keycah, null);
 	}
-	public ClientQueryBuilder(String keycah,DiagramLayout dl) {
+	public ClientQueryBuilder(String keycah,String schema) {
 		super(DEFAULT_TITLE);
 		setMaximizable(true);
 		setResizable(true);
 		setComponentCenter(builder = new QueryBuilder());
-		setDiagramLayout(dl);
 		builder.setClientQueryBuilder(this);
 
 		this.keycah = keycah;
@@ -85,7 +84,6 @@ public class ClientQueryBuilder extends MDIClient {
 		if (keycah != null) {
 			builder.setConnection(ConnectionAssistant.getHandler(keycah).get());
 			builder.setConnectionHandlerKey(keycah);
-			final String schema = dl!=null?dl.getQueryModel().getSchema():null;
 			loadPrefixTree(keycah,schema);
 		}
 		setFileName(null);
