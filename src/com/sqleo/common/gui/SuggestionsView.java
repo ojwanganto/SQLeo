@@ -208,7 +208,7 @@ public class SuggestionsView {
 
 	public String getTableNameFromAlias(final String alias) {
 		final String text = textPane.getText();
-		final String regex = "\\b"+alias+"\\b";
+		final String regex = "(?i)\\s+"+alias+"(\\n+|\\s+|$)";
 		final Matcher matcher = Pattern.compile(regex).matcher(text);
 		//find first matching alias
 		if(matcher.find() == true){
