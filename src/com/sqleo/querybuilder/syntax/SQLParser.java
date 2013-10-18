@@ -27,6 +27,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.ListIterator;
+import java.util.regex.Pattern;
 
 import com.sqleo.environment.Application;
 import com.sqleo.querybuilder.QueryBuilder;
@@ -44,7 +45,10 @@ public class SQLParser
 		sql = sql.replace("--","//");
 
 		// ticket #73 oracle (+) join support
-		sql = sql.replace("(+)"," ORACLE_OUTER_JOIN");
+		sql = sql.replace("(+)"," _ORACLE_OUTER_JOIN_");
+
+		// ticket #90 EXTRACT (X FROM field)
+		sql = sql.replaceAll("(?i)(extract)* (?:from) "," _EXTRACT_FROM_ ");
 
 
 		return toQueryModel(new StringReader(sql));
@@ -164,6 +168,7 @@ public class SQLParser
 				
 	}
 
+
 	private static void doParseSelect(ListIterator li, QuerySpecification qs)
 		throws IOException
 	{
@@ -171,7 +176,6 @@ public class SQLParser
 		String alias = null;
 		String value = new String();
 		SubQuery sub=null;
-		DerivedTable dt = null;
 		boolean seenSubquery = false;
 		
 		while(li.hasNext())
@@ -181,24 +185,6 @@ public class SQLParser
 			if(next.toString().equalsIgnoreCase(_ReservedWords.DISTINCT) && surrounds == 0 )
 			{
 				qs.setQuantifier(QuerySpecification.DISTINCT);
-			}
-			else if(next.toString().equalsIgnoreCase(_ReservedWords.EXTRACT))
-			{
-				Object n = li.next();
-                if(n.toString().equals("("))
-                {
-                	Extract e = new Extract();
-                	qs.addSelectList(e);
-                	doParseExtract(li,e);
-                }
-                else { value=next.toString(); li.previous(); }
-			}
-			else if(next.toString().equals("("))
-			{
-				Function f = new Function(value,new QueryTokens.DefaultExpression());
-				qs.addSelectList(f);
-				doParseFunction(li,f);
-				value = new String("");
 			}
 			else if(next.toString().equals(",") && surrounds == 0 )
 			{
@@ -216,21 +202,11 @@ public class SQLParser
 			else if(isClauseWord(next.toString()))
 			{
 				li.previous();
-				// for scalar subqueries
-				if(next.toString().equalsIgnoreCase(_ReservedWords.WITH))
-				{
-					//to to ticket #138
-					//sub = new SubQuery();
-					//doParseQuery(li,sub);
-					//qs.addSelectList(sub);
-
-					//value = new String();
-
-				}
 				if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
 				{
 					sub = new SubQuery();
 					doParseQuery(li,sub);
+
 					qs.addSelectList(sub);
 					value = new String();
 
@@ -252,6 +228,10 @@ public class SQLParser
 			{
 				alias = li.next().toString().trim();
 				if (seenSubquery && sub!=null) {sub.setAlias(alias); sub.setAs(true);}
+			}
+			else if(next.toString().equals("_EXTRACT_FROM_"))
+			{
+				value = value + " FROM";
 			}
 			else
 			{
@@ -298,8 +278,12 @@ public class SQLParser
 			
 			if(next.toString().equals(",") && surrounds == 0 || next.toString().equals(";"))
 			{
-				if(!value.trim().equals("")) qs.addGroupByClause(new QueryTokens.Group(value.trim()));
+				qs.addGroupByClause(new QueryTokens.Group(value.trim()));
 				value = new String();
+			}
+			else if(next.toString().equals("_EXTRACT_FROM_"))
+			{
+				value = value + " FROM";
 			}
 			else if(isClauseWord(next.toString()))
 			{
@@ -315,18 +299,6 @@ public class SQLParser
 				break;
 			}
 			// ticket #80 end
-			else if(next.toString().equalsIgnoreCase(_ReservedWords.EXTRACT))
-			{
-				Object n = li.next();
-				if(n.toString().equals("("))
-				{
-					Extract e = new Extract();
-					qs.addGroupByClause(new QueryTokens.Group(e));
-					doParseExtract(li,e);
-					value=new String();
-				}
-				else { value = value + next.toString().trim(); li.previous(); }
-			}
 			else
 			{
 				if(next.toString().equals("(")) surrounds++;
@@ -380,6 +352,10 @@ public class SQLParser
 			{
 				// nothing to do
 			}
+			else if(next.toString().equals("_EXTRACT_FROM_"))
+			{
+				value = value + " FROM";
+			}
 			else
 			{
 				if(next.toString().equals("(")) surrounds++;
@@ -410,10 +386,8 @@ public class SQLParser
 		for(int surrounds = 0; li.hasNext();)
 		{
 			String next = li.next().toString();
-
 			// ticket #80 Derived tables 
-			// ticket #135 add CTE support in derived tables
-			if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT)||next.toString().equalsIgnoreCase(_ReservedWords.WITH))
+			if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
 			{
 //				System.out.println("Derived Table");
 				dt = new DerivedTable();
@@ -581,7 +555,6 @@ public class SQLParser
 		ArrayList tokens = new ArrayList();
 		QueryTokens.Condition token = null;
 		QueryTokens._Expression expr = null;
-		String value;
 		
 		for(int surrounds = 0; li.hasNext();)
 		{
@@ -609,17 +582,6 @@ public class SQLParser
 				surrounds++; // Added for ticket #93
 
 
-			}
-			if(next.toString().equalsIgnoreCase(_ReservedWords.EXTRACT))
-			{
-				Object n = li.next();
-				if(n.toString().equalsIgnoreCase("("))
-				{
-					Extract e = new Extract();
-					doParseExtract(li,e);
-					expr = e;
-				}
-				else { expr = new QueryTokens.DefaultExpression(next.toString()); li.previous(); };
 			}
 			else if(isClauseWord(next.toString()))
 			{
@@ -672,7 +634,7 @@ public class SQLParser
 				expr = null;
 			}
 			// ticket #73 oracle (+) join support
-			else if(next.toString().equals("ORACLE_OUTER_JOIN"))
+			else if(next.toString().equals("_ORACLE_OUTER_JOIN_"))
 			{
 				// to do Change JOIN TYPE !
 				// raise exception 
@@ -681,14 +643,21 @@ public class SQLParser
 			// end #73
 			else
 			{
-				value = expr == null ? new String() : expr.toString();
+				String value = expr == null ? new String() : expr.toString();
 				
 				if(value.length()>0 && (next instanceof String || next instanceof Number))
 				{
 					char last = value.charAt(value.length()-1);
 					if(Character.isLetterOrDigit(last)) value = value + SQLFormatter.SPACE;
 				}
-				value = value + next.toString();
+				if(next.toString().equals("_EXTRACT_FROM_"))
+				{
+					 value = value + _ReservedWords.FROM;
+				}
+				else
+				{
+					value = value + next.toString();
+				}
 				expr = new QueryTokens.DefaultExpression(value);
 				
 				if(between && next.toString().equalsIgnoreCase(_ReservedWords.AND)) between = false;
@@ -702,93 +671,6 @@ public class SQLParser
 		}
 		
 		return (QueryTokens.Condition[])tokens.toArray(new QueryTokens.Condition[tokens.size()]);
-	}
-
-	private static void doParseFunction(ListIterator li, Function f)
-		throws IOException
-	{
-		char surround=1;
-		String value = new String();
-		while(li.hasNext())
-		{
-			Object next = li.next();
-			if(next.toString().equalsIgnoreCase(_ReservedWords.EXTRACT))
-			{
-				Object n = li.next();
-                if(n.toString().equals("("))
-                {
-                	Extract e = new Extract();
-                	f.setFunction(e);
-                	doParseExtract(li,e);
-                }
-                else { value=next.toString(); li.previous(); }
-				
-			}
-			else if(isClauseWord(next.toString())) {li.previous(); break; }
-			else if(next.toString().equals("(")) surround++;
-			else if(next.toString().equals(")")) surround--;
-			else
-			{
-				value = value + next;
-			}
-			if(surround==0) 
-				if(!value.equals(""))
-				{
-					f.setFunction(new QueryTokens.DefaultExpression(value));
-					break;
-				}
-		}
-	}
-
-	private static void doParseExtract(ListIterator li, Extract e)
-		throws IOException
-	{
-		String value = new String();
-		while(li.hasNext())
-		{
-			Object next = li.next();
-			if(next.toString().equalsIgnoreCase(_ReservedWords.FROM))
-			{
-				char surround = 1;
-				String expr = new String();
-				while(li.hasNext())
-				{
-					next = li.next();
-					if(next.toString().equals(")") )
-						surround--;
-					if(next.toString().equals("(") ) 
-						surround++;
-					if(surround==0)
-					{
-						Object n = li.next();
-						if(n.toString().equals(",") || n.toString().equals(";") || n.toString().equals(")"))
-						{
-							e.setExtract(value,expr,null);
-							li.previous();
-						}
-						else if(isClauseWord(n.toString()) || isOperatorSimbol(n.toString())) 
-						{
-							e.setExtract(value,expr,null);
-							li.previous();
-						}
-						else if(n.toString().equalsIgnoreCase(_ReservedWords.AS))
-						{
-							e.setExtract(value,expr,li.next().toString());
-							e.setAS(true);
-							break;
-						}
-						else 
-						{
-							e.setExtract(value,expr,n.toString());
-						}
-						break;
-					}
-					expr = expr + (expr.length()>0?SQLFormatter.SPACE:expr) + next;
-				}
-				break;
-			}
-			value = value + next;
-		}
 	}
 	
 	public static void doConvertColumns(QuerySpecification qs)
@@ -1063,7 +945,6 @@ public class SQLParser
 	{
 
 		StreamTokenizer stream = new StreamTokenizer(r);
-
 		stream.ordinaryChar('.');
 		stream.ordinaryChar('/'); // fix for ticket #48
 		stream.wordChars('$','$'); // fix for ticket #48
