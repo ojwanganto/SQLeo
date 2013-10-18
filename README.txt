@@ -34,6 +34,21 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2013.10.rc01.zip: 2013-10-18
+
+  Thanks to Bao Nguyen and Anudeep Gade for their contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.10/
+	136 	add support for SQLite3
+			Query Builder tested with xerial sqlite-jdbc-3.7.2.jar
+			driver class:	org.sqlite.JDBC
+			url format:	jdbc:sqlite:dbname.db
+	135 	Reverse query: fails with subqueries WITH CTE format
+	132 	Auto-complete should use choosen schema when no schema in syntax
+	130 	Auto-complete with table aliases
+	90 	Reverse query: add support for EXTRACT(year from date)
+
+
 SQLeoVQB.2013.09.rc01.zip: 2013-09-16
 
   Thanks to Bao Nguyen for his contribution to this release
