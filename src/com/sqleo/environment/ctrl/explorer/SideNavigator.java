@@ -311,14 +311,14 @@ public class SideNavigator extends TreeView implements TreeSelectionListener
 			else if(node.getUserObject() instanceof UoLinks)
 			{
 				String path = tse.getPath().toString();
-				rvLinks.setInfo(Text.replaceText(path, ", ", " » "));
+				rvLinks.setInfo(Text.replaceText(path, ", ", " >> "));
 				rvLinks.list(node);
 				rLayout.show(rContainer,"links");
 			}
 			else if(!node.getAllowsChildren())
 			{
 				String path = tse.getPath().toString();
-				rvMetadata.setInfo(Text.replaceText(path, ", ", " » "));
+				rvMetadata.setInfo(Text.replaceText(path, ", ", " >> "));
 				
 				LeftLoader ll = new LeftLoader(node);
 				new Thread(ll).start();

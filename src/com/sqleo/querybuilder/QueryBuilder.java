@@ -344,7 +344,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 			}
 			else if(tokens[i] instanceof QueryTokens.DefaultExpression)
 			{
-				//F-1730329 : verifica se è una colonna senza nome tabella specificato
+				//F-1730329 : verifica se e una colonna senza nome tabella specificato
 				DiagramAbstractEntity[] entities = diagram.getEntities();
 				for(int j=0; j<entities.length; j++)
 				{
