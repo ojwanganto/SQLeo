@@ -48,7 +48,8 @@ public class SQLParser
 		sql = sql.replace("(+)"," _ORACLE_OUTER_JOIN_");
 
 		// ticket #90 EXTRACT (X FROM field)
-		sql = sql.replaceAll("(?i)(extract)* (?:from) "," _EXTRACT_FROM_ ");
+		// commented because many regressions found in reverse SQL
+		// sql = sql.replaceAll("(?i)(extract)* (?:from) "," _EXTRACT_FROM_ ");
 
 
 		return toQueryModel(new StringReader(sql));
@@ -202,6 +203,17 @@ public class SQLParser
 			else if(isClauseWord(next.toString()))
 			{
 				li.previous();
+				// for scalar subqueries
+				//if(next.toString().equalsIgnoreCase(_ReservedWords.WITH))
+				//{
+					//to to ticket #138
+					//sub = new SubQuery();
+					//doParseQuery(li,sub);
+					//qs.addSelectList(sub);
+
+					//value = new String();
+
+				//}
 				if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
 				{
 					sub = new SubQuery();
@@ -387,7 +399,8 @@ public class SQLParser
 		{
 			String next = li.next().toString();
 			// ticket #80 Derived tables 
-			if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
+			// ticket #135 add CTE support in derived tables
+			if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT)||next.toString().equalsIgnoreCase(_ReservedWords.WITH))
 			{
 //				System.out.println("Derived Table");
 				dt = new DerivedTable();
