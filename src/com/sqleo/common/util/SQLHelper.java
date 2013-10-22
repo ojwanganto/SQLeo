@@ -28,8 +28,22 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class SQLHelper {
-
+	
 	public static String[] getColumns(final Connection connection, final String schema, final String table) {
+		//First try uppercase table name (For ORACLE,mysql)
+		String[] cols = getColumnsInternal(connection, schema, table.toUpperCase());
+		if(cols.length == 0){
+			// Then try lowercase table name (For postgres)
+			cols = getColumnsInternal(connection, schema, table.toUpperCase());
+			if(cols.length == 0){
+				//Then try given name (For some mixed case datasources)
+			    cols = getColumnsInternal(connection, schema, table);
+			}
+		}
+		return cols;
+	}
+
+	private static String[] getColumnsInternal(final Connection connection, final String schema, final String table) {
 		final Set<String> columns = new TreeSet<String>();
 		try {
 			String schemaFinal = schema;
@@ -37,7 +51,8 @@ public class SQLHelper {
 				schemaFinal = schemaFinal + "xxx";
 				schemaFinal = schemaFinal.split("_USER")[0];
 			}
-			final ResultSet rs = connection.getMetaData().getColumns(null, schemaFinal, table, "%");
+			final String catalog = schemaFinal == null ? null : connection.getCatalog();
+			final ResultSet rs = connection.getMetaData().getColumns(catalog, schemaFinal, table, "%");
 			if (rs != null) {
 				while (rs.next()) {
 					final String colName = rs.getString(4);

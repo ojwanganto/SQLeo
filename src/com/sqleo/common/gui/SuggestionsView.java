@@ -76,7 +76,7 @@ public class SuggestionsView {
 		private final String subWord;
 		private final int insertionPosition;
 
-		public SuggestionPanel(final JTextPane textPane, final int position, final String subWord, final Point location) {
+		private SuggestionPanel(final JTextPane textPane, final int position, final String subWord, final Point location) {
 			if (null == prefixTree) {
 				if (calledFromCommandEditor) {
 					final MDIClient client = Application.window.getClient(ClientCommandEditor.DEFAULT_TITLE);
@@ -113,7 +113,7 @@ public class SuggestionsView {
 			popupMenu.show(textPane, location.x, textPane.getBaseline(0, 0) + location.y);
 		}
 
-		public void hide() {
+		private void hide() {
 			popupMenu.setVisible(false);
 			if (suggestion == this) {
 				suggestion = null;
@@ -125,13 +125,14 @@ public class SuggestionsView {
 			if (subWord.endsWith(".")) {
 				final String tempSubWord = subWord + "xxx";
 				final String tableOrAliasName = tempSubWord.split("\\.")[0];
-				namesStartingWith = SQLHelper.getColumns(connection, schema, tableOrAliasName.toUpperCase());
-				if(null == namesStartingWith ||  namesStartingWith.length ==0){
-					// means find the table from alias tableOrAliasName
-					final String tableNameFromAlias = getTableNameFromAlias(tableOrAliasName);
-					if(tableNameFromAlias!=null){
-						namesStartingWith = SQLHelper.getColumns(connection, schema, tableNameFromAlias.toUpperCase());
-					}
+				//first try if its alias 
+				final String tableNameFromAlias = getTableNameFromAlias(tableOrAliasName);
+				if(tableNameFromAlias!=null){
+					//means found table name from alias 
+					namesStartingWith = SQLHelper.getColumns(connection, schema, tableNameFromAlias);
+				}else {
+					//try as table name 
+					namesStartingWith = SQLHelper.getColumns(connection, schema, tableOrAliasName);
 				}
 				columnMode = true;
 			} else if (prefixTree != null) {
@@ -154,7 +155,7 @@ public class SuggestionsView {
 			return list;
 		}
 
-		public boolean insertSelection() {
+		private boolean insertSelection() {
 			if (list.getSelectedValue() != null) {
 				try {
 					String selectedSuggestion;
@@ -174,12 +175,12 @@ public class SuggestionsView {
 			return false;
 		}
 
-		public void moveUp() {
+		private void moveUp() {
 			final int index = Math.min(list.getSelectedIndex() - 1, 0);
 			selectIndex(index);
 		}
 
-		public void moveDown() {
+		private void moveDown() {
 			final int index = Math.min(list.getSelectedIndex() + 1, list.getModel().getSize() - 1);
 			selectIndex(index);
 		}
@@ -206,7 +207,7 @@ public class SuggestionsView {
 		});
 	}
 
-	public String getTableNameFromAlias(final String alias) {
+	private String getTableNameFromAlias(final String alias) {
 		final String text = textPane.getText();
 		final String regex = "(?i)\\s+"+alias+"(\\n+|\\s+|$)";
 		final Matcher matcher = Pattern.compile(regex).matcher(text);
@@ -226,7 +227,7 @@ public class SuggestionsView {
 		}
 		return null;
 	}
-	final int[] getWordStartEndPositions(final int index, final String text){
+	private int[] getWordStartEndPositions(final int index, final String text){
 		int end = index;
 		//skip blanks
 		while(end > 0){
