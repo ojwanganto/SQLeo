@@ -34,7 +34,7 @@ public class SQLHelper {
 		String[] cols = getColumnsInternal(connection, schema, table.toUpperCase());
 		if(cols.length == 0){
 			// Then try lowercase table name (For postgres)
-			cols = getColumnsInternal(connection, schema, table.toUpperCase());
+			cols = getColumnsInternal(connection, schema, table.toLowerCase());
 			if(cols.length == 0){
 				//Then try given name (For some mixed case datasources)
 			    cols = getColumnsInternal(connection, schema, table);
