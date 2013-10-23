@@ -49,7 +49,7 @@ public class SQLParser
 
 		// ticket #90 EXTRACT (X FROM field)
 		// commented because many regressions found in reverse SQL
-		// sql = sql.replaceAll("(?i)(extract)* (?:from) "," _EXTRACT_FROM_ ");
+		sql = sql.replaceAll("(?i)(extract\\s*\\(\\s*\\w+)\\s+(from)\\s+","$1 _EXTRACT_FROM_ ");
 
 
 		return toQueryModel(new StringReader(sql));
