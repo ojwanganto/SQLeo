@@ -34,6 +34,17 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2013.10.rc2.zip: 2013-10-24
+
+  Bug Fixes included for:
+	135 	Reverse query: fails with subqueries WITH CTE format
+	130 	Auto-complete with table aliases
+	90 	Reverse query: add support for EXTRACT(year from date)
+
+  New ticket added:
+	140 unmappable character for encoding UTF8 
+
+
 SQLeoVQB.2013.10.rc01.zip: 2013-10-18
 
   Thanks to Bao Nguyen and Anudeep Gade for their contribution to this release
