@@ -61,8 +61,8 @@ public class SuggestionsView {
 	private Trie prefixTree;
 	private String schema;
 	private Connection connection;
-	private boolean columnMode = false;
 	private boolean calledFromCommandEditor = true;
+	private String[] previousColumns;
 
 	public SuggestionsView(final JTextPane textPane, final boolean calledFromCommandEditor) {
 		this.textPane = textPane;
@@ -73,7 +73,7 @@ public class SuggestionsView {
 	private class SuggestionPanel {
 		private JList list;
 		private final JPopupMenu popupMenu;
-		private final String subWord;
+		private String subWord;
 		private final int insertionPosition;
 
 		private SuggestionPanel(final JTextPane textPane, final int position, final String subWord, final Point location) {
@@ -130,15 +130,28 @@ public class SuggestionsView {
 				if(tableNameFromAlias!=null){
 					//means found table name from alias 
 					namesStartingWith = SQLHelper.getColumns(connection, schema, tableNameFromAlias);
-				}else {
+				}
+				if(null == namesStartingWith || namesStartingWith.length == 0){
 					//try as table name 
 					namesStartingWith = SQLHelper.getColumns(connection, schema, tableOrAliasName);
 				}
-				columnMode = true;
-			} else if (prefixTree != null) {
+				previousColumns = namesStartingWith;
+				this.subWord  = "";
+			}else if (previousColumns!=null && subWord.contains(".")) {
+				final String colPrefix = subWord.split("\\.")[1];
+				namesStartingWith = new String[previousColumns.length];
+				int i=0;
+				for(final String col : previousColumns){
+					if(col.startsWith(colPrefix)){
+						namesStartingWith[i]=col; 
+						i++;
+					}
+				}
+				this.subWord  = colPrefix;
+			}else if (prefixTree != null) {
 				final List<String> foundValues = prefixTree.getWordsForPrefix(subWord);
 				namesStartingWith = foundValues.toArray(new String[foundValues.size()]);
-				columnMode = false;
+				previousColumns = null;
 			}
 			final JList list = new JList(namesStartingWith);
 			list.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
@@ -158,13 +171,7 @@ public class SuggestionsView {
 		private boolean insertSelection() {
 			if (list.getSelectedValue() != null) {
 				try {
-					String selectedSuggestion;
-					if (columnMode) {
-						selectedSuggestion = (String) list.getSelectedValue();
-						columnMode = false;
-					} else {
-						selectedSuggestion = ((String) list.getSelectedValue()).substring(subWord.length());
-					}
+					String selectedSuggestion = ((String) list.getSelectedValue()).substring(subWord.length());
 					textPane.getDocument().insertString(insertionPosition, selectedSuggestion, null);
 					return true;
 				} catch (final BadLocationException e1) {
@@ -186,6 +193,7 @@ public class SuggestionsView {
 		}
 
 		private void selectIndex(final int index) {
+			if(index < 0 ) return;
 			final int position = textPane.getCaretPosition();
 			list.setSelectedIndex(index);
 			SwingUtilities.invokeLater(new Runnable() {
@@ -209,7 +217,7 @@ public class SuggestionsView {
 
 	private String getTableNameFromAlias(final String alias) {
 		final String text = textPane.getText();
-		final String regex = "(?i)\\s+"+alias+"(\\n+|\\s+|$)";
+		final String regex = "(?i)\\s+"+alias+"(\\n+|\\s+|$|,)";
 		final Matcher matcher = Pattern.compile(regex).matcher(text);
 		//find first matching alias
 		if(matcher.find() == true){
@@ -221,6 +229,9 @@ public class SuggestionsView {
 				// If AS keyword found then find word before AS.
 				int[] startEndIndexes = getWordStartEndPositions(startEndIndexes2[0]-1,text);
 				return text.substring(startEndIndexes[0],startEndIndexes[1]);
+			}else if(_ReservedWords.FROM.equals(word2.toUpperCase())){
+				//means given alias is actually table name 
+				return alias;
 			}else{
 				return word2;
 			}
