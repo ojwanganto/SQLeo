@@ -168,10 +168,14 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 			{
 				// fix #78 do not autoalias fields in subqueries
 				// entityUp.addField(field.querytoken.getAlias());
-				if(field.querytoken.getAlias()==null)
-					entityUp.addField(field.querytoken.getName());
-				else
-					entityUp.addField(field.querytoken.getAlias());
+				final DiagramField existinField = entityUp.getField(field.querytoken.getAlias()!=null?field.querytoken.getAlias():field.querytoken.getName());
+				if(null == existinField) {
+					// dont add again fields as we add them while reversing subquery
+					if(field.querytoken.getAlias()==null)
+						entityUp.addField(field.querytoken.getName());
+					else
+						entityUp.addField(field.querytoken.getAlias());
+				}
 
 			}
 			else

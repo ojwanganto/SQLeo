@@ -51,6 +51,8 @@ import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Column;
 import com.sqleo.querybuilder.syntax.QueryTokens.Condition;
 import com.sqleo.querybuilder.syntax.QueryTokens.DefaultExpression;
+import com.sqleo.querybuilder.syntax.QueryTokens.Table;
+import com.sqleo.querybuilder.syntax.QueryTokens._Expression;
 import com.sqleo.querybuilder.syntax.SQLFormatter;
 import com.sqleo.querybuilder.syntax.SQLParser;
 import com.sqleo.querybuilder.syntax.SubQuery;
@@ -287,9 +289,16 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 			}else if (whereToken instanceof DefaultExpression){
 				DiagramAbstractEntity[] entities = diagram.getEntities();
 				for(int j=0; j<entities.length; j++){
-					if(!(entities[j] instanceof DiagramEntity)) continue;
-					DiagramEntity entity = (DiagramEntity)entities[j];
-					DiagramField field =  entity.getField(whereToken.toString());
+					DiagramField field = null;
+					if(entities[j] instanceof DiagramEntity) {
+						DiagramEntity entity = (DiagramEntity)entities[j];
+						field =  entity.getField(whereToken.toString());
+					}
+					else if(entities[j] instanceof DiagramQuery){
+						DiagramQuery entity = (DiagramQuery)entities[j];
+						QueryTokens.DefaultExpression exp = (QueryTokens.DefaultExpression)whereToken;
+						field = entity.getField(exp.getValue());
+					}
 					if(field!=null){
 						return field;
 					}
@@ -309,11 +318,21 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 			}
 			else if(tokens[i] instanceof DerivedTable) // added for ticket #80
 			{
-				DiagramQuery entity = new DiagramQuery(this,(DerivedTable)tokens[i]);
+				DerivedTable subQuery = (DerivedTable)tokens[i];
+				DiagramQuery entity = new DiagramQuery(this,subQuery);
+				// display derived table fields
+				for(final _Expression exp : subQuery.getQuerySpecification().getSelectList()){
+					if(exp instanceof DefaultExpression){
+						final DefaultExpression column = (DefaultExpression) exp;
+						entity.addField(column.getValue());
+					}else if(exp instanceof QueryTokens.Column){
+						QueryTokens.Column column = (QueryTokens.Column)exp;
+						entity.addField(column.getName());
+					}
+				}
+				entity.pack();
 				this.diagram.addEntity(entity);
-				// to do display derived table fields
-				entity.setColumnSelections(true);
-				Application.alert("!!! Displaying reversed SQL for Derived table is not finished yet !!!");
+				//Application.alert("!!! Displaying reversed SQL for Derived table is not finished yet !!!");
 			}
 			else
 			{
@@ -348,26 +367,38 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				DiagramAbstractEntity[] entities = diagram.getEntities();
 				for(int j=0; j<entities.length; j++)
 				{
-					if(!(entities[j] instanceof DiagramEntity)) continue;
-					DiagramEntity entity = (DiagramEntity)entities[j];
-					
-					DiagramField field = entity.getField(tokens[i].toString());
-					if(field!=null)
-					{
-						QueryTokens.Column token = new QueryTokens.Column(entity.getQueryToken(),tokens[i].toString());
-						field.setQueryToken(token);
-
-						BrowserItems.DefaultTreeItem item = (BrowserItems.DefaultTreeItem)browser.getQueryItem().getChildAt(0);
-						for(int k=0; k<item.getChildCount(); k++)
+					//if(!(entities[j] instanceof DiagramEntity)) continue;
+					DiagramAbstractEntity entity = null;
+					DiagramField field = null;
+					if(entities[j] instanceof DiagramEntity) { 
+					  entity = (DiagramEntity)entities[j];
+					  field = entity.getField(tokens[i].toString());
+					  if(field!=null)
 						{
-							DefaultTreeItem child = (DefaultTreeItem)item.getChildAt(k);
-							if(child.getUserObject().toString().equalsIgnoreCase(tokens[i].toString()))
+							QueryTokens.Column token = new QueryTokens.Column(entity.getQueryToken(),tokens[i].toString());
+							field.setQueryToken(token);
+
+							BrowserItems.DefaultTreeItem item = (BrowserItems.DefaultTreeItem)browser.getQueryItem().getChildAt(0);
+							for(int k=0; k<item.getChildCount(); k++)
 							{
-								browser.getQuerySpecification().setSelectList(k,token);
-								child.setUserObject(token);
-								browser.reload(child);
-								field.setSelected(true);
+								DefaultTreeItem child = (DefaultTreeItem)item.getChildAt(k);
+								if(child.getUserObject().toString().equalsIgnoreCase(tokens[i].toString()))
+								{
+									browser.getQuerySpecification().setSelectList(k,token);
+									child.setUserObject(token);
+									browser.reload(child);
+									field.setSelected(true);
+								}
 							}
+						}
+					}else if(entities[j] instanceof DiagramQuery){
+						entity = (DiagramQuery)entities[j];
+						QueryTokens.DefaultExpression exp = (QueryTokens.DefaultExpression)tokens[i];
+						field = entity.getField(exp.getValue());
+						if(field!=null){
+							field.setSelected(true);
+						}else{
+							entity.setColumnSelections(true);
 						}
 					}
 				}
@@ -383,11 +414,17 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		Hashtable tables = new Hashtable();
 		for(int i=0; i<entities.length; i++)
 		{
-			if(!(entities[i] instanceof DiagramEntity)) continue;
-			DiagramEntity entity = (DiagramEntity)entities[i];
-			
-			QueryTokens._TableReference token = entity.getQueryToken();
-			tables.put(SQLFormatter.stripQuote(((QueryTokens.Table)token).getReference()),token);
+			if(entities[i] instanceof DiagramEntity){
+				DiagramEntity entity = (DiagramEntity)entities[i];
+				QueryTokens._TableReference token = entity.getQueryToken();
+				tables.put(SQLFormatter.stripQuote(((QueryTokens.Table)token).getReference()),token);
+			}
+			// TODO fix ticket 80 joins part
+//			else if(entities[i] instanceof DiagramQuery){
+//				DiagramQuery entity = (DiagramQuery)entities[i];
+//				QueryTokens._TableReference token = entity.getQueryToken();
+//				tables.put(SQLFormatter.stripQuote(((QueryTokens.Table)token).getReference()),token);
+//			}
 		}
 		
 		for(int i=0; i<tokens.length; i++)
