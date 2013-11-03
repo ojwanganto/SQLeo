@@ -185,6 +185,19 @@ public class ViewDiagram extends BorderLayoutPanel
 		return getEntity(table,true);
 	}
 	
+	public DiagramAbstractEntity getDerivedEntity(QueryTokens.Table token)
+	{
+		DiagramAbstractEntity[] entities = this.getEntities();
+		for(int i=0; i<entities.length; i++)
+		{
+			if(!(entities[i] instanceof DiagramQuery)) continue;
+			DiagramQuery entity = (DiagramQuery)entities[i];
+			
+			if(token.getReference().equalsIgnoreCase(entity.getQueryToken().getReference())) return entity;
+		}	
+		return null;
+	}
+	
     /**
      * Returns a DiagramEntity for the given name or null if no matching entity is found...
      */

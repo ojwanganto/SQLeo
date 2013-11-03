@@ -419,12 +419,11 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				QueryTokens._TableReference token = entity.getQueryToken();
 				tables.put(SQLFormatter.stripQuote(((QueryTokens.Table)token).getReference()),token);
 			}
-			// TODO fix ticket 80 joins part
-//			else if(entities[i] instanceof DiagramQuery){
-//				DiagramQuery entity = (DiagramQuery)entities[i];
-//				QueryTokens._TableReference token = entity.getQueryToken();
-//				tables.put(SQLFormatter.stripQuote(((QueryTokens.Table)token).getReference()),token);
-//			}
+			else if(entities[i] instanceof DiagramQuery){
+				DiagramQuery entity = (DiagramQuery)entities[i];
+				QueryTokens._TableReference token = entity.getQueryToken();
+				tables.put(SQLFormatter.stripQuote(((QueryTokens.Table)token).getReference()),token);
+			}
 		}
 		
 		for(int i=0; i<tokens.length; i++)
@@ -453,18 +452,26 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 	{
 		DiagramRelation relation = null;
 		
-		DiagramEntity entityP = diagram.getEntity(token.getPrimary().getTable());
+		DiagramAbstractEntity entityP = diagram.getEntity(token.getPrimary().getTable());
 		if(entityP == null)
 		{
-			DiagramLoader.run(DiagramLoader.DEFAULT,this,token.getPrimary().getTable(),false);
-			entityP = diagram.getEntity(token.getPrimary().getTable());
+			//search for derived table 
+			entityP = diagram.getDerivedEntity(token.getPrimary().getTable());
+			if(entityP == null){
+			 DiagramLoader.run(DiagramLoader.DEFAULT,this,token.getPrimary().getTable(),false);
+			 entityP = diagram.getEntity(token.getPrimary().getTable());
+			}
 		}
 		
-		DiagramEntity entityF = diagram.getEntity(token.getForeign().getTable());
+		DiagramAbstractEntity entityF = diagram.getEntity(token.getForeign().getTable());
 		if(entityF == null)
 		{
-			DiagramLoader.run(DiagramLoader.DEFAULT,this,token.getForeign().getTable(),false);
-			entityF = diagram.getEntity(token.getForeign().getTable());
+			//search for derived table 
+			entityF = diagram.getDerivedEntity(token.getPrimary().getTable());
+			if(entityF == null){
+				DiagramLoader.run(DiagramLoader.DEFAULT,this,token.getForeign().getTable(),false);
+				entityF = diagram.getEntity(token.getForeign().getTable());
+			}
 		}
 		
 		DiagramField fieldP = entityP.getField(token.getPrimary().getName());
