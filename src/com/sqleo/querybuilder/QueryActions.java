@@ -35,7 +35,10 @@ import javax.swing.filechooser.FileFilter;
 
 
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
+import com.sqleo.environment.ctrl.editor.DialogFindReplace;
+import com.sqleo.environment.mdi.ClientCommandEditor;
 
 public abstract class QueryActions
 {
@@ -46,6 +49,7 @@ public abstract class QueryActions
 	public static final String ENTITIES_PACK			= "entities-pack";
 	public static final String ENTITIES_REMOVE			= "entities-remove";
 	public static final String DIAGRAM_SAVE_AS_IMAGE	= "diagram-save-as-image";
+	public static final String FIND_AND_REPLACE	= "find-and-replace";
 	
 	static void init(QueryBuilder builder)
 	{
@@ -56,7 +60,30 @@ public abstract class QueryActions
 		builder.getActionMap().put(ENTITIES_PACK		,new ActionPackEntities(builder));
 		builder.getActionMap().put(ENTITIES_REMOVE		,new ActionRemoveEntities(builder));
 		builder.getActionMap().put(DIAGRAM_SAVE_AS_IMAGE,new ActionSaveDiagramAsImage(builder));
-	}	
+		builder.getActionMap().put(FIND_AND_REPLACE,new ActionShowFindReplace(builder));
+
+	}
+	
+	static class ActionShowFindReplace extends AbstractQueryAction {
+		ActionShowFindReplace(QueryBuilder builder) {
+			super(builder);
+			putValue(SMALL_ICON,
+					Application.resources.getIcon(Application.ICON_FIND));
+			putValue(SHORT_DESCRIPTION, "find/replace...");
+			putValue(NAME, "find/replace...");
+			setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			DialogFindReplace dlg = builder.getClientQueryBuilder().getFindReplaceDialog();
+			if (null == dlg) {
+				dlg = new DialogFindReplace(builder.getSyntax());
+				builder.getClientQueryBuilder().setFindReplaceDialog(dlg);
+			}
+			dlg.setVisible(true);
+		}
+	}
 	
 	abstract static class AbstractQueryAction extends AbstractAction
 	{

@@ -42,6 +42,7 @@ import javax.swing.text.Highlighter.Highlight;
 import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.gui.TextView;
 import com.sqleo.environment.Application;
+import com.sqleo.querybuilder.QueryStyledDocument;
 
 
 public class DialogFindReplace extends JDialog implements ActionListener
@@ -140,7 +141,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		
 		try
 		{
-			SQLStyledDocument document = (SQLStyledDocument)view.getDocument();
+			QueryStyledDocument document = (QueryStyledDocument)view.getDocument();
 			String text = document.getText(document.getStartPosition().getOffset(),document.getEndPosition().getOffset());
 			String find = txtFind.getText();
 			
@@ -193,7 +194,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 			Highlight tag = highlighter.getHighlights()[0];
 			highlighter.removeHighlight(tag);
 			
-			SQLStyledDocument document = (SQLStyledDocument)view.getDocument();
+			QueryStyledDocument document = (QueryStyledDocument)view.getDocument();
 			document.remove(tag.getStartOffset(),tag.getEndOffset()-tag.getStartOffset());
 			if(txtReplace.getText().length() > 0) document.insertString(tag.getStartOffset(),txtReplace.getText());
 		}

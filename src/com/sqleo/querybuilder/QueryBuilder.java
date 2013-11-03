@@ -489,6 +489,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		this.getActionMap().get(QueryActions.ENTITIES_ARRANGE_SPRING).setEnabled(this.getSelectedIndex() == 0);
 		this.getActionMap().get(QueryActions.ENTITIES_REMOVE).setEnabled(this.getSelectedIndex() == 0);
 		this.getActionMap().get(QueryActions.ENTITIES_PACK).setEnabled(this.getSelectedIndex() == 0);
+		this.getActionMap().get(QueryActions.FIND_AND_REPLACE).setEnabled(this.getSelectedIndex() != 0);
 
 		if(this.getSelectedIndex() == 0)
 		{

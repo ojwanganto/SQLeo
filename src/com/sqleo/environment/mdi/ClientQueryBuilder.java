@@ -40,6 +40,7 @@ import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.content.UpdateModel;
 import com.sqleo.environment.ctrl.define.TableMetaData;
+import com.sqleo.environment.ctrl.editor.DialogFindReplace;
 import com.sqleo.environment.io.FileStreamSQL;
 import com.sqleo.environment.io.FileStreamXLQ;
 import com.sqleo.querybuilder.DiagramLayout;
@@ -62,6 +63,14 @@ public class ClientQueryBuilder extends MDIClient {
 	private String keycah = null;
 	private String filename = null;
 	private String schema = null;
+	private DialogFindReplace dlg;
+	
+	public DialogFindReplace getFindReplaceDialog(){
+		return dlg;
+	}
+	public void setFindReplaceDialog(final DialogFindReplace dlg){
+		this.dlg = dlg;
+	}
 
 	public QueryBuilder getQueryBuilder() {
 		return builder;
@@ -123,6 +132,10 @@ public class ClientQueryBuilder extends MDIClient {
 		toolbar.getActionMap().put("save",saveAction);
 		toolbar.add(saveAction);
 		toolbar.add(btn);
+		toolbar.addSeparator();
+		toolbar.add(builder.getActionMap().get(
+				QueryActions.FIND_AND_REPLACE));
+		toolbar.addSeparator();
 
 		setComponentEast(toolbar);
 	}
