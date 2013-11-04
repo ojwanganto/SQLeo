@@ -768,13 +768,13 @@ public class SQLParser
 							c = new QueryTokens.Column((QueryTokens.Table)tables.get(owner),cname);
 							if(alias!=null) c.setAlias(alias);
 						}
-						else
-						{
+						//else
+						//{
 							// to do 
 							// c = new QueryTokens.Column((DerivedTable)tables.get(owner),cname);
 							// if(alias!=null) c.setAlias(alias);
-							Application.alert("!!! Column belongs to derived table: " + owner + "." + cname + " !!!");
-						}
+							//Application.alert("!!! Column belongs to derived table: " + owner + "." + cname + " !!!");
+						//}
 
 					}
 					// fix #92

@@ -327,12 +327,11 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 						entity.addField(column.getValue());
 					}else if(exp instanceof QueryTokens.Column){
 						QueryTokens.Column column = (QueryTokens.Column)exp;
-						entity.addField(column.getName());
+						entity.addField(column.getAlias()!=null ? column.getAlias() : column.getName());
 					}
 				}
 				entity.pack();
 				this.diagram.addEntity(entity);
-				//Application.alert("!!! Displaying reversed SQL for Derived table is not finished yet !!!");
 			}
 			else
 			{
@@ -396,7 +395,18 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 						QueryTokens.DefaultExpression exp = (QueryTokens.DefaultExpression)tokens[i];
 						field = entity.getField(exp.getValue());
 						if(field!=null){
-							field.setSelected(true);
+							BrowserItems.DefaultTreeItem item = (BrowserItems.DefaultTreeItem)browser.getQueryItem().getChildAt(0);
+							for(int k=0; k<item.getChildCount(); k++)
+							{
+								DefaultTreeItem child = (DefaultTreeItem)item.getChildAt(k);
+								if(child.getUserObject().toString().equalsIgnoreCase(tokens[i].toString()))
+								{
+									browser.getQuerySpecification().setSelectList(k,field.getQueryToken());
+									child.setUserObject(field.getQueryToken());
+									browser.reload(child);
+									field.setSelected(true);
+								}
+							}
 						}else{
 							entity.setColumnSelections(true);
 						}
