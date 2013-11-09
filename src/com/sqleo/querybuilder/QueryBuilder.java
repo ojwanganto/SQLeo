@@ -308,6 +308,19 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		return null;
 	}
 
+	public static String getRealColumn(final String alias,final String column){
+		final String realColumn;
+		if(alias!=null){
+			realColumn = alias;
+		}else if (column!=null && column.contains(".")) {
+			final String[] cols = column.split("\\.");
+			realColumn = cols[cols.length-1];
+		}else{
+			realColumn = column;
+		}
+		return realColumn;
+	}
+	
 	private void load(QueryTokens._TableReference[] tokens)
 	{
 		for(int i=0; i<tokens.length; i++)
@@ -324,10 +337,10 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				for(final _Expression exp : subQuery.getQuerySpecification().getSelectList()){
 					if(exp instanceof DefaultExpression){
 						final DefaultExpression column = (DefaultExpression) exp;
-						entity.addField(column.getValue());
+						entity.addField(getRealColumn(column.getAlias(),column.getValue()));
 					}else if(exp instanceof QueryTokens.Column){
 						QueryTokens.Column column = (QueryTokens.Column)exp;
-						entity.addField(column.getAlias()!=null ? column.getAlias() : column.getName());
+						entity.addField(getRealColumn(column.getAlias(),column.getName()));
 					}
 				}
 				entity.pack();
@@ -349,7 +362,11 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 			{
 				QueryTokens.Column token = (QueryTokens.Column)tokens[i];
 				
-				DiagramEntity entity = diagram.getEntity(token.getTable());
+				DiagramAbstractEntity entity = diagram.getEntity(token.getTable());
+				if(entity == null){
+					//search for derived table 
+					entity = diagram.getDerivedEntity(token.getTable());
+				}
 				if(entity!=null)
 				{
 					DiagramField field = entity.getField(token.getName());
@@ -366,7 +383,6 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				DiagramAbstractEntity[] entities = diagram.getEntities();
 				for(int j=0; j<entities.length; j++)
 				{
-					//if(!(entities[j] instanceof DiagramEntity)) continue;
 					DiagramAbstractEntity entity = null;
 					DiagramField field = null;
 					if(entities[j] instanceof DiagramEntity) { 
@@ -393,7 +409,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 					}else if(entities[j] instanceof DiagramQuery){
 						entity = (DiagramQuery)entities[j];
 						QueryTokens.DefaultExpression exp = (QueryTokens.DefaultExpression)tokens[i];
-						field = entity.getField(exp.getValue());
+						field = entity.getField(getRealColumn(exp.getAlias(), exp.getValue()));
 						if(field!=null){
 							BrowserItems.DefaultTreeItem item = (BrowserItems.DefaultTreeItem)browser.getQueryItem().getChildAt(0);
 							for(int k=0; k<item.getChildCount(); k++)
@@ -477,7 +493,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		if(entityF == null)
 		{
 			//search for derived table 
-			entityF = diagram.getDerivedEntity(token.getPrimary().getTable());
+			entityF = diagram.getDerivedEntity(token.getForeign().getTable());
 			if(entityF == null){
 				DiagramLoader.run(DiagramLoader.DEFAULT,this,token.getForeign().getTable(),false);
 				entityF = diagram.getEntity(token.getForeign().getTable());

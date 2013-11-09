@@ -481,7 +481,7 @@ public class SQLParser
 					int dot = e.lastIndexOf(SQLFormatter.DOT);
 					String ref = dot==-1 ? new String() : e.substring(0,dot);
 
-					// to do fix #80 for derived tables
+					//  fix #80 for derived tables
 					QueryTokens.Table tr = new QueryTokens.Table(null,ref);
 
 					if(tables.containsKey(ref))
@@ -490,10 +490,11 @@ public class SQLParser
 						{
 							tr = (QueryTokens.Table)tables.get(ref);
 						}
-						else
+						else if (tables.get(ref) instanceof DerivedTable)
 						{
-							// to do Derived Table
-							Application.alert("!!! join with derived table for: " + ref + " !!!");
+							DerivedTable sub = (DerivedTable)tables.get(ref);
+							tr = new QueryTokens.Table(null,null);
+							tr.setAlias(sub.getAlias());
 						}
 					}
 					// fix #92 

@@ -29,8 +29,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.TreeNode;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
+import com.sqleo.querybuilder.BrowserItems.DiagramQueryTreeItem;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
 
@@ -72,10 +74,37 @@ public class MaskExpression extends BaseMask
 			return false;
 		}
 		
+		final String fieldName, text;
+		if(querytoken.getAlias()!=null){
+			text = alias.getText();
+			fieldName = querytoken.getAlias();
+		}else{
+			text = value.getText();
+			fieldName = querytoken.getValue();
+		}
+		BrowserItems.DiagramQueryTreeItem dqti = (BrowserItems.DiagramQueryTreeItem)builder.browser.getQueryItem();
+		reloadParentWithAlias(dqti,fieldName, text);
+		
 		querytoken.setValue(value.getText());
 		querytoken.setAlias(alias.getText());
 		return true;
 	}
+
+	private void reloadParentWithAlias(final BrowserItems.DiagramQueryTreeItem dqti,final String fieldName, final String text) {
+		if(dqti!=null){
+			dqti.getDiagramObject().getField(fieldName).getLabelComponent().setText(text);
+			dqti.getDiagramObject().getField(fieldName).getQueryToken().setName(text);
+			dqti.getDiagramObject().getField(fieldName).setName(text);
+			dqti.getDiagramObject().pack();
+			final TreeNode parent = dqti.getParent().getParent();
+			builder.browser.reload(parent.getChildAt(0));
+			if(parent instanceof BrowserItems.DiagramQueryTreeItem){
+				reloadParentWithAlias((DiagramQueryTreeItem) parent, fieldName, text);
+			}
+		}
+	}
+	
+	
 
 	protected void onShow()
 	{
