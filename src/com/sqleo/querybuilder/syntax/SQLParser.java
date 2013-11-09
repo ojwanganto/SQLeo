@@ -48,7 +48,6 @@ public class SQLParser
 		sql = sql.replace("(+)"," _ORACLE_OUTER_JOIN_");
 
 		// ticket #90 EXTRACT (X FROM field)
-		// commented because many regressions found in reverse SQL
 		sql = sql.replaceAll("(?i)(extract\\s*\\(\\s*\\w+)\\s+(from)\\s+","$1 _EXTRACT_FROM_ ");
 
 

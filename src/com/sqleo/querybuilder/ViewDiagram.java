@@ -520,21 +520,26 @@ public class ViewDiagram extends BorderLayoutPanel
 		// spring force
 		DiagramRelation[] relations = ViewDiagram.this.getRelations();
 
-		DiagramEntity[] tab = new DiagramEntity[relations.length];
+		DiagramAbstractEntity [] tab = new DiagramAbstractEntity [relations.length];
 
 		for(int k=0; k<relations.length; k++)
 		{
 
 			if (relations[k].querytoken.getPrimary().getTable().equals(entities[i].getQueryToken()) )
 			{
-				tab[k] = (DiagramEntity)getEntity(relations[k].querytoken.getForeign().getTable());
+				tab[k] = getEntity(relations[k].querytoken.getForeign().getTable());
+				if (tab[k] == null)
+					tab[k] = getDerivedEntity(relations[k].querytoken.getForeign().getTable());
 			}
 			else if (relations[k].querytoken.getForeign().getTable().equals(entities[i].getQueryToken()) )
 			{
-				tab[k] = (DiagramEntity)getEntity(relations[k].querytoken.getPrimary().getTable());
+				tab[k] = getEntity(relations[k].querytoken.getPrimary().getTable());
+				if (tab[k] == null)
+					tab[k] = getDerivedEntity(relations[k].querytoken.getPrimary().getTable());
 			}
 			else
 				continue;
+
 
 			boolean alreadyjoined = false;
 			// keep only one join per node pair
@@ -551,7 +556,8 @@ public class ViewDiagram extends BorderLayoutPanel
 			//      A [i]  B        |      |
 			//      |______|        C [k]  D
 			//			|______|
-
+			
+			
 			// AC
 			double vx1 = entities[i].getX() - tab[k].getX();	
 			// AD
@@ -560,6 +566,7 @@ public class ViewDiagram extends BorderLayoutPanel
 			double vx3 = entities[i].getX()+entities[i].getWidth() - tab[k].getX();
 			// BD
 			double vx4 = entities[i].getX()+entities[i].getWidth() - (tab[k].getX()+tab[k].getWidth());
+
 
 			if (Math.abs(vx1) > Math.abs(vx2) )
 				vx = vx2;
