@@ -51,6 +51,7 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.TabSet;
 import javax.swing.text.TabStop;
 
+import com.sqleo.common.util.Trie;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.querybuilder.QueryStyledDocument;
@@ -60,6 +61,7 @@ public class TextView extends BorderLayoutPanel
 {
 	private JTextPane editor;
 	private CompoundUndoManager undoManager;
+	private SuggestionsView suggestions;
 	
 	public TextView(StyledDocument doc)
 	{
@@ -69,7 +71,7 @@ public class TextView extends BorderLayoutPanel
 			//request view 
 			undoManager = new CompoundUndoManager(editor);
 			if (Preferences.isAutoCompleteEnabled()) {
-				new SuggestionsView(editor, doc instanceof SQLStyledDocument);
+				suggestions = new SuggestionsView(editor, doc instanceof SQLStyledDocument);
 			}
 		}
 		editor.addMouseListener(new InternalPopup());
@@ -89,6 +91,12 @@ public class TextView extends BorderLayoutPanel
 		
 		this.setTabSize(4);
 		
+	}
+	
+	public void reloadSuggestionsTrie(final Trie prefixTree){
+		if(suggestions!=null){
+			suggestions.setPrefixTree(prefixTree);
+		}
 	}
 	
 	public void setEditable(boolean b)

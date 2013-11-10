@@ -32,6 +32,7 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 import com.sqleo.common.gui.ClientFrame;
+import com.sqleo.common.gui.TextView;
 import com.sqleo.common.gui.Toolbar;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
@@ -73,11 +74,18 @@ public abstract class MDIClient extends ClientFrame {
 	}
 
 	protected void loadPrefixTree(final String chKey,final String schema) {
+		loadPrefixTreeAndView(chKey, schema, null);
+	}
+	
+	protected void loadPrefixTreeAndView(final String chKey,final String schema,final TextView textView) {
 		if (Preferences.isAutoCompleteEnabled()) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
 					loadAllTableNames(chKey,schema);
+					if(textView!=null){
+						textView.reloadSuggestionsTrie(getPrefixTree());
+					}
 				}
 			});
 		}

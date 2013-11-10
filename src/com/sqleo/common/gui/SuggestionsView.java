@@ -69,6 +69,10 @@ public class SuggestionsView {
 		this.textPane.addKeyListener(new SuggestionsKeyListener());
 		this.calledFromCommandEditor = calledFromCommandEditor;
 	}
+	
+	public void setPrefixTree(final Trie prefixTree){
+		this.prefixTree = prefixTree;
+	}
 
 	private class SuggestionPanel {
 		private JList list;

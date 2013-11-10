@@ -27,6 +27,8 @@ package com.sqleo.environment.mdi;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileReader;
@@ -123,6 +125,19 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 	private void createToolbar() {
 		cbx = new JComboBox(ConnectionAssistant.getHandlers().toArray());
+		if(Preferences.isAutoCompleteEnabled()){
+		 cbx.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent event) {
+				if (event.getStateChange() == ItemEvent.SELECTED) {
+			          if(event.getItem()!=null){
+			        	  loadPrefixTreeAndView(event.getItem().toString(), null, control.getRequestArea());
+			          }
+			             
+			    }
+			}
+		 });
+		}
 		cbxLimit = new JCheckBox("limit rows:", true);
 		cbxLimit.addActionListener(new ActionListener() {
 			@Override
