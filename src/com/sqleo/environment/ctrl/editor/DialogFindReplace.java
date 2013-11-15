@@ -188,7 +188,10 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		Highlighter highlighter = view.getHighlighter();
 		highlighter.removeAllHighlights();
 		for(int from=0; (from=find(from))!=-1; from++);
-		return highlighter.getHighlights().length>0;
+		boolean found = highlighter.getHighlights().length>0;
+		if(!found)
+			Application.alert("could not find: " + txtFind.getText());
+		return found;
 	}
 	
 	private boolean replace()
