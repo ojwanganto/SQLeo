@@ -24,8 +24,11 @@
 
 package com.sqleo.common.gui;
 
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -39,6 +42,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
@@ -62,6 +66,7 @@ public class TextView extends BorderLayoutPanel
 	private JTextPane editor;
 	private CompoundUndoManager undoManager;
 	private SuggestionsView suggestions;
+	private JScrollPane scroll;
 	
 	public TextView(StyledDocument doc)
 	{
@@ -85,12 +90,51 @@ public class TextView extends BorderLayoutPanel
 		BorderLayoutPanel noWrapPanel = new BorderLayoutPanel();
 		noWrapPanel.setComponentCenter(editor);		
 		
-		JScrollPane scroll = new JScrollPane(noWrapPanel);
+		scroll = new JScrollPane(noWrapPanel);
 		scroll.getVerticalScrollBar().setUnitIncrement(25);
 		setComponentCenter(scroll);
 		
 		this.setTabSize(4);
 		
+	}
+	
+	public void scrollCenter()
+	{
+	    Container container = SwingUtilities.getAncestorOfClass(JViewport.class, editor);
+
+	    if (container == null) return;
+
+	    try
+	    {
+	        Rectangle r = editor.modelToView(editor.getCaretPosition());
+	        JViewport viewport = (JViewport)container;
+
+	        int extentWidth = viewport.getExtentSize().width;
+	        int viewWidth = viewport.getViewSize().width;
+
+	        int x = Math.max(0, r.x - (extentWidth / 2));
+	        x = Math.min(x, viewWidth - extentWidth);
+
+	        int extentHeight = viewport.getExtentSize().height;
+	        int viewHeight = viewport.getViewSize().height;
+
+	        int y = Math.max(0, r.y - (extentHeight / 2));
+	        y = Math.min(y, viewHeight - extentHeight);
+	        
+	        //smooth scroll
+	        int oldY = viewport.getViewPosition().y;
+            for(int i = oldY;i<y;i++){
+            	viewport.setViewPosition(new Point(0, i));
+                try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+            }
+            // use the below comment if we don't need smooth scroll. 
+	        // viewport.setViewPosition(new Point(x, y));
+	    }
+	    catch(BadLocationException ble) {}
 	}
 	
 	public void reloadSuggestionsTrie(final Trie prefixTree){
