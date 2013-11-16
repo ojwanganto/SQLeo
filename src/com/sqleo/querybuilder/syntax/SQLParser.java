@@ -452,6 +452,12 @@ public class SQLParser
 				if(t!=null) tables.put(SQLFormatter.stripQuote(t.getReference()),t);
 				t=null;
 				
+				if(dt!=null) // #80
+				{
+					tables.put(SQLFormatter.stripQuote(dt.getAlias()),dt);
+					dt=null;
+				}
+				
 				/* is AND/OR, then use previous/last type */
 				if(joinType == -1)
 				{

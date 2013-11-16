@@ -341,6 +341,9 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 					}else if(exp instanceof QueryTokens.Column){
 						QueryTokens.Column column = (QueryTokens.Column)exp;
 						entity.addField(getRealColumn(column.getAlias(),column.getName()));
+					}else if(exp instanceof SubQuery){
+						SubQuery column = (SubQuery)exp;
+						entity.addField(getRealColumn(column.getAlias(),null));
 					}
 				}
 				entity.pack();
