@@ -122,17 +122,17 @@ public class TextView extends BorderLayoutPanel
 	        y = Math.min(y, viewHeight - extentHeight);
 	        
 	        //smooth scroll
-	        int oldY = viewport.getViewPosition().y;
-            for(int i = oldY;i<y;i++){
-            	viewport.setViewPosition(new Point(0, i));
-                try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-            }
+//	        int oldY = viewport.getViewPosition().y;
+//            for(int i = oldY;i<y;i++){
+//            	viewport.setViewPosition(new Point(x, i));
+//                try {
+//					Thread.sleep(2);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//            }
             // use the below comment if we don't need smooth scroll. 
-	        // viewport.setViewPosition(new Point(x, y));
+	         viewport.setViewPosition(new Point(x, y));
 	    }
 	    catch(BadLocationException ble) {}
 	}

@@ -174,13 +174,17 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		highlighter.removeAllHighlights();
 		find(from);
 		boolean found = highlighter.getHighlights().length>0;
+		scrollViewToHighlight(highlighter, found);
+		return found;
+	}
+
+	private void scrollViewToHighlight(Highlighter highlighter, boolean found) {
 		if(found){
-			view.setCaretPosition(from-txtFind.getText().length()>0?from-txtFind.getText().length():0);
-			view.scrollCenter();
-		}
+			Highlight firstMatch = highlighter.getHighlights()[0];
+			view.setCaretPosition(firstMatch.getStartOffset()>0?firstMatch.getStartOffset():0);
+			view.scrollCenter();		}
 		else 
 			Application.alert("could not find: " + txtFind.getText());
-		return found;
 	}
 	
 	private boolean findAll()
@@ -189,8 +193,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		highlighter.removeAllHighlights();
 		for(int from=0; (from=find(from))!=-1; from++);
 		boolean found = highlighter.getHighlights().length>0;
-		if(!found)
-			Application.alert("could not find: " + txtFind.getText());
+		scrollViewToHighlight(highlighter, found);
 		return found;
 	}
 	
