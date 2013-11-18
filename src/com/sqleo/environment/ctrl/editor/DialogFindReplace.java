@@ -171,7 +171,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 	private boolean findNext(boolean alertNotFound)
 	{
 		Highlighter highlighter = view.getHighlighter();
-		int from = highlighter.getHighlights().length == 1 ? highlighter.getHighlights()[0].getEndOffset() : 0;
+		int from = highlighter.getHighlights().length == 1 ? highlighter.getHighlights()[0].getStartOffset() : 0;
 		highlighter.removeAllHighlights();
 		find(from);
 		boolean found = highlighter.getHighlights().length>0;
@@ -251,7 +251,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 			if(cntReplaced == 0){
 				Application.alert("could not find: " + txtFind.getText());
 			}else {
-				Application.alert(cntReplaced + " changes performed");
+				Application.alert(cntReplaced+1 + " changes performed");
 			}
 		}
 	}
