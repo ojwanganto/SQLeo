@@ -60,6 +60,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 	private JTextField txtReplace;	
 	
 	private TextView view;
+	private int cntReplaced = 0;
 	
 	public DialogFindReplace(TextView view)
 	{
@@ -167,23 +168,23 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		return offset;
 	}
 	
-	private boolean findNext()
+	private boolean findNext(boolean alertNotFound)
 	{
 		Highlighter highlighter = view.getHighlighter();
 		int from = highlighter.getHighlights().length == 1 ? highlighter.getHighlights()[0].getEndOffset() : 0;
 		highlighter.removeAllHighlights();
 		find(from);
 		boolean found = highlighter.getHighlights().length>0;
-		scrollViewToHighlight(highlighter, found);
+		scrollViewToHighlight(highlighter, found, alertNotFound);
 		return found;
 	}
 
-	private void scrollViewToHighlight(Highlighter highlighter, boolean found) {
+	private void scrollViewToHighlight(Highlighter highlighter, boolean found, boolean alertNotFound) {
 		if(found){
 			Highlight firstMatch = highlighter.getHighlights()[0];
 			view.setCaretPosition(firstMatch.getStartOffset()>0?firstMatch.getStartOffset():0);
 			view.scrollCenter();		}
-		else 
+		else if(alertNotFound)
 			Application.alert("could not find: " + txtFind.getText());
 	}
 	
@@ -193,7 +194,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		highlighter.removeAllHighlights();
 		for(int from=0; (from=find(from))!=-1; from++);
 		boolean found = highlighter.getHighlights().length>0;
-		scrollViewToHighlight(highlighter, found);
+		scrollViewToHighlight(highlighter, found,true);
 		return found;
 	}
 	
@@ -216,21 +217,23 @@ public class DialogFindReplace extends JDialog implements ActionListener
 			e.printStackTrace();
 		}
 		
-		return findNext();
+		return findNext(false);
 	}
 
 	private boolean replaceNext()
 	{
 		Highlighter highlighter = view.getHighlighter();
 		if(highlighter.getHighlights().length < 1) find(0);
-		return replace();
+		boolean replaced = replace();
+		if(replaced) cntReplaced++;
+		return replaced;
 	}
 	
 	public void actionPerformed(ActionEvent ae)
 	{
 		if(ae.getSource() == btnFind)
 		{
-			btnReplace.setEnabled(findNext());
+			btnReplace.setEnabled(findNext(true));
 		}
 		else if(ae.getSource() == btnFindAll)
 		{
@@ -243,7 +246,13 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		else if(ae.getSource() == btnReplaceAll)
 		{
 			btnReplace.setEnabled(false);
+			cntReplaced = 0;
 			while(replaceNext());
+			if(cntReplaced == 0){
+				Application.alert("could not find: " + txtFind.getText());
+			}else {
+				Application.alert(cntReplaced + " changes performed");
+			}
 		}
 	}
 }
