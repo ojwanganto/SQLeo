@@ -525,13 +525,13 @@ public class ViewDiagram extends BorderLayoutPanel
 		for(int k=0; k<relations.length; k++)
 		{
 
-			if (relations[k].querytoken.getPrimary().getTable().equals(entities[i].getQueryToken()) )
+			if (relations[k].querytoken.getPrimary().getTable().toString().equals(entities[i].getQueryToken().toString()) )
 			{
 				tab[k] = getEntity(relations[k].querytoken.getForeign().getTable());
 				if (tab[k] == null)
 					tab[k] = getDerivedEntity(relations[k].querytoken.getForeign().getTable());
 			}
-			else if (relations[k].querytoken.getForeign().getTable().equals(entities[i].getQueryToken()) )
+			else if (relations[k].querytoken.getForeign().getTable().toString().equals(entities[i].getQueryToken().toString()) )
 			{
 				tab[k] = getEntity(relations[k].querytoken.getPrimary().getTable());
 				if (tab[k] == null)
