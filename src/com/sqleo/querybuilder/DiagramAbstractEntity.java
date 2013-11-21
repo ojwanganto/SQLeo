@@ -164,6 +164,8 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 		if(queryItem instanceof BrowserItems.DiagramQueryTreeItem)
 		{
 			DiagramQuery entityUp = ((BrowserItems.DiagramQueryTreeItem)queryItem).getDiagramObject();
+			if(null == entityUp)
+				return;
 			if(field.isSelected())
 			{
 				// fix #78 do not autoalias fields in subqueries
