@@ -34,6 +34,18 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2013.11.rc1.zip: 2013-11-24
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.10/
+	139 	auto-complete: Alias and columns proposal on the fly
+	137 	add find and replace option for builder syntax
+	131 	Command Editor > Auto complete with multiple connections at same time
+	122 	Designer: arrange spring fails with derived tables
+	80 	Query builder: reverse SQL, add derived tables subqueries support
+
+
 SQLeoVQB.2013.10.rc2.zip: 2013-10-24
 
   Bug Fixes included for:
@@ -45,7 +57,7 @@ SQLeoVQB.2013.10.rc2.zip: 2013-10-24
 	140 unmappable character for encoding UTF8 
 
 
-SQLeoVQB.2013.10.rc01.zip: 2013-10-18
+SQLeoVQB.2013.10.rc1.zip: 2013-10-18
 
   Thanks to Bao Nguyen and Anudeep Gade for their contribution to this release
   For changes included see tickets at  
