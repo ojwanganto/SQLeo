@@ -25,6 +25,7 @@
 package com.sqleo.environment.mdi;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
@@ -33,12 +34,13 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
@@ -64,6 +66,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	private JCheckBox optQbUseSchema;
 	private JCheckBox optQbLoadAtOnce;
 	private JCheckBox optQbSelectAll;
+	private JRadioButton optQbRelrenderArc;
+	private JRadioButton optQbRelrenderLinear; 
 
 	private JLabel jLabelLanguage = new JLabel();
 	private JTextArea jLabelAutoCommitInfo = new JTextArea();
@@ -81,6 +85,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	public static final String CHECK_FOR_UPDATE_KEY = "application.checkforupdate";
 	public static final String ASK_BEFORE_EXIT_KEY = "application.askBeforeExit";
 	public static final String AUTO_COMPLETE_KEY = "application.autoComplete";
+	public static final String QB_RELATION_RENDER_ARC_KEY = "querybuilder.isArcRelationRender";
 
 	public DialogPreferences() {
 		super(Application.window, Application.PROGRAM + ".preferences", 350,
@@ -113,6 +118,23 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				"application.preferences.selectAllColumns",
 				"aout select all colmuns"), Preferences.getBoolean(
 				"querybuilder.select-all-columns", true)));
+		
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,2,2));
+		boolean relationRendering = Preferences.getBoolean(QB_RELATION_RENDER_ARC_KEY , true);
+		optQbRelrenderArc  = new JRadioButton(I18n.getString(
+				"application.preferences.relationsRenderArc",
+				"arc"), relationRendering);
+		optQbRelrenderLinear  = new JRadioButton(I18n.getString(
+				"application.preferences.relationsRenderLinear",
+				"linear"), !relationRendering);
+		ButtonGroup radioGroup = new ButtonGroup();
+		radioGroup.add(optQbRelrenderArc);
+		radioGroup.add(optQbRelrenderLinear);
+		JLabel jLabelRelRender = new JLabel(I18n.getString("application.preferences.relationsRender","relations render"));
+		buttonPanel.add(jLabelRelRender);
+		buttonPanel.add(optQbRelrenderArc);
+		buttonPanel.add(optQbRelrenderLinear);
+		pnlQB.add(buttonPanel);
 
 		jLabelLanguage.setText(I18n.getString(
 				"application.preferences.language", "language"));
@@ -270,7 +292,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 					optQbUseSchema.setEnabled(false);
 					optQbLoadAtOnce.setEnabled(false);
 					optQbSelectAll.setEnabled(false);
-
+					optQbRelrenderArc.setEnabled(false);
+					optQbRelrenderLinear.setEnabled(false);
 					break;
 				}
 			}
@@ -284,7 +307,9 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		QueryBuilder.useAlwaysQuote = optQbUseQuote.isSelected();
 		QueryBuilder.loadObjectsAtOnce = optQbLoadAtOnce.isSelected();
 		QueryBuilder.selectAllColumns = optQbSelectAll.isSelected();
-
+		
+		Preferences.set(QB_RELATION_RENDER_ARC_KEY,
+				new Boolean(optQbRelrenderArc.isSelected()));
 		Preferences.set("querybuilder.auto-join",
 				new Boolean(optQbAutoJoin.isSelected()));
 		Preferences.set("querybuilder.auto-alias",

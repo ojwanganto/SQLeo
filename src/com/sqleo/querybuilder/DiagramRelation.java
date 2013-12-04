@@ -35,9 +35,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -48,13 +45,12 @@ import javax.swing.border.LineBorder;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.io.CSVRelationDefinition;
 import com.sqleo.environment.io.ManualDBMetaData;
-import com.sqleo.environment.io.ManualTableMetaData;
-import com.sqleo.environment.mdi.ClientMetadataExplorer;
+import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Column;
-import com.sqleo.querybuilder.syntax.QueryTokens.Join;
 
 
 public class DiagramRelation extends JPanel
@@ -170,14 +166,36 @@ public class DiagramRelation extends JPanel
 		builder.browser.removeFromClause(querytoken);
 	}
 	
-	Color plusColor;
-	Color minusColor;
+	
+	void doResize()
+	{
+		if(isArcRendering()){
+			doResizeArc();
+		}else {
+			doResizeLinear();
+		}
+	}
+	
+	private boolean isArcRendering(){
+		return Preferences.getBoolean(DialogPreferences.QB_RELATION_RENDER_ARC_KEY,true);
+	}
+	
+	/**
+	 * array of points to draw the connection line. It is updated by the method
+	 * doResize()
+	 * 
+	 */
+	private Point[] serie = isArcRendering() ? 
+			new Point[] { new Point(0, 0), new Point(0, 0), new Point(0, 0) } : 
+			new Point[4]	;
+	private Color plusColor;
+	private Color minusColor;
 
 	/**
 	 * Updates the serie array accordely to the fields positions.
 	 * 
 	 */
-	void doResize()
+	private void doResizeArc()
 	{
 		try
 		{
@@ -267,26 +285,97 @@ public class DiagramRelation extends JPanel
         }
 	}
 	
-	private boolean isLeft(){
-		return QueryTokens.Join.LEFT_OUTER == querytoken.getType();
+	private void doResizeLinear(){
+	try{	
+ 		int yFieldP = (int)primaryField.getLocationOnScreen().getY() - (int)primaryEntity.getLocationOnScreen().getY() + primaryEntity.getLocation().y;
+ 		int yFieldF = (int)foreignField.getLocationOnScreen().getY() - (int)foreignEntity.getLocationOnScreen().getY() + foreignEntity.getLocation().y;
+ 
+		int yStart = yFieldP + (primaryField.getSize().height/2);
+		int yEnd = yFieldF + (foreignField.getSize().height/2);
+
+		int xMin = primaryEntity.getLocation().x;
+		int xEnd = foreignEntity.getLocation().x;
+		int xMax = foreignEntity.getLocation().x + foreignEntity.getSize().width;
+		int xStart = primaryEntity.getLocation().x + primaryEntity.getSize().width;
+
+		if(xStart < xEnd){
+			plusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+			minusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+		}else if (xMin > xMax){
+			plusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
+			minusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
+		}else {
+			plusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+			minusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+		}
+
+		if(xEnd < xMin)
+		{
+			int x = xEnd;
+			xEnd = xMin;
+			xMin = x;
+			
+			yStart = yFieldF + (foreignField.getSize().height/2);
+			yEnd = yFieldP + (primaryField.getSize().height/2);
+		}
+		
+		if(xStart > xMax)
+		{
+			int x = xStart;
+			xStart = xMax;
+			xMax = x;
+		}
+
+		int yMin = primaryEntity.getLocation().y;
+		int yMinF = foreignEntity.getLocation().y;
+		if(yMinF < yMin) { 
+			yMin = yMinF;
+		}
+		
+		int yMax = primaryEntity.getLocation().y + primaryEntity.getSize().height;
+		int yMaxF = foreignEntity.getLocation().y + foreignEntity.getSize().height;
+		if(yMaxF > yMax) {
+			yMax = yMaxF;
+		}
+		
+		Rectangle area = new Rectangle(xMin, yMin, xMax-xMin, yMax-yMin);
+
+		yStart-= area.y;
+		yEnd-= area.y;
+		
+		int y = yStart > yEnd ? yEnd + ((yStart-yEnd)/2) : yStart + ((yEnd-yStart)/2);
+		int x = xEnd - xStart;
+		if( x > (anchor.getSize().width*2))
+			x = xStart - area.x + (x/2);
+		else
+			x = (area.width=area.width+30)- 15;
+
+		serie[0] = new Point(xStart-area.x,yStart);
+		serie[1] = new Point(x,yStart);
+		serie[2] = new Point(x,yEnd);
+		serie[3] = new Point(xEnd-area.x,yEnd);
+		
+ 		setBounds(area);
+ 		anchor.setLocation(x + area.x - (anchor.getSize().width/2), y + area.y - (anchor.getSize().height/2));
+ 		
+	   }catch(Exception e)
+	   { 
+	    // BUG: 1929659
+	   }
+
 	}
 	
-	private boolean isRight(){
-		return QueryTokens.Join.RIGHT_OUTER == querytoken.getType();
-	}
-	
-	private boolean isFull(){
-		return QueryTokens.Join.FULL_OUTER == querytoken.getType();
-	}
-
-	/**
-	 * array of points to draw the connection line. It is updated by the method
-	 * doResize()
-	 * 
-	 */
-	private Point[] serie = new Point[] { new Point(0, 0), new Point(0, 0), new Point(0, 0) };
-
 	protected void paintChildren(Graphics g)
+	{
+		if(isArcRendering()){
+			paintArc(g);
+		}else {
+			paintLinear(g);
+		}
+
+	}
+	
+	protected void paintArc(Graphics g)
 	{
 		((Graphics2D) g).setStroke(isHighlight() ? highlightStroke : normalStroke);
 
@@ -371,12 +460,42 @@ public class DiagramRelation extends JPanel
 			}
 		}
 
-		// g.drawLine(serie[0].x,serie[0].y,serie[1].x,serie[1].y);
-		// g.drawLine(serie[1].x,serie[1].y,serie[2].x,serie[2].y);
-		// g.drawLine(serie[2].x,serie[2].y,serie[3].x,serie[3].y);
+//		 g.drawLine(serie[0].x,serie[0].y,serie[1].x,serie[1].y);
+//		 g.drawLine(serie[1].x,serie[1].y,serie[2].x,serie[2].y);
+//		 g.drawLine(serie[2].x,serie[2].y,serie[3].x,serie[3].y);
 
 		super.paintChildren(g);
 	}
+	
+	protected void paintLinear(Graphics g)
+	{
+		((Graphics2D) g).setStroke(isHighlight() ? highlightStroke : normalStroke);
+		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		 
+		 g.setColor(plusColor);
+		 g.drawLine(serie[0].x,serie[0].y,serie[1].x,serie[1].y);
+		 g.drawLine(serie[1].x,serie[1].y,(serie[1].x+serie[2].x)/2,(serie[1].y+serie[2].y)/2);
+
+		 g.setColor(minusColor);
+		 g.drawLine((serie[1].x+serie[2].x)/2,(serie[1].y+serie[2].y)/2,serie[2].x,serie[2].y);
+		 g.drawLine(serie[2].x,serie[2].y,serie[3].x,serie[3].y);
+
+		super.paintChildren(g);
+	}
+
+	private boolean isLeft(){
+		return QueryTokens.Join.LEFT_OUTER == querytoken.getType();
+	}
+	
+	private boolean isRight(){
+		return QueryTokens.Join.RIGHT_OUTER == querytoken.getType();
+	}
+	
+	private boolean isFull(){
+		return QueryTokens.Join.FULL_OUTER == querytoken.getType();
+	}	
+	
+	
 
 	private class Anchor extends JPanel implements MouseListener
 	{
