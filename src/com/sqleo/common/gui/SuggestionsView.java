@@ -60,6 +60,7 @@ public class SuggestionsView {
 	private SuggestionPanel suggestion;
 	private Trie prefixTree;
 	private String schema;
+	private String chKey;
 	private Connection connection;
 	private boolean calledFromCommandEditor = true;
 	private String[] previousColumns;
@@ -70,8 +71,11 @@ public class SuggestionsView {
 		this.calledFromCommandEditor = calledFromCommandEditor;
 	}
 	
-	public void setPrefixTree(final Trie prefixTree){
+	public void setPrefixTree(final Trie prefixTree,final String chKey){
 		this.prefixTree = prefixTree;
+		this.chKey = chKey;
+		this.connection = ConnectionAssistant.getHandler(chKey).get();
+		this.schema = SQLHelper.getSchemaFromUser(chKey);
 	}
 
 	private class SuggestionPanel {
@@ -81,32 +85,7 @@ public class SuggestionsView {
 		private final int insertionPosition;
 
 		private SuggestionPanel(final JTextPane textPane, final int position, final String subWord, final Point location) {
-			if (null == prefixTree) {
-				if (calledFromCommandEditor) {
-					final MDIClient client = Application.window.getClient(ClientCommandEditor.DEFAULT_TITLE);
-					if (client != null) {
-						final ClientCommandEditor ce = (ClientCommandEditor) client;
-						prefixTree = ce.getPrefixTree();
-						connection = ConnectionAssistant.getHandler(ce.getActiveConnection()).get();
-						schema = SQLHelper.getSchemaFromUser(ce.getActiveConnection());
-					}
-				} else {
-					final MDIClient[] clients =
-							Application.window.getClientsOfConnection(ClientQueryBuilder.DEFAULT_TITLE, null);
-					if (clients.length >= 1) {
-						final ClientQueryBuilder ce = (ClientQueryBuilder) clients[0];
-						prefixTree = ce.getPrefixTree();
-						connection =
-								ConnectionAssistant.getHandler(ce.getQueryBuilder().getConnectionHandlerKey()).get();
-						if (ce.getQueryBuilder().getDiagramLayout().getQueryModel().getSchema()!=null){
-							schema = ce.getQueryBuilder().getDiagramLayout().getQueryModel().getSchema();
-						}else {
-							schema = SQLHelper.getSchemaFromUser(ce.getQueryBuilder().getConnectionHandlerKey());
-						}
-					}
-				}
-
-			}
+			initPrefixTreeAndConnection();
 			this.insertionPosition = position;
 			this.subWord = subWord;
 			popupMenu = new JPopupMenu();
@@ -133,11 +112,11 @@ public class SuggestionsView {
 				final String tableNameFromAlias = getTableNameFromAlias(tableOrAliasName);
 				if(tableNameFromAlias!=null){
 					//means found table name from alias 
-					namesStartingWith = SQLHelper.getColumns(connection, schema, tableNameFromAlias);
+					namesStartingWith = SQLHelper.getColumns(chKey, connection, schema, tableNameFromAlias);
 				}
 				if(null == namesStartingWith || namesStartingWith.length == 0){
 					//try as table name 
-					namesStartingWith = SQLHelper.getColumns(connection, schema, tableOrAliasName);
+					namesStartingWith = SQLHelper.getColumns(chKey, connection, schema, tableOrAliasName);
 				}
 				previousColumns = namesStartingWith;
 				this.subWord  = "";
@@ -214,6 +193,16 @@ public class SuggestionsView {
 			@Override
 			public void run() {
 				showSuggestion();
+			}
+
+		});
+	}
+	
+	private void showJoinsSuggestionLater() {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				showJoinsSuggestion();
 			}
 
 		});
@@ -302,6 +291,115 @@ public class SuggestionsView {
 			}
 		});
 	}
+	
+	private void initPrefixTreeAndConnection(){
+		if (null == prefixTree) {
+			if (calledFromCommandEditor) {
+				final MDIClient client = Application.window.getClient(ClientCommandEditor.DEFAULT_TITLE);
+				if (client != null) {
+					final ClientCommandEditor ce = (ClientCommandEditor) client;
+					prefixTree = ce.getPrefixTree();
+					chKey = ce.getActiveConnection();
+					connection = ConnectionAssistant.getHandler(chKey).get();
+					schema = SQLHelper.getSchemaFromUser(chKey);
+				}
+			} else {
+				final MDIClient[] clients =
+						Application.window.getClientsOfConnection(ClientQueryBuilder.DEFAULT_TITLE, null);
+				if (clients.length >= 1) {
+					final ClientQueryBuilder ce = (ClientQueryBuilder) clients[0];
+					prefixTree = ce.getPrefixTree();
+					chKey = ce.getQueryBuilder().getConnectionHandlerKey();
+					connection =
+							ConnectionAssistant.getHandler(chKey).get();
+					if (ce.getQueryBuilder().getDiagramLayout().getQueryModel().getSchema()!=null){
+						schema = ce.getQueryBuilder().getDiagramLayout().getQueryModel().getSchema();
+					}else {
+						schema = SQLHelper.getSchemaFromUser(chKey);
+					}
+				}
+			}
+		}
+	}
+	
+	private void showJoinsSuggestion() {
+		initPrefixTreeAndConnection();
+		final String selection = textPane.getSelectedText();
+		if(null == selection || selection.length()==0)
+			return;
+		// format #i, foreignTable fk, primaryTable pk
+		// or foreignTable fk, primaryTable pk (default inner join type)
+		// or primaryTable pk, foreignTable fk
+		final String[] splitSelection = selection.split(",");
+		final int length = splitSelection.length; 
+		if(length!=2 && length!=3)
+			return;
+		final String joinType = length == 3 ? splitSelection[0] : "#i";
+		final String joinKeyword = getJoinKeyword(joinType);
+		if(null == joinKeyword)
+			return;
+		int startIndex = length-2 ;
+		final String fkTableWitAlias = splitSelection[startIndex].trim();
+		startIndex++;
+		final String fkTable;
+		final String fkAlias;
+		final String[] fkSplit = fkTableWitAlias.split(" ");
+		if(fkSplit.length == 2){
+			fkTable = fkSplit[0];
+			fkAlias = fkSplit[1];
+		}else{
+			fkTable = fkTableWitAlias;
+			fkAlias = fkTableWitAlias;
+		}
+		final String pkTableWitAlias = splitSelection[startIndex].trim();
+		final String pkTable;
+		final String pkAlias;
+		final String[] pkSplit = pkTableWitAlias.split(" ");
+		if(pkSplit.length == 2){
+			pkTable = pkSplit[0];
+			pkAlias = pkSplit[1];
+		}else {
+			pkTable = pkTableWitAlias;
+			pkAlias = pkTableWitAlias;
+		}
+		List<List<String>> joinColumns = SQLHelper.getJoinColumns(chKey, connection, schema, fkTable, pkTable);
+		if(joinColumns.isEmpty()){
+			//try swapping pk,fk
+			joinColumns = SQLHelper.getJoinColumns(chKey, connection, schema, pkTable, fkTable);
+			if(joinColumns.isEmpty()){
+				return;
+			}
+		}
+		final StringBuilder builder = new StringBuilder();
+		builder.append(fkTableWitAlias).append(" ").append(joinKeyword).append(" ");
+		builder.append(pkTableWitAlias).append(" ").append("on ");
+		boolean first = true;
+		for(List<String> temp : joinColumns){
+			final String pkCol = temp.get(0);//pkCol
+			final String fkCol = temp.get(1);//fkCol
+			if(!first){
+				builder.append(" and ");
+			}else{
+				first = false;
+			}
+			builder.append(fkAlias).append(".").append(fkCol).append("=");
+			builder.append(pkAlias).append(".").append(pkCol);
+		}
+		
+		textPane.replaceSelection(builder.toString());
+	}
+	
+	private String getJoinKeyword(final String joinFormat){
+		if(joinFormat.equals("#i")){
+			return "inner join";
+		}else if(joinFormat.equals("#l")){
+			return "left outer join";
+		}else if(joinFormat.equals("#r")){
+			return "right outer join";
+		}else{
+			return null;
+		}
+	}
 
 	private void hideSuggestion() {
 		if (suggestion != null) {
@@ -334,7 +432,9 @@ public class SuggestionsView {
 
 		@Override
 		public void keyReleased(final KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_DOWN && suggestion != null) {
+			if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_SPACE){
+				showJoinsSuggestionLater();
+			}else if (e.getKeyCode() == KeyEvent.VK_DOWN && suggestion != null) {
 				suggestion.moveDown();
 			} else if (e.getKeyCode() == KeyEvent.VK_UP && suggestion != null) {
 				suggestion.moveUp();

@@ -38,6 +38,7 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.common.util.Trie;
+import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 import com.sqleo.querybuilder.syntax._ReservedWords;
 
@@ -72,22 +73,36 @@ public abstract class MDIClient extends ClientFrame {
 	public Trie getPrefixTree() {
 		return prefixTree;
 	}
-
+	
+	private String getCacheKey(final String chKey,final String schema){
+		return chKey+","+schema+",prefixtree";
+	}
+	
 	protected void loadPrefixTree(final String chKey,final String schema) {
 		loadPrefixTreeAndView(chKey, schema, null);
 	}
 	
 	protected void loadPrefixTreeAndView(final String chKey,final String schema,final TextView textView) {
 		if (Preferences.isAutoCompleteEnabled()) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					loadAllTableNames(chKey,schema);
-					if(textView!=null){
-						textView.reloadSuggestionsTrie(getPrefixTree());
-					}
+			final String cacheKey = getCacheKey(chKey, schema);
+			final Object cached = Application.session.getColumnCache(cacheKey);
+			if(cached!=null){
+				prefixTree = (Trie) cached;
+				if(textView!=null){
+					textView.reloadSuggestionsTrie(getPrefixTree(),chKey);
 				}
-			});
+			}else {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						loadAllTableNames(chKey,schema);
+						Application.session.putColumnCache(cacheKey, prefixTree);
+						if(textView!=null){
+							textView.reloadSuggestionsTrie(getPrefixTree(),chKey);
+						}
+					}
+				});
+			}
 		}
 	}
 

@@ -50,9 +50,13 @@ public class Store
 	/* Current mount-point */
 	private Object[] cmp;
 	
+	//Cache tables prefixTree, Cache table columns, Cache joinColums (All needed for autocomplete feature)
+	private Hashtable columnsCache;
+	
 	public Store()
 	{
 		mountpoints = new Hashtable();
+		columnsCache = new Hashtable();
 		
 		cmp = new Object[3];
 		cmp[INDEX_DATA] = new ArrayList();
@@ -67,6 +71,16 @@ public class Store
 	protected void put(String entry, Object[] content)
 	{
 		mountpoints.put(entry,content);
+	}
+	
+	public Object getColumnCache(String entry)
+	{
+		return columnsCache.get(entry);
+	}
+	
+	public void putColumnCache(String entry, Object content)
+	{
+		columnsCache.put(entry,content);
 	}
 	
 	public void home()

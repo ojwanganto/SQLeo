@@ -137,9 +137,9 @@ public class TextView extends BorderLayoutPanel
 	    catch(BadLocationException ble) {}
 	}
 	
-	public void reloadSuggestionsTrie(final Trie prefixTree){
+	public void reloadSuggestionsTrie(final Trie prefixTree,final String chKey){
 		if(suggestions!=null){
-			suggestions.setPrefixTree(prefixTree);
+			suggestions.setPrefixTree(prefixTree,chKey);
 		}
 	}
 	
