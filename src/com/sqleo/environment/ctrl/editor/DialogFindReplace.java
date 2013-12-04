@@ -60,7 +60,6 @@ public class DialogFindReplace extends JDialog implements ActionListener
 	private JTextField txtReplace;	
 	
 	private TextView view;
-	private int cntReplaced = 0;
 	
 	public DialogFindReplace(TextView view)
 	{
@@ -198,35 +197,62 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		return found;
 	}
 	
-	private boolean replace()
+	private boolean replaceAndNext()
 	{
+		boolean replaced = replaceOnly();
+		if(!replaced){
+			return false;
+		}else {
+			return findNext(false);
+		}
+	}
+
+	private boolean replaceOnly() {
 		try
 		{
 			Highlighter highlighter = view.getHighlighter();
 			if(highlighter.getHighlights().length < 1) return false;
 			
 			Highlight tag = highlighter.getHighlights()[0];
-			highlighter.removeHighlight(tag);
-			
-			QueryStyledDocument document = (QueryStyledDocument)view.getDocument();
-			document.remove(tag.getStartOffset(),tag.getEndOffset()-tag.getStartOffset());
-			if(txtReplace.getText().length() > 0) document.insertString(tag.getStartOffset(),txtReplace.getText());
+			replaceHighlight(highlighter, tag);
 		}
 		catch (BadLocationException e)
 		{
 			e.printStackTrace();
 		}
-		
-		return findNext(false);
+		return true;
 	}
 
-	private boolean replaceNext()
+	private void replaceHighlight(Highlighter highlighter, Highlight tag)
+			throws BadLocationException {
+		
+		highlighter.removeHighlight(tag);
+		
+		QueryStyledDocument document = (QueryStyledDocument)view.getDocument();
+		document.remove(tag.getStartOffset(),tag.getEndOffset()-tag.getStartOffset());
+		if(txtReplace.getText().length() > 0) document.insertString(tag.getStartOffset(),txtReplace.getText());
+	}
+
+	
+	private void replaceAll()
 	{
-		Highlighter highlighter = view.getHighlighter();
-		if(highlighter.getHighlights().length < 1) find(0);
-		boolean replaced = replace();
-		if(replaced) cntReplaced++;
-		return replaced;
+		try
+		{
+			findAll();
+			int found = view.getHighlighter().getHighlights().length;
+			for(Highlight tag : view.getHighlighter().getHighlights()){
+				replaceHighlight(view.getHighlighter(), tag);
+			}
+			if(found == 0){
+				Application.alert("could not find: " + txtFind.getText());
+			}else {
+				Application.alert(found+ " occurences were replaced");
+			}
+		}
+		catch (BadLocationException e)
+		{
+				e.printStackTrace();
+		}
 	}
 	
 	public void actionPerformed(ActionEvent ae)
@@ -241,18 +267,12 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		}
 		else if(ae.getSource() == btnReplace)
 		{
-			btnReplace.setEnabled(replace());			
+			btnReplace.setEnabled(replaceAndNext());			
 		}
 		else if(ae.getSource() == btnReplaceAll)
 		{
 			btnReplace.setEnabled(false);
-			cntReplaced = 0;
-			while(replaceNext());
-			if(cntReplaced == 0){
-				Application.alert("could not find: " + txtFind.getText());
-			}else {
-				Application.alert(cntReplaced+1 + " changes performed");
-			}
+			replaceAll();
 		}
 	}
 }
