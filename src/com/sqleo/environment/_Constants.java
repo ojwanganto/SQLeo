@@ -95,4 +95,5 @@ public interface _Constants
 	public static final String ICON_CONTENT_INSERT	= "icon.160";
 	public static final String ICON_CONTENT_DELETE	= "icon.161";
 	public static final String ICON_CONTENT_UPDATE	= "icon.162";
+	public static final String ICON_QUERY_DESIGNER  = "icon.163";
 }

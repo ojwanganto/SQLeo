@@ -25,12 +25,14 @@
 package com.sqleo.environment.mdi;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
@@ -133,8 +135,12 @@ public class ClientQueryBuilder extends MDIClient {
 		toolbar.add(saveAction);
 		toolbar.add(btn);
 		toolbar.addSeparator();
-		toolbar.add(builder.getActionMap().get(
-				QueryActions.FIND_AND_REPLACE));
+		Action dialogFindReplaceAction = builder.getActionMap().get(
+				QueryActions.FIND_AND_REPLACE);
+		toolbar.add(dialogFindReplaceAction);
+		builder.getSyntax().getViewInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK),
+				dialogFindReplaceAction);
 		toolbar.addSeparator();
 
 		setComponentEast(toolbar);

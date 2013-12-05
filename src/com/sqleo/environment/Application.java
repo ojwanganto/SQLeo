@@ -110,6 +110,8 @@ public class Application extends Appearance implements _Constants,_Version
 		
 		resources.loadIcon(ICON_QUERY_LAUNCH,"/images/table_gear.png");
 		resources.loadIcon(ICON_DIAGRAM_SAVE,"/images/picture_save.png");
+		resources.loadIcon(ICON_QUERY_DESIGNER,"/images/chart_organisation.png");
+		
 	}
 	
 	private static void loadSession()

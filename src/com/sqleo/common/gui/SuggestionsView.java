@@ -302,6 +302,7 @@ public class SuggestionsView {
 					chKey = ce.getActiveConnection();
 					connection = ConnectionAssistant.getHandler(chKey).get();
 					schema = SQLHelper.getSchemaFromUser(chKey);
+					removeLafKeyBinding(ce);
 				}
 			} else {
 				final MDIClient[] clients =
@@ -317,9 +318,16 @@ public class SuggestionsView {
 					}else {
 						schema = SQLHelper.getSchemaFromUser(chKey);
 					}
+					removeLafKeyBinding(ce);
 				}
 			}
 		}
+	}
+	
+	private void removeLafKeyBinding(final MDIClient client){
+		//Removes LookAndFeel overriden ctrl+space keybinding to show system menu
+		if(client.getActionMap()!=null && client.getActionMap().getParent()!=null)
+			client.getActionMap().getParent().remove("showSystemMenu");
 	}
 	
 	private void showJoinsSuggestion() {
@@ -432,7 +440,9 @@ public class SuggestionsView {
 
 		@Override
 		public void keyReleased(final KeyEvent e) {
+			System.out.println("entered"+e.getKeyCode());
 			if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_SPACE){
+				System.out.println("show join suggestion");
 				showJoinsSuggestionLater();
 			}else if (e.getKeyCode() == KeyEvent.VK_DOWN && suggestion != null) {
 				suggestion.moveDown();

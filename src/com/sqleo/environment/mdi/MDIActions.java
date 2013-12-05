@@ -120,7 +120,13 @@ public abstract class MDIActions implements _Constants
 	}
 	public static class NewQuery extends AbstractBase
 	{
-		public NewQuery(){super(I18n.getString("application.menu.newQuery","new query"));}
+		public NewQuery(){
+			super();
+			setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,InputEvent.CTRL_MASK));
+			setIcon(ICON_QUERY_DESIGNER);
+			setTooltip(I18n.getString("application.query_designer","query designer"));
+			setText(I18n.getString("application.menu.newQuery","new query"));
+		}
 		public void actionPerformed(ActionEvent ae)
 		{
 			if(!ConnectionAssistant.getHandlers().isEmpty())

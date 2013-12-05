@@ -167,7 +167,11 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		toolbar.getActionMap().put("save",saveAction);
 		toolbar.add(saveAction);
 		toolbar.addSeparator();
-		toolbar.add(new ActionShowFindReplace());
+		ActionShowFindReplace dialogFindReplaceAction = new ActionShowFindReplace();
+		toolbar.add(dialogFindReplaceAction);
+		control.getRequestArea().getViewInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK),
+				dialogFindReplaceAction);
 		toolbar.addSeparator();
 		toolbar.add(control.getActionMap().get("start-task"));
 		toolbar.add(control.getActionMap().get("stop-task"));

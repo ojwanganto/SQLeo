@@ -44,7 +44,7 @@ public class MDIToolbar extends BorderLayoutPanel
 		toolbar.addSeparator();
 		toolbar.add(Application.window.getAction(MDIActions.ACTION_MDI_SHOW_EXPLORER));
 		toolbar.add(Application.window.getAction(MDIActions.ACTION_MDI_SHOW_EDITOR));
-		toolbar.add(Application.window.getAction(MDIActions.ACTION_MDI_SHOW_COMPARER));
+		toolbar.add(Application.window.getAction(MDIActions.ACTION_NEW_QUERY));
 		toolbar.addSeparator();
 		toolbar.add(Application.window.getAction(MDIActions.ACTION_SHOW_PREFERENCES));
 		toolbar.addSeparator();
