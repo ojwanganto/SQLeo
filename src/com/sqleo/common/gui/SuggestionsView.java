@@ -440,9 +440,7 @@ public class SuggestionsView {
 
 		@Override
 		public void keyReleased(final KeyEvent e) {
-			System.out.println("entered"+e.getKeyCode());
 			if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_SPACE){
-				System.out.println("show join suggestion");
 				showJoinsSuggestionLater();
 			}else if (e.getKeyCode() == KeyEvent.VK_DOWN && suggestion != null) {
 				suggestion.moveDown();
