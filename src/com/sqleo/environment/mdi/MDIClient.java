@@ -96,9 +96,11 @@ public abstract class MDIClient extends ClientFrame {
 					@Override
 					public void run() {
 						loadAllTableNames(chKey,schema);
-						Application.session.putColumnCache(cacheKey, prefixTree);
-						if(textView!=null){
-							textView.reloadSuggestionsTrie(getPrefixTree(),chKey);
+						if(prefixTree!=null){
+							Application.session.putColumnCache(cacheKey, prefixTree);
+							if(textView!=null){
+								textView.reloadSuggestionsTrie(getPrefixTree(),chKey);
+							}
 						}
 					}
 				});

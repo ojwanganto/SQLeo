@@ -182,6 +182,9 @@ public class SQLParser
 		{
 			Object next = li.next();
 			
+			boolean isOpenBracket = next.toString().equals("(");
+			boolean isClosedBracket = next.toString().equals(")");
+			
 			if(next.toString().equalsIgnoreCase(_ReservedWords.DISTINCT) && surrounds == 0 )
 			{
 				qs.setQuantifier(QuerySpecification.DISTINCT);
@@ -228,7 +231,7 @@ public class SQLParser
 					break;
 				}
 			}
-			else if(next.toString().equals(")") && value.trim().equals("")) // for last ")" after subquery
+			else if(isClosedBracket && value.trim().equals("")) // for last ")" after subquery
 			{
 				surrounds--;
 				seenSubquery = true;
@@ -246,17 +249,20 @@ public class SQLParser
 			}
 			else
 			{
-				if(next.toString().equals(")")) surrounds--;
-				if(next.toString().equals("(")) surrounds++;
-
+				if(isClosedBracket) surrounds--;
+				if(isOpenBracket) surrounds++;
 				
 				if(value.length()>0)
 					if(next instanceof String || next instanceof Character || next instanceof Integer)
 				{
-					// ticket #54
-					// char last = value.charAt(value.length()-1);
-					// if(Character.isLetter(last) || String.valueOf(last).equals(QueryBuilder.identifierQuoteString))
-					value = value + SQLFormatter.SPACE;
+					// ticket #54, #155
+					char last = value.charAt(value.length()-1);
+					if(last == ')')
+					  value = value + SQLFormatter.SPACE;					 
+					else if(!isOpenBracket && !isClosedBracket){
+					   if(Character.isLetter(last) || String.valueOf(last).equals(QueryBuilder.identifierQuoteString))
+						value = value + SQLFormatter.SPACE;
+					}
 				}
 				value = value + next.toString().trim();
 				

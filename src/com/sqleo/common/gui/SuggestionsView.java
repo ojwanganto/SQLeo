@@ -32,6 +32,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -211,7 +212,15 @@ public class SuggestionsView {
 	private String getTableNameFromAlias(final String alias) {
 		final String text = textPane.getText();
 		final String regex = "(?i)\\s+"+alias+"(\\n+|\\s+|$|,)";
-		final Matcher matcher = Pattern.compile(regex).matcher(text);
+		Matcher matcher = null;
+		try{
+			matcher = Pattern.compile(regex).matcher(text);
+		}catch(PatternSyntaxException e){
+			Application.println(e, false);
+		}
+		if(null == matcher){
+			return null;
+		}
 		//find first matching alias
 		if(matcher.find() == true){
 			int aliasIndex = matcher.start();
