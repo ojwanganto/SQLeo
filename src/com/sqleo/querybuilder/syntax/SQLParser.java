@@ -255,6 +255,13 @@ public class SQLParser
 				if(value.length()>0)
 					if(next instanceof String || next instanceof Character || next instanceof Integer)
 				{
+<<<<<<< .mine
+					// ticket #54
+					// char last = value.charAt(value.length()-1);
+					// if(Character.isLetter(last) || String.valueOf(last).equals(QueryBuilder.identifierQuoteString))
+					if(!next.toString().equals("(") && !next.toString().equals("|"))
+						value = value + SQLFormatter.SPACE;
+=======
 					// ticket #54, #155
 					char last = value.charAt(value.length()-1);
 					if(last == ')')
@@ -263,6 +270,7 @@ public class SQLParser
 					   if(Character.isLetter(last) || String.valueOf(last).equals(QueryBuilder.identifierQuoteString))
 						value = value + SQLFormatter.SPACE;
 					}
+>>>>>>> .r185
 				}
 				value = value + next.toString().trim();
 				
