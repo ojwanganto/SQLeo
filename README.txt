@@ -34,11 +34,25 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2013.12.rc1.zip: 2013-12-17
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.12/
+
+	159 	Autocomplete-generate join conditions automatically by command
+	155 	blanks are added in select text during reverse SQL to graph
+	149 	Create a menu button to open new query builder window
+	148 	Reverse query: enable offline mode
+	147 	Find and replace All never ends
+	143 	Designer: relations rendering linear links
+
+
 SQLeoVQB.2013.11.rc1.zip: 2013-11-24
 
   Thanks to Anudeep Gade for his contribution to this release
   For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2013.10/
+     http://sourceforge.net/p/sqleo/tickets/milestone/2013.11/
 	139 	auto-complete: Alias and columns proposal on the fly
 	137 	add find and replace option for builder syntax
 	131 	Command Editor > Auto complete with multiple connections at same time
