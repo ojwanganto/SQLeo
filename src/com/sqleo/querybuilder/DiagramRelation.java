@@ -177,7 +177,10 @@ public class DiagramRelation extends JPanel
 	}
 	
 	private boolean isArcRendering(){
-		return Preferences.getBoolean(DialogPreferences.QB_RELATION_RENDER_ARC_KEY,true);
+		return 
+			Application.MINOR.endsWith("+") ? 
+			Preferences.getBoolean(DialogPreferences.QB_RELATION_RENDER_ARC_KEY,true) 
+			: false;
 	}
 	
 	/**
@@ -222,8 +225,8 @@ public class DiagramRelation extends JPanel
 	
 			if (px2 < fx1)
 			{
-				plusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
-				minusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+				plusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+				minusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
 
 				serie[0].x = px2;
 				serie[0].y = py;
@@ -237,8 +240,8 @@ public class DiagramRelation extends JPanel
 			}
 			else if (px1 > fx2)
 			{
-				plusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
-				minusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
+				plusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
+				minusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
 
 				serie[0].x = fx2;
 				serie[0].y = fy;
@@ -252,8 +255,8 @@ public class DiagramRelation extends JPanel
 			}
 			else
 			{
-				plusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
-				minusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
+				plusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
+				minusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
 
 				serie[0].x = px2;
 				serie[0].y = py;
@@ -299,14 +302,14 @@ public class DiagramRelation extends JPanel
 		int xStart = primaryEntity.getLocation().x + primaryEntity.getSize().width;
 
 		if(xStart < xEnd){
-			plusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
-			minusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
-		}else if (xMin > xMax){
-			plusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
-			minusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
+			plusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+			minusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+		}else if (xStart > xMax){
+			plusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
+			minusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight()?Color.black:Color.lightGray;
 		}else {
-			plusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
-			minusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+			plusColor = this.isRight() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
+			minusColor = this.isLeft() || this.isFull() ? isHighlight() ? Color.green.darker() : Color.green  : isHighlight() ? Color.black: Color.lightGray;
 		}
 
 		if(xEnd < xMin)
@@ -318,7 +321,7 @@ public class DiagramRelation extends JPanel
 			yStart = yFieldF + (foreignField.getSize().height/2);
 			yEnd = yFieldP + (primaryField.getSize().height/2);
 		}
-		
+	
 		if(xStart > xMax)
 		{
 			int x = xStart;
