@@ -136,7 +136,6 @@ public class DiagramLoader extends JDialog implements Runnable
 	{
 		message.setText( I18n.getFormattedString("querybuilder.message.loading","Loading: {0}", new Object[]{"" + table.getIdentifier()}));
 		checkTable(table);
-		
 
 		// fix #78 do not autoalias fields in subqueries
 		// if(( QueryBuilder.autoAlias || (builder.browser.getQueryItem() instanceof BrowserItems.DiagramQueryTreeItem)) && table.getAlias()==null)
@@ -253,7 +252,15 @@ public class DiagramLoader extends JDialog implements Runnable
 	
 	private void createAndJoin(QueryTokens.Table table) throws SQLException{
 		DiagramEntity item = creatEntity(table);
-		builder.diagram.addEntity(item);
+		// #157
+		if(Application.MINOR.endsWith("+") || builder.diagram.getEntities().length < 3){
+			builder.diagram.addEntity(item);
+		}
+		else{
+			JOptionPane.showMessageDialog(this,"Version with 3 tables max per graph, Please Donate for more", table.getIdentifier() + " " + table.getAlias(), JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		
 		
 		/* lo deve fare se provengo da: click su browser, da reference o da open all
 		non lo deve fare se sto facendo setQueryModel! */

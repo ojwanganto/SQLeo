@@ -177,10 +177,7 @@ public class DiagramRelation extends JPanel
 	}
 	
 	private boolean isArcRendering(){
-		return 
-			Application.MINOR.endsWith("+") ? 
-			Preferences.getBoolean(DialogPreferences.QB_RELATION_RENDER_ARC_KEY,true) 
-			: false;
+		return Preferences.getBoolean(DialogPreferences.QB_RELATION_RENDER_ARC_KEY,true) ;
 	}
 	
 	/**
