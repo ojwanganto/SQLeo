@@ -32,14 +32,17 @@ import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
+import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.Toolbar;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.ctrl.ContentPane;
 import com.sqleo.environment.ctrl.content.UpdateModel;
 import com.sqleo.environment.ctrl.define.TableMetaData;
 import com.sqleo.environment.ctrl.editor.DialogFindReplace;
@@ -59,6 +62,7 @@ public class ClientQueryBuilder extends MDIClient {
 
 	private QueryBuilder builder;
 	private ClientContent client;
+	private BorderLayoutPanel previewPanel;
 	private JMenuItem[] m_actions;
 	private Toolbar toolbar;
 
@@ -84,7 +88,13 @@ public class ClientQueryBuilder extends MDIClient {
 		super(DEFAULT_TITLE);
 		setMaximizable(true);
 		setResizable(true);
-		setComponentCenter(builder = new QueryBuilder());
+		builder = new QueryBuilder();
+		previewPanel = new BorderLayoutPanel();
+		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setLeftComponent(builder);
+		splitPane.setRightComponent(previewPanel);
+		setComponentCenter(splitPane);
 		builder.setClientQueryBuilder(this);
 
 		this.keycah = keycah;
@@ -129,7 +139,8 @@ public class ClientQueryBuilder extends MDIClient {
 		btn.setText(null);
 
 		toolbar = new Toolbar(Toolbar.HORIZONTAL);
-		toolbar.add(new ActionLaunch());
+		ActionLaunch actionExecuteQuery = new ActionLaunch();
+		toolbar.add(actionExecuteQuery);
 		Action saveAction = new ActionSave();
 		toolbar.getActionMap().put("save",saveAction);
 		toolbar.add(saveAction);
@@ -141,6 +152,10 @@ public class ClientQueryBuilder extends MDIClient {
 		builder.getSyntax().getViewInputMap().put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK),
 				dialogFindReplaceAction);
+		builder.getSyntax().getViewInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.CTRL_MASK),
+				actionExecuteQuery);
+		
 		toolbar.addSeparator();
 
 		setComponentEast(toolbar);
@@ -275,7 +290,35 @@ public class ClientQueryBuilder extends MDIClient {
 			}
 			client = newClient;
 			client.setTitle(ClientContent.PREVIEW_TITLE+" : " + subtitle);
-			Application.window.add(client);
+			
+			//Application.window.add(client); //adds client as window
+			
+			// adds the content and buttons to previewpanel
+			previewPanel.removeAll();
+			//add content toolbar
+			previewPanel.setComponentNorth(client.getContentPane().getComponent(1)); 
+			//add content view
+			ContentPane content = (ContentPane)client.getContentPane().getComponent(0);
+			//remove sql status component
+			BorderLayoutPanel pnlSouth = (BorderLayoutPanel)content.getComponent(0);
+			pnlSouth.remove(pnlSouth.getComponent(2));
+			previewPanel.setComponentCenter(content);
+			
+			//append client menu actions inside builder menu actions
+			int len1 = getMenuActions().length;
+			int len2 = client.getMenuActions().length;
+			if(len1 == 8){
+				JMenuItem[] allMenuItems = new JMenuItem[len1+len2];
+				System.arraycopy(getMenuActions(), 0, allMenuItems, 0, len1);
+			    System.arraycopy(client.getMenuActions(), 0, allMenuItems, len1, len2);
+			    m_actions = allMenuItems;
+			}else{
+				System.arraycopy(client.getMenuActions(), 0, m_actions, 8, len2);
+			}
+			Application.window.menubar.internalFrameActivated(
+					new InternalFrameEvent(ClientQueryBuilder.this,
+					0));
+
 		}
 
 		@Override
