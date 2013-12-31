@@ -60,6 +60,12 @@ public class DialogStream extends AbstractDialogWizard
 		new DialogStream("export", content.getView(), tname).setVisible(true);
 	}
 	
+	public static void showExportExcel(ContentPane content)
+	{
+		String tname = null;
+		new DialogStream("exportExcel", content.getView(), tname).setVisible(true);
+	}
+	
 	public static void showImport(ContentPane content)
 	{
 		String tname = null;
@@ -102,22 +108,30 @@ public class DialogStream extends AbstractDialogWizard
 	
 	protected void onOpen()
 	{
-		if(this.getTitle().equals("export"))
+		if(this.getTitle().equals("exportExcel"))
 		{
 			mkp = new MaskExport();
 			mkc = new DefaultMaskChooser(AbstractMaskChooser.SAVE_DIALOG,AbstractMaskChooser.FILES_ONLY,false);
 		
-			mkc.addChoosableFileFilter(new SQLFilter());
-			mkc.addChoosableFileFilter(new WebFilter());
+			mkc.addChoosableFileFilter(new CSVFilter());
+			mkc.addChoosableFileFilter(new XLSFilter());
+		}else {
+			if(this.getTitle().equals("export"))
+			{
+				mkp = new MaskExport();
+				mkc = new DefaultMaskChooser(AbstractMaskChooser.SAVE_DIALOG,AbstractMaskChooser.FILES_ONLY,false);
 			
+				mkc.addChoosableFileFilter(new SQLFilter());
+				mkc.addChoosableFileFilter(new WebFilter());
+				
+			}
+			else if(this.getTitle().equals("import"))
+			{
+				mkp = new MaskImport();
+				mkc = new DefaultMaskChooser(AbstractMaskChooser.OPEN_DIALOG,AbstractMaskChooser.FILES_ONLY,false);
+			}
+			mkc.addChoosableFileFilter(new TXTFilter());
 		}
-		else if(this.getTitle().equals("import"))
-		{
-			mkp = new MaskImport();
-			mkc = new DefaultMaskChooser(AbstractMaskChooser.OPEN_DIALOG,AbstractMaskChooser.FILES_ONLY,false);
-		}
-		
-		mkc.addChoosableFileFilter(new TXTFilter());
 		
 		addStep(mkc);
 		addStep(mkp);
@@ -168,6 +182,18 @@ public class DialogStream extends AbstractDialogWizard
 	{
 		TXTFilter(){super("text files",new String[]{".txt"});}
 		public short getPerformType(){return MaskExport.TXT;}
+	}
+	
+	private static class CSVFilter extends AbstractMaskChooser.AbstractFileFilter
+	{
+		CSVFilter(){super("csv files",new String[]{".csv"});}
+		public short getPerformType(){return MaskExport.CSV;}
+	}
+	
+	private static class XLSFilter extends AbstractMaskChooser.AbstractFileFilter
+	{
+		XLSFilter(){super("excel files",new String[]{".xls"});}
+		public short getPerformType(){return MaskExport.XLS;}
 	}
 	
 	private static class WebFilter extends AbstractMaskChooser.AbstractFileFilter

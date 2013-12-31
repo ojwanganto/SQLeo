@@ -81,6 +81,7 @@ public class Application extends Appearance implements _Constants,_Version
 		resources.loadIcon(ICON_DELETE	,"/images/cross.png");
 		resources.loadIcon(ICON_BACK	,"/images/arrow_left.png");
 		resources.loadIcon(ICON_FWD		,"/images/arrow_right.png");
+		resources.loadIcon(ICON_EXCEL	,"/images/export_excel.png");
 
 		resources.loadIcon(ICON_COMPARER	,"/images/table_error.png");
         resources.loadIcon(ICON_EXPLORER	,"/images/database_lightning.png");

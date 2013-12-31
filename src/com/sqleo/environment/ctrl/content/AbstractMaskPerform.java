@@ -40,6 +40,8 @@ public abstract class AbstractMaskPerform extends BorderLayoutPanel
 	static final short SQL = 0;
 	static final short TXT = 1;
 	static final short WEB = 2;
+	static final short CSV = 3;
+	static final short XLS = 4;
 
 	protected JProgressBar progress;
 	protected JButton btnStop;

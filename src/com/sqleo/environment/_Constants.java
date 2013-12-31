@@ -66,6 +66,7 @@ public interface _Constants
 	public static final String ICON_DELETE	= "icon.014";
 	public static final String ICON_BACK	= "icon.015";
 	public static final String ICON_FWD		= "icon.016";
+	public static final String ICON_EXCEL	= "icon.017";
 	
 	public static final String ICON_PREFERENCES	= "icon.050";
     public static final String ICON_EXPLORER	= "icon.051";

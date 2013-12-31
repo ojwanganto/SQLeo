@@ -83,6 +83,20 @@ public class MaskExport extends AbstractMaskPerform
 			if(!fname.endsWith(".txt")) fname = fname + ".txt"; 
 			setComponentCenter(eChoice = new TxtChoice());
 		}
+		else if(type == CSV)
+		{
+			if(!fname.endsWith(".csv")) fname = fname + ".csv";
+			TxtChoice csvChoice = new TxtChoice();
+			csvChoice.setDefaultDelimiterAndDisable(",");
+			setComponentCenter(eChoice = csvChoice);
+		}
+		else if(type == XLS)
+		{
+			if(!fname.endsWith(".xls")) fname = fname + ".xls"; 
+			TxtChoice xlsChoice = new TxtChoice();
+			xlsChoice.setTabAsDefaultAndDisable();
+			setComponentCenter(eChoice = xlsChoice);
+		}
 			
 		lblFile.setText("file: " + fname);
 	}	
@@ -535,6 +549,20 @@ public class MaskExport extends AbstractMaskPerform
 		{
 			if(rbTab.isSelected()) return "\t";
 			return txtDelimiter.getText();
+		}
+		private void disableDelimiterSelection(){
+			rbTab.setEnabled(false);
+			rbOther.setEnabled(false);
+			txtDelimiter.setEnabled(false);
+		}
+		public void setTabAsDefaultAndDisable(){
+			rbTab.setSelected(true);
+			disableDelimiterSelection();
+		}
+		public void setDefaultDelimiterAndDisable(final String delimiter){
+			rbOther.setSelected(true);
+			txtDelimiter.setText(delimiter);
+			disableDelimiterSelection();
 		}
 
 		void open()

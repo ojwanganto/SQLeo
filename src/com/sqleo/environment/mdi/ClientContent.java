@@ -184,6 +184,8 @@ public class ClientContent extends MDIClientWithCRActions
 			toolbar.add(commit);
 			toolbar.add(rollback);
 			toolbar.addSeparator();
+			toolbar.add(new ActionShowExportExcel());
+			toolbar.addSeparator();
 		}
 		setComponentEast(toolbar);
 	}
@@ -344,6 +346,23 @@ public class ClientContent extends MDIClientWithCRActions
 		{
 			if(ClientContent.this.control.isBusy()) return;
 			DialogStream.showImport(ClientContent.this.control);
+		}
+	}
+	
+	private class ActionShowExportExcel extends AbstractAction
+	{
+		ActionShowExportExcel()
+		{
+			this.putValue(NAME, "export excel...");
+			this.putValue(SMALL_ICON,
+					Application.resources.getIcon(Application.ICON_EXCEL));
+			putValue(SHORT_DESCRIPTION, "export excel...");
+		}
+
+		public void actionPerformed(ActionEvent ae)
+		{
+			if(ClientContent.this.control.isBusy()) return;
+			DialogStream.showExportExcel(ClientContent.this.control);
 		}
 	}
 		
