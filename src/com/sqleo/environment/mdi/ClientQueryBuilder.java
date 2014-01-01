@@ -153,13 +153,15 @@ public class ClientQueryBuilder extends MDIClient {
             	JSplitPane split2 = (JSplitPane)split.getLeftComponent();
             	if(client!=null){
             		splitPane.setDividerLocation(0.66);
+            		splitPane.validate();
     				split2.setDividerLocation(1.0);
+    				split2.validate();
             	}else{
             		splitPane.setDividerLocation(1.0);
+            		splitPane.validate();
             		split2.setDividerLocation(0.5);
+            		split2.validate();
             	}
-            	splitPane.validate();
-   				split2.validate();
             }
         });
     }
