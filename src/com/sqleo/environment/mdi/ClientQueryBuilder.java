@@ -32,6 +32,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -82,6 +84,7 @@ public class ClientQueryBuilder extends MDIClient {
 	private String schema = null;
 	private DialogFindReplace dlg;
 	private JSplitPane splitPane;
+	private boolean previewAlreadyLoadedOnce = false;
 	
 	public DialogFindReplace getFindReplaceDialog(){
 		return dlg;
@@ -139,6 +142,22 @@ public class ClientQueryBuilder extends MDIClient {
 				adjustSplitPaneDivider();
 			}
 		});
+		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, 
+			    new PropertyChangeListener() {
+			        @Override
+			        public void propertyChange(PropertyChangeEvent pce) {
+			        	 SwingUtilities.invokeLater(new Runnable() {
+			        		 @Override
+			                 public void run() {
+			        			 BorderLayoutPanel designer = (BorderLayoutPanel)getQueryBuilder().getComponentAt(0);
+					             JSplitPane split = (JSplitPane)designer.getComponent(0);
+					             JSplitPane split2 = (JSplitPane)split.getLeftComponent();
+					             split2.setDividerLocation(1.0);
+				    			 split2.validate();
+			        		 }
+			        	 });
+			        }
+			});
 		
 		adjustSplitPaneDivider();
 		
@@ -152,8 +171,11 @@ public class ClientQueryBuilder extends MDIClient {
             	JSplitPane split = (JSplitPane)designer.getComponent(0);
             	JSplitPane split2 = (JSplitPane)split.getLeftComponent();
             	if(client!=null){
-            		splitPane.setDividerLocation(0.66);
-            		splitPane.validate();
+            		if(!previewAlreadyLoadedOnce){
+            			previewAlreadyLoadedOnce = true;
+            			splitPane.setDividerLocation(0.66);
+            			splitPane.validate();
+            		}
     				split2.setDividerLocation(1.0);
     				split2.validate();
             	}else{

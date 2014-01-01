@@ -87,7 +87,7 @@ public class MaskExport extends AbstractMaskPerform
 		{
 			if(!fname.endsWith(".csv")) fname = fname + ".csv";
 			TxtChoice csvChoice = new TxtChoice();
-			csvChoice.setDefaultDelimiterAndDisable(",");
+			csvChoice.setDefaultDelimiter(",");
 			setComponentCenter(eChoice = csvChoice);
 		}
 		else if(type == XLS)
@@ -559,10 +559,9 @@ public class MaskExport extends AbstractMaskPerform
 			rbTab.setSelected(true);
 			disableDelimiterSelection();
 		}
-		public void setDefaultDelimiterAndDisable(final String delimiter){
+		public void setDefaultDelimiter(final String delimiter){
 			rbOther.setSelected(true);
 			txtDelimiter.setText(delimiter);
-			disableDelimiterSelection();
 		}
 
 		void open()

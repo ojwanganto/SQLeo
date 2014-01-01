@@ -20,6 +20,10 @@
 
 package com.sqleo.environment.ctrl.content;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+
 import javax.swing.JCheckBox;
 
 import com.sqleo.common.gui.AbstractDialogWizard;
@@ -114,7 +118,6 @@ public class DialogStream extends AbstractDialogWizard
 			mkc = new DefaultMaskChooser(AbstractMaskChooser.SAVE_DIALOG,AbstractMaskChooser.FILES_ONLY,false);
 		
 			mkc.addChoosableFileFilter(new CSVFilter());
-			mkc.addChoosableFileFilter(new XLSFilter());
 		}else {
 			if(this.getTitle().equals("export"))
 			{
@@ -168,7 +171,14 @@ public class DialogStream extends AbstractDialogWizard
 			DialogStream.this.mkp.setEnabled(true);
 			DialogStream.this.setBarEnabled(true);
 			
-			if(DialogStream.this.mkp.finished() && cbxClose.isSelected()) DialogStream.this.dispose();
+			if(DialogStream.this.mkp.finished()){
+				try {  
+					 final String fileNameLbl = DialogStream.this.mkp.lblFile.getText();
+					 final String fileName = fileNameLbl.substring(6);
+				     Desktop.getDesktop().open(new File(fileName));
+				} catch (IOException e) {e.printStackTrace();}
+				if(cbxClose.isSelected()) DialogStream.this.dispose();
+			}
 		}
 	}
 	
