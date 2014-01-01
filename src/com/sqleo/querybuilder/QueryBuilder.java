@@ -100,19 +100,6 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		this.initComponents();
 		this.setConnection(connection);
 		
-		this.addComponentListener(new ComponentAdapter()
-		{
-			public void componentResized(ComponentEvent evt)
-			{
-				BorderLayoutPanel designer = (BorderLayoutPanel)QueryBuilder.this.getComponentAt(0);
-				JSplitPane split = (JSplitPane)designer.getComponent(0);
-				JSplitPane split2 = (JSplitPane)split.getLeftComponent();
-                // Value changed to 0.5 by Giulio Toffoli
-				split2.setDividerLocation(0.5);
-				split2.validate();
-			}
-		});
-		
 		this.transferFocus();
 	}
 	

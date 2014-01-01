@@ -24,18 +24,29 @@
 
 package com.sqleo.environment.mdi;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.Toolbar;
@@ -70,6 +81,7 @@ public class ClientQueryBuilder extends MDIClient {
 	private String filename = null;
 	private String schema = null;
 	private DialogFindReplace dlg;
+	private JSplitPane splitPane;
 	
 	public DialogFindReplace getFindReplaceDialog(){
 		return dlg;
@@ -89,14 +101,14 @@ public class ClientQueryBuilder extends MDIClient {
 		setMaximizable(true);
 		setResizable(true);
 		builder = new QueryBuilder();
+		builder.setClientQueryBuilder(this);
+	
 		previewPanel = new BorderLayoutPanel();
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setLeftComponent(builder);
 		splitPane.setRightComponent(previewPanel);
 		setComponentCenter(splitPane);
-		builder.setClientQueryBuilder(this);
-
 		this.keycah = keycah;
 
 		createToolbar();
@@ -119,7 +131,39 @@ public class ClientQueryBuilder extends MDIClient {
 				openSaveQueryDialog();
 			}
 		});
+		
+		this.addComponentListener(new ComponentAdapter()
+		{
+			public void componentResized(ComponentEvent evt)
+			{
+				adjustSplitPaneDivider();
+			}
+		});
+		
+		adjustSplitPaneDivider();
+		
 	}
+	
+	private void adjustSplitPaneDivider() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+            	BorderLayoutPanel designer = (BorderLayoutPanel)getQueryBuilder().getComponentAt(0);
+            	JSplitPane split = (JSplitPane)designer.getComponent(0);
+            	JSplitPane split2 = (JSplitPane)split.getLeftComponent();
+            	if(client!=null){
+            		splitPane.setDividerLocation(0.66);
+    				split2.setDividerLocation(1.0);
+            	}else{
+            		splitPane.setDividerLocation(1.0);
+            		split2.setDividerLocation(0.5);
+            	}
+            	splitPane.validate();
+   				split2.validate();
+            }
+        });
+    }
+	
 	private void openSaveQueryDialog(){
 		int selectLength = _ReservedWords.SELECT.length();
 		if(builder.getSyntax().getDocument().getLength()>selectLength ||
@@ -318,6 +362,7 @@ public class ClientQueryBuilder extends MDIClient {
 			Application.window.menubar.internalFrameActivated(
 					new InternalFrameEvent(ClientQueryBuilder.this,
 					0));
+			adjustSplitPaneDivider();
 
 		}
 
