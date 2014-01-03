@@ -39,7 +39,7 @@ public class DialogStream extends AbstractDialogWizard
 	private String tname = null;
 	private ContentView view;
 	
-	private JCheckBox cbxClose;
+	private JCheckBox cbxOpen;
 	
 	private AbstractMaskPerform mkp;
 	private AbstractMaskChooser mkc;
@@ -53,9 +53,9 @@ public class DialogStream extends AbstractDialogWizard
 		this.tname = tname;
 		this.view = view;
 		
-		cbxClose = new JCheckBox("close dialog when finished",Preferences.getBoolean("content.close-dialog",false));
-		cbxClose.setVisible(false);		
-		bar.add(cbxClose,0);
+		cbxOpen = new JCheckBox("open file when finished",Preferences.getBoolean("content.open-file",true));
+		cbxOpen.setVisible(false);		
+		bar.add(cbxOpen,0);
 	}
 
 	public static void showExport(ContentPane content)
@@ -78,19 +78,19 @@ public class DialogStream extends AbstractDialogWizard
 	
 	public void dispose()
 	{
-		Preferences.set("content.close-dialog",new Boolean(cbxClose.isSelected()));
+		Preferences.set("content.open-file",new Boolean(cbxOpen.isSelected()));
 		super.dispose();		
 	}
 
 	protected boolean onBack()
 	{
-		cbxClose.setVisible(false);
+		cbxOpen.setVisible(false);
 		return super.onBack();
 	}
 
 	protected boolean onNext()
 	{
-		cbxClose.setVisible(true);
+		cbxOpen.setVisible(true);
 		
 		if(getStep()==0)
 		{
@@ -172,12 +172,14 @@ public class DialogStream extends AbstractDialogWizard
 			DialogStream.this.setBarEnabled(true);
 			
 			if(DialogStream.this.mkp.finished()){
-				try {  
-					 final String fileNameLbl = DialogStream.this.mkp.lblFile.getText();
-					 final String fileName = fileNameLbl.substring(6);
-				     Desktop.getDesktop().open(new File(fileName));
-				} catch (IOException e) {e.printStackTrace();}
-				if(cbxClose.isSelected()) DialogStream.this.dispose();
+				if(cbxOpen.isSelected()) {
+					try {  
+					 	final String fileNameLbl = DialogStream.this.mkp.lblFile.getText();
+					 	final String fileName = fileNameLbl.substring(6);
+				     		Desktop.getDesktop().open(new File(fileName));
+					} catch (IOException e) {e.printStackTrace();}
+				}
+				DialogStream.this.dispose();
 			}
 		}
 	}
