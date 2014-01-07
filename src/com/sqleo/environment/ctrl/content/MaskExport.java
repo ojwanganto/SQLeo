@@ -90,13 +90,6 @@ public class MaskExport extends AbstractMaskPerform
 			csvChoice.setDefaultDelimiter(",");
 			setComponentCenter(eChoice = csvChoice);
 		}
-		else if(type == XLS)
-		{
-			if(!fname.endsWith(".xls")) fname = fname + ".xls"; 
-			TxtChoice xlsChoice = new TxtChoice();
-			xlsChoice.setTabAsDefaultAndDisable();
-			setComponentCenter(eChoice = xlsChoice);
-		}
 			
 		lblFile.setText("file: " + fname);
 	}	
@@ -207,7 +200,6 @@ public class MaskExport extends AbstractMaskPerform
 		private PrintStream stream;
 		
 		JRadioButton rbAll;
-		JRadioButton rbBlock;
 		JRadioButton rbUser;
 		
 		JTextField txtInterval;
@@ -234,7 +226,6 @@ public class MaskExport extends AbstractMaskPerform
 			cbxFromGrid.setSelected(false);
 			pnl.add(new JLabel("records:"));
 			pnl.add(rbAll	= new JRadioButton("all",true));
-			pnl.add(rbBlock	= new JRadioButton("current block"));
 			pnl.add(rbUser	= new JRadioButton("define:"));
 			pnl.add(txtInterval = new JTextField("1..",8));
 			txtInterval.setEditable(false);
@@ -252,24 +243,13 @@ public class MaskExport extends AbstractMaskPerform
 					{
 						txtInterval.setText("1..");
 					}
-					else if(rbBlock.isSelected())
-					{
-						int last = view.getBlock() * ContentModel.MAX_BLOCK_RECORDS;
-						int first = last - ContentModel.MAX_BLOCK_RECORDS;
-						if(first == 0) first = 1;
-						if(last > view.getFlatRowCount()) last = view.getFlatRowCount() -1;
-						
-						txtInterval.setText(first + ".." + last);
-					}
 				}
 			};
 			
 			bg.add(rbAll);			
-			bg.add(rbBlock);
 			bg.add(rbUser);
 								
 			rbAll.addItemListener(il);
-			rbBlock.addItemListener(il);
 			rbUser.addItemListener(il);
 		}
 
