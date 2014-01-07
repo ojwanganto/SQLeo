@@ -27,13 +27,16 @@ package com.sqleo.environment.ctrl.editor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.CallableStatement;
 import java.sql.Types;
+
 import java.text.NumberFormat;
 import java.util.Arrays;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.environment.Preferences;
+
 
 
 public class Task implements Runnable {
@@ -61,18 +64,40 @@ public class Task implements Runnable {
 		try {
 			String syntax = source.getSyntax().trim();
 			if (ConnectionAssistant.hasHandler(source.getHandlerKey())) {
-				if (syntax.length() > 6) {
+				if (syntax.length() >= 4) {
 					ConnectionHandler ch = ConnectionAssistant
 							.getHandler(source.getHandlerKey());
 					stmt = ch.get().createStatement();
 					stmt.setFetchSize(limit);
 					stmt.setMaxRows(limit);
 
-					String sqlcmd = syntax.toUpperCase().substring(0, 6);
-					if (sqlcmd.equals("SELECT")) {
+					String sqlcmd = syntax.toUpperCase().substring(0, 7);
+					if (sqlcmd.startsWith("WITH")) {
 						rs = stmt.executeQuery(syntax);
 						printSelect();
 						rs.close();
+					}else if (sqlcmd.startsWith("SELECT")) {
+						rs = stmt.executeQuery(syntax);
+						printSelect();
+						rs.close();
+					} else if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN")) {
+						stmt.executeUpdate("begin dbms_output.enable(1000000); end;");
+						stmt.executeUpdate(syntax);
+						// dbms output get
+            				            CallableStatement showOutput = ch.get().prepareCall("begin dbms_output.get_line(:1,:status); end;");
+					            showOutput.registerOutParameter(1, java.sql.Types.VARCHAR); // line
+					            showOutput.registerOutParameter(2, java.sql.Types.INTEGER); // done (no more) ?
+            
+					            for (int i=0;;i++){
+        					        showOutput.executeUpdate();
+					                if(showOutput.getInt(2)== 1){
+					                    break;
+					                }
+					                target.write(showOutput.getString(1) + "\n");                
+					            }
+					            showOutput.close();
+						stmt.executeUpdate("begin dbms_output.disable; end;");
+						target.write("PL/SQL block executed successfully");
 					} else {
 						rs = null;
 						int rows = stmt.executeUpdate(syntax);

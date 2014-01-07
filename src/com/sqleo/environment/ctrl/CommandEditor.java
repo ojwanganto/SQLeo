@@ -158,6 +158,8 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		@Override
 		public void run() {
 			String requestString = request.getSelectedText();
+
+
 			if (requestString == null || requestString.trim().length() == 0) {
 				// line
 				try {
@@ -179,9 +181,19 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				requestString = request.getSelectedText();
 			}
 
-			if (requestString != null && requestString.trim().length() > 0) {
+			Boolean PLsql=false;
+			String sqlcmd = requestString.toUpperCase().substring(0, 7);
+			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN")) PLsql=true;
+
+			if (requestString != null && requestString.trim().length() > 0 ) {
 				requestString = requestString.trim();
-				StringTokenizer st = new StringTokenizer(requestString, ";");
+				StringTokenizer st;
+				if (!PLsql){
+					st = new StringTokenizer(requestString, ";"); // split sql separated by ";"
+				} else {
+					st = new StringTokenizer(requestString, ""); // don't split in case of PL/SQL
+				}
+					
 				for (int len = 0; !stopped && st.hasMoreTokens();) {
 					String sql = st.nextToken();
 					// rimuovere gli a capo da sql!
