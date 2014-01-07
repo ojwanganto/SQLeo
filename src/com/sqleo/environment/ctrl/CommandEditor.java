@@ -183,7 +183,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 			Boolean PLsql=false;
 			String sqlcmd = requestString.toUpperCase().substring(0, 7);
-			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN")) PLsql=true;
+			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("CREATE") || sqlcmd.startsWith("EXECUTE")) PLsql=true;
 
 			if (requestString != null && requestString.trim().length() > 0 ) {
 				requestString = requestString.trim();
