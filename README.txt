@@ -33,6 +33,22 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2014.01.rc1.zip: 2014-01-11
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.01/
+
+	164 	export csv: remove current block choice
+	161 	query builder: add shortcut CTRL-ENTER for execute
+	152 	colored part of left or rigth joins is wrong
+	146 	add button to send data result in excel
+	60 	refactor data CONTENT window inside QUERY one
+	59 	Add support for execute procedure and PL/SQL blocks
+
+	Starting with this release, Query builder is limited to 3 tables max per window.
+	Please Donate to get the full featured version.
+
 
 SQLeoVQB.2013.12.rc1.zip: 2013-12-17
 
