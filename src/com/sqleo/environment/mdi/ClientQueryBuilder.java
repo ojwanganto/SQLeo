@@ -105,6 +105,7 @@ public class ClientQueryBuilder extends MDIClient {
 		setResizable(true);
 		builder = new QueryBuilder();
 		builder.setClientQueryBuilder(this);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 	
 		previewPanel = new BorderLayoutPanel();
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -192,11 +193,14 @@ public class ClientQueryBuilder extends MDIClient {
 		int selectLength = _ReservedWords.SELECT.length();
 		if(builder.getSyntax().getDocument().getLength()>selectLength ||
 				builder.getDiagramLayout().getQueryModel().toString().length() > selectLength ){
-			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_OPTION);
+			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
 			if(option == JOptionPane.YES_OPTION){
 				toolbar.getActionMap().get("save").actionPerformed(null);
 			}
-		}
+			if(option != JOptionPane.CANCEL_OPTION)
+				ClientQueryBuilder.this.dispose();
+		} else
+			ClientQueryBuilder.this.dispose();
 	}
 	private void createToolbar() {
 		JButton btn = new JButton(builder.getActionMap().get(

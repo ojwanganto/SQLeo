@@ -103,7 +103,6 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 			@Override
 			public void internalFrameClosing(InternalFrameEvent e) {
 				openSaveQueryDialog();
-				ClientCommandEditor.this.dispose();
 			}
 			
 		};
@@ -116,11 +115,14 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	
 	private void openSaveQueryDialog(){
 		if(control.getDocument().getLength()>0){
-			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_OPTION);
+			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
 			if(option == JOptionPane.YES_OPTION){
 				toolbar.getActionMap().get("save").actionPerformed(null);
 			}
-		}
+			if(option != JOptionPane.CANCEL_OPTION)
+				ClientCommandEditor.this.dispose();
+		} else
+			ClientCommandEditor.this.dispose();
 	}
 
 	private void createToolbar() {
