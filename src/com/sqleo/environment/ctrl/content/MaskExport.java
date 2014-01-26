@@ -312,22 +312,6 @@ public class MaskExport extends AbstractMaskPerform
 			super.initComponents();
 		}
 
-		void open()
-		{
-			super.open();
-			println("<html><body><table border=1>");
-			
-			if(cbxHeader.isSelected())
-			{
-				print("<tr>");
-				for(int col=0; col<view.getColumnCount(); col++)
-				{
-					print("<th>" + view.getColumnName(col) + "</th>");
-				}		
-				println("</tr>");
-			}
-		}
-
 		void open(ResultSetMetaData mtd)
 		{
 			super.open();
@@ -339,7 +323,8 @@ public class MaskExport extends AbstractMaskPerform
 				try {
 					for(int col=1; col<=mtd.getColumnCount(); col++)
 					{
-						print("<th>" + mtd.getColumnName(col) + "</th>");
+						// Ticket #171 replace getColumnName per getColumnLabel
+						print("<th>" + mtd.getColumnLabel(col) + "</th>");
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -400,24 +385,6 @@ public class MaskExport extends AbstractMaskPerform
 			super.initComponents();
 		}
 
-		void open()
-		{
-			super.open();
-			
-			if(cbxDelete.isSelected())
-			{
-				println("DELETE FROM " + txtTable.getText() + ";");
-			}
-			
-			StringBuffer buffer = new StringBuffer("INSERT INTO " + txtTable.getText() + " (");
-			for(int col=0; col<view.getColumnCount(); col++)
-			{
-				buffer.append(view.getColumnName(col) + ",");
-			}
-			buffer.deleteCharAt(buffer.length()-1);
-			insert = buffer.toString() + ")";
-		}
-
 		void open(ResultSetMetaData mtd)
 		{
 			super.open();
@@ -431,7 +398,8 @@ public class MaskExport extends AbstractMaskPerform
 
 				for(int col=1; col<=mtd.getColumnCount(); col++)
 				{
-					buffer.append(mtd.getColumnName(col) + ",");
+					// Ticket #171 replace getColumnName per getColumnLabel
+					buffer.append(mtd.getColumnLabel(col) + ",");
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -544,21 +512,6 @@ public class MaskExport extends AbstractMaskPerform
 			txtDelimiter.setText(delimiter);
 		}
 
-		void open()
-		{
-			super.open();
-			
-			if(cbxHeader.isSelected())
-			{
-				StringBuffer buffer = new StringBuffer();
-				for(int col=0; col<view.getColumnCount(); col++)
-				{
-					buffer.append(view.getColumnName(col) + getDelimiter());
-				}
-				if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
-				println(buffer.toString());
-			}
-		}
 		void open(ResultSetMetaData mtd)
 		{
 			super.open();
@@ -569,7 +522,9 @@ public class MaskExport extends AbstractMaskPerform
 				try {
 					for(int col=1; col<=mtd.getColumnCount(); col++)
 					{
-						buffer.append(mtd.getColumnName(col) + getDelimiter());
+						// Ticket #171 replace getColumnName per getColumnLabel
+						buffer.append(mtd.getColumnLabel(col) + getDelimiter());
+
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -586,6 +541,8 @@ public class MaskExport extends AbstractMaskPerform
 			StringBuffer buffer = new StringBuffer();
 			for(int i=0; i<vals.length; i++)
 			{
+				// TO DO #165 empty string if NULL
+				// TO DO #162 enclose CHAR and VARCHAR with "" (see toSQLValue)
 				String val = vals[i] == null ? "null" : vals[i].toString();
 				buffer.append(val + getDelimiter());
 			}
