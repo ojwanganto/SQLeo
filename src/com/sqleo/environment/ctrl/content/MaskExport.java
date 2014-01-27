@@ -447,7 +447,7 @@ public class MaskExport extends AbstractMaskPerform
 	{
 		JCheckBox cbxHeader;
 		JCheckBox cbxNull;
-		JCheckBox cbxTrim;
+		JCheckBox cbxCote;
 		
 		JRadioButton rbTab;
 		JRadioButton rbOther;
@@ -458,8 +458,8 @@ public class MaskExport extends AbstractMaskPerform
 		{
 			JPanel pnl1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			pnl1.add(cbxHeader = new JCheckBox("with header"));
-			pnl1.add(cbxNull = new JCheckBox("null if blanks"));
-			pnl1.add(cbxTrim = new JCheckBox("trim value"));
+			pnl1.add(cbxNull = new JCheckBox("empty if null"));
+			pnl1.add(cbxCote = new JCheckBox("cote text"));
 			
 			JPanel pnl2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			pnl2.add(new JLabel("delimiter:"));
@@ -538,13 +538,35 @@ public class MaskExport extends AbstractMaskPerform
 
 		void handle(Object[] vals)
 		{
+
 			StringBuffer buffer = new StringBuffer();
 			for(int i=0; i<vals.length; i++)
 			{
-				// TO DO #165 empty string if NULL
-				// TO DO #162 enclose CHAR and VARCHAR with "" (see toSQLValue)
-				String val = vals[i] == null ? "null" : vals[i].toString();
-				buffer.append(val + getDelimiter());
+				// Ticket #165 empty string if NULL
+				if(vals[i]==null) {
+					if(cbxNull.isSelected()) 
+						vals[i]="";
+					else
+						vals[i]="null";
+
+				// Ticket #162 enclose CHAR and VARCHAR with ""
+				} else if (cbxCote.isSelected()) {
+
+					switch(MaskExport.this.view.getColumnType(i))
+					{
+						case Types.CHAR:
+							vals[i] = Text.replaceText(vals[i].toString(),"\"","\"\"");
+							vals[i] = "\"" + vals[i].toString() + "\"";
+						case Types.VARCHAR:
+							vals[i] = Text.replaceText(vals[i].toString(),"\"","\"\"");
+							vals[i] = "\"" + vals[i].toString() + "\"";
+						default:
+							vals[i] = vals[i].toString();
+					}
+				} else {
+					vals[i] = vals[i].toString();
+				}
+				buffer.append(vals[i] + getDelimiter());
 			}
 			if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
 			println(buffer.toString());
