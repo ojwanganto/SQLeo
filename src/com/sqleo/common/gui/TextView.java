@@ -24,6 +24,7 @@
 
 package com.sqleo.common.gui;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -67,14 +68,23 @@ public class TextView extends BorderLayoutPanel
 	private CompoundUndoManager undoManager;
 	private SuggestionsView suggestions;
 	private JScrollPane scroll;
-	
+	private static final Color DEFAULT_CURRENT_LINE_HIGHLIGHT_COLOR	= new Color(255,255,170);
+
 	public TextView(StyledDocument doc)
 	{
 		editor = new JTextPane();
 		editor.setDocument(doc);
+		TextLineNumber lineNumberView = null;
 		if(doc instanceof QueryStyledDocument){
 			//request view 
+			// add undo manager 
 			undoManager = new CompoundUndoManager(editor);
+			// add line highlighter 
+			new LinePainter(editor,DEFAULT_CURRENT_LINE_HIGHLIGHT_COLOR);
+			// add line number view 
+			lineNumberView = new TextLineNumber(editor);
+			lineNumberView.setCurrentLineForeground(Color.orange); 
+			// add suggestions for auto complete
 			if (Preferences.isAutoCompleteEnabled()) {
 				suggestions = new SuggestionsView(editor, doc instanceof SQLStyledDocument);
 			}
@@ -92,6 +102,9 @@ public class TextView extends BorderLayoutPanel
 		
 		scroll = new JScrollPane(noWrapPanel);
 		scroll.getVerticalScrollBar().setUnitIncrement(25);
+		if(lineNumberView!=null){
+			scroll.setRowHeaderView(lineNumberView);
+		}
 		setComponentCenter(scroll);
 		
 		this.setTabSize(4);
