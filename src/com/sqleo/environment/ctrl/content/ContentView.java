@@ -334,6 +334,17 @@ public class ContentView extends JPanel implements ListSelectionListener
 			TableColumn tc = data.getColumnModel().getColumn(i);
 			columnwidths.add(tc.getPreferredWidth());
 		}
+		setColumnWidths(columnwidths);
+	}
+	
+	public Vector<Integer> getColumnWidths(){
+		return columnwidths;
+	}
+	
+	public void setColumnWidths(Vector<Integer> columnwidths){
+		this.columnwidths = columnwidths;
+		ContentColumnModel columnModel = (ContentColumnModel) data.getColumnModel();
+		columnModel.setColumnWidths(columnwidths);
 	}
 	
 	

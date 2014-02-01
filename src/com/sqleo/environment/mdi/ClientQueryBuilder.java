@@ -34,6 +34,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Vector;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -357,7 +358,12 @@ public class ClientQueryBuilder extends MDIClient {
 		}
 		
 		private void onLaunch(String subtitle,ClientContent newClient){
+			Vector<Integer> prevColWidths = null;
 			if(client!=null){
+				client.getControl().getView().cacheColumnWidths();
+				if(!client.getControl().getView().getColumnWidths().isEmpty()){
+					prevColWidths = client.getControl().getView().getColumnWidths();
+				}
 				client.dispose();
 			}
 			client = newClient;
@@ -371,6 +377,9 @@ public class ClientQueryBuilder extends MDIClient {
 			previewPanel.setComponentNorth(client.getContentPane().getComponent(1)); 
 			//add content view
 			ContentPane content = (ContentPane)client.getContentPane().getComponent(0);
+			if(prevColWidths!=null){
+				content.getView().setColumnWidths(prevColWidths);
+			}
 			//remove sql status component
 			BorderLayoutPanel pnlSouth = (BorderLayoutPanel)content.getComponent(0);
 			pnlSouth.remove(pnlSouth.getComponent(2));
