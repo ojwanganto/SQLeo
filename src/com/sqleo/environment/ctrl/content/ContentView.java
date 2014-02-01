@@ -31,6 +31,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Types;
+import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -63,14 +64,17 @@ public class ContentView extends JPanel implements ListSelectionListener
 	private ContentModel model;
 	private ContentPopup popup;
 	private ContentPane control;
+	private Vector<Integer> columnwidths;
     
 	public ContentView(final ContentPane control)
 	{
 		super(new GridLayout(1,1));
 	    this.control = control;
+	    columnwidths = new Vector<Integer>();
 	    
 		data = new JTable();
 		data.setModel(model = new ContentModel(getControl().getQueryModel()==null));
+		data.setColumnModel(new ContentColumnModel(columnwidths));
 		data.addMouseListener(popup = new ContentPopup(this));
 		data.addKeyListener(new KeyAdapter()
 		{
@@ -317,10 +321,21 @@ public class ContentView extends JPanel implements ListSelectionListener
 
 	public void reset()
 	{
+		cacheColumnWidths();
 		data.setModel(model = new ContentModel());
 		lines.setRowCount(0);
 		lines.setBlock(1);
 	}
+	
+	public void cacheColumnWidths(){
+		columnwidths.clear();
+		for(int i=0; i<data.getColumnModel().getColumnCount(); i++)
+		{
+			TableColumn tc = data.getColumnModel().getColumn(i);
+			columnwidths.add(tc.getPreferredWidth());
+		}
+	}
+	
 	
 	public Object getCellValue()
 	{

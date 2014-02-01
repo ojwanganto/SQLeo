@@ -83,7 +83,7 @@ public class TextView extends BorderLayoutPanel
 			new LinePainter(editor,DEFAULT_CURRENT_LINE_HIGHLIGHT_COLOR);
 			// add line number view 
 			lineNumberView = new TextLineNumber(editor);
-			lineNumberView.setCurrentLineForeground(Color.orange); 
+			lineNumberView.setCurrentLineForeground(Color.blue); 
 			// add suggestions for auto complete
 			if (Preferences.isAutoCompleteEnabled()) {
 				suggestions = new SuggestionsView(editor, doc instanceof SQLStyledDocument);
