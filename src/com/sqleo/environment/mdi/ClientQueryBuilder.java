@@ -362,7 +362,7 @@ public class ClientQueryBuilder extends MDIClient {
 			if(client!=null){
 				client.getControl().getView().cacheColumnWidths();
 				if(!client.getControl().getView().getColumnWidths().isEmpty()){
-					prevColWidths = client.getControl().getView().getColumnWidths();
+					prevColWidths = new Vector<Integer>(client.getControl().getView().getColumnWidths());
 				}
 				client.dispose();
 			}

@@ -328,13 +328,15 @@ public class ContentView extends JPanel implements ListSelectionListener
 	}
 	
 	public void cacheColumnWidths(){
-		columnwidths.clear();
-		for(int i=0; i<data.getColumnModel().getColumnCount(); i++)
-		{
-			TableColumn tc = data.getColumnModel().getColumn(i);
-			columnwidths.add(tc.getPreferredWidth());
+		if(!getControl().isBusy()){
+			columnwidths.clear();
+			for(int i=0; i<data.getColumnModel().getColumnCount(); i++)
+			{
+				TableColumn tc = data.getColumnModel().getColumn(i);
+				columnwidths.add(tc.getPreferredWidth());
+			}
+			setColumnWidths(columnwidths);
 		}
-		setColumnWidths(columnwidths);
 	}
 	
 	public Vector<Integer> getColumnWidths(){
