@@ -18,7 +18,7 @@ To run SQLeo Visual Query Builder, launch:
 
   java -jar SQLeoVQB.jar
 
-or launch
+or rename sqleo-start.txt to:
 
   sqleo-start.bat 
   sqleo-start.sh
@@ -32,6 +32,23 @@ These instructions assume that the 1.6 version of the java
 command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
+
+SQLeoVQB.2014.02.rc1.zip: 2014-02-04
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.02/
+
+	176 	editor : add line number view and line highlighter
+	171 	export forget column alias in header
+	169 	Add CANCEL to "Do you want to save query to a file ?" yes/no
+	168 	remove .bat extensions in zip to be able to send it to gmail users
+	165 	export csv: propose option for "no text" if null
+	162 	export csv: enclose text by ""
+	107 	Content window: column size should be preserved during 
+			execute or data refresh (F5)
+	28 	trim space during export doen't trim
+
 
 SQLeoVQB.2014.01.rc1.zip: 2014-01-11
 
