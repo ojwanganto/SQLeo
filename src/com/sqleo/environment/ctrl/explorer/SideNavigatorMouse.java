@@ -48,6 +48,7 @@ public class SideNavigatorMouse extends MouseAdapter
 		
 		popup = new JPopupMenu();
 		popup.add(new ActionConnect());
+		popup.add(new ActionReconnect());
 		popup.add(new ActionNewDriver());
 		popup.add(new ActionNewDatasource());
 		popup.addSeparator();
@@ -70,6 +71,7 @@ public class SideNavigatorMouse extends MouseAdapter
 			popup.getComponent(3).setVisible(false);
 			popup.getComponent(4).setVisible(false);
 			popup.getComponent(5).setVisible(false);
+			popup.getComponent(6).setVisible(false);
 					
 			for(int i=0; i<popup.getComponentCount(); i++)
 				popup.getComponent(i).setEnabled(false);		
@@ -84,37 +86,39 @@ public class SideNavigatorMouse extends MouseAdapter
 					
 					popup.getComponent(0).setVisible(true);
 					popup.getComponent(0).setEnabled(true);
+					popup.getComponent(1).setVisible(true);
+					popup.getComponent(1).setEnabled(true);
 					
 					ConnectionHandler ch = uoDs.isConnected() ? ConnectionAssistant.getHandler(uoDs.getKey()) : null;
 					if(uoDs.schema!=null || (ch!=null && ((Boolean)ch.getObject("$supportsSchema")).booleanValue()))
 					{
-						popup.getComponent(3).setVisible(true);
-						popup.getComponent(5).setVisible(true);
-						popup.getComponent(5).setEnabled(uoDs.schema!=null);
+						popup.getComponent(4).setVisible(true);
+						popup.getComponent(6).setVisible(true);
+						popup.getComponent(6).setEnabled(uoDs.schema!=null);
 					}
 				}
 				else if(navigator.getSelectionPath().getPathCount() == 4)
 				{
 					if(navigator.getSelectionNode().getAllowsChildren())
 					{
-						popup.getComponent(4).setVisible(true);
-						popup.getComponent(4).setEnabled(true);
+						popup.getComponent(5).setVisible(true);
+						popup.getComponent(5).setEnabled(true);
 					}
 				}
 				else
 				{
-					popup.getComponent(2).setVisible(navigator.getSelectionPath().getPathCount() == 2);
-					popup.getComponent(2).setEnabled(navigator.getSelectionPath().getPathCount() == 2);
+					popup.getComponent(3).setVisible(navigator.getSelectionPath().getPathCount() == 2);
+					popup.getComponent(3).setEnabled(navigator.getSelectionPath().getPathCount() == 2);
 				}
 				
-				popup.getComponent(7).setEnabled(navigator.getSelectionPath().getPathCount() == 2 || navigator.getSelectionPath().getPathCount() == 3);
 				popup.getComponent(8).setEnabled(navigator.getSelectionPath().getPathCount() == 2 || navigator.getSelectionPath().getPathCount() == 3);
-				popup.getComponent(10).setEnabled(navigator.getSelectionPath().getPathCount() == 2 || navigator.getSelectionPath().getPathCount() == 3);
+				popup.getComponent(9).setEnabled(navigator.getSelectionPath().getPathCount() == 2 || navigator.getSelectionPath().getPathCount() == 3);
+				popup.getComponent(11).setEnabled(navigator.getSelectionPath().getPathCount() == 2 || navigator.getSelectionPath().getPathCount() == 3);
 			}
 			else
 			{
-				popup.getComponent(1).setEnabled(true);				
-				popup.getComponent(1).setVisible(true);				
+				popup.getComponent(2).setEnabled(true);				
+				popup.getComponent(2).setVisible(true);				
 			}		
 		
 			if(navigator.isSelectionEmpty() || navigator.getSelectionNode().getAllowsChildren())
@@ -252,6 +256,42 @@ public class SideNavigatorMouse extends MouseAdapter
 			{
 				DialogDatasource dlg = new DialogDatasource(navigator,DialogDatasource.ITEM_MODIFY);
 				dlg.setVisible(true);
+			}
+		}
+	}
+	
+	private class ActionReconnect extends AbstractAction
+	{
+		ActionReconnect()
+		{
+			putValue(NAME,"reconnect");
+		}
+		
+		public void actionPerformed(ActionEvent ae)
+		{
+			UoDatasource uoDs = (UoDatasource)navigator.getSelectionNode().getUserObject();
+			try
+			{
+				if(uoDs.isConnected()){
+					uoDs.disconnect();
+				}
+				uoDs.connect();
+			
+			}
+			catch(Exception e)
+			{
+				Application.println(e,true);
+			}
+			finally
+			{
+				final boolean connected = uoDs.isConnected();
+				if(connected){
+					Application.window.connectionOpened(uoDs.getKey());
+				}else{
+					Application.window.connectionClosed(uoDs.getKey());
+				}
+				navigator.reloadSelection();
+				((JCheckBoxMenuItem)popup.getComponent(0)).setSelected(connected);
 			}
 		}
 	}
