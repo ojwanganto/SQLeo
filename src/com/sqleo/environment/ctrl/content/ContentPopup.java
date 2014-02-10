@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.sql.Date;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -42,6 +41,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
 
 import com.sqleo.environment.Application;
+import com.sqleo.environment.io.FileHelper;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.SQLFormatter;
 
@@ -60,6 +60,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		add(new ActionCopySpecial());
 		addSeparator();
 		add(new ActionCopy());
+		add(new ActionCopyAndOpen());
 		add(new ActionPaste());
 		addSeparator();
 		add(new ActionSetNull());
@@ -67,17 +68,17 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		add(new ActionResetOldValue());
 		add(new ActionTrim());
 				
-		addSeparator(); // 9
+		addSeparator(); // 10
 		add(new ActionClone());
 		JMenuItem iRi = add(view.getControl().getActionMap().get("record-insert"));
 		JMenuItem iRd = add(view.getControl().getActionMap().get("record-delete"));
-		addSeparator(); // 13
+		addSeparator(); // 14
 		add("save record").setEnabled(false);
 		
-		addSeparator(); // 15
+		addSeparator(); // 16
 		add(new ActionJump());
 		
-		addSeparator(); // 17
+		addSeparator(); // 18
 		add(new ActionSortAsc());
 		add(new ActionSortDesc());
 		
@@ -149,21 +150,21 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 			view.setSelectedCell(row,col);
 			
 			// record
-			getComponent(9).setVisible(bAllCols);
 			getComponent(10).setVisible(bAllCols);
-			getComponent(11).setVisible(bAllCols && !view.isReadOnly());
+			getComponent(11).setVisible(bAllCols);
 			getComponent(12).setVisible(bAllCols && !view.isReadOnly());
-			getComponent(13).setVisible(bAllCols);
+			getComponent(13).setVisible(bAllCols && !view.isReadOnly());
 			getComponent(14).setVisible(bAllCols);
+			getComponent(15).setVisible(bAllCols);
 			
 			// jump
-			getComponent(15).setVisible(!bAllCols && !bAllRows);
 			getComponent(16).setVisible(!bAllCols && !bAllRows);
+			getComponent(17).setVisible(!bAllCols && !bAllRows);
 			
 			// sort
-			getComponent(17).setVisible(bAllRows);
 			getComponent(18).setVisible(bAllRows);
 			getComponent(19).setVisible(bAllRows);
+			getComponent(20).setVisible(bAllRows);
 			
 			show((JComponent)me.getSource(),me.getX(),me.getY());
 		}
@@ -229,10 +230,29 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 			return SQLFormatter.toJdbcValue(value,ContentPopup.this.view.getColumnType(col));
 		}
 	}
+	
+	private class ActionCopyAndOpen extends ActionCopy
+	{
+		private static final String SQ_LEO_TEMP_TXT = "SQLeo_temp.txt";
+
+		ActionCopyAndOpen(){super("copy and open in editor");}
+		
+		public void actionPerformed(ActionEvent ae)
+		{
+			super.actionPerformed(ae);
+			if(valueCopied!=null){
+				FileHelper.writeTextToFile(valueCopied,SQ_LEO_TEMP_TXT,false,true);
+			}
+		}
+	}
 
 	private class ActionCopy extends AbstractAction
 	{
 		ActionCopy(){super("copy");}
+		
+		ActionCopy(String title){super(title);}
+		
+		protected String valueCopied;
 		
 		public void actionPerformed(ActionEvent ae)
 		{
@@ -261,7 +281,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 			if(value == null) return;
 			
 			Clipboard cb = ContentPopup.this.getToolkit().getSystemClipboard();
-			StringSelection contents = new StringSelection(value.toString());
+			StringSelection contents = new StringSelection(valueCopied = value.toString());
 			cb.setContents(contents, Application.defaultClipboardOwner);
 		}
 	}

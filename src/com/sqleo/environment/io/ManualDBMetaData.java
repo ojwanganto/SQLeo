@@ -165,11 +165,6 @@ public class ManualDBMetaData {
 		}
 	}
 	public static boolean saveDefinitionToFile(CSVRelationDefinition rdef,String fkDefFileName){
-		BufferedWriter out = null;
-		boolean saveSuccess = false;
-		try {
-			out = new BufferedWriter(new FileWriter(fkDefFileName,true));
-			
 			String[] columns = new String[10];
 			columns[IDX_FKT_SCHEMA] = rdef.getFktSchema();
 			columns[IDX_FKT_NAME] = rdef.getFktName();
@@ -195,26 +190,8 @@ public class ManualDBMetaData {
 				builder.append(columns[i]);
 			}
 			builder.append("\n");
-			out.write(builder.toString());
-			saveSuccess = true;
-		} catch (FileNotFoundException e) {
-			saveSuccess = false;
-			Application.println(e, true);
-			e.printStackTrace();
-		} catch (IOException e) {
-			saveSuccess = false;
-			Application.println(e, true);
-			e.printStackTrace();
-		}finally{
-			try {
-				if(out!=null){
-					out.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}			
-		}
-		return saveSuccess;
+			return FileHelper.writeTextToFile(builder.toString(), fkDefFileName, true, false);
+
 	}
 	
 }

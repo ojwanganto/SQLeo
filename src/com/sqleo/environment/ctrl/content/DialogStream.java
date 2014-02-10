@@ -31,6 +31,7 @@ import com.sqleo.common.gui.AbstractMaskChooser;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.ContentPane;
+import com.sqleo.environment.io.FileHelper;
 import com.sqleo.environment.mdi.DefaultMaskChooser;
 
 
@@ -173,11 +174,9 @@ public class DialogStream extends AbstractDialogWizard
 			
 			if(DialogStream.this.mkp.finished()){
 				if(cbxOpen.isSelected()) {
-					try {  
-					 	final String fileNameLbl = DialogStream.this.mkp.lblFile.getText();
-					 	final String fileName = fileNameLbl.substring(6);
-				     		Desktop.getDesktop().open(new File(fileName));
-					} catch (IOException e) {e.printStackTrace();}
+					final String fileNameLbl = DialogStream.this.mkp.lblFile.getText();
+					final String fileName = fileNameLbl.substring(6);
+				    FileHelper.openFile(fileName);
 				}
 				DialogStream.this.dispose();
 			}
