@@ -27,6 +27,7 @@ import java.awt.event.ItemListener;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -273,9 +274,13 @@ public class MaskExport extends AbstractMaskPerform
 		{
 			try
 			{
-				stream = new PrintStream(new FileOutputStream(MaskExport.this.lblFile.getText().substring(6)));
+				stream = new PrintStream(new FileOutputStream(MaskExport.this.lblFile.getText().substring(6)),true,"UTF-8");
 			}
 			catch (FileNotFoundException e)
+			{
+				Application.println(e,true);
+			}
+			catch (UnsupportedEncodingException e)
 			{
 				Application.println(e,true);
 			}
