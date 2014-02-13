@@ -1,7 +1,8 @@
 package com.sqleo.environment.io;
 
 import java.awt.Desktop;
-import java.io.BufferedWriter;
+import java.io.PrintStream;
+import java.io.FileOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -14,11 +15,13 @@ import com.sqleo.environment.Application;
 public class FileHelper {
 
 	public static boolean writeTextToFile(String text,String fileName,boolean append, boolean openFile){
-		BufferedWriter out = null;
+		PrintStream out = null;
 		boolean saveSuccess = false;
 		try {
-			out = new BufferedWriter(new FileWriter(fileName,append));
-			out.write(text);
+			// Ticket #45 this use default encoding, can be modified when launching app by
+			// java -Dfile.encoding=UTF-8 -jar SQLeoVQB.jar 
+			out = new PrintStream(new FileOutputStream(fileName));
+			out.print(text);
 			saveSuccess = true;
 		} catch (FileNotFoundException e) {
 			saveSuccess = false;
@@ -29,14 +32,9 @@ public class FileHelper {
 			Application.println(e, true);
 			e.printStackTrace();
 		}finally{
-			try {
-				if(out!=null){
-					out.close();
-				}
-			} catch (IOException e) {
-				saveSuccess = false;
-				e.printStackTrace();
-			}			
+			if(out!=null){
+				out.close();
+			}
 		}
 		if(saveSuccess && openFile){
 			openFile(fileName);
