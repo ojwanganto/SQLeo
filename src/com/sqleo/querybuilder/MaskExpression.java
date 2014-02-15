@@ -61,29 +61,31 @@ public class MaskExpression extends BaseMask
 
 	protected boolean onConfirm()
 	{
-		if(builder.browser.getQueryItem() instanceof BrowserItems.DiagramQueryTreeItem
-		&&(alias.getText() == null || alias.getText().trim().length() == 0))
+		if(builder.browser.getQueryItem() instanceof BrowserItems.DiagramQueryTreeItem)
 		{
-			String message = "Please, set a valid alias.";
-			
-			if(SwingUtilities.getWindowAncestor(builder) instanceof Frame)
-				JOptionPane.showMessageDialog((Frame)SwingUtilities.getWindowAncestor(builder),message,"SQLeonardo",JOptionPane.WARNING_MESSAGE);
-			else if(SwingUtilities.getWindowAncestor(builder) instanceof Dialog)
-				JOptionPane.showMessageDialog((Dialog)SwingUtilities.getWindowAncestor(builder),message,"SQLeonardo",JOptionPane.WARNING_MESSAGE);
-						
-			return false;
-		}
+			if(alias.getText() == null || alias.getText().trim().length() == 0)
+			{
+				String message = "Please, set a valid alias.";
+				
+				if(SwingUtilities.getWindowAncestor(builder) instanceof Frame)
+					JOptionPane.showMessageDialog((Frame)SwingUtilities.getWindowAncestor(builder),message,"SQLeonardo",JOptionPane.WARNING_MESSAGE);
+				else if(SwingUtilities.getWindowAncestor(builder) instanceof Dialog)
+					JOptionPane.showMessageDialog((Dialog)SwingUtilities.getWindowAncestor(builder),message,"SQLeonardo",JOptionPane.WARNING_MESSAGE);
+							
+				return false;
+			}
 		
-		final String fieldName, text;
-		if(querytoken.getAlias()!=null){
-			text = alias.getText();
-			fieldName = querytoken.getAlias();
-		}else{
-			text = value.getText();
-			fieldName = querytoken.getValue();
+			final String fieldName, text;
+			if(querytoken.getAlias()!=null){
+				text = alias.getText();
+				fieldName = querytoken.getAlias();
+			}else{
+				text = value.getText();
+				fieldName = querytoken.getValue();
+			}
+			BrowserItems.DiagramQueryTreeItem dqti = (BrowserItems.DiagramQueryTreeItem)builder.browser.getQueryItem();
+			reloadParentWithAlias(dqti,fieldName, text);
 		}
-		BrowserItems.DiagramQueryTreeItem dqti = (BrowserItems.DiagramQueryTreeItem)builder.browser.getQueryItem();
-		reloadParentWithAlias(dqti,fieldName, text);
 		
 		querytoken.setValue(value.getText());
 		querytoken.setAlias(alias.getText());
