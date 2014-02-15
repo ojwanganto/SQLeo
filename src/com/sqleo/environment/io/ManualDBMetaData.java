@@ -190,7 +190,7 @@ public class ManualDBMetaData {
 				builder.append(columns[i]);
 			}
 			builder.append("\n");
-			return FileHelper.writeTextToFile(builder.toString(), fkDefFileName, true, false);
+			return FileHelper.writeTextToFile(builder.toString(), new File(fkDefFileName), true, false);
 
 	}
 	

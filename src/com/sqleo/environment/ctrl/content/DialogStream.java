@@ -176,7 +176,7 @@ public class DialogStream extends AbstractDialogWizard
 				if(cbxOpen.isSelected()) {
 					final String fileNameLbl = DialogStream.this.mkp.lblFile.getText();
 					final String fileName = fileNameLbl.substring(6);
-				    FileHelper.openFile(fileName);
+				    FileHelper.openFile(new File(fileName));
 				}
 				DialogStream.this.dispose();
 			}
