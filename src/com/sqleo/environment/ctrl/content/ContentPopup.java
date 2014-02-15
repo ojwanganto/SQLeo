@@ -243,11 +243,11 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 			super.actionPerformed(ae);
 			if(valueCopied!=null){
 				final String tempDir = System.getProperty("java.io.tmpdir");
-				File sqleoTempFile;
+				final File sqleoTempFile;
 				if(tempDir!=null){
 					sqleoTempFile = new File(tempDir,SQ_LEO_TEMP_TXT);
 				}else{
-					sqleoTempFile = new File(tempDir,SQ_LEO_TEMP_TXT);
+					sqleoTempFile = new File(SQ_LEO_TEMP_TXT);
 				}
 				FileHelper.writeTextToFile(valueCopied,sqleoTempFile,false,true);
 			}
