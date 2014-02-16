@@ -24,9 +24,11 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -81,12 +83,14 @@ public class MaskImport extends AbstractMaskPerform
 	void next()
 	{
 		String line = iChoice.nextln();
-		
-		Object[] rowdata = new Object[view.getColumnCount()];
-		iChoice.flush(line,rowdata);
-		
-		view.addRow(rowdata,true);
-		progress.setValue(progress.getValue() + line.length() + 1);
+		if(line!=null){
+			Object[] rowdata = new Object[view.getColumnCount()];
+			iChoice.flush(line,rowdata);
+			view.addRow(rowdata,true);
+			progress.setValue(progress.getValue() + line.length() + 1);
+		}else{
+			progress.setValue(progress.getMaximum());
+		}
 	}
 	
 	boolean finished()
@@ -111,6 +115,8 @@ public class MaskImport extends AbstractMaskPerform
 	private abstract class AbstractChoice extends BorderLayoutPanel
 	{
 		private FileInputStream stream;
+		private BufferedReader bufferedReader;
+		
 		
 		JRadioButton rbAll;
 		JRadioButton rbUser;
@@ -161,6 +167,8 @@ public class MaskImport extends AbstractMaskPerform
 			try
 			{
 				stream = new FileInputStream(MaskImport.this.lblFile.getText().substring(6));
+				// java -Dfile.encoding=UTF-8 -jar SQLeoVQB.jar 
+		        bufferedReader = new BufferedReader(new InputStreamReader(stream));
 				return stream.available();
 			}
 			catch (FileNotFoundException e)
@@ -180,6 +188,7 @@ public class MaskImport extends AbstractMaskPerform
 			try
 			{
 				stream.close();
+				bufferedReader.close();
 			}
 			catch (IOException e)
 			{
@@ -193,13 +202,15 @@ public class MaskImport extends AbstractMaskPerform
 		{
 			try
 			{
-				String line = new String("");
-				
-				int nChar;
-				while((nChar=stream.read())!=-1 && (char)nChar!='\n')
-					line = line + (char)nChar;
-				
-				return line;
+// code before, directly reads bytes as characters
+//				String line = new String("");
+//				int nChar;
+//				while((nChar=stream.read())!=-1 && (char)nChar!='\n')
+//					line = line + (char)nChar;
+//				return line;
+
+//now buffered reader reads a line with predefined encoding defined when reader is created				
+				return bufferedReader.readLine();
 			}
 			catch (IOException e)
 			{
@@ -273,7 +284,9 @@ public class MaskImport extends AbstractMaskPerform
 			if(cbxHeader.isSelected())
 			{
 				String line = nextln();
-				bytes = bytes - (line.length() + 1);				
+				if(line!=null){
+					bytes = bytes - (line.length() + 1);
+				}
 			}
 			
 			return bytes;
