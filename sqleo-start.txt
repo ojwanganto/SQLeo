@@ -6,6 +6,9 @@
 
 java -jar SQLeoVQB.jar
 
+:: Manage export/import files in UTF-8 with java encoding
+:: java -Dfile.encoding=UTF-8 -jar SQLeoVQB.jar
+
 :: Other available look and feels from jdk
 
 :: java -Dcom.sqleo.laf.class=com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel -jar SQLeoVQB.jar
