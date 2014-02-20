@@ -62,13 +62,13 @@ public class QueryStyledDocument extends DefaultStyledDocument implements _Reser
 	public void insertString(int offset, String str, AttributeSet a) throws BadLocationException
 	{
 		super.insertString(offset,str,a);
-		this.onChanged(offset, str.length());
+// ticket #184	this.onChanged(offset, str.length());
 	}
 		
 	public void remove(int offset, int length) throws BadLocationException
 	{
 		super.remove(offset,length);
-		this.onChanged(offset,0);
+// ticket #184	this.onChanged(offset,0);
 	}
 		
 	protected void onChanged(int offset, int length) throws BadLocationException
