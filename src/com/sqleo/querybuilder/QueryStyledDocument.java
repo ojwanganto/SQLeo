@@ -59,19 +59,29 @@ public class QueryStyledDocument extends DefaultStyledDocument implements _Reser
 		insertString(offset, str, defaultAttributSet);
 	}
 	
+	public void insertStringAndNoSyntaxHighlight(int offset, String str) throws BadLocationException
+	{
+		super.insertString(offset, str, defaultAttributSet);
+	}
+	
 	public void insertString(int offset, String str, AttributeSet a) throws BadLocationException
 	{
 		super.insertString(offset,str,a);
-// ticket #184	this.onChanged(offset, str.length());
+    	this.onChanged(offset, str.length());
 	}
 		
 	public void remove(int offset, int length) throws BadLocationException
 	{
 		super.remove(offset,length);
-// ticket #184	this.onChanged(offset,0);
+		this.onChanged(offset,0);
+	}
+	
+	public void removeAndNoSyntaxHighlight(int offset, int length) throws BadLocationException
+	{
+		super.remove(offset,length);
 	}
 		
-	protected void onChanged(int offset, int length) throws BadLocationException
+	public void onChanged(int offset, int length) throws BadLocationException
 	{
 		int contentLength = this.getLength();
 		String content = this.getText(0,contentLength);

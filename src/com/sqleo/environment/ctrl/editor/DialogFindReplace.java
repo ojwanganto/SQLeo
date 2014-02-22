@@ -214,7 +214,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 			if(highlighter.getHighlights().length < 1) return false;
 			
 			Highlight tag = highlighter.getHighlights()[0];
-			replaceHighlight(highlighter, tag);
+			replaceHighlight(highlighter, tag, true);
 		}
 		catch (BadLocationException e)
 		{
@@ -223,14 +223,24 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		return true;
 	}
 
-	private void replaceHighlight(Highlighter highlighter, Highlight tag)
+	private void replaceHighlight(Highlighter highlighter, Highlight tag, boolean highlightSyntax)
 			throws BadLocationException {
 		
 		highlighter.removeHighlight(tag);
 		
 		QueryStyledDocument document = (QueryStyledDocument)view.getDocument();
-		document.remove(tag.getStartOffset(),tag.getEndOffset()-tag.getStartOffset());
-		if(txtReplace.getText().length() > 0) document.insertString(tag.getStartOffset(),txtReplace.getText());
+		if(highlightSyntax){
+			document.remove(tag.getStartOffset(),tag.getEndOffset()-tag.getStartOffset());
+		}else{
+			document.removeAndNoSyntaxHighlight(tag.getStartOffset(),tag.getEndOffset()-tag.getStartOffset());
+		}
+		if(txtReplace.getText().length() > 0) {
+			if(highlightSyntax){
+				document.insertString(tag.getStartOffset(),txtReplace.getText());
+			}else{
+				document.insertStringAndNoSyntaxHighlight(tag.getStartOffset(),txtReplace.getText());
+			}
+		}
 	}
 
 	
@@ -240,12 +250,23 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		{
 			findAll();
 			int found = view.getHighlighter().getHighlights().length;
+			int idx =0,first = 0,last = 0;
 			for(Highlight tag : view.getHighlighter().getHighlights()){
-				replaceHighlight(view.getHighlighter(), tag);
+				if(idx == 0){
+					first = tag.getStartOffset();
+				}
+				if(idx == found-1){
+					last = tag.getStartOffset() + txtReplace.getText().length();
+				}
+				
+				replaceHighlight(view.getHighlighter(), tag, false);
+			    idx++;
 			}
 			if(found == 0){
 				Application.alert("could not find: " + txtFind.getText());
 			}else {
+				QueryStyledDocument document = (QueryStyledDocument)view.getDocument();
+				document.onChanged(first, last);
 				Application.alert(found+ " occurences were replaced");
 			}
 		}
