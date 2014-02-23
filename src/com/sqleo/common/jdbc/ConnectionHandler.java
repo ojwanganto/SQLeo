@@ -78,6 +78,9 @@ public class ConnectionHandler
 		
 		try
 		{
+			// Ticket #24: for H2 supportSchema is false but getSchemas returns Schemas
+			// Ticket #186: for MySQL supportSchema is false,  getSchemas returns nothing, have to use getCatalogs()
+
 			if(this.supportsSchema())
 			{
 				ResultSet rs = connection.getMetaData().getSchemas();
@@ -87,6 +90,14 @@ public class ConnectionHandler
 					if(!schemas.contains(name)) schemas.add(name);
 				}
 				rs.close();
+// Ticket #186:			} else {
+//				ResultSet rs = connection.getMetaData().getCatalogs();
+//				while(rs.next())
+//				{
+//					String name = rs.getString(1).trim();
+//					if(!schemas.contains(name)) schemas.add(name);
+//				}
+//				rs.close();
 			}
 		}
 		catch(Exception e)
