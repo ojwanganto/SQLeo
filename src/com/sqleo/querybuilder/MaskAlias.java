@@ -109,13 +109,15 @@ public class MaskAlias extends BaseMask
 				
 				BrowserItems.DiagramQueryTreeItem dqti = (BrowserItems.DiagramQueryTreeItem)builder.browser.getQueryItem();
 				final String fieldName = querytoken.getAlias()!=null ? querytoken.getAlias() : querytoken.getName();
-				DiagramField field = dqti.getDiagramObject().getField(fieldName);
-				if(field!=null){
-					field.getLabelComponent().setText(value.getText());
-					field.getQueryToken().setName(value.getText());
-					field.setName(value.getText());
-					dqti.getDiagramObject().pack();
-					builder.browser.reload(dqti.getParent().getParent().getChildAt(0));
+				if(dqti.getDiagramObject()!=null){
+					final DiagramField field = dqti.getDiagramObject().getField(fieldName);
+					if(field!=null){
+						field.getLabelComponent().setText(value.getText());
+						field.getQueryToken().setName(value.getText());
+						field.setName(value.getText());
+						dqti.getDiagramObject().pack();
+						builder.browser.reload(dqti.getParent().getParent().getChildAt(0));
+					}
 				}
 			}
 					

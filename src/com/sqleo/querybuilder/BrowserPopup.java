@@ -263,8 +263,10 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 				if(qti instanceof BrowserItems.DiagramQueryTreeItem)
 				{
 					DiagramQuery entityUp = ((BrowserItems.DiagramQueryTreeItem)qti).getDiagramObject();
-					entityUp.addField(token.getAlias());
-					entityUp.pack();
+					if(entityUp!=null){
+						entityUp.addField(token.getAlias());
+						entityUp.pack();
+					}
 				}
 				
 				BrowserPopup.this.builder.browser.addSelectList(token);
@@ -440,8 +442,10 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 				if(qti instanceof BrowserItems.DiagramQueryTreeItem)
 				{
 					DiagramQuery entityUp = ((BrowserItems.DiagramQueryTreeItem)qti).getDiagramObject();
-					entityUp.removeField(((QueryTokens.DefaultExpression)token).getAlias());
-					entityUp.pack();
+					if(entityUp!=null){
+						entityUp.removeField(((QueryTokens.DefaultExpression)token).getAlias());
+						entityUp.pack();
+					}
 				}
 				
 			}

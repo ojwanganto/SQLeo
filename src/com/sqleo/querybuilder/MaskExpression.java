@@ -94,17 +94,19 @@ public class MaskExpression extends BaseMask
 
 	private void reloadParentWithAlias(final BrowserItems.DiagramQueryTreeItem dqti,final String fieldName, final String text) {
 		if(dqti!=null){
-			DiagramField field = dqti.getDiagramObject().getField(fieldName);
-			if(field!=null){
-				field.getLabelComponent().setText(text);
-				field.getQueryToken().setName(text);
-				field.setName(text);
-				dqti.getDiagramObject().pack();
-			}
-			final TreeNode parent = dqti.getParent().getParent();
-			builder.browser.reload(parent.getChildAt(0));
-			if(parent instanceof BrowserItems.DiagramQueryTreeItem){
-				reloadParentWithAlias((DiagramQueryTreeItem) parent, fieldName, text);
+			if(dqti.getDiagramObject()!=null){
+				DiagramField field = dqti.getDiagramObject().getField(fieldName);
+				if(field!=null){
+					field.getLabelComponent().setText(text);
+					field.getQueryToken().setName(text);
+					field.setName(text);
+					dqti.getDiagramObject().pack();
+				}
+				final TreeNode parent = dqti.getParent().getParent();
+				builder.browser.reload(parent.getChildAt(0));
+				if(parent instanceof BrowserItems.DiagramQueryTreeItem){
+					reloadParentWithAlias((DiagramQueryTreeItem) parent, fieldName, text);
+				}
 			}
 		}
 	}
