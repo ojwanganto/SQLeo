@@ -273,8 +273,10 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 					token.setAlias("EXPR_" + (++expr_counter));
 					
 					DiagramQuery entityUp = ((BrowserItems.DiagramQueryTreeItem)qti).getDiagramObject();
-					entityUp.addField(token.getAlias());
-					entityUp.pack();
+					if(entityUp!=null){
+						entityUp.addField(token.getAlias());
+						entityUp.pack();
+					}
 				}
 				
 				getOwner().builder.browser.addSelectList(token);
