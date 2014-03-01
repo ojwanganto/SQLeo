@@ -33,6 +33,27 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+
+SQLeoVQB.2014.03.rc1.zip: 2014-03-01
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.03/
+
+	187 	Sql scripts: add queries on MySQL information_schema
+	184 	designer syntax: find / replace is slow and consume too much memory
+	182 	Import: is wrong with UTF-8 files
+	180 	Add reconnect option in metadataexplorer
+	179 	change donation currency $ --> €
+	167 	Data grid: open cell in text editor
+	153 	query builder: error during add expression on standard table
+	45 	export table data to file transform non ANSI chars to ?
+
+	For Export/import in UTF-8 use command line
+		java -Dfile.encoding=UTF-8 -jar SQLeoVQB.jar
+	as described in sqleo-start.txt
+
+
 SQLeoVQB.2014.02.rc1.zip: 2014-02-04
 
   Thanks to Anudeep Gade for his contribution to this release
