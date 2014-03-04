@@ -500,6 +500,21 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 			
 			relation = diagram.getRelation(token);
 			if(relation!=null) relation.setQueryToken(token);
+
+		} 
+
+		if (fieldP == null) {
+			// ticket # 150 relation is lost
+			JOptionPane.showMessageDialog(this, "Field " + token.getPrimary().getName() +" Not found in table" + token.getPrimary().getTable(), "Join" , JOptionPane.WARNING_MESSAGE);			
+			// TO DO: see how to add missing field in red color
+			// DiagramField field = entityP.addField(pos,column);
+		} 
+
+		if (fieldF == null) {
+			// ticket # 150 relation is lost
+			JOptionPane.showMessageDialog(this, "Field " + token.getForeign().getName() + " Not found in table" + token.getForeign().getTable(), "Join" , JOptionPane.WARNING_MESSAGE);			
+			// TO DO: see how to add missing field in red color
+			// DiagramField field = entityP.addField(pos,column);
 		}
 		
 		return relation;
