@@ -38,6 +38,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.Highlight;
+import javax.swing.text.StyledDocument;
 
 import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.gui.TextView;
@@ -60,6 +61,8 @@ public class DialogFindReplace extends JDialog implements ActionListener
 	private JTextField txtReplace;	
 	
 	private TextView view;
+	
+	private boolean disableReplace = false;
 	
 	public DialogFindReplace(TextView view)
 	{
@@ -134,6 +137,14 @@ public class DialogFindReplace extends JDialog implements ActionListener
         gbc.gridwidth = GridBagConstraints.REMAINDER;
 		getContentPane().add(pnlB,gbc);
 	}
+	
+	public void disableReplace(){
+		btnReplace.setEnabled(false);
+		btnReplaceAll.setEnabled(false);
+		txtReplace.setEnabled(false);
+		disableReplace = true;
+		setTitle("find");
+	}
 
 	private int find(int from)
 	{
@@ -141,7 +152,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		
 		try
 		{
-			QueryStyledDocument document = (QueryStyledDocument)view.getDocument();
+			StyledDocument document = (StyledDocument)view.getDocument();
 			String text = document.getText(document.getStartPosition().getOffset(),document.getEndPosition().getOffset());
 			String find = txtFind.getText();
 			
@@ -280,15 +291,24 @@ public class DialogFindReplace extends JDialog implements ActionListener
 	{
 		if(ae.getSource() == btnFind)
 		{
-			btnReplace.setEnabled(findNext(true));
+			boolean findNext = findNext(true);
+			if(!disableReplace){
+				btnReplace.setEnabled(findNext);
+			}
 		}
 		else if(ae.getSource() == btnFindAll)
 		{
-			btnReplace.setEnabled(findAll());
+			boolean findAll = findAll();
+			if(!disableReplace){
+				btnReplace.setEnabled(findAll);
+			}
 		}
 		else if(ae.getSource() == btnReplace)
 		{
-			btnReplace.setEnabled(replaceAndNext());			
+			boolean replaceAndNext = replaceAndNext();
+			if(!disableReplace){
+				btnReplace.setEnabled(replaceAndNext);
+			}
 		}
 		else if(ae.getSource() == btnReplaceAll)
 		{

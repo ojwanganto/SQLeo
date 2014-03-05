@@ -83,6 +83,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	private JTextField txtLimit;
 
 	private DialogFindReplace dlg;
+	private DialogFindReplace dlg2;
 
 	public ClientCommandEditor() {
 		super(DEFAULT_TITLE);
@@ -98,6 +99,9 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 			public void internalFrameDeactivated(InternalFrameEvent e) {
 				if (ClientCommandEditor.this.dlg != null) {
 					ClientCommandEditor.this.dlg.setVisible(false);
+				}
+				if (ClientCommandEditor.this.dlg2 != null) {
+					ClientCommandEditor.this.dlg2.setVisible(false);
 				}
 			}
 			@Override
@@ -174,6 +178,10 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		control.getRequestArea().getViewInputMap().put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK),
 				dialogFindReplaceAction);
+		ActionShowFindReplace dialogFindReplaceAction2 = new ActionShowFindReplace(false);
+		control.getResponseArea().getViewInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK),
+				dialogFindReplaceAction2);
 		toolbar.addSeparator();
 		toolbar.add(control.getActionMap().get("start-task"));
 		toolbar.add(control.getActionMap().get("stop-task"));
@@ -503,20 +511,35 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	}
 
 	private class ActionShowFindReplace extends AbstractAction {
+		final boolean isRequestArea;
 		ActionShowFindReplace() {
 			putValue(SMALL_ICON,
 					Application.resources.getIcon(Application.ICON_FIND));
 			putValue(SHORT_DESCRIPTION, "find/replace...");
 			putValue(NAME, "find/replace...");
+			this.isRequestArea = true;
+		}
+		ActionShowFindReplace(final boolean isRequestArea) {
+			new ActionShowFindReplace();
+			this.isRequestArea = isRequestArea;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent ae) {
-			if (ClientCommandEditor.this.dlg == null) {
-				ClientCommandEditor.this.dlg = new DialogFindReplace(
-						getControl().getRequestArea());
+			if(this.isRequestArea){
+				if (ClientCommandEditor.this.dlg == null) {
+					ClientCommandEditor.this.dlg = new DialogFindReplace(
+							getControl().getRequestArea());
+				}
+				ClientCommandEditor.this.dlg.setVisible(true);
+			}else{
+				if (ClientCommandEditor.this.dlg2 == null) {
+					ClientCommandEditor.this.dlg2 = new DialogFindReplace(
+							getControl().getResponseArea());
+					ClientCommandEditor.this.dlg2.disableReplace();
+				}
+				ClientCommandEditor.this.dlg2.setVisible(true);
 			}
-			ClientCommandEditor.this.dlg.setVisible(true);
 		}
 	}
 
