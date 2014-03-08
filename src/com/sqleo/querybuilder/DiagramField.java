@@ -21,6 +21,7 @@
 package com.sqleo.querybuilder;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.dnd.DropTarget;
@@ -131,6 +132,10 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 	public void setToolTipText(String text)
 	{
 		getLabelComponent().setToolTipText(text);
+	}
+	
+	public void setFontColor(final Color color){
+		getLabelComponent().setForeground(color);
 	}
 	
 	QueryTokens.Column getQueryToken()

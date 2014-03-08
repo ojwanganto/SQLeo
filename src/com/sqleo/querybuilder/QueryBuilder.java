@@ -24,8 +24,7 @@
 
 package com.sqleo.querybuilder;
 
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.Color;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -47,16 +46,15 @@ import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.mdi.ClientQueryBuilder;
 import com.sqleo.querybuilder.BrowserItems.DefaultTreeItem;
+import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Column;
 import com.sqleo.querybuilder.syntax.QueryTokens.Condition;
 import com.sqleo.querybuilder.syntax.QueryTokens.DefaultExpression;
-import com.sqleo.querybuilder.syntax.QueryTokens.Table;
 import com.sqleo.querybuilder.syntax.QueryTokens._Expression;
 import com.sqleo.querybuilder.syntax.SQLFormatter;
 import com.sqleo.querybuilder.syntax.SQLParser;
 import com.sqleo.querybuilder.syntax.SubQuery;
-import com.sqleo.querybuilder.syntax.DerivedTable;
 
 
 public class QueryBuilder extends JTabbedPane implements ChangeListener
@@ -493,6 +491,46 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		DiagramField fieldP = entityP.getField(token.getPrimary().getName());
 		DiagramField fieldF = entityF.getField(token.getForeign().getName());
 		
+		if (fieldP == null) {
+			// ticket # 150 relation is lost
+			//  add missing field in red color
+			// JOptionPane.showMessageDialog(this, "Field " + token.getPrimary().getName() +" Not found in table" + token.getPrimary().getTable(), "Join" , JOptionPane.WARNING_MESSAGE);			
+			final String fieldLabel = token.getPrimary().getName();
+			if(entityP instanceof DiagramEntity){
+				DiagramEntity entityPReal = (DiagramEntity) entityP;
+				fieldP = entityPReal.addField(null, fieldLabel, null);
+			}else if (entityP instanceof DiagramQuery){
+				DiagramQuery entityPReal = (DiagramQuery) entityP;
+				fieldP = entityPReal.addField(fieldLabel);
+			}
+			if(fieldP!=null){
+				fieldP.setFontColor(Color.red);
+				fieldP.setToolTipText("Added field : " + fieldLabel);
+				entityP.pack();
+			}
+		} 
+
+		if (fieldF == null) {
+			// ticket # 150 relation is lost
+		    //  add missing field in red color
+            // JOptionPane.showMessageDialog(this, "Field " + token.getForeign().getName() + " Not found in table" + token.getForeign().getTable(), "Join" , JOptionPane.WARNING_MESSAGE);			
+			final String fieldLabel = token.getForeign().getName();
+			if(entityF instanceof DiagramEntity){
+				DiagramEntity entityFReal = (DiagramEntity) entityF;
+				fieldF = entityFReal.addField(null, fieldLabel, null);
+			}else if (entityF instanceof DiagramQuery){
+				DiagramQuery entityFReal = (DiagramQuery) entityF;
+				fieldF = entityFReal.addField(fieldLabel);
+			}
+			if(fieldF!=null){
+				fieldF.setFontColor(Color.red);
+				fieldF.setToolTipText("Added field : " + fieldLabel);
+				entityF.pack();
+			}
+
+
+		}
+		
 		if(fieldP!=null && fieldF!=null)
 		{
 			diagram.join(entityP,fieldP);
@@ -503,19 +541,6 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 
 		} 
 
-		if (fieldP == null) {
-			// ticket # 150 relation is lost
-			JOptionPane.showMessageDialog(this, "Field " + token.getPrimary().getName() +" Not found in table" + token.getPrimary().getTable(), "Join" , JOptionPane.WARNING_MESSAGE);			
-			// TO DO: see how to add missing field in red color
-			// DiagramField field = entityP.addField(pos,column);
-		} 
-
-		if (fieldF == null) {
-			// ticket # 150 relation is lost
-			JOptionPane.showMessageDialog(this, "Field " + token.getForeign().getName() + " Not found in table" + token.getForeign().getTable(), "Join" , JOptionPane.WARNING_MESSAGE);			
-			// TO DO: see how to add missing field in red color
-			// DiagramField field = entityP.addField(pos,column);
-		}
 		
 		return relation;
 	}

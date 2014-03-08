@@ -270,10 +270,12 @@ public class SideNavigatorMouse extends MouseAdapter
 		public void actionPerformed(ActionEvent ae)
 		{
 			UoDatasource uoDs = (UoDatasource)navigator.getSelectionNode().getUserObject();
+			boolean disconnected = false;
 			try
 			{
 				if(uoDs.isConnected()){
 					uoDs.disconnect();
+					disconnected = true;
 				}
 				uoDs.connect();
 			
@@ -284,6 +286,9 @@ public class SideNavigatorMouse extends MouseAdapter
 			}
 			finally
 			{
+				if(disconnected){
+					Application.window.connectionClosed(uoDs.getKey());
+				}
 				final boolean connected = uoDs.isConnected();
 				if(connected){
 					Application.window.connectionOpened(uoDs.getKey());

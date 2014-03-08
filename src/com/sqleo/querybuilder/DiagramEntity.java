@@ -129,10 +129,12 @@ public class DiagramEntity extends DiagramAbstractEntity
 		builder.browser.removeFromClause(querytoken);
 	}
 	
-	DiagramField addField(int ordinalPosition, String label, Object key)
+	DiagramField addField(Integer ordinalPosition, String label, Object key)
 	{
 		DiagramField df = new DiagramField(this,label,key!=null);
-		df.position = ordinalPosition;
+		if(ordinalPosition!=null){
+			df.position = ordinalPosition;
+		}
 		
 		QueryTokens.Column ctoken = new QueryTokens.Column(querytoken,label);
 		df.setQueryToken(ctoken);
