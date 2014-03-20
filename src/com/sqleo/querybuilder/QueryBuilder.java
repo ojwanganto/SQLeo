@@ -493,7 +493,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		
 		if (fieldP == null) {
 			// ticket # 150 relation is lost
-			//  add missing field in red color
+			// add missing field in red color
 			// JOptionPane.showMessageDialog(this, "Field " + token.getPrimary().getName() +" Not found in table" + token.getPrimary().getTable(), "Join" , JOptionPane.WARNING_MESSAGE);			
 			final String fieldLabel = token.getPrimary().getName();
 			if(entityP instanceof DiagramEntity){
@@ -505,15 +505,15 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 			}
 			if(fieldP!=null){
 				fieldP.setFontColor(Color.red);
-				fieldP.setToolTipText("Added field : " + fieldLabel);
+				fieldP.setToolTipText(fieldLabel  + " : !!! missing !!! ");
 				entityP.pack();
 			}
 		} 
 
 		if (fieldF == null) {
 			// ticket # 150 relation is lost
-		    //  add missing field in red color
-            // JOptionPane.showMessageDialog(this, "Field " + token.getForeign().getName() + " Not found in table" + token.getForeign().getTable(), "Join" , JOptionPane.WARNING_MESSAGE);			
+			// add missing field in red color
+			// JOptionPane.showMessageDialog(this, "Field " + token.getForeign().getName() + " Not found in table" + token.getForeign().getTable(), "Join" , JOptionPane.WARNING_MESSAGE);			
 			final String fieldLabel = token.getForeign().getName();
 			if(entityF instanceof DiagramEntity){
 				DiagramEntity entityFReal = (DiagramEntity) entityF;
@@ -524,7 +524,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 			}
 			if(fieldF!=null){
 				fieldF.setFontColor(Color.red);
-				fieldF.setToolTipText("Added field : " + fieldLabel);
+				fieldF.setToolTipText(fieldLabel + " : !!! missing !!! ");
 				entityF.pack();
 			}
 
