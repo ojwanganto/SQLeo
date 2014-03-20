@@ -243,6 +243,10 @@ public class SQLParser
 				alias = li.next().toString().trim();
 				if (seenSubquery && sub!=null) {sub.setAlias(alias); sub.setAs(true);}
 			}
+			else if(value.trim().endsWith(")") && surrounds == 0 && next instanceof String){
+				//ticket 144 column alias without AS Example:  f(field) x === f(field) as x
+				alias = next.toString().trim();
+			}
 			else if(next.toString().equals("_EXTRACT_FROM_"))
 			{
 				value = value + " FROM";
