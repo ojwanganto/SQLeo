@@ -34,9 +34,10 @@ public class SQLFormatter implements _ReservedWords
 	public static final char DOT	= '.';
 	public static final char SPACE	= ' ';
 	
-	private static final String INDENT	= "     ";
+	//private static final String INDENT	= "     ";
+	private static final String INDENT	= String.valueOf('\t');
 	
-	public static String concatCommaDelimited(Object tokens[], boolean wrap)
+	public static String concatCommaDelimited(Object tokens[], boolean wrap, int offset)
 	{
 		if(tokens.length == 0) return "<empty>";
 		
@@ -45,29 +46,32 @@ public class SQLFormatter implements _ReservedWords
 		
 		for(int i=0; i<tokens.length; i++)
 		{
-			if(wrap) buffer.append(INDENT);
+			if(wrap) {
+				buffer.append(INDENT);
+				indent(offset, buffer, INDENT);
+			}
 			buffer.append(tokens[i] + delimiter);
 		}
 		
 		return buffer.substring(0,buffer.length()-delimiter.length());
 	}
 
-	public static String concat(QueryTokens._Expression tokens[], boolean wrap)
+	public static String concat(QueryTokens._Expression tokens[], boolean wrap, int offset)
 	{
-		return concatCommaDelimited(tokens,wrap);
+		return concatCommaDelimited(tokens,wrap,offset);
 	}
 	
-	public static String concat(QueryTokens.Group tokens[], boolean wrap)
+	public static String concat(QueryTokens.Group tokens[], boolean wrap, int offset)
 	{
-		return concatCommaDelimited(tokens,wrap);
+		return concatCommaDelimited(tokens,wrap, offset);
 	}
 	
-	public static String concat(QueryTokens.Sort tokens[], boolean wrap)
+	public static String concat(QueryTokens.Sort tokens[], boolean wrap, int offset)
 	{
-		return concatCommaDelimited(tokens,wrap);
+		return concatCommaDelimited(tokens,wrap, offset);
 	}
 	
-	public static String concat(QueryTokens.Condition tokens[], boolean wrap)
+	public static String concat(QueryTokens.Condition tokens[], boolean wrap, int offset)
 	{
 		if(tokens.length == 0) return "<empty>";
 		
@@ -86,6 +90,7 @@ public class SQLFormatter implements _ReservedWords
 					indentation = "  ";
 				
 				buffer.append(indentation);
+				indent(offset, buffer, indentation);
 			}
 			buffer.append(tokens[i] + delimiter);
 		}
@@ -93,11 +98,11 @@ public class SQLFormatter implements _ReservedWords
 		return buffer.substring(0,buffer.length()-delimiter.length());
 	}
 	
-	public static String concat(QueryTokens._TableReference tokens[], boolean wrap)
+	public static String concat(QueryTokens._TableReference tokens[], boolean wrap, int offset)
 	{
 		if(tokens.length == 0) return "<empty>";
 		
-		String delimiter = (wrap ? String.valueOf(BREAK) + INDENT : String.valueOf(SPACE));
+		String delimiter = (wrap ? String.valueOf(BREAK) + INDENT + indent(offset) : String.valueOf(SPACE));
 		StringBuffer buffer = new StringBuffer();
 		
 		sort(tokens);
@@ -154,8 +159,10 @@ public class SQLFormatter implements _ReservedWords
 				{
 					if(buffer.length() > 0)
 						buffer.insert(buffer.toString().lastIndexOf(delimiter),COMMA);
-					else if(wrap)
+					else if(wrap){
 						buffer.append(INDENT);
+						indent(offset, buffer, INDENT);
+					}
 
 					String left = cL.getTable().toString();
 					if(cL.getTable().getName() == null && subs.containsKey(cL.getTable().getAlias())) left = subs.get(cL.getTable().getAlias()).toString();
@@ -201,14 +208,38 @@ public class SQLFormatter implements _ReservedWords
 			{
 				if(buffer.length() > 0)
 					buffer.insert(buffer.toString().lastIndexOf(delimiter),COMMA);
-				else if(wrap)
+				else if(wrap){
 					buffer.append(INDENT);
-					
-				buffer.append(tokens[i] + delimiter);
+					indent(offset, buffer, INDENT);
+				}
+				if(tokens[i] instanceof SubQuery){
+					if(tokens[i] instanceof DerivedTable){
+						final DerivedTable derivedTable = (DerivedTable) tokens[i];
+						buffer.append(derivedTable.toString(wrap, offset+1));
+					}else{
+						final SubQuery subQuery  = (SubQuery) tokens[i];
+						buffer.append(subQuery.toString(wrap, offset+1));
+					}
+					buffer.append(delimiter);
+				}else{
+					buffer.append(tokens[i] + delimiter);
+				}
 			}
 		}
 		
 		return buffer.length() > 0 ? buffer.substring(0,buffer.length()-delimiter.length()) : "<empty>";
+	}
+	
+	public static String indent(int n){
+		final StringBuffer buffer = new StringBuffer();
+		indent(n, buffer, INDENT);
+		return buffer.toString();
+	}
+	
+	private static void indent(int n,final StringBuffer buffer,String indentString){
+		for(int i=0;i<n;i++){
+			buffer.append(indentString);
+		}
 	}
 	
 	private static void sort(QueryTokens._TableReference tokens[])

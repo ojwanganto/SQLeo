@@ -31,8 +31,8 @@ public class DerivedTable extends SubQuery implements _TableReference
 		return alias == null ? alias = "SUBQUERY_" + (++counter) : alias;
 	}
 	
-	public String toString(boolean wrap)
+	public String toString(boolean wrap, int offset)
 	{
-		return super.toString(wrap) + SQLFormatter.SPACE + this.getAlias();
+		return super.toString(wrap,offset) + SQLFormatter.SPACE + this.getAlias();
 	}	
 }

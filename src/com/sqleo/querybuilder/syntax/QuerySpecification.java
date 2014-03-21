@@ -207,10 +207,11 @@ public class QuerySpecification implements Cloneable
 		quantifier = q;
 	}
 	
-	public String toString(boolean wrap)
+	public String toString(boolean wrap,int offset)
 	{
 		String concat = (wrap ? String.valueOf(SQLFormatter.BREAK) : String.valueOf(SQLFormatter.SPACE));
 		String syntax = _ReservedWords.SELECT;
+		//String syntax = wrap ? (offset>0?concat:"") + SQLFormatter.indent(offset) +_ReservedWords.SELECT : _ReservedWords.SELECT;
 		
 		if(quantifier == ALL)
 			syntax = syntax + SQLFormatter.SPACE + _ReservedWords.ALL;
@@ -218,27 +219,36 @@ public class QuerySpecification implements Cloneable
 			syntax = syntax + SQLFormatter.SPACE + _ReservedWords.DISTINCT;
 		
 		if(selectList.size() > 0)
-			syntax = syntax + concat + SQLFormatter.concat(this.getSelectList(),wrap);
+			syntax = syntax + concat + SQLFormatter.concat(this.getSelectList(),wrap,offset);
 		else if(isAsteriskSet())
 			syntax = syntax + SQLFormatter.SPACE + "*";
 		
+		String indentPrefix = SQLFormatter.indent(offset) + (offset>0? SQLFormatter.SPACE : "");
 		if(fromClause.size() > 0)
-			syntax = syntax + concat + _ReservedWords.FROM + concat + SQLFormatter.concat(this.getFromClause(),wrap);
+			syntax = syntax + concat + 
+				(wrap ? indentPrefix + _ReservedWords.FROM : _ReservedWords.FROM)
+				+ concat + SQLFormatter.concat(this.getFromClause(),wrap, offset);
 
 		if(whereClause.size() > 0)
-			syntax = syntax + concat + _ReservedWords.WHERE + concat + SQLFormatter.concat(this.getWhereClause(),wrap);
+			syntax = syntax + concat + 
+				(wrap ? indentPrefix + _ReservedWords.WHERE : _ReservedWords.WHERE)
+					+ concat + SQLFormatter.concat(this.getWhereClause(),wrap, offset);
 
 		if(groupClause.size() > 0)
-			syntax = syntax + concat + _ReservedWords.GROUP_BY + concat + SQLFormatter.concat(this.getGroupByClause(),wrap);
+			syntax = syntax + concat + 
+				(wrap ? indentPrefix + _ReservedWords.GROUP_BY : _ReservedWords.GROUP_BY)
+					+ concat + SQLFormatter.concat(this.getGroupByClause(),wrap, offset);
 
 		if(havingClause.size() > 0)
-			syntax = syntax + concat + _ReservedWords.HAVING + concat + SQLFormatter.concat(this.getHavingClause(),wrap);
+			syntax = syntax + concat + 
+				(wrap ? indentPrefix + _ReservedWords.HAVING : _ReservedWords.HAVING)
+				   	+ concat + SQLFormatter.concat(this.getHavingClause(),wrap, offset);
 		
 		return syntax;
 	}
 	
 	public String toString()
 	{
-		return toString(false);
+		return toString(false,0);
 	}	
 }

@@ -59,18 +59,21 @@ public class QueryExpression implements Cloneable
 		queryUnion = qe;
 	}
 	
-	public String toString(boolean wrap)
+	public String toString(boolean wrap,int offset)
 	{
-		String syntax = querySpecification.toString(wrap);
+		String syntax = querySpecification.toString(wrap,offset);
 		
 		if(queryUnion!=null)
-			syntax = syntax + (wrap ? SQLFormatter.BREAK : SQLFormatter.SPACE) + _ReservedWords.UNION + (wrap ? SQLFormatter.BREAK : SQLFormatter.SPACE) + queryUnion.toString(wrap);
+			syntax = syntax + 
+			(wrap ? SQLFormatter.BREAK + SQLFormatter.indent(offset) : SQLFormatter.SPACE)
+			 + _ReservedWords.UNION + 
+			(wrap ? SQLFormatter.BREAK : SQLFormatter.SPACE) + queryUnion.toString(wrap, offset);
 		
 		return syntax;
 	}
 	
 	public String toString()
 	{
-		return toString(false);
+		return toString(false,0);
 	}	
 }

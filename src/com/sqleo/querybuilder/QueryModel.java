@@ -98,10 +98,10 @@ public class QueryModel implements Cloneable
 	
 	public String toString(boolean wrap)
 	{
-		String syntax = queryExpression.toString(wrap);
+		String syntax = queryExpression.toString(wrap,0);
 		
 		if(orderClause.size() > 0)
-			syntax = syntax + (wrap ? SQLFormatter.BREAK : SQLFormatter.SPACE) + _ReservedWords.ORDER_BY + (wrap ? SQLFormatter.BREAK : SQLFormatter.SPACE) + SQLFormatter.concat(this.getOrderByClause(),wrap);
+			syntax = syntax + (wrap ? SQLFormatter.BREAK : SQLFormatter.SPACE) + _ReservedWords.ORDER_BY + (wrap ? SQLFormatter.BREAK : SQLFormatter.SPACE) + SQLFormatter.concat(this.getOrderByClause(),wrap, 0);
 		
 		return syntax;
 	}

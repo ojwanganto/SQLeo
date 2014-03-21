@@ -88,8 +88,8 @@ public class UpdateModel
 	public String getInsertSyntax(String[] columns, Object[] fieldValues)
 	{
 		return	"INSERT INTO " + table.getIdentifier() +
-				" (" + SQLFormatter.concatCommaDelimited(columns,false) +
-				") VALUES (" + SQLFormatter.concatCommaDelimited(fieldValues,false) + ")";
+				" (" + SQLFormatter.concatCommaDelimited(columns,false,0) +
+				") VALUES (" + SQLFormatter.concatCommaDelimited(fieldValues,false,0) + ")";
 	}
 	
 	public String getUpdateSyntax(String[] columns)
@@ -128,7 +128,7 @@ public class UpdateModel
 			c[i] = new QueryTokens.Condition(SQLFormatter.AND,rowid[i],"=",new QueryTokens.DefaultExpression(params[i].toString()));
 		c[0].setAppend(null);
 		
-		return SQLFormatter.WHERE + SQLFormatter.SPACE + SQLFormatter.concat(c,false);
+		return SQLFormatter.WHERE + SQLFormatter.SPACE + SQLFormatter.concat(c,false, 0);
 	}
 /*	
 	public static void main(String[] args)

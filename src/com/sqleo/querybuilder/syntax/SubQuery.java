@@ -61,20 +61,20 @@ public class SubQuery extends QueryExpression implements QueryTokens._Expression
 		this.alias = alias;
 	}
 	
-	public String toString(boolean wrap)
+	public String toString(boolean wrap,int offset)
 	{
 		if (this instanceof DerivedTable)
-			return "( " + super.toString(wrap) + " )";
+			return "(" + super.toString(wrap,offset) + ")";
 		else if(!isAsSet())
-			return "( " + super.toString(wrap) + " )" + (isAliasSet() ? SQLFormatter.SPACE + this.getAlias() : "");
+			return "(" + super.toString(wrap,offset) + ")" + (isAliasSet() ? SQLFormatter.SPACE + this.getAlias() : "");
 		else if(isAsSet())
-			return "( " + super.toString(wrap) + " )" + (isAliasSet() ? SQLFormatter.SPACE + _ReservedWords.AS + SQLFormatter.SPACE + this.getAlias() : "");
+			return "(" + super.toString(wrap,offset) + ")" + (isAliasSet() ? SQLFormatter.SPACE + _ReservedWords.AS + SQLFormatter.SPACE + this.getAlias() : "");
 		else
 			return ""; //for future use
 	}
 	
 	public String toString()
 	{
-		return toString(false);
+		return toString(false,0);
 	}
 }
