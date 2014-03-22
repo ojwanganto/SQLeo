@@ -107,7 +107,7 @@ public class SQLFormatter implements _ReservedWords
 		
 		sort(tokens);
 
-		Hashtable subs = new Hashtable();
+		Hashtable<String,DerivedTable> subs = new Hashtable<String,DerivedTable>();
 		for(int i=0; i<tokens.length; i++)
 		{
 			if(tokens[i] instanceof DerivedTable)
@@ -165,10 +165,10 @@ public class SQLFormatter implements _ReservedWords
 					}
 
 					String left = cL.getTable().toString();
-					if(cL.getTable().getName() == null && subs.containsKey(cL.getTable().getAlias())) left = subs.get(cL.getTable().getAlias()).toString();
+					if(cL.getTable().getName() == null && subs.containsKey(cL.getTable().getAlias())) left = subs.get(cL.getTable().getAlias()).toString(wrap,offset+1);
 					
 					String right = cR.getTable().toString();
-					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString();					
+					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString(wrap,offset+1);					
 					
 					buffer.append(left + SPACE + token.getTypeName() + SPACE + right + SPACE + _ReservedWords.ON + SPACE + token.getCondition() + delimiter);
 //					buffer.append(token.toString() + delimiter);
@@ -193,7 +193,7 @@ public class SQLFormatter implements _ReservedWords
 					}
 					
 					String right = cR.getTable().toString();
-					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString();
+					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString(wrap,offset+1);
 					
 					buffer.append(token.getTypeName() + SPACE + right + SPACE + _ReservedWords.ON + SPACE + token.getCondition() + delimiter);
 				}
