@@ -80,6 +80,11 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 		return header;
 	}
 	
+	public void setFontColorAndToolTip(final Color color,final String toolTip){
+		header.setForeground(color);
+		header.setToolTipText(toolTip);
+	} 
+	
 	void addField(DiagramField field)
 	{
 		// fix #78 do not autoalias fields in subqueries	

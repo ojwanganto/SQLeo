@@ -24,6 +24,7 @@
 
 package com.sqleo.querybuilder;
 
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.sql.DatabaseMetaData;
@@ -135,7 +136,7 @@ public class DiagramLoader extends JDialog implements Runnable
 		throws SQLException
 	{
 		message.setText( I18n.getFormattedString("querybuilder.message.loading","Loading: {0}", new Object[]{"" + table.getIdentifier()}));
-		checkTable(table);
+		boolean tableExists = checkTable(table);
 
 		// fix #78 do not autoalias fields in subqueries
 		// if(( QueryBuilder.autoAlias || (builder.browser.getQueryItem() instanceof BrowserItems.DiagramQueryTreeItem)) && table.getAlias()==null)
@@ -215,7 +216,7 @@ public class DiagramLoader extends JDialog implements Runnable
 							}
 						}
 						if(impAliases.size()>=1){
-							createAndJoin(table);
+							createAndJoin(table, true);
 							added = true;
 						}
 					
@@ -223,14 +224,14 @@ public class DiagramLoader extends JDialog implements Runnable
 							QueryTokens.Table qt = impADE.get(alias).getQueryToken();
 							QueryTokens.Table tablex = new QueryTokens.Table(noSchema?null:qt.getSchema(), qt.getName()); 
 							tablex.setAlias(alias);
-							createAndJoin(tablex);
+							createAndJoin(tablex, true);
 							added=true;
 						}
 						
 						for(String alias : expAliases){
 							QueryTokens.Table tablex = new QueryTokens.Table(noSchema?null:table.getSchema(), table.getName()); 
 							tablex.setAlias(alias);
-							createAndJoin(tablex);
+							createAndJoin(tablex, true);
 							added = true;
 						}
 						if(added && woAliasExists){
@@ -245,13 +246,13 @@ public class DiagramLoader extends JDialog implements Runnable
 			}
 		}
 		if(!added){
-			createAndJoin(table);
+			createAndJoin(table, tableExists);
 		}
 		
 	}
 	
-	private void createAndJoin(QueryTokens.Table table) throws SQLException{
-		DiagramEntity item = creatEntity(table);
+	private void createAndJoin(QueryTokens.Table table,boolean tableExists) throws SQLException{
+		DiagramEntity item = creatEntity(table,tableExists);
 		// #157
 		if(Application.MINOR.endsWith("+") || builder.diagram.getEntities().length < 3){
 			builder.diagram.addEntity(item);
@@ -364,7 +365,7 @@ public class DiagramLoader extends JDialog implements Runnable
 		}
 	}
 	
-	private void checkTable(QueryTokens.Table table)
+	private boolean checkTable(QueryTokens.Table table)
 		throws SQLException
 	{
 		DatabaseMetaData dbmd = builder.getConnection().getMetaData();
@@ -402,17 +403,20 @@ public class DiagramLoader extends JDialog implements Runnable
 			rs.close();
 		}
 		
-		if(!exists) // fix ticket #119
-		{
-			Application.alert(Application.PROGRAM,"Object " + table.getIdentifier() + " doesn't exists!");
-		}
-
+//		if(!exists) // fix ticket #119
+//		{
+//			Application.alert(Application.PROGRAM,"Object " + table.getIdentifier() + " doesn't exists!");
+//		}
+		return exists;
 	}
 	
-	private DiagramEntity creatEntity(QueryTokens.Table table)
+	private DiagramEntity creatEntity(QueryTokens.Table table, boolean tableExists)
 		throws SQLException
 	{
 		DiagramEntity item = new DiagramEntity(builder,table);
+		if(!tableExists){
+			item.setFontColorAndToolTip(Color.red, table.getName()  + " : !!! missing !!! ");
+		}
 		item.setEnabled(builder.getConnection()!=null);
 		
 		if(builder.getConnection()!=null)
