@@ -50,7 +50,18 @@ public class SQLFormatter implements _ReservedWords
 				buffer.append(INDENT);
 				indent(offset, buffer, INDENT);
 			}
-			buffer.append(tokens[i] + delimiter);
+			if(tokens[i] instanceof SubQuery){
+				if(tokens[i] instanceof DerivedTable){
+					final DerivedTable derivedTable = (DerivedTable) tokens[i];
+					buffer.append(derivedTable.toString(wrap, offset+1));
+				}else{
+					final SubQuery subQuery  = (SubQuery) tokens[i];
+					buffer.append(subQuery.toString(wrap, offset+1));
+				}
+				buffer.append(delimiter);
+			}else{
+				buffer.append(tokens[i] + delimiter);
+			}
 		}
 		
 		return buffer.substring(0,buffer.length()-delimiter.length());
@@ -84,7 +95,8 @@ public class SQLFormatter implements _ReservedWords
 				buffer.append(INDENT);
 				indent(offset, buffer, INDENT);
 			}
-			buffer.append( tokens[i] + delimiter);
+			buffer.append(tokens[i].toString(wrap, offset));
+			buffer.append(delimiter);
 		}
 		
 		return buffer.substring(0,buffer.length()-delimiter.length());
@@ -157,10 +169,10 @@ public class SQLFormatter implements _ReservedWords
 					}
 
 					String left = cL.getTable().toString();
-					if(cL.getTable().getName() == null && subs.containsKey(cL.getTable().getAlias())) left = subs.get(cL.getTable().getAlias()).toString(wrap,offset+1);
+					if(cL.getTable().getName() == null && subs.containsKey(cL.getTable().getAlias())) left = subs.get(cL.getTable().getAlias()).toString(wrap,offset+4);
 					
 					String right = cR.getTable().toString();
-					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString(wrap,offset+1);					
+					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString(wrap,offset+4);					
 					
 					buffer.append(left + delimiter + token.getTypeName() + SPACE + right + delimiter + SPACE + _ReservedWords.ON + SPACE + token.getCondition() + delimiter);
 //					buffer.append(token.toString() + delimiter);
@@ -185,7 +197,7 @@ public class SQLFormatter implements _ReservedWords
 					}
 					
 					String right = cR.getTable().toString();
-					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString(wrap,offset+1);
+					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString(wrap,offset+4);
 					
 					buffer.append(token.getTypeName() + SPACE + right + delimiter + SPACE + _ReservedWords.ON + SPACE + token.getCondition() + delimiter);
 				}

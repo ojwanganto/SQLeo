@@ -397,6 +397,55 @@ public abstract class QueryTokens
 			
 			return (append!=null ? append + " " : "") + exprL + " " + operator + " " + exprR;
 		}
+		
+		public String toString(boolean wrap, int offset)
+		{
+			String exprL = null;
+			String exprR = null;
+			
+			if(left!=null)
+			{
+				if(left instanceof Column){
+					exprL = ((Column)left).getIdentifier();
+				}else if(left instanceof SubQuery){
+					if(left instanceof DerivedTable){
+						final DerivedTable derivedTable = (DerivedTable)left;
+						exprL = derivedTable.toString(wrap, offset+2);
+					}else{
+						final SubQuery sub = (SubQuery)left;
+						exprL = sub.toString(wrap, offset+2);
+					}
+				}else{
+					exprL = left.toString();
+				}
+			}
+			boolean isRightSubQuery = false;
+			if(right!=null)
+			{
+				if(right instanceof Column){
+					exprR = ((Column)right).getIdentifier();
+				}else if(right instanceof SubQuery){
+					isRightSubQuery = true;
+					if(right instanceof DerivedTable){
+						final DerivedTable derivedTable = (DerivedTable)right;
+						exprR = derivedTable.toString(wrap, null == left ? offset + 3 : offset+2);
+					}else{
+						final SubQuery sub = (SubQuery)right;
+						exprR = sub.toString(wrap, null == left ? offset + 3 :offset+2);
+					}
+				}else{
+					exprR = right.toString();
+				}
+			}
+			
+			String delimiter = (wrap && isRightSubQuery? String.valueOf(SQLFormatter.BREAK)+ SQLFormatter.indent(offset+1) : String.valueOf(SQLFormatter.SPACE));
+			if(operator.equals("EXISTS") || operator.equals("NOT EXISTS"))
+			{
+				return (append!=null ? append + " " : "") +  delimiter + operator +" "+exprR;
+			}
+			
+			return (append!=null ? append + " " : "") + exprL + delimiter +operator + " " +exprR;
+		}
 	}
 
 	public static class Group implements _Base
