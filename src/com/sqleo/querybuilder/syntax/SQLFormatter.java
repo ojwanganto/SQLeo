@@ -80,19 +80,11 @@ public class SQLFormatter implements _ReservedWords
 		
 		for(int i=0; i<tokens.length; i++)
 		{
-			if(wrap)
-			{
-				String indentation = INDENT;
-				
-				if(tokens[i].toString().startsWith("AND "))
-					indentation = " ";
-				else if (tokens[i].toString().startsWith("OR "))
-					indentation = "  ";
-				
-				buffer.append(indentation);
-				indent(offset, buffer, indentation);
+			if(wrap) {				
+				buffer.append(INDENT);
+				indent(offset, buffer, INDENT);
 			}
-			buffer.append(tokens[i] + delimiter);
+			buffer.append( tokens[i] + delimiter);
 		}
 		
 		return buffer.substring(0,buffer.length()-delimiter.length());
