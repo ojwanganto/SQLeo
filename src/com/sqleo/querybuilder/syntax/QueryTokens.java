@@ -419,29 +419,36 @@ public abstract class QueryTokens
 					exprL = left.toString();
 				}
 			}
-			boolean isRightSubQuery = false;
 			if(right!=null)
 			{
 				if(right instanceof Column){
 					exprR = ((Column)right).getIdentifier();
 				}else if(right instanceof SubQuery){
-					isRightSubQuery = true;
+					int leftLength = operator.length();
+					if(append!=null){
+						leftLength +=append.length();
+					}
+					if(exprL!=null){
+						leftLength +=exprL.length();
+					}
+					final int offset2 = leftLength>0 ?  offset + 2 + leftLength/4 : offset;
 					if(right instanceof DerivedTable){
 						final DerivedTable derivedTable = (DerivedTable)right;
-						exprR = derivedTable.toString(wrap, null == left ? offset + 3 : offset+2);
+						exprR = derivedTable.toString(wrap, offset2);
 					}else{
 						final SubQuery sub = (SubQuery)right;
-						exprR = sub.toString(wrap, null == left ? offset + 3 :offset+2);
+						exprR = sub.toString(wrap, offset2);
 					}
 				}else{
 					exprR = right.toString();
 				}
 			}
 			
-			String delimiter = (wrap && isRightSubQuery? String.valueOf(SQLFormatter.BREAK)+ SQLFormatter.indent(offset+1) : String.valueOf(SQLFormatter.SPACE));
+			final String delimiter =  String.valueOf(SQLFormatter.SPACE);
+
 			if(operator.equals("EXISTS") || operator.equals("NOT EXISTS"))
 			{
-				return (append!=null ? append + " " : "") +  delimiter + operator +" "+exprR;
+				return (append!=null ? append + " " : "") +  operator +" "+exprR;
 			}
 			
 			return (append!=null ? append + " " : "") + exprL + delimiter +operator + " " +exprR;

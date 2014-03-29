@@ -169,7 +169,7 @@ public class SQLFormatter implements _ReservedWords
 					}
 
 					String left = cL.getTable().toString();
-					if(cL.getTable().getName() == null && subs.containsKey(cL.getTable().getAlias())) left = subs.get(cL.getTable().getAlias()).toString(wrap,offset+4);
+					if(cL.getTable().getName() == null && subs.containsKey(cL.getTable().getAlias())) left = subs.get(cL.getTable().getAlias()).toString(wrap,offset+1);
 					
 					String right = cR.getTable().toString();
 					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString(wrap,offset+4);					
