@@ -34,6 +34,26 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2014.04.rc1.zip: 2014-03-31
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.04/
+
+
+	186,192	Query builder: support multi schemas for MySQL
+		  --> try the modified MariaDB jdbc driver available in lib directory
+
+	151,194	Query Builder: derived table syntax is not tab formated
+		  --> improved subqueries formatting
+
+	150,160	Reverse query: display missing columns for joins
+		  --> graph is dislayed in red when table or column not found
+		  --> permits to reverse any SQL query without being connected
+			
+	189 	Command editor result - Add option for find dialog to search
+	144 	Reverse query: column alias without AS not recognized for functions
+
 SQLeoVQB.2014.03.rc1.zip: 2014-03-01
 
   Thanks to Anudeep Gade for his contribution to this release
