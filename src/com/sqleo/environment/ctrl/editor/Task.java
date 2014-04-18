@@ -71,7 +71,7 @@ public class Task implements Runnable {
 					stmt.setFetchSize(limit);
 					stmt.setMaxRows(limit);
 
-					String sqlcmd = syntax.toUpperCase().substring(0, 7);
+					String sqlcmd = syntax.length() > 7 ?  syntax.toUpperCase().substring(0, 7) : syntax.toUpperCase();
 					if (sqlcmd.startsWith("WITH")) {
 						rs = stmt.executeQuery(syntax);
 						printSelect();

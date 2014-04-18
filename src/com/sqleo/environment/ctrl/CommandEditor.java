@@ -189,41 +189,26 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				requestString = requestString.trim();
 				StringTokenizer st;
 				if (!PLsql){
-					st = new StringTokenizer(requestString, ";"); // split sql separated by ";"
+					st = new StringTokenizer(requestString, "\n"); // split sql separated by "\n"
 				} else {
 					st = new StringTokenizer(requestString, ""); // don't split in case of PL/SQL
 				}
-					
-				for (int len = 0; !stopped && st.hasMoreTokens();) {
-					String sql = st.nextToken();
-					// rimuovere gli a capo da sql!
-
-					do {
-						len += sql.length() + 1;
-						if (len < requestString.length()
-								&& requestString.charAt(len) != '\n'
-								&& st.hasMoreTokens()) {
-							sql = sql + ";" + st.nextToken();
-						} else {
-							break;
-						}
-					} while (!stopped);
-
-					_TaskSource source = new TaskSource(sql);
-
-					String keycah = "*** " + source.getHandlerKey() + " ***";
-					CommandEditor.this.response.append("\n" + keycah);
-					int offset = CommandEditor.this.response.getDocument()
-							.getLength() - keycah.length();
-					response.getDocument().setCharacterAttributes(offset,
-							keycah.length(), keycahAttributSet, true);
-					CommandEditor.this.response.append("\n"
-							+ source.getSyntax() + "\n");
-
-					ClientCommandEditor cce = (ClientCommandEditor) Application.window
-							.getClient(ClientCommandEditor.DEFAULT_TITLE);
-					new Task(source, CommandEditor.this, cce.getLimitRows())
-							.run();
+				StringBuilder sqlBuilder = new StringBuilder();
+				while (!stopped && st.hasMoreTokens()) {
+					final String line = st.nextToken();
+					if (line.startsWith("--") || line.startsWith("//") || line.startsWith("#")) {
+	                    // Line is a comment	
+						continue;
+	                } else if (line.endsWith(";")) {
+	                	sqlBuilder.append(line.substring(0, line.lastIndexOf(";")));
+	                	executeCommandQuery(sqlBuilder.toString());
+	                	sqlBuilder = new StringBuilder();
+	                }else{
+	                	sqlBuilder.append(line);
+	                }
+				}
+				if(!stopped && sqlBuilder.toString().length()>0){
+					executeCommandQuery(sqlBuilder.toString());
 				}
 			}
 			setEnabled(true);
@@ -231,6 +216,24 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 			getActionMap().get("stop-task").setEnabled(false);
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
+
+		private void executeCommandQuery(final String sql) {
+			_TaskSource source = new TaskSource(sql);
+
+			String keycah = "*** " + source.getHandlerKey() + " ***";
+			CommandEditor.this.response.append("\n" + keycah);
+			int offset = CommandEditor.this.response.getDocument()
+					.getLength() - keycah.length();
+			response.getDocument().setCharacterAttributes(offset,
+					keycah.length(), keycahAttributSet, true);
+			CommandEditor.this.response.append("\n"
+					+ source.getSyntax() + "\n");
+
+			ClientCommandEditor cce = (ClientCommandEditor) Application.window
+					.getClient(ClientCommandEditor.DEFAULT_TITLE);
+			new Task(source, CommandEditor.this, cce.getLimitRows())
+					.run();
 		}
 	}
 
