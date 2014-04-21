@@ -286,11 +286,30 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 					if(entities[j] instanceof DiagramEntity) {
 						DiagramEntity entity = (DiagramEntity)entities[j];
 						field =  entity.getField(whereToken.toString());
+						if(null == field && whereToken.toString().lastIndexOf(SQLFormatter.DOT)!=-1 
+								&& whereToken.toString().startsWith(entity.getQueryToken().toString())){
+							QueryTokens.DefaultExpression exp = (QueryTokens.DefaultExpression)whereToken;
+							//add dummy column
+							final String realColumn = getRealColumn(exp.getAlias(), exp.getValue());
+							field = entity.addField(null,realColumn , null);
+							field.setFontColor(Color.red);
+							field.setToolTipText(realColumn  + " : !!! missing !!! ");
+							entity.pack();
+						}
 					}
 					else if(entities[j] instanceof DiagramQuery){
 						DiagramQuery entity = (DiagramQuery)entities[j];
 						QueryTokens.DefaultExpression exp = (QueryTokens.DefaultExpression)whereToken;
 						field = entity.getField(exp.getValue());
+						if(null == field && exp.getValue().lastIndexOf(SQLFormatter.DOT)!=-1
+								&& exp.getValue().startsWith(entity.getQueryToken().toString())){
+							//add dummy column
+							final String realColumn = getRealColumn(exp.getAlias(), exp.getValue());
+							field = entity.addField(realColumn);
+							field.setFontColor(Color.red);
+							field.setToolTipText(realColumn+ " : !!! missing !!! ");
+							entity.pack();
+						}
 					}
 					if(field!=null){
 						return field;
