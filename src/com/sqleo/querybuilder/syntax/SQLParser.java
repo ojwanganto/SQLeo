@@ -479,12 +479,45 @@ public class SQLParser
 					surrounds++;
 					left = li.next().toString();
 				}
+				String leftFunctionName = null,rightFunctionName = null;
+				if(left.lastIndexOf(SQLFormatter.DOT) == -1){
+					final String nextVal = li.next().toString();
+					if(nextVal.equals("(")){
+						leftFunctionName = ""+left;//count(ta.field), nvl(t.col,0) or decode(t.col,0,1)
+						left = li.next().toString();
+						leftFunctionName = leftFunctionName + "("+left;
+						String temp = li.next().toString();
+						while(!temp.equals(")")){
+							leftFunctionName = leftFunctionName +temp;
+							temp = li.next().toString();
+						}
+						leftFunctionName = leftFunctionName +temp;
+					}else{
+						li.previous();
+					}
+				}
 				String op = li.next().toString();
 				String right = li.next().toString();
+				if(right.lastIndexOf(SQLFormatter.DOT) == -1){
+					final String nextVal = li.next().toString();
+					if(nextVal.equals("(")){
+						rightFunctionName = ""+right;//count(ta.field), nvl(t.col,0) or decode(t.col,0,1)
+						right = li.next().toString();
+						rightFunctionName = rightFunctionName + "("+right;
+						String temp = li.next().toString();
+						while(!temp.equals(")")){
+							rightFunctionName = rightFunctionName +temp;
+							temp = li.next().toString();
+						}
+						rightFunctionName = rightFunctionName +temp;
+					}else{
+						li.previous();
+					}
+				}
 				
 				QueryTokens.Column tcl = null;
 				QueryTokens.Column tcr = null;
-				
+				boolean addToFromClause = true;
 				for(int side=0; side<2; side++)
 				{
 					String e = side==0 ? left : right;
@@ -514,18 +547,62 @@ public class SQLParser
 					{	
 						// let contaisKey case sensitive but raise exception if Alias or Table not fount
 						// to do raise exception
-						Application.alert("!!! condition table or alias not found: " + ref + " !!!");
+						if(dot!=-1){
+							Application.alert("!!! condition table or alias not found: " + ref + " !!!");
+						}
 
 					} // end #92
 
 					if(side==0)
-						tcl = new QueryTokens.Column(tr,e.substring(dot+1));
+						tcl = new QueryTokens.Column(tr,leftFunctionName!=null? leftFunctionName: e.substring(dot+1));
 
 					else
-						tcr = new QueryTokens.Column(tr,e.substring(dot+1));
+						tcr = new QueryTokens.Column(tr,rightFunctionName!=null ? rightFunctionName : e.substring(dot+1));
+					
+					if(dot == -1){
+						final QueryTokens.DefaultExpression conditionVal = 	new QueryTokens.DefaultExpression(e);
+						// fix #142 transform values on join into where clause
+						final QueryTokens.Condition conditionToken = new QueryTokens.Condition();
+						conditionToken.setOperator(op);
+						final QueryTokens.Table tableReference;
+						if(side==0){
+							conditionToken.setLeft(conditionVal);
+							conditionToken.setRight(tcr);
+							tableReference = tcr.getTable();
+						}else{
+							conditionToken.setRight(conditionVal);
+							conditionToken.setLeft(tcl);
+							tableReference = tcl.getTable();
+						}
+						if(qs.getWhereClause().length>0){
+							conditionToken.setAppend(next);
+						}
+						qs.addWhereClause(conditionToken);
+						if(getTableIndexInFromClause(qs,tableReference,true)==-1){
+							qs.addFromClause(tableReference);
+						}
+						addToFromClause = false;
+						Application.alert("!!! WARNING conditions on join are converted into where clause( " + conditionToken + " )!!!");
+					}
 				}
+		 		if(addToFromClause){		
+		 			
+		 			final int leftIndex = getTableIndexInFromClause(qs,tcl.getTable(),false);
+		 			if(leftIndex!=-1){
+		 				qs.removeFromClause(leftIndex);
+		 			}
+		 			final int rightIndex = getTableIndexInFromClause(qs,tcr.getTable(),false);
+		 			if(rightIndex!=-1){
+		 				qs.removeFromClause(rightIndex);
+		 			}
+		 			
+		 			final QueryTokens.Join joinToken = new QueryTokens.Join(joinType,tcl,op,tcr);
+		 			if(!next.toString().equalsIgnoreCase(_ReservedWords.ON)){
+		 				joinToken.getCondition().setAppend(next.toUpperCase());
+		 			}
+					qs.addFromClause(joinToken);
 		 				
-				qs.addFromClause(new QueryTokens.Join(joinType,tcl,op,tcr));
+		 		}
 				joinType = -1;
 			}
 			else if(next.toString().equals("("))
@@ -572,6 +649,30 @@ public class SQLParser
 				
 			}
 		}
+	}
+	
+	private static int getTableIndexInFromClause(
+			final QuerySpecification qs, final QueryTokens.Table tableRef,final boolean checkJoins) {
+		for(int i=0; i < qs.getFromClause().length; i++){
+			final QueryTokens._TableReference token = qs.getFromClause()[i];
+			if(token instanceof QueryTokens.Table){
+				final QueryTokens.Table table = (QueryTokens.Table)token;
+				if(tableRef.equals(table)){
+					return i;
+				}
+			}
+			else if(checkJoins && token instanceof QueryTokens.Join)	{
+				final QueryTokens.Table tableP = (QueryTokens.Table)((QueryTokens.Join)token).getPrimary().getTable();
+				if(tableRef.equals(tableP)){
+					return i;
+				}
+				final QueryTokens.Table tableF = (QueryTokens.Table)((QueryTokens.Join)token).getForeign().getTable();
+				if(tableRef.equals(tableF)){
+					return i;
+				}
+			}
+		}
+		return -1;
 	}
 
 	private static QueryTokens.Condition[] doParseConditions(ListIterator li)

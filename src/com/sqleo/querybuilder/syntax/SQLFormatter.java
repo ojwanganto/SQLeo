@@ -173,13 +173,13 @@ public class SQLFormatter implements _ReservedWords
 					
 					String right = cR.getTable().toString();
 					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString(wrap,offset+4);					
-					
+					token.getCondition().setAppend(null);
 					buffer.append(left + delimiter + token.getTypeName() + SPACE + right + delimiter + SPACE + _ReservedWords.ON + SPACE + token.getCondition() + delimiter);
 //					buffer.append(token.toString() + delimiter);
 				}
 				else if(bLeft && bRight)
 				{
-					buffer.append(SPACE + _ReservedWords.AND + SPACE + token.getCondition().toString() + delimiter);
+					buffer.append(SPACE + (token.getCondition().getAppend()!=null ? "" : _ReservedWords.AND )+ SPACE + token.getCondition().toString() + delimiter);
 				}
 				else
 				{

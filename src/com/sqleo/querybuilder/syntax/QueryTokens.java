@@ -164,6 +164,10 @@ public abstract class QueryTokens
 		public String getIdentifier()
 		{
 			String identifier = SQLFormatter.ensureQuotes(this.getName(),!QueryBuilder.useAlwaysQuote);
+			if(identifier.contains("(") && identifier.endsWith(")")){
+				//function count(ta.field)
+				return identifier;
+			}
 			if(owner!=null) identifier = owner.getReference() + SQLFormatter.DOT + identifier;
 			return identifier;
 		}

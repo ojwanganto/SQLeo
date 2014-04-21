@@ -269,7 +269,15 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				QueryTokens.Column token = (QueryTokens.Column)whereToken;
 				DiagramEntity entity = diagram.getEntity(token.getTable());
 				if(entity!=null){
-					return entity.getField(token.getName());
+					DiagramField field =  entity.getField(token.getName());
+					if(null == field){
+						//add dummy column
+						field = entity.addField(null, token.getName(), null);
+						field.setFontColor(Color.red);
+						field.setToolTipText( token.getName()  + " : !!! missing !!! ");
+						entity.pack();
+					}
+					return field;
 				}
 			}else if (whereToken instanceof DefaultExpression){
 				DiagramAbstractEntity[] entities = diagram.getEntities();

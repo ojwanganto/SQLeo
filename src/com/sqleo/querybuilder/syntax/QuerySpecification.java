@@ -145,6 +145,10 @@ public class QuerySpecification implements Cloneable
 		}
 		
 	}
+	public void removeFromClause(final int index)
+	{
+		fromClause.remove(index);
+	}
 
 	public void removeWhereClause(QueryTokens.Condition token)
 	{
