@@ -182,6 +182,13 @@ public abstract class QueryTokens
 			
 			return declare;
 		}
+		
+		public String toStringWithoutAlias()
+		{
+			String declare = this.getIdentifier();
+			if(declare == null) return getAlias();
+			return declare;
+		}
 
 	}
 	

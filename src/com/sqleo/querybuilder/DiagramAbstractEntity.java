@@ -128,6 +128,8 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 			DiagramField field = (DiagramField)fields.getComponent(i);
 			if(field.getLabel().equalsIgnoreCase(label)) return i;
 			if(field.getQueryToken().toString().equalsIgnoreCase(label)) return i;
+			//for where tokens without alias (select t.col as x where t.col = 1), here t.col === x 
+			if(field.getQueryToken().toStringWithoutAlias().equalsIgnoreCase(label)) return i;
 		}
 		
 		return -1;		

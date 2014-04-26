@@ -483,34 +483,54 @@ public class SQLParser
 				if(left.lastIndexOf(SQLFormatter.DOT) == -1){
 					final String nextVal = li.next().toString();
 					if(nextVal.equals("(")){
-						leftFunctionName = ""+left;//count(ta.field), nvl(t.col,0) or decode(t.col,0,1)
-						left = li.next().toString();
-						leftFunctionName = leftFunctionName + "("+left;
+						//count(ta.field), nvl(t.col,0) or decode(t.col,0,1)
+						leftFunctionName = left + "(";
 						String temp = li.next().toString();
 						while(!temp.equals(")")){
+							if(temp.indexOf(SQLFormatter.DOT)!=-1){
+								left = temp;
+							}
 							leftFunctionName = leftFunctionName +temp;
 							temp = li.next().toString();
 						}
-						leftFunctionName = leftFunctionName +temp;
-					}else{
-						li.previous();
+						//fx(gx(hx(ta.field)))
+						while(temp.equals(")")){
+							leftFunctionName = leftFunctionName +temp;
+							temp = li.next().toString();
+						}
 					}
+					li.previous();
 				}
 				String op = li.next().toString();
 				String right = li.next().toString();
 				if(right.lastIndexOf(SQLFormatter.DOT) == -1){
-					final String nextVal = li.next().toString();
-					if(nextVal.equals("(")){
-						rightFunctionName = ""+right;//count(ta.field), nvl(t.col,0) or decode(t.col,0,1)
-						right = li.next().toString();
-						rightFunctionName = rightFunctionName + "("+right;
+					if(op.equalsIgnoreCase("in") && right.equals("(")){
+						// ta.y in (1,2,3)
 						String temp = li.next().toString();
 						while(!temp.equals(")")){
-							rightFunctionName = rightFunctionName +temp;
+							right = right +temp;
 							temp = li.next().toString();
 						}
-						rightFunctionName = rightFunctionName +temp;
-					}else{
+						right = right +temp; //(1,2,3)
+					}else {
+						final String nextVal = li.next().toString();
+						if(nextVal.equals("(")){
+							//count(ta.field), nvl(t.col,0) or decode(t.col,0,1)
+							rightFunctionName = right + "(";
+							String temp = li.next().toString();
+							while(!temp.equals(")")){
+								if(temp.indexOf(SQLFormatter.DOT)!=-1){
+									right = temp;
+								}
+								rightFunctionName = rightFunctionName +temp;
+								temp = li.next().toString();
+							}
+							//fx(gx(hx(ta.field)))
+							while(temp.equals(")")){
+								rightFunctionName = rightFunctionName +temp;
+								temp = li.next().toString();
+							}
+						}
 						li.previous();
 					}
 				}
