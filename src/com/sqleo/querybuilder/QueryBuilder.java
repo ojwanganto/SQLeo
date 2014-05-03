@@ -287,7 +287,9 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 						DiagramEntity entity = (DiagramEntity)entities[j];
 						field =  entity.getField(whereToken.toString());
 						if(null == field && whereToken.toString().lastIndexOf(SQLFormatter.DOT)!=-1 
-								&& whereToken.toString().startsWith(entity.getQueryToken().toString())){
+								&& (whereToken.toString().startsWith(entity.getQueryToken().toString())
+									|| whereToken.toString().startsWith(entity.getQueryToken().getAlias()))
+						){
 							QueryTokens.DefaultExpression exp = (QueryTokens.DefaultExpression)whereToken;
 							//add dummy column
 							final String realColumn = getRealColumn(exp.getAlias(), exp.getValue());
@@ -302,7 +304,9 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 						QueryTokens.DefaultExpression exp = (QueryTokens.DefaultExpression)whereToken;
 						field = entity.getField(exp.getValue());
 						if(null == field && exp.getValue().lastIndexOf(SQLFormatter.DOT)!=-1
-								&& exp.getValue().startsWith(entity.getQueryToken().toString())){
+								&& (exp.getValue().startsWith(entity.getQueryToken().toString())
+									|| exp.getValue().startsWith(entity.getQueryToken().getAlias()))
+						){
 							//add dummy column
 							final String realColumn = getRealColumn(exp.getAlias(), exp.getValue());
 							field = entity.addField(realColumn);

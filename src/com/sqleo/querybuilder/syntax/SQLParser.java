@@ -95,8 +95,14 @@ public class SQLParser
 			else if(next.toString().equalsIgnoreCase(_ReservedWords.WHERE))
 			{
 				QueryTokens.Condition[] tokens = doParseConditions(li);
-				for(int i=0; i<tokens.length; i++)
+				//#ticket142- join values are converted into where clause before, so prefix first token by and if exists 
+				final boolean alreadyWhereClauseExists = qe.getQuerySpecification().getWhereClause().length>0;
+				for(int i=0; i<tokens.length; i++){
+					if(i==0 && alreadyWhereClauseExists){
+						tokens[i].setAppend(_ReservedWords.AND);
+					}
 					qe.getQuerySpecification().addWhereClause(tokens[i]);
+				}
 			}
 			else if(next.toString().equalsIgnoreCase(_ReservedWords.GROUP_BY))
 			{
@@ -481,30 +487,33 @@ public class SQLParser
 				}
 				String leftFunctionName = null,rightFunctionName = null;
 				if(left.lastIndexOf(SQLFormatter.DOT) == -1){
+					//count(ta.field), nvl(t.col,0) or decode(t.col,0,1)
+					//fx(gx(hx(ta.field))), to_char(f(tb.f2),'yy')
 					final String nextVal = li.next().toString();
 					if(nextVal.equals("(")){
-						//count(ta.field), nvl(t.col,0) or decode(t.col,0,1)
+						int leftSurrounds = 1;
 						leftFunctionName = left + "(";
-						String temp = li.next().toString();
-						while(!temp.equals(")")){
-							if(temp.indexOf(SQLFormatter.DOT)!=-1){
-								left = temp;
+						while(leftSurrounds!=0){
+							String temp = li.next().toString();
+							if(temp.equals("(")){
+								leftSurrounds++;
+							}else if(temp.equals(")")){
+								leftSurrounds--;
+							}else{
+								if(temp.indexOf(SQLFormatter.DOT)!=-1){
+									left = temp;
+								}
 							}
 							leftFunctionName = leftFunctionName +temp;
-							temp = li.next().toString();
 						}
-						//fx(gx(hx(ta.field)))
-						while(temp.equals(")")){
-							leftFunctionName = leftFunctionName +temp;
-							temp = li.next().toString();
-						}
+					}else{
+						li.previous();
 					}
-					li.previous();
 				}
 				String op = li.next().toString();
 				String right = li.next().toString();
 				if(right.lastIndexOf(SQLFormatter.DOT) == -1){
-					if(op.equalsIgnoreCase("in") && right.equals("(")){
+					if(op.equalsIgnoreCase(_ReservedWords.IN) && right.equals("(")){
 						// ta.y in (1,2,3)
 						String temp = li.next().toString();
 						while(!temp.equals(")")){
@@ -512,26 +521,36 @@ public class SQLParser
 							temp = li.next().toString();
 						}
 						right = right +temp; //(1,2,3)
-					}else {
+					}else if(op.equalsIgnoreCase(_ReservedWords.BETWEEN)){
+						// ta.y between 1 and 2 
+						for(int i=1;i<=2;i++){
+							String temp = li.next().toString();
+							right = right + SQLFormatter.SPACE +temp;
+						}
+					}
+					else {
+						//count(ta.field), nvl(t.col,0) or decode(t.col,0,1)
+						//fx(gx(hx(ta.field))), to_char(f(tb.f2),'yy')
 						final String nextVal = li.next().toString();
 						if(nextVal.equals("(")){
-							//count(ta.field), nvl(t.col,0) or decode(t.col,0,1)
+							int rightSurrounds = 1;
 							rightFunctionName = right + "(";
-							String temp = li.next().toString();
-							while(!temp.equals(")")){
-								if(temp.indexOf(SQLFormatter.DOT)!=-1){
-									right = temp;
+							while(rightSurrounds!=0){
+								String temp = li.next().toString();
+								if(temp.equals("(")){
+									rightSurrounds++;
+								}else if(temp.equals(")")){
+									rightSurrounds--;
+								}else{
+									if(temp.indexOf(SQLFormatter.DOT)!=-1){
+										right = temp;
+									}
 								}
 								rightFunctionName = rightFunctionName +temp;
-								temp = li.next().toString();
 							}
-							//fx(gx(hx(ta.field)))
-							while(temp.equals(")")){
-								rightFunctionName = rightFunctionName +temp;
-								temp = li.next().toString();
-							}
+						}else{
+							li.previous();
 						}
-						li.previous();
 					}
 				}
 				
@@ -678,6 +697,12 @@ public class SQLParser
 			if(token instanceof QueryTokens.Table){
 				final QueryTokens.Table table = (QueryTokens.Table)token;
 				if(tableRef.equals(table)){
+					return i;
+				}
+			}
+			else if(checkJoins && token instanceof DerivedTable){
+				final DerivedTable derivedTable = (DerivedTable)token;
+				if(tableRef.getAlias().equals(derivedTable.getAlias())){
 					return i;
 				}
 			}
