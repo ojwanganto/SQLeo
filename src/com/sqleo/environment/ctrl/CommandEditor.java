@@ -182,33 +182,33 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			}
 
 			Boolean PLsql=false;
-			String sqlcmd = requestString.toUpperCase().substring(0, 7);
+			String sqlcmd = requestString.length() > 7 ? requestString.toUpperCase().substring(0, 7) : requestString;
 			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("CREATE") || sqlcmd.startsWith("EXECUTE")) PLsql=true;
 
 			if (requestString != null && requestString.trim().length() > 0 ) {
 				requestString = requestString.trim();
-				StringTokenizer st;
 				if (!PLsql){
-					st = new StringTokenizer(requestString, "\n"); // split sql separated by "\n"
-				} else {
-					st = new StringTokenizer(requestString, ""); // don't split in case of PL/SQL
-				}
-				StringBuilder sqlBuilder = new StringBuilder();
-				while (!stopped && st.hasMoreTokens()) {
-					final String line = st.nextToken();
-					if (line.startsWith("--") || line.startsWith("//") || line.startsWith("#")) {
-	                    // Line is a comment	
-						continue;
-	                } else if (line.endsWith(";")) {
-	                	sqlBuilder.append(line.substring(0, line.lastIndexOf(";")));
-	                	executeCommandQuery(sqlBuilder.toString());
-	                	sqlBuilder = new StringBuilder();
-	                }else{
-	                	sqlBuilder.append(line);
-	                }
-				}
-				if(!stopped && sqlBuilder.toString().length()>0){
-					executeCommandQuery(sqlBuilder.toString());
+					StringTokenizer st = new StringTokenizer(requestString, "\n"); // split sql separated by "\n"
+					StringBuilder sqlBuilder = new StringBuilder();
+					while (!stopped && st.hasMoreTokens()) {
+						final String line = st.nextToken();
+						if (line.startsWith("--") || line.startsWith("//") || line.startsWith("#")) {
+		                    // Line is a comment	
+							continue;
+		                } else if (line.endsWith(";")) {
+		                	sqlBuilder.append(line.substring(0, line.lastIndexOf(";")));
+		                	executeCommandQuery(sqlBuilder.toString());
+		                	sqlBuilder = new StringBuilder();
+		                }else{
+		                	sqlBuilder.append(line);
+		                }
+					}
+					if(!stopped && sqlBuilder.toString().length()>0){
+						executeCommandQuery(sqlBuilder.toString());
+					}
+				}else{
+					//pl-sql, execute whole selected text
+					executeCommandQuery(requestString);
 				}
 			}
 			setEnabled(true);
