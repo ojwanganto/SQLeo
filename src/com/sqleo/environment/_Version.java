@@ -34,5 +34,5 @@ public interface _Version
     public static final String DONATE_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=legrand_legrand@hotmail.com&item_name=Donation+to+SQLeo&currency_code=EUR";
     
     public static final String MAJOR = "2014";
-    public static final String MINOR = "04.rc1";
+    public static final String MINOR = "05.rc1";
 }

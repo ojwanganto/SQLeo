@@ -34,6 +34,17 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2014.05.rc1.zip: 2014-05-09
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.05/
+
+	191 Reverse query: display missing columns for where conditions
+	158 Reverse query: fails with function on ANSI join field
+	142 Reverse query: values in ON conditions generates error
+
+
 SQLeoVQB.2014.04.rc1.zip: 2014-03-31
 
   Thanks to Anudeep Gade for his contribution to this release
