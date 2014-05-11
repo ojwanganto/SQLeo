@@ -68,8 +68,8 @@ public class ListView extends BorderLayoutPanel
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		reset();
 		
-		table.getActionMap().put("copy",new ActionCopyCell());
-		table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.CTRL_MASK),"copy");
+		table.getActionMap().put("Copy",new ActionCopyCell());
+		table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.CTRL_MASK),"Copy");
     }
     
 	protected JTable getJavaComponent()

@@ -79,7 +79,7 @@ public class MDIToolbar extends BorderLayoutPanel
 			{
 				public void mouseClicked(MouseEvent e)
 				{
-					if(Application.confirm(Application.PROGRAM,"run the garbage collector?")) System.gc();
+					if(Application.confirm(Application.PROGRAM,"Run the garbage collector?")) System.gc();
 				}
 			});
             

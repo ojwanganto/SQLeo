@@ -88,12 +88,12 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		history = new History();
 		winGroup = new WindowGroup();
     	
-		JMenu menu = add("file");
+		JMenu menu = add("File");
 		menu.setMnemonic('f');
 		menu.add(createItem(MDIActions.ACTION_NEW_QUERY));
 		menu.add(createItem(MDIActions.ACTION_LOAD_QUERY));
 
-		recentQueryMenu = add("recent queries");
+		recentQueryMenu = add("Recent queries");
 		MDIActions.LoadGivenQuery action = new MDIActions.LoadGivenQuery();  
 
 		if(Preferences.containsKey(RECENT_QUERIES)){
@@ -125,15 +125,15 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		menu.add(recentQueryMenu);
 
 		menu.addSeparator();
-		menu.add(createItem(new MDIActions.Dummy("print..."))).setEnabled(false);
+		menu.add(createItem(new MDIActions.Dummy("Print..."))).setEnabled(false);
 		menu.addSeparator();
 		menu.add(createItem(MDIActions.ACTION_EXIT));
         
-		menu = add("actions");
+		menu = add("Actions");
 		menu.setMnemonic('a');
 		menu.add("<empty>").setEnabled(false);
         
-		menu = add("tools");
+		menu = add("Tools");
 		menu.setMnemonic('t');
 		menu.add(winGroup.add(MDIActions.ACTION_MDI_SHOW_EXPLORER));
 		menu.add(winGroup.add(MDIActions.ACTION_MDI_SHOW_EDITOR));
@@ -144,7 +144,7 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		menu.addSeparator();
 		menu.add(createItem(MDIActions.ACTION_SHOW_PREFERENCES));
         
-        menu = add("window");
+        menu = add("Window");
 		menu.setMnemonic('w');
         menu.add(createItem(MDIActions.ACTION_MDI_CASCADE));
 		menu.add(createItem(MDIActions.ACTION_MDI_TILEH));
@@ -153,7 +153,7 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		menu.addSeparator();
 		menu.add("<empty>").setEnabled(false);
 		
-        menu = add("help");
+        menu = add("Help");
         menu.setMnemonic('h');
 		menu.add(createItem(MDIActions.ACTION_HOWTOUSE));
 		menu.addSeparator();

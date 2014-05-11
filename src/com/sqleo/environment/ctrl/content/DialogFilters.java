@@ -41,7 +41,7 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 	
 	public DialogFilters(ContentPane content)
 	{
-		super(Application.window,"filters");
+		super(Application.window,"Filters");
 		this.content = content;
 		
 		where = new ClauseCondition(this);

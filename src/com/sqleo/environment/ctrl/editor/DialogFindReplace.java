@@ -66,7 +66,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 	
 	public DialogFindReplace(TextView view)
 	{
-		super(Application.window,"find/replace");
+		super(Application.window,"Find/replace");
 		this.view = view;
 		
 		init();
@@ -91,7 +91,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		
 		getContentPane().setLayout(new GridBagLayout());
 		
-		lbl = new JLabel("find:");
+		lbl = new JLabel("Find:");
         gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.EAST;
         gbc.insets = new Insets(8, 5, 3, 0);
@@ -105,7 +105,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
         gbc.insets = new Insets(8, 2, 3, 5);
         add(txtFind,gbc);
 
-        lbl = new JLabel("replace:");
+        lbl = new JLabel("Replace:");
         gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.EAST;
         gbc.insets = new Insets(0, 5, 7, 0);
@@ -118,7 +118,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
         gbc.insets = new Insets(0, 2, 7, 5);
         add(txtReplace,gbc);
 
-        chxCase = new JCheckBox("case sensitive");
+        chxCase = new JCheckBox("Case sensitive");
         chxCase.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         chxCase.setMargin(new Insets(0, 0, 0, 0));
         gbc = new GridBagConstraints();
@@ -128,10 +128,10 @@ public class DialogFindReplace extends JDialog implements ActionListener
         add(chxCase,gbc);
 
 		JPanel pnlB = new JPanel();
-		pnlB.add(btnFind		= new CommandButton("find",this));
-		pnlB.add(btnFindAll		= new CommandButton("find all",this));
-		pnlB.add(btnReplace		= new CommandButton("replace",this));
-		pnlB.add(btnReplaceAll	= new CommandButton("replace all",this));
+		pnlB.add(btnFind		= new CommandButton("Find",this));
+		pnlB.add(btnFindAll		= new CommandButton("Find all",this));
+		pnlB.add(btnReplace		= new CommandButton("Replace",this));
+		pnlB.add(btnReplaceAll	= new CommandButton("Replace all",this));
 		btnReplace.setEnabled(false);
         gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -143,7 +143,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		btnReplaceAll.setEnabled(false);
 		txtReplace.setEnabled(false);
 		disableReplace = true;
-		setTitle("find");
+		setTitle("Find");
 	}
 
 	private int find(int from)
@@ -195,7 +195,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 			view.setCaretPosition(firstMatch.getStartOffset()>0?firstMatch.getStartOffset():0);
 			view.scrollCenter();		}
 		else if(alertNotFound)
-			Application.alert("could not find: " + txtFind.getText());
+			Application.alert("Could not find: " + txtFind.getText());
 	}
 	
 	private boolean findAll()
@@ -274,7 +274,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 			    idx++;
 			}
 			if(found == 0){
-				Application.alert("could not find: " + txtFind.getText());
+				Application.alert("Could not find: " + txtFind.getText());
 			}else {
 				QueryStyledDocument document = (QueryStyledDocument)view.getDocument();
 				document.onChanged(first, last);

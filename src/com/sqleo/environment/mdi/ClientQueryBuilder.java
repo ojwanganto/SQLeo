@@ -208,7 +208,7 @@ public class ClientQueryBuilder extends MDIClient {
 				QueryActions.DIAGRAM_SAVE_AS_IMAGE));
 		btn.setIcon(Application.resources
 				.getIcon(Application.ICON_DIAGRAM_SAVE));
-		btn.setToolTipText("save as image");
+		btn.setToolTipText("Save as image");
 		btn.setText(null);
 
 		toolbar = new Toolbar(Toolbar.HORIZONTAL);
@@ -272,7 +272,7 @@ public class ClientQueryBuilder extends MDIClient {
 	public final void setFileName(String filename) {
 		this.filename = filename;
 
-		String filename2 = filename == null ? "<untitled" + ++counter + ">"
+		String filename2 = filename == null ? "<Untitled" + ++counter + ">"
 				: filename;
 		super.setTitle(getID() + " - " + DEFAULT_TITLE + " : " + filename2
 				+ " : " + keycah);
@@ -307,10 +307,10 @@ public class ClientQueryBuilder extends MDIClient {
 
 	private class ActionLaunch extends MDIActions.AbstractBase {
 		private ActionLaunch() {
-			super(I18n.getString("application.launchQuery", "launch query"));
+			super(I18n.getString("application.launchQuery", "Launch query"));
 			setIcon(Application.ICON_QUERY_LAUNCH);
 			setTooltip(I18n
-					.getString("application.launchQuery", "launch query"));
+					.getString("application.launchQuery", "Launch query"));
 		}
 		
 		private void onLaunchFromDesigner(String subtitle){
@@ -406,7 +406,7 @@ public class ClientQueryBuilder extends MDIClient {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			if (ClientQueryBuilder.this.builder.getConnection() == null) {
-				Application.alert(Application.PROGRAM, "no connection!");
+				Application.alert(Application.PROGRAM, "No connection!");
 				return;
 			}
 
@@ -422,9 +422,9 @@ public class ClientQueryBuilder extends MDIClient {
 
 	public class ActionSave extends MDIActions.AbstractBase {
 		private ActionSave() {
-			setText(I18n.getString("application.saveQuery", "save query"));
+			setText(I18n.getString("application.saveQuery", "Save query"));
 			setIcon(Application.ICON_SAVE);
-			setTooltip(I18n.getString("application.saveQuery", "save query"));
+			setTooltip(I18n.getString("application.saveQuery", "Save query"));
 		}
 
 		private void saveAs() {
@@ -469,7 +469,7 @@ public class ClientQueryBuilder extends MDIClient {
 			} else {
 				String message = I18n.getFormattedString(
 						"application.message.replaceFile",
-						"{0}\nreplace existing file?", new Object[] { ""
+						"{0}\nReplace existing file?", new Object[] { ""
 								+ ClientQueryBuilder.this.filename });
 				int ret = JOptionPane
 						.showConfirmDialog(Application.window, message,

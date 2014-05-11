@@ -132,16 +132,16 @@ public class JumpManager implements Runnable
 		Object jumpTo = null;
 		if(v.size() == 1)
 		{
-			if(JOptionPane.showConfirmDialog(Application.window,"jump from '" + csource + "' to:\n" + v.elementAt(0),Application.PROGRAM,JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION)
+			if(JOptionPane.showConfirmDialog(Application.window,"Jump from '" + csource + "' to:\n" + v.elementAt(0),Application.PROGRAM,JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION)
 				jumpTo = v.elementAt(0);
 		}
 		else if(v.size() > 1)
 		{
-			jumpTo = JOptionPane.showInputDialog(Application.window,"jump from '" + csource + "' to:",Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,v.toArray(),null);
+			jumpTo = JOptionPane.showInputDialog(Application.window,"Jump from '" + csource + "' to:",Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,v.toArray(),null);
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(Application.window,"column '" + csource + "' has no references",Application.PROGRAM,JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(Application.window,"Column '" + csource + "' has no references",Application.PROGRAM,JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		

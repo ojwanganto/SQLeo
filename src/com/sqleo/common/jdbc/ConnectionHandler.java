@@ -131,22 +131,22 @@ public class ConnectionHandler
 		try
 		{
 			String[] info = new String[2];
-			info[0] = "database product name";
+			info[0] = "Database product name";
 			info[1] = connection.getMetaData().getDatabaseProductName();
 			infos.add(info);
 			
 			info = new String[2];
-			info[0] = "database product version";
+			info[0] = "Database product version";
 			info[1] = connection.getMetaData().getDatabaseProductVersion();
 			infos.add(info);
 			
 			info = new String[2];
-			info[0] = "driver name";
+			info[0] = "Driver name";
 			info[1] = connection.getMetaData().getDriverName();
 			infos.add(info);
 			
 			info = new String[2];
-			info[0] = "driver version";
+			info[0] = "Driver version";
 			info[1] = connection.getMetaData().getDriverVersion();
 			infos.add(info);
 		}

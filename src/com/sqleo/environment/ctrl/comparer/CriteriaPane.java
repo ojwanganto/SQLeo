@@ -82,18 +82,18 @@ public class CriteriaPane extends JPanel implements _Starter, _ConnectionListene
 	{
 		JPanel pnlMaster = new JPanel(new GridLayout(4,1,0,0));
 		pnlMaster.setOpaque(false);
-		pnlMaster.add(new JLabel("1) use connection:"));
+		pnlMaster.add(new JLabel("1) Use connection:"));
 		pnlMaster.add(cbxConnection1	= new JComboBox(ConnectionAssistant.getHandlers().toArray()));
-		pnlMaster.add(new JLabel("1) schema:"));
+		pnlMaster.add(new JLabel("1) Schema:"));
 		pnlMaster.add(cbxSchema1 = new JComboBox());
 		cbxConnection1.setSelectedItem(null);
 		cbxSchema1.setEnabled(false);
 		
 		JPanel pnlSlave = new JPanel(new GridLayout(4,1,0,0));
 		pnlSlave.setOpaque(false);
-		pnlSlave.add(new JLabel("2) use connection:"));
+		pnlSlave.add(new JLabel("2) Use connection:"));
 		pnlSlave.add(cbxConnection2	= new JComboBox(ConnectionAssistant.getHandlers().toArray()));
-		pnlSlave.add(new JLabel("2) schema:"));
+		pnlSlave.add(new JLabel("2) Schema:"));
 		pnlSlave.add(cbxSchema2 = new JComboBox());
 		cbxConnection2.setSelectedItem(null);
 		cbxSchema2.setEnabled(false);
@@ -114,7 +114,7 @@ public class CriteriaPane extends JPanel implements _Starter, _ConnectionListene
 		gbl.setConstraints(pnlSlave,gbc);
 		add(pnlSlave);
 		
-		chxViceVersa = new JCheckBox("vice versa");
+		chxViceVersa = new JCheckBox("Vice versa");
 		chxViceVersa.setOpaque(false);
 		gbc.insets = new Insets(10,5,0,5);
 		gbl.setConstraints(chxViceVersa,gbc);
@@ -123,7 +123,7 @@ public class CriteriaPane extends JPanel implements _Starter, _ConnectionListene
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		gbc.insets = new Insets(20,5,0,5);
 		gbc.weightx	= 0.0;
-		JLabel lbl = new JLabel("table:");
+		JLabel lbl = new JLabel("Table:");
 		gbl.setConstraints(lbl,gbc);
 		add(lbl);
         
@@ -140,31 +140,31 @@ public class CriteriaPane extends JPanel implements _Starter, _ConnectionListene
 		
 		cbxPattern.setPreferredSize(txtTables.getPreferredSize());
 		
-		chxColumns = new JCheckBox("columns");
+		chxColumns = new JCheckBox("Columns");
 		chxColumns.setOpaque(false);
 		gbc.insets = new Insets(10,5,0,5);
 		gbl.setConstraints(chxColumns,gbc);
 		add(chxColumns);
 		
-		chxPrimaryKeys = new JCheckBox("primary keys");
+		chxPrimaryKeys = new JCheckBox("Primary keys");
 		chxPrimaryKeys.setOpaque(false);
 		gbc.insets	= new Insets(0,5,0,5);
 		gbl.setConstraints(chxPrimaryKeys,gbc);
 		add(chxPrimaryKeys);
 		
-		chxIndeces = new JCheckBox("indices");
+		chxIndeces = new JCheckBox("Indices");
 		chxIndeces.setOpaque(false);
 		gbc.insets	= new Insets(0,5,0,5);
 		gbl.setConstraints(chxIndeces,gbc);
 		add(chxIndeces);
 		
-		chxExportedKeys = new JCheckBox("exported keys");
+		chxExportedKeys = new JCheckBox("Exported keys");
 		chxExportedKeys.setOpaque(false);
 		gbc.insets	= new Insets(0,5,0,5);
 		gbl.setConstraints(chxExportedKeys,gbc);
 		add(chxExportedKeys);
 		
-		chxImportedKeys = new JCheckBox("imported keys");
+		chxImportedKeys = new JCheckBox("Imported keys");
 		chxImportedKeys.setOpaque(false);
 		gbc.insets	= new Insets(0,5,0,5);
 		gbl.setConstraints(chxImportedKeys,gbc);
@@ -175,7 +175,7 @@ public class CriteriaPane extends JPanel implements _Starter, _ConnectionListene
 		gbc.gridwidth	= GridBagConstraints.REMAINDER;
 		gbc.insets		= new Insets(25,2,0,2);
 		
-		cb = new CommandButton("start",this);
+		cb = new CommandButton("Start",this);
 		gbl.setConstraints(cb,gbc);
 		add(cb);
 		
@@ -206,7 +206,7 @@ public class CriteriaPane extends JPanel implements _Starter, _ConnectionListene
 
 	public void actionPerformed(ActionEvent ae)
 	{
-		boolean stop = cb.getText().equals("stop");
+		boolean stop = cb.getText().equals("Stop");
 		
 		if(!stop && cbxConnection1.getSelectedIndex() == -1) return;
 		if(!stop && cbxSchema1.getItemCount() > 0 && cbxSchema1.getSelectedIndex() == -1) return;
@@ -221,7 +221,7 @@ public class CriteriaPane extends JPanel implements _Starter, _ConnectionListene
 		else
 		{
 			setEnabled(false);
-			cb.setText("stop");
+			cb.setText("Stop");
 			analyzer.perform(this);
 		}
 	}
@@ -245,7 +245,7 @@ public class CriteriaPane extends JPanel implements _Starter, _ConnectionListene
 	public void onFinished()
 	{
 		setEnabled(true);
-		cb.setText("start");
+		cb.setText("Start");
 	}
 	
 	public boolean isViceVersa()

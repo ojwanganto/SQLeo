@@ -90,7 +90,7 @@ public class ClientDefinition extends MDIClient
 	{
 		private ActionChooseColumns()
 		{
-			putValue(NAME,"choose columns...");
+			putValue(NAME,"Choose columns...");
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -109,7 +109,7 @@ public class ClientDefinition extends MDIClient
 	{
 		private ActionCopyList()
 		{
-			putValue(NAME,"copy list");
+			putValue(NAME,"Copy list");
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -122,7 +122,7 @@ public class ClientDefinition extends MDIClient
 	{
 		private ActionRefreshList()
 		{
-			putValue(NAME,"refresh list");
+			putValue(NAME,"Refresh list");
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -134,7 +134,7 @@ public class ClientDefinition extends MDIClient
 
 	private class ActionShowContent extends AbstractActionContent
 	{
-		ActionShowContent(){this.putValue(NAME,"show content");}
+		ActionShowContent(){this.putValue(NAME,"Show content");}
 		
 		protected boolean isShowCountRecordsPopup(){
 			return false;
@@ -173,12 +173,12 @@ public class ClientDefinition extends MDIClient
 		{
 			if(records == 0)
 			{
-				String message = this.getDefaultMessage(records) + "\ndo you want continue?";
+				String message = this.getDefaultMessage(records) + "\nDo you want continue?";
 				return JOptionPane.showConfirmDialog(Application.window,message,"show content",JOptionPane.YES_NO_OPTION);
 			}
 			else
 			{
-				String message = this.getDefaultMessage(records) + "\ndo you want retrieve?";
+				String message = this.getDefaultMessage(records) + "\nDo you want retrieve?";
 				return JOptionPane.showConfirmDialog(Application.window,message,"show content",JOptionPane.YES_NO_CANCEL_OPTION);
 			}
 		}

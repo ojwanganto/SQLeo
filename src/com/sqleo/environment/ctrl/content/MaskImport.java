@@ -103,7 +103,7 @@ public class MaskImport extends AbstractMaskPerform
 			view.getControl().doRefreshStatus();
 
 			btnStop.setEnabled(false);
-			lblMsg.setText("ready!");
+			lblMsg.setText("Ready!");
 			
 			return true;
 		}
@@ -125,7 +125,7 @@ public class MaskImport extends AbstractMaskPerform
 
 		AbstractChoice()
 		{
-			setBorder(new TitledBorder("options"));
+			setBorder(new TitledBorder("Options"));
 		}
 /*		
 		void initComponents()
@@ -237,14 +237,14 @@ public class MaskImport extends AbstractMaskPerform
 			super();
 			
 			JPanel pnl1 = new JPanel(new GridLayout(3,1));
-			pnl1.add(cbxHeader = new JCheckBox("with header"));
+			pnl1.add(cbxHeader = new JCheckBox("With header"));
 			pnl1.add(cbxNull = new JCheckBox("null if blanks"));
-			pnl1.add(cbxTrim = new JCheckBox("trim value"));
+			pnl1.add(cbxTrim = new JCheckBox("Trim value"));
 			
 			JPanel pnl2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			pnl2.add(new JLabel("delimiter:"));
-			pnl2.add(rbTab = new JRadioButton("tab",true));
-			pnl2.add(rbOther = new JRadioButton("other"));
+			pnl2.add(new JLabel("Delimiter:"));
+			pnl2.add(rbTab = new JRadioButton("Tab",true));
+			pnl2.add(rbOther = new JRadioButton("Other"));
 			pnl2.add(txtDelimiter = new JTextField(";",5));
 			txtDelimiter.setEditable(false);
 			txtDelimiter.setEnabled(false);

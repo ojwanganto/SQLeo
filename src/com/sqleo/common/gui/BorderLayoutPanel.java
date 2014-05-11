@@ -49,7 +49,7 @@ public class BorderLayoutPanel extends JPanel
 	public final void setLayout(LayoutManager mgr)
 	{
 		if(!(mgr instanceof BorderLayout))
-			throw new IllegalArgumentException("this is a BorderLayout panel");
+			throw new IllegalArgumentException("This is a BorderLayout panel");
 		
 		super.setLayout(mgr);
 	}

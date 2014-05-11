@@ -56,7 +56,7 @@ public abstract class AbstractDialogConfirm extends AbstractDialogModal
 	protected void initComponent(Component owner, String title, Dimension size)
 	{
 		super.initComponent(owner, title, size);
-		btnConfirm = insertButton(1,I18n.getString("application.ok","ok"));
+		btnConfirm = insertButton(1,I18n.getString("application.ok","Ok"));
 
 		ActionListener al = new ActionListener()
 		{

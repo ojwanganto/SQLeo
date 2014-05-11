@@ -74,7 +74,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		JMenuItem iRi = add(view.getControl().getActionMap().get("record-insert"));
 		JMenuItem iRd = add(view.getControl().getActionMap().get("record-delete"));
 		addSeparator(); // 14
-		add("save record").setEnabled(false);
+		add("Save record").setEnabled(false);
 		
 		addSeparator(); // 16
 		add(new ActionJump());
@@ -175,7 +175,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionCopySpecial()
 		{
-			this.putValue(NAME,"copy special");
+			this.putValue(NAME,"Copy special");
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -236,7 +236,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		private static final String SQ_LEO_TEMP_TXT = "SQLeo_temp.txt";
 
-		ActionCopyAndOpen(){super("copy and open in editor");}
+		ActionCopyAndOpen(){super("Copy and open in editor");}
 		
 		public void actionPerformed(ActionEvent ae)
 		{
@@ -256,7 +256,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 
 	private class ActionCopy extends AbstractAction
 	{
-		ActionCopy(){super("copy");}
+		ActionCopy(){super("Copy");}
 		
 		ActionCopy(String title){super(title);}
 		
@@ -298,7 +298,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionPaste()
 		{
-			super("paste");
+			super("Paste");
 			setEnabled(!view.isReadOnly());
 		}
 		
@@ -326,7 +326,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionClone()
 		{
-			this.putValue(NAME,"clone record");
+			this.putValue(NAME,"Clone record");
 			setEnabled(!view.isReadOnly());
 		}
 
@@ -349,7 +349,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionTrim()
 		{
-			this.putValue(NAME,"trim trailing spaces");
+			this.putValue(NAME,"Trim trailing spaces");
 			setEnabled(!view.isReadOnly());
 		}
 
@@ -438,13 +438,13 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	
 	private class ActionSetNull extends AbstractActionSet
 	{
-		ActionSetNull(){super("set <null>");}
+		ActionSetNull(){super("Set <null>");}
 		Object getValue(){return null;}
 	}
 	
 	private class ActionSetToday extends AbstractActionSet
 	{
-		ActionSetToday(){super("set <today>");}
+		ActionSetToday(){super("Set <today>");}
 		Object getValue(){return new Date(System.currentTimeMillis());}
 	}
 	
@@ -452,7 +452,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionResetOldValue()
 		{
-			this.putValue(NAME,"reset <old-value>");
+			this.putValue(NAME,"Reset <old-value>");
 			setEnabled(!view.isReadOnly());
 		}
 
@@ -509,13 +509,13 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	
 	private class ActionSortAsc extends AbstractActionSort
 	{
-		ActionSortAsc(){super("sort ascending");}
+		ActionSortAsc(){super("Sort ascending");}
 		short getType(){return QueryTokens.Sort.ASCENDING;}
 	}
 	
 	private class ActionSortDesc extends AbstractActionSort
 	{
-		ActionSortDesc(){super("sort descending");}
+		ActionSortDesc(){super("Sort descending");}
 		short getType(){return QueryTokens.Sort.DESCENDING;}
 	}
 	
@@ -523,7 +523,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionJump()
 		{
-			this.putValue(NAME,"jump...");
+			this.putValue(NAME,"Jump...");
 			setEnabled(!view.isReadOnly());
 		}
 

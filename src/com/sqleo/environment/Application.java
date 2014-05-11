@@ -24,6 +24,7 @@
 
 package com.sqleo.environment;
 
+import java.awt.Font;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
@@ -32,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.Locale;
 
 import javax.swing.ImageIcon;
@@ -39,6 +41,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JWindow;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 import com.sqleo.common.util.Appearance;
 import com.sqleo.common.util.I18n;
@@ -275,6 +280,27 @@ public class Application extends Appearance implements _Constants,_Version
        }
     }
     
+    private static void initializeFontSize() {
+        final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, 100);
+        if (fontSizePercentage != 100) {
+        	final float multiplier = fontSizePercentage / 100.0f;
+        	final UIDefaults defaults = UIManager.getDefaults();
+            for (Enumeration e = defaults.keys(); e.hasMoreElements();) {
+            	final Object key = e.nextElement();
+            	final Object value = defaults.get(key);
+                if (value instanceof Font) {
+                    Font font = (Font) value;
+                    final int newSize = Math.round(font.getSize() * multiplier);
+                    if (value instanceof FontUIResource) {
+                        defaults.put(key, new FontUIResource(font.getName(), font.getStyle(), newSize));
+                    } else {
+                        defaults.put(key, new Font(font.getName(), font.getStyle(), newSize));
+                    }
+                }
+            }
+        }
+    }
+    
     public static void main(String[] args)
     {    	
         // Fix for java Bug ID:  4521075
@@ -303,25 +329,26 @@ public class Application extends Appearance implements _Constants,_Version
         }
         System.out.println("SystemLookAndFeel: "+javax.swing.UIManager.getSystemLookAndFeelClassName());
         System.out.println("SQLeoUsingLookAndFeel: "+javax.swing.UIManager.getLookAndFeel());
-
         
 		Application.loadSession();
 		Application.initI18n();
-		Application.println("loading resources...");
+		initializeFontSize();
+		
+		Application.println("Loading resources...");
 		Application.loadIcons();
-		Application.println("loading window...");
+		Application.println("Loading window...");
         Application.window = new MDIWindow();
 		//set icon
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		// ticket #126: Compatibility Java Web Start
 		//URL imgUrl = ClassLoader.getSystemResource("images/sqleo.png");
 		// check if compatible with PNSPlugin 
-                URL imgUrl = Resources.class.getResource("/images/sqleo.png");
+        URL imgUrl = Resources.class.getResource("/images/sqleo.png");
 		Application.window.setIconImage(new ImageIcon(imgUrl).getImage());
 		Application.window.show();
 		
 		JWindow wait = new JWindow(window);
-		wait.getContentPane().add(new JLabel("wait, auto connections...",JLabel.CENTER));
+		wait.getContentPane().add(new JLabel("Wait, auto connections...",JLabel.CENTER));
 		wait.setSize(250,40);
 		wait.setLocationRelativeTo(window);
 		wait.setVisible(true);

@@ -55,7 +55,7 @@ public abstract class AbstractMaskPerform extends BorderLayoutPanel
 		super(2,10);
 		setBorder(new CompoundBorder(new CustomLineBorder(false,false,true,false), new EmptyBorder(20,10,15,10)));
 		
-		lblFile = new JLabel("file: <empty>");
+		lblFile = new JLabel("File: <empty>");
 		lblFile.setBorder(new CustomLineBorder(false,false,true,false));
 		setComponentNorth(lblFile);
 		
@@ -65,7 +65,7 @@ public abstract class AbstractMaskPerform extends BorderLayoutPanel
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				AbstractMaskPerform.this.lblMsg.setText("stopped!");
+				AbstractMaskPerform.this.lblMsg.setText("Stopped!");
 				AbstractMaskPerform.this.btnStop.setEnabled(false);
 				
 				AbstractMaskPerform.this.view.onTableChanged(true);
@@ -102,7 +102,7 @@ public abstract class AbstractMaskPerform extends BorderLayoutPanel
 	void init()
 	{
 		btnStop.setEnabled(true);
-		lblMsg.setText("wait...");
+		lblMsg.setText("Wait...");
 	}
 
 	abstract void next();

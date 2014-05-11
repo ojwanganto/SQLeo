@@ -49,7 +49,7 @@ public abstract class AbstractActionContent extends AbstractAction
 
 	protected int showConfirmDialog(int records)
 	{
-		String message = this.getDefaultMessage(records) + "\ndo you want continue?";
+		String message = this.getDefaultMessage(records) + "\nDo you want continue?";
 		return JOptionPane.showConfirmDialog(Application.window,message,this.getValue(NAME).toString(),JOptionPane.YES_NO_OPTION);
 	}
 	

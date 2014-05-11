@@ -125,14 +125,14 @@ public class ContentView extends JPanel implements ListSelectionListener
 		
 		data.getColumnModel().getSelectionModel().addListSelectionListener(this);
 		
-			data.getActionMap().put("copy", ((JMenuItem)popup.getSubElementsAt(1)).getAction());
-			data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C,InputEvent.CTRL_MASK),"copy");
+			data.getActionMap().put("Copy", ((JMenuItem)popup.getSubElementsAt(1)).getAction());
+			data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C,InputEvent.CTRL_MASK),"Copy");
 			
-			data.getActionMap().put("paste", ((JMenuItem)popup.getSubElementsAt(2)).getAction());
-			data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V,InputEvent.CTRL_MASK),"paste");
+			data.getActionMap().put("Paste", ((JMenuItem)popup.getSubElementsAt(2)).getAction());
+			data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V,InputEvent.CTRL_MASK),"Paste");
 					
-			data.getActionMap().put("set-null", ((JMenuItem)popup.getSubElementsAt(3)).getAction());
-			data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"set-null");
+			data.getActionMap().put("Set-null", ((JMenuItem)popup.getSubElementsAt(3)).getAction());
+			data.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"Set-null");
 
 		
 			MouseAdapter ma = new MouseAdapter()

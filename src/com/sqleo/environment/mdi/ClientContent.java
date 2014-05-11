@@ -138,7 +138,7 @@ public class ClientContent extends MDIClientWithCRActions
 				&& !ClientContent.this.control.isReadOnly()){
 					
 				  if(isContentChanged()){
-					int option = JOptionPane.showConfirmDialog(Application.window,"do you want to apply changes to db?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
+					int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to apply changes to db?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
 					if(option == JOptionPane.YES_OPTION){
 						ClientContent.this.control.getActionMap().get("changes-save").actionPerformed(null);
 					}
@@ -221,7 +221,7 @@ public class ClientContent extends MDIClientWithCRActions
 	
 	private class ActionReverseSyntax extends AbstractAction {
 		ActionReverseSyntax() {
-			putValue(NAME, "reverse syntax");
+			putValue(NAME, "Reverse syntax");
 		}
 
 		@Override
@@ -303,7 +303,7 @@ public class ClientContent extends MDIClientWithCRActions
 	{
 		ActionShowUpdateCriteria()
 		{
-			super("update criteria...");			
+			super("Update criteria...");			
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -317,7 +317,7 @@ public class ClientContent extends MDIClientWithCRActions
 	{
 		ActionShowChanges()
 		{
-			super("show changes...");
+			super("Show changes...");
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -339,7 +339,7 @@ public class ClientContent extends MDIClientWithCRActions
 	{
 		ActionShowImport()
 		{
-			this.putValue(NAME, "import data...");
+			this.putValue(NAME, "Import data...");
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -353,7 +353,7 @@ public class ClientContent extends MDIClientWithCRActions
 	{
 		ActionShowExportExcel()
 		{
-			this.putValue(NAME, "export excel...");
+			this.putValue(NAME, "Export excel...");
 			this.putValue(SMALL_ICON,
 					Application.resources.getIcon(Application.ICON_EXCEL));
 			putValue(SHORT_DESCRIPTION, "export excel...");
@@ -370,7 +370,7 @@ public class ClientContent extends MDIClientWithCRActions
 	{
 		ActionShowExport()
 		{
-			this.putValue(NAME, "export data...");
+			this.putValue(NAME, "Export data...");
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -385,8 +385,8 @@ public class ClientContent extends MDIClientWithCRActions
 		ActionShowFilter()
 		{
 			this.putValue(SMALL_ICON, Application.resources.getIcon(Application.ICON_FILTER));
-			this.putValue(SHORT_DESCRIPTION, "filter");
-			this.putValue(NAME, "filter...");
+			this.putValue(SHORT_DESCRIPTION, "Filter");
+			this.putValue(NAME, "Filter...");
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -401,8 +401,8 @@ public class ClientContent extends MDIClientWithCRActions
 		ActionShowFindReplace()
 		{
 			this.putValue(SMALL_ICON, Application.resources.getIcon(Application.ICON_FIND));
-			this.putValue(SHORT_DESCRIPTION, "find/replace...");
-			this.putValue(NAME, "find/replace...");			
+			this.putValue(SHORT_DESCRIPTION, "Find/replace...");
+			this.putValue(NAME, "Find/replace...");			
 		}
 		
 		public void actionPerformed(ActionEvent ae)

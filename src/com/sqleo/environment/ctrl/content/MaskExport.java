@@ -181,7 +181,7 @@ public class MaskExport extends AbstractMaskPerform
 			eChoice.close();
 			
 			btnStop.setEnabled(false);
-			lblMsg.setText("ready!");
+			lblMsg.setText("Ready!");
 			
 			return true;
 		}
@@ -208,7 +208,7 @@ public class MaskExport extends AbstractMaskPerform
 
 		AbstractChoice()
 		{
-			setBorder(new TitledBorder("options"));
+			setBorder(new TitledBorder("Options"));
 			initComponents();
 		}
 		
@@ -222,11 +222,11 @@ public class MaskExport extends AbstractMaskPerform
 		{
 			JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			setComponentSouth(pnl);
-			pnl.add(cbxFromGrid = new JCheckBox("from grid"));
+			pnl.add(cbxFromGrid = new JCheckBox("From grid"));
 			cbxFromGrid.setSelected(false);
 			pnl.add(new JLabel("records:"));
-			pnl.add(rbAll	= new JRadioButton("all",true));
-			pnl.add(rbUser	= new JRadioButton("define:"));
+			pnl.add(rbAll	= new JRadioButton("All",true));
+			pnl.add(rbUser	= new JRadioButton("Define:"));
 			pnl.add(txtInterval = new JTextField("1..",8));
 			txtInterval.setEditable(false);
 			txtInterval.setEnabled(false);
@@ -308,7 +308,7 @@ public class MaskExport extends AbstractMaskPerform
 		void initComponents()
 		{
 			JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			pnl.add(cbxHeader = new JCheckBox("with header"));
+			pnl.add(cbxHeader = new JCheckBox("With header"));
 			setComponentCenter(pnl);
 			
 			super.initComponents();
@@ -371,10 +371,10 @@ public class MaskExport extends AbstractMaskPerform
 		void initComponents()
 		{
 			JPanel pnl1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			pnl1.add(new JLabel("table name:"));
+			pnl1.add(new JLabel("Table name:"));
 			pnl1.add(txtTable = new JTextField(10));			
 			
-			cbxDelete = new JCheckBox("with delete statement");
+			cbxDelete = new JCheckBox("With delete statement");
 			
 			JPanel pnl2 = new JPanel(new GridLayout(2,1));
 			pnl2.add(pnl1);
@@ -459,14 +459,14 @@ public class MaskExport extends AbstractMaskPerform
 		void initComponents()
 		{
 			JPanel pnl1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			pnl1.add(cbxHeader = new JCheckBox("with header"));
-			pnl1.add(cbxNull = new JCheckBox("empty if null"));
-			pnl1.add(cbxCote = new JCheckBox("cote text"));
+			pnl1.add(cbxHeader = new JCheckBox("With header"));
+			pnl1.add(cbxNull = new JCheckBox("Empty if null"));
+			pnl1.add(cbxCote = new JCheckBox("Cote text"));
 			
 			JPanel pnl2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			pnl2.add(new JLabel("delimiter:"));
-			pnl2.add(rbTab = new JRadioButton("tab",true));
-			pnl2.add(rbOther = new JRadioButton("other"));
+			pnl2.add(new JLabel("Delimiter:"));
+			pnl2.add(rbTab = new JRadioButton("Tab",true));
+			pnl2.add(rbOther = new JRadioButton("Other"));
 			pnl2.add(txtDelimiter = new JTextField(";",5));
 			txtDelimiter.setEditable(false);
 			txtDelimiter.setEnabled(false);

@@ -95,13 +95,13 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 		
 		Container container = new Container();
 		container.setLayout(cv = new CardLayout());
-		container.add("first", navigator.getRightView());
-		container.add("last", search.getRightView());
+		container.add("First", navigator.getRightView());
+		container.add("Last", search.getRightView());
 		split.setRightComponent(container);
 		
 		tp = new JTabbedPane(JTabbedPane.BOTTOM);
-		tp.addTab("browse",navigator);
-		tp.addTab("search",search);
+		tp.addTab("Browse",navigator);
+		tp.addTab("Search",search);
 		tp.addChangeListener(this);
 		split.setLeftComponent(tp);        
 	}
@@ -314,14 +314,14 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 	{
 		private ActionChooseColumns()
 		{
-			putValue(NAME,"choose columns...");
+			putValue(NAME,"Choose columns...");
 			setEnabled(false);
 		}
         
 		public void actionPerformed(ActionEvent ae)
 		{
 			String dvname = MetadataExplorer.this.navigator.getSelectionNode().getPath()[1].toString();
-			ColumnsChooser.showDialog(dvname,"table types");
+			ColumnsChooser.showDialog(dvname,"Table types");
 		}
 	}
 
@@ -329,7 +329,7 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 	{
 		private ActionCopyList()
 		{
-			putValue(NAME,"copy list");
+			putValue(NAME,"Copy list");
 			setEnabled(false);
 		}
         
@@ -352,7 +352,7 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 	{
 		private ActionExportList()
 		{
-			putValue(NAME,"export list...");
+			putValue(NAME,"Export list...");
 			setEnabled(false);
 		}
         
@@ -376,7 +376,7 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 		private ActionRefreshList()
 		{
 			putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_F5,0));
-			putValue(NAME,"refresh");
+			putValue(NAME,"Refresh");
 			setEnabled(false);
 		}
         

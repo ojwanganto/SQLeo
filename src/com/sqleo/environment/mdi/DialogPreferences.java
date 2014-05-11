@@ -34,6 +34,7 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -74,6 +75,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	private JComboBox jComboBoxLanguage = new JComboBox();
 	private JCheckBox jCheckBoxTrace = new JCheckBox();
 	private JTextField jTextFieldMaxRowFetchSize = new JTextField();
+	private JTextField jTextFieldFontSize = new JTextField();
+
 
 	private JTextField jTextFieldMaxColSize = new JTextField();
 	private JCheckBox jCheckBoxAutoCommit = new JCheckBox();
@@ -86,58 +89,59 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	public static final String ASK_BEFORE_EXIT_KEY = "application.askBeforeExit";
 	public static final String AUTO_COMPLETE_KEY = "application.autoComplete";
 	public static final String QB_RELATION_RENDER_ARC_KEY = "querybuilder.isArcRelationRender";
+	public static final String FONT_SIZE_PERCENTAGE = "application.fontSizePercentage";
 
 	public DialogPreferences() {
 		super(Application.window, Application.PROGRAM + ".preferences", 350,
-				390);
+				400);
 
 		JPanel pnlQB = new JPanel(new GridLayout(0, 1));
 		pnlQB.setBorder(new EmptyBorder(10, 5, 90, 5));
 
 		pnlQB.add(optQbAutoJoin = new JCheckBox(I18n.getString(
-				"application.preferences.autoJoin", "auto join"), Preferences
+				"application.preferences.autoJoin", "Auto join"), Preferences
 				.getBoolean("querybuilder.auto-join", true)));
 		pnlQB.add(optQbAutoAlias = new JCheckBox(I18n.getString(
-				"application.preferences.autoAlias", "auto alias"), Preferences
+				"application.preferences.autoAlias", "Auto alias"), Preferences
 				.getBoolean("querybuilder.auto-alias", true)));
 		pnlQB.add(new JSeparator());
 		pnlQB.add(optQbUseQuote = new JCheckBox(I18n.getString(
 				"application.preferences.alwaysQuoteIdentifiers",
-				"always quote identifiers"), Preferences.getBoolean(
+				"Always quote identifiers"), Preferences.getBoolean(
 				"querybuilder.use-quote", true)));
 		pnlQB.add(optQbUseSchema = new JCheckBox(I18n.getString(
 				"application.preferences.useSchemaName",
-				"use schema name in syntax definition"), Preferences
+				"Use schema name in syntax definition"), Preferences
 				.getBoolean("querybuilder.use-schema", true)));
 		pnlQB.add(new JSeparator());
 		pnlQB.add(optQbLoadAtOnce = new JCheckBox(I18n.getString(
 				"application.preferences.loadObjectsAtOnce",
-				"load table objects list at once"), Preferences.getBoolean(
+				"Load table objects list at once"), Preferences.getBoolean(
 				"querybuilder.load-objects-at-once", true)));
 		pnlQB.add(optQbSelectAll = new JCheckBox(I18n.getString(
 				"application.preferences.selectAllColumns",
-				"aout select all colmuns"), Preferences.getBoolean(
+				"Auto select all colmuns"), Preferences.getBoolean(
 				"querybuilder.select-all-columns", true)));
 		
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,2,2));
 		boolean relationRendering = Preferences.getBoolean(QB_RELATION_RENDER_ARC_KEY , true);
 		optQbRelrenderArc  = new JRadioButton(I18n.getString(
 				"application.preferences.relationsRenderArc",
-				"arc"), relationRendering);
+				"Arc"), relationRendering);
 		optQbRelrenderLinear  = new JRadioButton(I18n.getString(
 				"application.preferences.relationsRenderLinear",
-				"linear"), !relationRendering);
+				"Linear"), !relationRendering);
 		ButtonGroup radioGroup = new ButtonGroup();
 		radioGroup.add(optQbRelrenderArc);
 		radioGroup.add(optQbRelrenderLinear);
-		JLabel jLabelRelRender = new JLabel(I18n.getString("application.preferences.relationsRender","relations render"));
+		JLabel jLabelRelRender = new JLabel(I18n.getString("application.preferences.relationsRender","Relations render"));
 		buttonPanel.add(jLabelRelRender);
 		buttonPanel.add(optQbRelrenderArc);
 		buttonPanel.add(optQbRelrenderLinear);
 		pnlQB.add(buttonPanel);
 
 		jLabelLanguage.setText(I18n.getString(
-				"application.preferences.language", "language"));
+				"application.preferences.language", "Language"));
 		jLabelAutoCommitInfo.setText(I18n.getString(
 				"application.preferences.autoCommitInfo",
 				I18n.getString(
@@ -177,7 +181,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		jComboBoxLanguage.setSelectedIndex(selectedItem);
 
 		jCheckBoxTrace.setText(I18n.getString("application.preferences.trace",
-				"trace log (need restart)"));
+				"Trace log (need restart)"));
 		jCheckBoxTrace.setSelected(Preferences.getBoolean("application.trace",
 				true));
 		jCheckBoxCheckUpdate.setText(I18n.getString("application.preferences.checkforupdate",
@@ -193,7 +197,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		jCheckBoxAskBeforeExit.setSelected(Preferences.getBoolean(
 				ASK_BEFORE_EXIT_KEY, true));
 		jCheckBoxAutoCommit.setText(I18n.getString(
-				"application.preferences.autoCommit", "auto commit"));
+				"application.preferences.autoCommit", "Auto commit"));
 		jCheckBoxAutoCommit.setSelected(Preferences.getBoolean(
 				"application.autoCommit", true));
 		jCheckBoxAutoCommit.addItemListener(new ItemListener() {
@@ -243,12 +247,22 @@ public class DialogPreferences extends AbstractDialogConfirm {
 
 		
 		
-
 		JPanel pnlGeneral = new JPanel(new GridLayout(0, 1));
-		pnlGeneral.setBorder(new EmptyBorder(10, 5, 5, 5));
 
-		pnlGeneral.add(jLabelLanguage);
-		pnlGeneral.add(jComboBoxLanguage);
+		JPanel pnlLanguage = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlLanguage.add(jLabelLanguage);
+		pnlLanguage.add(jComboBoxLanguage);
+		pnlGeneral.add(pnlLanguage);
+		
+		// add font size percentage
+		JPanel pnlFont = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlFont.add(new JLabel(I18n.getString(
+				FONT_SIZE_PERCENTAGE, "Font size scaling % (need restart)")));
+		jTextFieldFontSize.setText(String.valueOf(Preferences.getInteger(
+				FONT_SIZE_PERCENTAGE, 100)));
+		pnlFont.add(jTextFieldFontSize);
+		pnlGeneral.add(pnlFont);
+		
 		pnlGeneral.add(jCheckBoxTrace);
 		pnlGeneral.add(jCheckBoxCheckUpdate);
 		pnlGeneral.add(jCheckBoxAskBeforeExit);
@@ -271,9 +285,9 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		pnlCommand.add(jCheckBoxAutoComplete);
 
 		JTabbedPane options = new JTabbedPane();
-		options.addTab("general", pnlGeneral);
-		options.addTab("command editor", pnlCommand);
-		options.addTab("query builder", pnlQB);
+		options.addTab("General", pnlGeneral);
+		options.addTab("Command editor", pnlCommand);
+		options.addTab("Query builder", pnlQB);
 
 		getContentPane().add(options);
 	}
@@ -344,6 +358,9 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				new Integer(jTextFieldMaxColSize.getText()));
 		Preferences.set(CONTENT_MAX_ROWS_FETCH_SIZE_KEY,
 				new Integer(jTextFieldMaxRowFetchSize.getText()));
+		Preferences.set(FONT_SIZE_PERCENTAGE,
+				new Integer(jTextFieldFontSize.getText()));
+
 
 		return true;
 	}

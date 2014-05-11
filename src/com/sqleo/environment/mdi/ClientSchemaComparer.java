@@ -29,7 +29,7 @@ import com.sqleo.environment.ctrl.SchemaComparer;
 
 public class ClientSchemaComparer extends MDIClient
 {
-	public static final String DEFAULT_TITLE = "schema comparer";
+	public static final String DEFAULT_TITLE = "Schema comparer";
 	
 	private SchemaComparer control;
 	private JMenuItem[] m_actions;

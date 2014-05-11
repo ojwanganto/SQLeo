@@ -52,7 +52,7 @@ public class DialogUpdateCriteria extends AbstractDialogConfirm implements ItemL
 
 	public DialogUpdateCriteria(ContentPane content)
 	{
-		super(Application.window,"define update criteria",350,275);
+		super(Application.window,"Define update criteria",350,275);
 		this.content = content;
 		
 		DefaultTableModel model = new DefaultTableModel(0,2)

@@ -149,7 +149,7 @@ public class TaskUpdate implements Runnable
 	{
 		String title = e.getClass().getName();
 		String message = Text.wrap(e.toString(),75);
-		message += "\ndo you want continue?";
+		message += "\nDo you want continue?";
 		
 		return JOptionPane.showConfirmDialog(Application.window,message,title,JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;		
 	}

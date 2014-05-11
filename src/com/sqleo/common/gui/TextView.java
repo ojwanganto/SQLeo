@@ -59,6 +59,7 @@ import javax.swing.text.TabStop;
 import com.sqleo.common.util.Trie;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
+import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.QueryStyledDocument;
 
 
@@ -74,6 +75,17 @@ public class TextView extends BorderLayoutPanel
 	{
 		editor = new JTextPane();
 		editor.setDocument(doc);
+		
+		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, 100);
+        final int editorFontSize;
+        if (fontSizePercentage != 100) {
+        	final float multiplier = fontSizePercentage / 100.0f;
+        	editorFontSize = Math.round(14 * multiplier);
+        }else{
+        	editorFontSize = 14;
+        }
+		editor.setFont(new Font("monospaced", Font.PLAIN, editorFontSize));
+		
 		TextLineNumber lineNumberView = null;
 		if(doc instanceof QueryStyledDocument){
 			//request view 
@@ -90,7 +102,6 @@ public class TextView extends BorderLayoutPanel
 			}
 		}
 		editor.addMouseListener(new InternalPopup());
-		editor.setFont(new Font("monospaced", Font.PLAIN, 12));
 		
 		
 		editor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT,KeyEvent.SHIFT_MASK),DefaultEditorKit.pasteAction);
@@ -332,13 +343,13 @@ public class TextView extends BorderLayoutPanel
 		{
 			DefaultEditorKit kit = new DefaultEditorKit();
 			
-			add(createItem("cut",DefaultEditorKit.cutAction,kit.getActions()));
-			add(createItem("copy",DefaultEditorKit.copyAction,kit.getActions()));
-			add(createItem("paste",DefaultEditorKit.pasteAction,kit.getActions()));
-			add(createItem("delete",DefaultEditorKit.deletePrevCharAction,kit.getActions()));
+			add(createItem("Cut",DefaultEditorKit.cutAction,kit.getActions()));
+			add(createItem("Copy",DefaultEditorKit.copyAction,kit.getActions()));
+			add(createItem("Paste",DefaultEditorKit.pasteAction,kit.getActions()));
+			add(createItem("Delete",DefaultEditorKit.deletePrevCharAction,kit.getActions()));
 			addSeparator();
-			add(createItem("select all",DefaultEditorKit.selectAllAction,kit.getActions()));
-			add(createItem("clear all","clear-all",new AbstractAction(){
+			add(createItem("Select all",DefaultEditorKit.selectAllAction,kit.getActions()));
+			add(createItem("Clear all","Clear-all",new AbstractAction(){
 				private static final long serialVersionUID = 1L;
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -358,8 +369,8 @@ public class TextView extends BorderLayoutPanel
 				}
 			}));
 			if(editor.getDocument() instanceof QueryStyledDocument){
-				add(createItem("undo","undoMouse",editor.getActionMap().get("Undo")));
-				add(createItem("redo","redoMouse",editor.getActionMap().get("Redo")));
+				add(createItem("Undo","undoMouse",editor.getActionMap().get("Undo")));
+				add(createItem("Redo","redoMouse",editor.getActionMap().get("Redo")));
 			}
 		}
 

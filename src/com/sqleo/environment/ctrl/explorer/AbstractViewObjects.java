@@ -83,14 +83,14 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 		statusbar.setComponentCenter(info = new JLabel("..."));
 		info.setBorder(new CompoundBorder(LineBorder.createGrayLineBorder(), new EmptyBorder(2,4,2,4)));
 		
-		statusbar.setComponentEast(counter = new JLabel("objects : 0"));
+		statusbar.setComponentEast(counter = new JLabel("Objects : 0"));
 		counter.setBorder(new CompoundBorder(LineBorder.createGrayLineBorder(), new EmptyBorder(2,4,2,4)));
 	}
 	
 	public void addRow(Object[] rowdata)
 	{
 		super.addRow(rowdata);
-		counter.setText("objects : " + this.getRowCount());
+		counter.setText("Objects : " + this.getRowCount());
 	}
 	
 	public void reset()
@@ -98,7 +98,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 		super.reset();
 		
 		if(counter!=null)
-			counter.setText("objects : 0");
+			counter.setText("Objects : 0");
 	}
 	
 	protected void setInfo(String s)
@@ -193,7 +193,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 			popup.add(new ActionQuery());
 			
 			MDIClient [] queryWindows = getQueryWindows();
-			JMenu submenu = new JMenu("add to query");
+			JMenu submenu = new JMenu("Add to query");
 			submenu.setEnabled(false);
 			
 			if(queryWindows.length>0) {
@@ -231,7 +231,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	{
 		ActionQuery()
 		{
-			super("add to new query");
+			super("Add to new query");
 		}
 		
 		public void run()
@@ -320,7 +320,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	{
 		ActionAddLink()
 		{
-			super("add to group...");
+			super("Add to group...");
 		}
 		
 		public void actionPerformed(ActionEvent e)
@@ -342,9 +342,9 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 			
 			Object group = null;
 			if(uoLk.getGroups().size() == 0)
-				group = Application.input(Application.PROGRAM,"group name:");
+				group = Application.input(Application.PROGRAM,"Group name:");
 			else
-				group = JOptionPane.showInputDialog(Application.window,"choose group:",Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,uoLk.getGroups().toArray(),null);
+				group = JOptionPane.showInputDialog(Application.window,"Choose group:",Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,uoLk.getGroups().toArray(),null);
 			
 			if(group!=null)
 				uoLk.add(group.toString(),AbstractViewObjects.this.getTableSchema(),AbstractViewObjects.this.getTableName(),AbstractViewObjects.this.getTableType());
@@ -353,7 +353,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 
 	protected class ActionDeleteContent extends AbstractActionContent
 	{
-		ActionDeleteContent(){this.putValue(NAME,"delete content");}
+		ActionDeleteContent(){this.putValue(NAME,"Delete content");}
 		
 		protected boolean isShowCountRecordsPopup(){
 			return true;
@@ -387,7 +387,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 
 	protected class ActionDropObject extends AbstractActionContent
 	{
-		ActionDropObject(){this.putValue(NAME,"drop <object>");}
+		ActionDropObject(){this.putValue(NAME,"Drop <object>");}
 		
 		protected boolean isShowCountRecordsPopup(){
 			return true;
@@ -423,7 +423,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 
 	protected class ActionShowContent extends AbstractActionContent
 	{
-		ActionShowContent(){this.putValue(NAME,"show content");}
+		ActionShowContent(){this.putValue(NAME,"Show content");}
 		
 		protected boolean isShowCountRecordsPopup(){
 			return false;
@@ -455,12 +455,12 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 		{
 			if(records == 0)
 			{
-				String message = this.getDefaultMessage(records) + "\ndo you want continue?";
+				String message = this.getDefaultMessage(records) + "\nDo you want continue?";
 				return JOptionPane.showConfirmDialog(Application.window,message,"show content",JOptionPane.YES_NO_OPTION);
 			}
 			else
 			{
-				String message = this.getDefaultMessage(records) + "\ndo you want retrieve?";
+				String message = this.getDefaultMessage(records) + "\nDo you want retrieve?";
 				return JOptionPane.showConfirmDialog(Application.window,message,"show content",JOptionPane.YES_NO_CANCEL_OPTION);
 			}
 		}
@@ -470,7 +470,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	{
 		ActionShowDefinition()
 		{
-			super("show definition");
+			super("Show definition");
 		}
 		
 		public void actionPerformed(ActionEvent e)
@@ -487,7 +487,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	{
 		ActionCommand()
 		{
-			setText("new command...");
+			setText("New command...");
 			setAccelerator(null);
 			setIcon(null);
 		}

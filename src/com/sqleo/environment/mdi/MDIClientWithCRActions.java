@@ -50,7 +50,7 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 			this.keyCah = keyCah;
 			putValue(SMALL_ICON,
 					Application.resources.getIcon(Application.ICON_ACCEPT));
-			putValue(SHORT_DESCRIPTION, "commit...");
+			putValue(SHORT_DESCRIPTION, "Commit...");
 			putValue(NAME, "action-commit");
 			setEnabled(!ConnectionAssistant.getAutoCommitPrefered());
 
@@ -84,7 +84,7 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 			this.keyCah = keyCah;
 			putValue(SMALL_ICON,
 					Application.resources.getIcon(Application.ICON_DELETE)); //TODO keep rollback icon
-			putValue(SHORT_DESCRIPTION, "rollback...");
+			putValue(SHORT_DESCRIPTION, "Rollback...");
 			putValue(NAME, "action-rollback");
 			setEnabled(!ConnectionAssistant.getAutoCommitPrefered());
 		}

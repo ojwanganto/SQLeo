@@ -52,8 +52,8 @@ public abstract class AbstractDialogWizard extends AbstractDialogModal
 		
 		getContentPane().add(cardPanel);
 		
-		btnNext = insertButton(1,I18n.getString("application.next","next >"));
-		btnBack = insertButton(1,I18n.getString("application.back","< back"));
+		btnNext = insertButton(1,I18n.getString("application.next","Next >"));
+		btnBack = insertButton(1,I18n.getString("application.back","< Back"));
 	}
 	
 	protected void setBarEnabled(boolean b)
@@ -88,9 +88,9 @@ public abstract class AbstractDialogWizard extends AbstractDialogModal
 		cardLayout.show(cardPanel,"step"+step);		
 		
 		if(step==cardPanel.getComponentCount()-1)
-			btnNext.setText(I18n.getString("application.ok","ok"));
+			btnNext.setText(I18n.getString("application.ok","Ok"));
 		else
-			btnNext.setText(I18n.getString("application.next","next >"));
+			btnNext.setText(I18n.getString("application.next","Next >"));
 
 		setBarEnabled(true);
 	}
@@ -107,7 +107,7 @@ public abstract class AbstractDialogWizard extends AbstractDialogModal
 		{
 			if(!onNext()) return;
 			
-			if(!btnNext.getText().equals(I18n.getString("application.ok","ok")))
+			if(!btnNext.getText().equals(I18n.getString("application.ok","Ok")))
 			{
 				setStep(step+1);
 				return;

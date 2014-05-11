@@ -83,7 +83,7 @@ public abstract class AbstractDialogModal extends JDialog implements ActionListe
 		bar = new Box(BoxLayout.X_AXIS);
 		bar.add(Box.createHorizontalGlue());
 		bar.add(Box.createRigidArea(new Dimension(8,0)));
-		btnClose = insertButton(2,I18n.getString("application.close","close"));
+		btnClose = insertButton(2,I18n.getString("application.close","Close"));
 		
 		BorderLayoutPanel pnlContent = new BorderLayoutPanel(3,3);
 		pnlContent.setBorder(new EmptyBorder(5,5,5,5));

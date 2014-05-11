@@ -41,7 +41,7 @@ public class DialogPreview extends AbstractDialogModal
 	
 	public DialogPreview(ContentPane content)
 	{
-		super(Application.window,"changes");
+		super(Application.window,"Changes");
 		this.content = content;
 			
 		getContentPane().add(new JScrollPane(syntaxes=new JTextArea()));

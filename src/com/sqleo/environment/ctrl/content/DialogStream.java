@@ -54,7 +54,7 @@ public class DialogStream extends AbstractDialogWizard
 		this.tname = tname;
 		this.view = view;
 		
-		cbxOpen = new JCheckBox("open file when finished",Preferences.getBoolean("content.open-file",true));
+		cbxOpen = new JCheckBox("Open file when finished",Preferences.getBoolean("content.open-file",true));
 		cbxOpen.setVisible(false);		
 		bar.add(cbxOpen,0);
 	}
@@ -62,19 +62,19 @@ public class DialogStream extends AbstractDialogWizard
 	public static void showExport(ContentPane content)
 	{
 		String tname = null;
-		new DialogStream("export", content.getView(), tname).setVisible(true);
+		new DialogStream("Export", content.getView(), tname).setVisible(true);
 	}
 	
 	public static void showExportExcel(ContentPane content)
 	{
 		String tname = null;
-		new DialogStream("exportExcel", content.getView(), tname).setVisible(true);
+		new DialogStream("ExportExcel", content.getView(), tname).setVisible(true);
 	}
 	
 	public static void showImport(ContentPane content)
 	{
 		String tname = null;
-		new DialogStream("import", content.getView(), tname).setVisible(true);
+		new DialogStream("Import", content.getView(), tname).setVisible(true);
 	}
 	
 	public void dispose()
@@ -113,14 +113,14 @@ public class DialogStream extends AbstractDialogWizard
 	
 	protected void onOpen()
 	{
-		if(this.getTitle().equals("exportExcel"))
+		if(this.getTitle().equals("ExportExcel"))
 		{
 			mkp = new MaskExport();
 			mkc = new DefaultMaskChooser(AbstractMaskChooser.SAVE_DIALOG,AbstractMaskChooser.FILES_ONLY,false);
 		
 			mkc.addChoosableFileFilter(new CSVFilter());
 		}else {
-			if(this.getTitle().equals("export"))
+			if(this.getTitle().equals("Export"))
 			{
 				mkp = new MaskExport();
 				mkc = new DefaultMaskChooser(AbstractMaskChooser.SAVE_DIALOG,AbstractMaskChooser.FILES_ONLY,false);
@@ -129,7 +129,7 @@ public class DialogStream extends AbstractDialogWizard
 				mkc.addChoosableFileFilter(new WebFilter());
 				
 			}
-			else if(this.getTitle().equals("import"))
+			else if(this.getTitle().equals("Import"))
 			{
 				mkp = new MaskImport();
 				mkc = new DefaultMaskChooser(AbstractMaskChooser.OPEN_DIALOG,AbstractMaskChooser.FILES_ONLY,false);

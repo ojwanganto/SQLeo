@@ -64,7 +64,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 	
 	public DialogFindReplace(ContentPane content)
 	{
-		super(Application.window,"find/replace");
+		super(Application.window,"Find/replace");
 		this.flag = new ContentFlag();
 		this.view = content.getView();
 				
@@ -89,7 +89,7 @@ public class DialogFindReplace extends JDialog implements ActionListener
 			vCols.addElement(view.getColumnName(i));
 		
 		JPanel pnlT = new JPanel(new GridLayout(3,3,2,0));
-		pnlT.add(new JLabel("find into:"));
+		pnlT.add(new JLabel("Find into:"));
 		pnlT.add(cbxColumns = new JComboBox(vCols));
 		pnlT.add(chxAll	= new JCheckBox("all columns"));
 		
@@ -97,19 +97,19 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		pnlT.add(txtFind	 = new JTextField());
 		pnlT.add(chxNullFind = new JCheckBox("null"));
 		
-		pnlT.add(new JLabel("replace with:"));
+		pnlT.add(new JLabel("Replace with:"));
 		pnlT.add(txtReplace		= new JTextField());
 		pnlT.add(chxNullReplace	= new JCheckBox("null"));
 		
 		JPanel pnlC = new JPanel(new GridLayout(1,3,2,0));
 //		pnlC.add(chxBlock	= new JCheckBox("only current block"));
 //		pnlC.add(chxChanges	= new JCheckBox("only changed cells"));
-		pnlC.add(chxCase	= new JCheckBox("case sensitive"));
+		pnlC.add(chxCase	= new JCheckBox("Case sensitive"));
 
 		JPanel pnlB = new JPanel();
-		pnlB.add(btnFind		= new CommandButton("find",this));
-		pnlB.add(btnReplace		= new CommandButton("replace",this));
-		pnlB.add(btnReplaceAll	= new CommandButton("replace all",this));
+		pnlB.add(btnFind		= new CommandButton("Find",this));
+		pnlB.add(btnReplace		= new CommandButton("Replace",this));
+		pnlB.add(btnReplaceAll	= new CommandButton("Replace all",this));
 
 		btnReplace.setEnabled(false);
 		

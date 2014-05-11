@@ -73,7 +73,7 @@ import com.sqleo.querybuilder.syntax.SQLParser;
 
 public class ClientCommandEditor extends MDIClientWithCRActions implements
 		_ConnectionListener {
-	public static final String DEFAULT_TITLE = "command editor";
+	public static final String DEFAULT_TITLE = "Command editor";
 
 	private CommandEditor control;
 	private JMenuItem[] m_actions;
@@ -144,7 +144,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 			}
 		 });
 		}
-		cbxLimit = new JCheckBox("limit rows:", true);
+		cbxLimit = new JCheckBox("Limit rows:", true);
 		cbxLimit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -198,7 +198,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		toolbar.add(cbxLimit);
 		toolbar.add(txtLimit);
 		toolbar.addSeparator();
-		toolbar.add(new JLabel("use connection: "));
+		toolbar.add(new JLabel("Use connection: "));
 		toolbar.add(cbx);
 
 		setComponentEast(toolbar);
@@ -298,7 +298,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 	private class ActionCommand extends AbstractAction {
 		ActionCommand() {
-			putValue(NAME, "new command...");
+			putValue(NAME, "New command...");
 		}
 
 		@Override
@@ -313,7 +313,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 	private class ActionClearInput extends AbstractAction {
 		ActionClearInput() {
-			putValue(NAME, "clear request area");
+			putValue(NAME, "Clear request area");
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_MASK));
 		}
@@ -328,7 +328,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 	private class ActionClearOutput extends AbstractAction {
 		ActionClearOutput() {
-			putValue(NAME, "clear response area");
+			putValue(NAME, "Clear response area");
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.CTRL_MASK));
 		}
@@ -343,7 +343,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	private class ActionOpen extends MDIActions.AbstractBase {
 		private ActionOpen() {
 			setIcon(Application.ICON_EDITOR_OPEN);
-			setTooltip("open");
+			setTooltip("Open");
 		}
 
 		@Override
@@ -406,7 +406,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	private class ActionSave extends MDIActions.AbstractBase {
 		private ActionSave() {
 			setIcon(Application.ICON_EDITOR_SAVE);
-			setTooltip("save");
+			setTooltip("Save");
 		}
 
 		@Override
@@ -462,7 +462,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 	private class ActionReverseSyntax extends AbstractAction {
 		ActionReverseSyntax() {
-			putValue(NAME, "reverse syntax");
+			putValue(NAME, "Reverse syntax");
 		}
 
 		@Override
@@ -515,8 +515,8 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		ActionShowFindReplace() {
 			putValue(SMALL_ICON,
 					Application.resources.getIcon(Application.ICON_FIND));
-			putValue(SHORT_DESCRIPTION, "find/replace...");
-			putValue(NAME, "find/replace...");
+			putValue(SHORT_DESCRIPTION, "Find/replace...");
+			putValue(NAME, "Find/replace...");
 			this.isRequestArea = true;
 		}
 		ActionShowFindReplace(final boolean isRequestArea) {

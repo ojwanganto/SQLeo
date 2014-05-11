@@ -107,17 +107,17 @@ public class Task implements Runnable {
 								|| sqlcmd.startsWith("UPDATE")) {
 							target.write(rows + " row(s) affected");
 						} else {
-							target.write("command has been executed successfully");
+							target.write("Command has been executed successfully");
 						}
 					}
 					stmt.close();
 
 					if (!target.continueRun()) {
-						message = "execution has been stopped";
+						message = "Execution has been stopped";
 					}
 				}
 			} else {
-				message = "no connection!";
+				message = "No connection!";
 			}
 
 			target.onTaskFinished(message, false);
@@ -220,7 +220,7 @@ public class Task implements Runnable {
 		if (rowcount > 0) {
 			target.write(divider.toString() + "\n");
 		}
-		target.write("record(s): "
+		target.write("Record(s): "
 				+ NumberFormat.getInstance().format(rowcount) + " [ seconds: "
 				+ NumberFormat.getInstance().format(seconds) + " bytes: "
 				+ NumberFormat.getInstance().format(bytes) + " ]");

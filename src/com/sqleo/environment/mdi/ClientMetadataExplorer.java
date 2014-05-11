@@ -40,7 +40,7 @@ import com.sqleo.environment.ctrl.explorer.DialogDriver;
 
 public class ClientMetadataExplorer extends MDIClient
 {
-	public static final String DEFAULT_TITLE = "metadata explorer";
+	public static final String DEFAULT_TITLE = "Metadata explorer";
 	
 	private MetadataExplorer control;
 	private JMenuItem[] m_actions;
@@ -133,7 +133,7 @@ public class ClientMetadataExplorer extends MDIClient
 	{
 		private ActionNewDriver()
 		{
-			putValue(SHORT_DESCRIPTION,"new driver...");
+			putValue(SHORT_DESCRIPTION,"New driver...");
 			putValue(SMALL_ICON, Application.resources.getIcon(Application.ICON_EXPLORER_DRIVER_NEW));
 		}
         
@@ -148,7 +148,7 @@ public class ClientMetadataExplorer extends MDIClient
 	{
 		private ActionNewDatasource()
 		{
-			putValue(SHORT_DESCRIPTION,"new datasource...");
+			putValue(SHORT_DESCRIPTION,"New datasource...");
 			putValue(SMALL_ICON, Application.resources.getIcon(Application.ICON_EXPLORER_DATASOURCE_NEW));
 		}
         
@@ -156,7 +156,7 @@ public class ClientMetadataExplorer extends MDIClient
 		{
 			if(control.getNavigator().isSelectionEmpty())
 			{
-				Application.alert(Application.PROGRAM,"select one driver!");
+				Application.alert(Application.PROGRAM,"Select one driver!");
 				return;
 			}
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)control.getNavigator().getSelectionPath().getPathComponent(1);
@@ -171,7 +171,7 @@ public class ClientMetadataExplorer extends MDIClient
 	{
 		private ActionDelete()
 		{
-			putValue(SHORT_DESCRIPTION,"delete selection");
+			putValue(SHORT_DESCRIPTION,"Delete selection");
 			putValue(SMALL_ICON, Application.resources.getIcon(Application.ICON_DELETE));
 		}
         

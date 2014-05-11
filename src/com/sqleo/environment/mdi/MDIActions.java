@@ -85,13 +85,13 @@ public abstract class MDIActions implements _Constants
 		
 		public void actionPerformed(ActionEvent ae)
 		{
-			Application.alert(Application.PROGRAM,"not implemented!");
+			Application.alert(Application.PROGRAM,"Not implemented!");
 		}
 	}
 
 	public final static class HowToUse extends AbstractAction
 	{
-		public HowToUse(){super(I18n.getString("application.menu.help.howtouse","how to use..."));}
+		public HowToUse(){super(I18n.getString("application.menu.help.howtouse","How to use..."));}
 		public void actionPerformed(ActionEvent ae)
 		{
 
@@ -124,8 +124,8 @@ public abstract class MDIActions implements _Constants
 			super();
 			setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,InputEvent.CTRL_MASK));
 			setIcon(ICON_QUERY_DESIGNER);
-			setTooltip(I18n.getString("application.query_designer","query designer"));
-			setText(I18n.getString("application.menu.newQuery","new query"));
+			setTooltip(I18n.getString("application.query_designer","Query designer"));
+			setText(I18n.getString("application.menu.newQuery","New query"));
 		}
 		public void actionPerformed(ActionEvent ae)
 		{
@@ -133,7 +133,7 @@ public abstract class MDIActions implements _Constants
 			{
 				Object keycah = null;
 				if(ConnectionAssistant.getHandlers().size() > 1)
-					keycah = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.useConnection","use connection:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,ConnectionAssistant.getHandlers().toArray(),null);
+					keycah = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.useConnection","Use connection:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,ConnectionAssistant.getHandlers().toArray(),null);
 				else
 					keycah = ConnectionAssistant.getHandlers().toArray()[0];
 				
@@ -146,7 +146,7 @@ public abstract class MDIActions implements _Constants
 						ArrayList schemas = (ArrayList)ch.getObject("$schema_names");
 						if(schemas.size()>0)
 						{
-							Object schema = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.schema","schema:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,schemas.toArray(),null);
+							Object schema = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.schema","Schema:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,schemas.toArray(),null);
 							if(schema == null) return;
 							dl.getQueryModel().setSchema(schema.toString());
 						}
@@ -165,7 +165,7 @@ public abstract class MDIActions implements _Constants
     
 	public static class LoadQuery extends AbstractBase
 	{
-		public LoadQuery(){super(I18n.getString("application.menu.loadQuery","load query..."));}
+		public LoadQuery(){super(I18n.getString("application.menu.loadQuery","Load query..."));}
 		
 		private void setSchema(String schema, QueryExpression qe)
 		{
@@ -216,7 +216,7 @@ public abstract class MDIActions implements _Constants
 					{
 						if(ret[3]!=null)
 						{
-							int option = JOptionPane.showConfirmDialog(Application.window,"do you want to apply '" + ret[3] + "' schema on all elements?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
+							int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to apply '" + ret[3] + "' schema on all elements?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
 						
 							if(option == JOptionPane.YES_OPTION)
 								setSchema(ret[3].toString(),dl.getQueryModel().getQueryExpression());
@@ -261,7 +261,7 @@ public abstract class MDIActions implements _Constants
 
 	public static class LoadGivenQuery extends AbstractBase
 	{
-		public LoadGivenQuery(){super(I18n.getString("application.menu.loadQuery","load query..."));}
+		public LoadGivenQuery(){super(I18n.getString("application.menu.loadQuery","Load query..."));}
 
 		public void actionPerformed(ActionEvent ae)
 		{
@@ -274,7 +274,7 @@ public abstract class MDIActions implements _Constants
 			{
 				Object keycah = null;
 				if(ConnectionAssistant.getHandlers().size() > 1)
-					keycah = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.useConnection","use connection:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,ConnectionAssistant.getHandlers().toArray(),null);
+					keycah = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.useConnection","Use connection:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,ConnectionAssistant.getHandlers().toArray(),null);
 				else
 					keycah = ConnectionAssistant.getHandlers().toArray()[0];
 
@@ -294,7 +294,7 @@ public abstract class MDIActions implements _Constants
 						ArrayList schemas = (ArrayList)ch.getObject("$schema_names");
 						if(schemas.size()>0)
 						{
-							Object schema = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.schema","schema:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,schemas.toArray(),null);
+							Object schema = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.schema","Schema:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,schemas.toArray(),null);
 							if(schema == null) return;
 							if(!isSQLFile){
 							 dl.getQueryModel().setSchema(schema.toString());
@@ -324,7 +324,7 @@ public abstract class MDIActions implements _Constants
 
 	public static class Exit extends AbstractBase
 	{
-		public Exit(){super(I18n.getString("application.menu.exit","exit"));}
+		public Exit(){super(I18n.getString("application.menu.exit","Exit"));}
         
 		public void actionPerformed(ActionEvent ae)
 		{
@@ -336,7 +336,7 @@ public abstract class MDIActions implements _Constants
 	{
 		public GoBack()
 		{
-			super("go back");
+			super("Go back");
 			setIcon(ICON_BACK);
 			setTooltip("<empty>");
 			setEnabled(false);
@@ -352,7 +352,7 @@ public abstract class MDIActions implements _Constants
 	{
 		public GoForward()
 		{
-			super("go forward");
+			super("Go forward");
 			setIcon(ICON_FWD);
 			setTooltip("<empty>");
 			setEnabled(false);
@@ -368,7 +368,7 @@ public abstract class MDIActions implements _Constants
 	{
 		private TableMetaData tmd = null;
 		
-		public ShowContent(){this.putValue(NAME,I18n.getString("application.tool.content","show content..."));}
+		public ShowContent(){this.putValue(NAME,I18n.getString("application.tool.content","Show content..."));}
         
 		public void actionPerformed(ActionEvent e)
 		{
@@ -395,7 +395,7 @@ public abstract class MDIActions implements _Constants
 		{
 			if(tmd == null)
 			{
-				Object[] ret = DialogQuickObject.show("show content");
+				Object[] ret = DialogQuickObject.show("Show content");
 				if(ret != null)
 					tmd = new TableMetaData(ret[0].toString(), ret[1] == null ? null : ret[1].toString(), ret[2].toString());
 			}
@@ -406,11 +406,11 @@ public abstract class MDIActions implements _Constants
 	
 	public static class ShowDefinition extends AbstractBase
 	{
-		public ShowDefinition(){super(I18n.getString("application.tool.definition","show definition..."));}
+		public ShowDefinition(){super(I18n.getString("application.tool.definition","Show definition..."));}
         
 		public void actionPerformed(ActionEvent ae)
 		{
-			Object[] ret = DialogQuickObject.show("show definition");
+			Object[] ret = DialogQuickObject.show("Show definition");
 			if(ret == null) return;
 			
 			String schema = ret[1] == null ? null : ret[1].toString();
@@ -422,9 +422,9 @@ public abstract class MDIActions implements _Constants
 	{
 		public ShowPreferences()
 		{
-			super("preferences...");
+			super("Preferences...");
 			setIcon(ICON_PREFERENCES);
-			setTooltip("edit preferences");
+			setTooltip("Edit preferences");
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -451,7 +451,7 @@ public abstract class MDIActions implements _Constants
 			setAccelerator(ks);
 			setIcon(iconKey);
 			setTooltip(this.getMDIClientName());
-			setText("show " + this.getMDIClientName());
+			setText("Show " + this.getMDIClientName());
 		}
 		
 		public void actionPerformed(ActionEvent ae)
@@ -521,7 +521,7 @@ public abstract class MDIActions implements _Constants
 	{
 		public CascadeClients()
 		{
-			super(I18n.getString("application.menu.cascade","cascade"));
+			super(I18n.getString("application.menu.cascade","Cascade"));
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -534,7 +534,7 @@ public abstract class MDIActions implements _Constants
 	{
 		public TileClients()
 		{
-			super(I18n.getString("application.menu.tileHorizontal","tile horizontal"));
+			super(I18n.getString("application.menu.tileHorizontal","Tile horizontal"));
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -547,7 +547,7 @@ public abstract class MDIActions implements _Constants
 	{
 		public CloseAllClients()
 		{
-			super(I18n.getString("application.menu.closeAll","close all"));
+			super(I18n.getString("application.menu.closeAll","Close all"));
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -559,7 +559,7 @@ public abstract class MDIActions implements _Constants
 	
 	public static class About extends AbstractBase
 	{
-		public About(){super(I18n.getFormattedString("application.menu.about","about {0}...", new Object[]{""+Application.PROGRAM}));}
+		public About(){super(I18n.getFormattedString("application.menu.about","About {0}...", new Object[]{""+Application.PROGRAM}));}
         
 		public void actionPerformed(ActionEvent ae)
 		{
