@@ -101,7 +101,8 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 	
 	void removeField(DiagramField field)
 	{
-		fields.remove(field);
+		if(fields!=null)
+			fields.remove(field);
 	}
 	
 	private int findField(String label, boolean unpack)

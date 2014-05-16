@@ -33,18 +33,36 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryTokens;
+import com.sqleo.querybuilder.syntax.QueryTokens.Table;
 
 
 public class MaskAlias extends BaseMask
 {
 	private QueryTokens.AbstractDatabaseObject querytoken;
+	private DerivedTable derivedTable;
 	private JTextField value;
+	
+	public MaskAlias(DerivedTable token,QueryBuilder builder)
+	{
+		super("database object.edit",builder);
+		maskAliasInternal(null,token,builder);
+	}
 	
 	public MaskAlias(QueryTokens.AbstractDatabaseObject token,QueryBuilder builder)
 	{
 		super("database object.edit",builder);
+		maskAliasInternal(token,null,builder);
+	}
+	
+	private void maskAliasInternal(QueryTokens.AbstractDatabaseObject token,DerivedTable derivedTable,QueryBuilder builder)
+	{
 		querytoken = token;
+		String identifier = querytoken!=null ? querytoken.getIdentifier() : null;
+		
+		this.derivedTable = derivedTable;
+		identifier = this.derivedTable!=null ? this.derivedTable.getAlias() : null;
 		
 		GridBagLayout gbl = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -61,7 +79,7 @@ public class MaskAlias extends BaseMask
 		JLabel lbl = new JLabel("identifier:");
 		gbl.setConstraints(lbl, gbc);
 		pnl.add(lbl);
-		JTextField txt = new JTextField(token.getIdentifier());
+		JTextField txt = new JTextField(identifier);
 		txt.setEditable(false);
 		gbl.setConstraints(txt,gbc);
 		pnl.add(txt);
@@ -108,20 +126,31 @@ public class MaskAlias extends BaseMask
 				}
 				
 				BrowserItems.DiagramQueryTreeItem dqti = (BrowserItems.DiagramQueryTreeItem)builder.browser.getQueryItem();
-				final String fieldName = querytoken.getAlias()!=null ? querytoken.getAlias() : querytoken.getName();
-				if(dqti.getDiagramObject()!=null){
-					final DiagramField field = dqti.getDiagramObject().getField(fieldName);
-					if(field!=null){
-						field.getLabelComponent().setText(value.getText());
-						field.getQueryToken().setName(value.getText());
-						field.setName(value.getText());
-						dqti.getDiagramObject().pack();
-						builder.browser.reload(dqti.getParent().getParent().getChildAt(0));
+				if(querytoken!=null){
+					final String fieldName = querytoken.getAlias()!=null ? querytoken.getAlias() : querytoken.getName();
+					if(dqti.getDiagramObject()!=null){
+						final DiagramField field = dqti.getDiagramObject().getField(fieldName);
+						if(field!=null){
+							field.getLabelComponent().setText(value.getText());
+							field.getQueryToken().setName(value.getText());
+							field.setName(value.getText());
+							dqti.getDiagramObject().pack();
+							builder.browser.reload(dqti.getParent().getParent().getChildAt(0));
+						}
 					}
+				}else if (derivedTable!=null){
+					final DiagramQuery diagQuery = dqti.getDiagramObject();
+					derivedTable.setAlias(value.getText());
+					if(diagQuery!=null){
+						diagQuery.setQueryToken(derivedTable);
+					}
+					dqti.setUserObject(value.getText());
+					builder.browser.reload(dqti.getParent().getParent().getChildAt(0));
 				}
 			}
-					
-			querytoken.setAlias(value.getText());
+			if(querytoken!=null) {		
+				querytoken.setAlias(value.getText());
+			}
 		}
 		
 		return true;
@@ -129,8 +158,10 @@ public class MaskAlias extends BaseMask
 
 	protected void onShow()
 	{
-		if(querytoken.isAliasSet())
+		if(querytoken!=null && querytoken.isAliasSet())
 			value.setText(querytoken.getAlias());
+		else if(derivedTable!=null && derivedTable.isAliasSet())
+			value.setText(derivedTable.getAlias());
 		else
 			value.setText("");
 	}

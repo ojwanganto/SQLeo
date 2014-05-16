@@ -36,6 +36,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import com.sqleo.common.util.I18n;
+import com.sqleo.querybuilder.BrowserItems.DiagramQueryTreeItem;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryExpression;
 import com.sqleo.querybuilder.syntax.QuerySpecification;
@@ -95,6 +96,8 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 		if(me.getClickCount() == 2)
 		{
 			if(token == null) return;
+			if(BrowserPopup.this.token instanceof DerivedTable) return;
+			
 			((JMenuItem)getComponent(POP_IDX_EDIT)).getAction().actionPerformed(null);
 		}
 	}
@@ -167,6 +170,11 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 				
 				if(node instanceof BrowserItems.AbstractQueryTreeItem)
 				{
+					if(BrowserPopup.this.token instanceof DerivedTable){
+						boolean isEditable = !(token instanceof QueryTokens.Group);
+						getComponent(POP_IDX_EDIT).setVisible(true);
+						getComponent(POP_IDX_EDIT).setEnabled(isEditable);
+					}
 					getComponent(POP_IDX_ADD_U).setVisible(true);
 					getComponent(POP_IDX_EDIT-1).setVisible(getComponent(POP_IDX_EDIT).isVisible());
 					getComponent(POP_IDX_REM-1).setVisible(true);
@@ -364,6 +372,10 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 			{
 				if(new MaskAlias((QueryTokens.AbstractDatabaseObject)BrowserPopup.this.token,BrowserPopup.this.builder).showDialog()) ret = 0;
 			}
+			else if(BrowserPopup.this.token instanceof DerivedTable)
+			{
+				if(new MaskAlias((DerivedTable)BrowserPopup.this.token,BrowserPopup.this.builder).showDialog()) ret = 0;
+			}
 			else if(BrowserPopup.this.token instanceof QueryTokens.Condition)
 			{
 				QueryTokens.Condition condition = (QueryTokens.Condition)BrowserPopup.this.token;
@@ -463,7 +475,8 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 				{
 					BrowserItems.DiagramQueryTreeItem dqti = (BrowserItems.DiagramQueryTreeItem)BrowserPopup.this.node;
 					BrowserPopup.this.builder.browser.setSelectedItem((BrowserItems.DefaultTreeItem)dqti.getParent());
-					dqti.getDiagramObject().dispose();
+					if(dqti.getDiagramObject()!=null)
+						dqti.getDiagramObject().dispose();
 				}
 				else if(BrowserPopup.this.token instanceof QueryTokens._Expression)
 				{

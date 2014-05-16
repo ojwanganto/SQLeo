@@ -35,6 +35,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 
+import com.sqleo.querybuilder.DiagramAbstractEntity;
 import com.sqleo.querybuilder.DiagramEntity;
 import com.sqleo.querybuilder.DiagramField;
 import com.sqleo.querybuilder.ViewDiagram;
@@ -99,7 +100,12 @@ public class RelationDropTargetListener implements DropTargetListener {
     try {
         EntityField entityField = (EntityField)transferable.getTransferData(entityFieldDataFlavor);
         
-        DiagramEntity deF = this.getViewDiagram().getEntity( entityField.getTable() );
+        DiagramAbstractEntity deF = this.getViewDiagram().getEntity( entityField.getTable() );
+        if(deF == null)
+		{
+			//search for derived table 
+        	deF = this.getViewDiagram().getDerivedEntity(entityField.getTable());
+		}
         DiagramField dfF = deF.getField( entityField.getFieldName() );
         
         DiagramField dfP = (DiagramField)event.getDropTargetContext().getDropTarget().getComponent().getParent();
