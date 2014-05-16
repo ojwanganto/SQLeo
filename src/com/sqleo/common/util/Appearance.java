@@ -37,9 +37,9 @@ public class Appearance
 {
     public final static EmptyBorder NO_BORDER = new EmptyBorder(0,0,0,0);    
     
-	public final static Font fontBOLD	= new Font("Dialog", Font.BOLD, 11);
-	public final static Font fontPLAIN	= new Font("Dialog", Font.PLAIN, 11);
-	public final static Font fontMONO	= new Font("monospaced", Font.PLAIN, 11);
+	public static Font fontBOLD	= new Font("Dialog", Font.BOLD, 11);
+	public static Font fontPLAIN	= new Font("Dialog", Font.PLAIN, 11);
+	public static Font fontMONO	= new Font("monospaced", Font.PLAIN, 11);
 	
 	private static final byte[] bytesMinus = new byte[] {(byte)71,(byte)73,(byte)70,(byte)56,(byte)57,(byte)97,(byte)9,(byte)0,(byte)9,(byte)0,(byte)179,(byte)0,(byte)0,(byte)82,(byte)82,(byte)247,(byte)206,(byte)206,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)255,(byte)44,(byte)0,(byte)0,(byte)0,(byte)0,(byte)9,(byte)0,(byte)9,(byte)0,(byte)0,(byte)4,(byte)21,(byte)48,(byte)200,(byte)73,(byte)133,(byte)189,(byte)66,(byte)226,(byte)171,(byte)119,(byte)14,(byte)2,(byte)32,(byte)138,(byte)159,(byte)87,(byte)122,(byte)221,(byte)70,(byte)173,(byte)65,(byte)4,(byte)0,(byte)59,};
 	private static final Icon immagineMinus = new ImageIcon(bytesMinus)

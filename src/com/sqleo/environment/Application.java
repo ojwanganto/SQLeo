@@ -298,6 +298,11 @@ public class Application extends Appearance implements _Constants,_Version
                     }
                 }
             }
+            
+            	final int fontSize = Math.round(13 * multiplier);
+            	fontBOLD	= new Font("Dialog", Font.BOLD, fontSize);
+            	fontPLAIN	= new Font("Dialog", Font.PLAIN, fontSize);
+            	fontMONO	= new Font("monospaced", Font.PLAIN, fontSize);
         }
     }
     
