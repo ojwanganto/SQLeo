@@ -51,7 +51,9 @@ import javax.swing.table.TableColumn;
 import com.sqleo.common.gui.CustomLineBorder;
 import com.sqleo.common.gui.HeaderCellRenderer;
 import com.sqleo.common.util.Appearance;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.ContentPane;
+import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
 
@@ -94,6 +96,12 @@ public class ContentView extends JPanel implements ListSelectionListener
 				}
 			}
 		});
+		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, 100);
+        if (fontSizePercentage != 100) {
+        	final float multiplier = fontSizePercentage / 100.0f;
+        	final int newHeight = Math.round(data.getRowHeight() * multiplier);
+        	data.setRowHeight(newHeight);
+        }
 		
 		JScrollPane scroll = new JScrollPane(data);
 		scroll.getViewport().setBackground(UIManager.getDefaults().getColor("Table.background"));

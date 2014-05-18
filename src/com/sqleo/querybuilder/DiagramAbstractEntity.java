@@ -135,6 +135,21 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 		
 		return -1;		
 	}
+	
+	public void setFieldsWithAlias(String oldAlias,String newAlias)
+	{
+		for(int i=0; i<fields.getComponentCount(); i++)
+		{
+			DiagramField field = (DiagramField)fields.getComponent(i);
+			if(field.getQueryToken() instanceof QueryTokens.Column){
+				final QueryTokens.Column column = (QueryTokens.Column) field.getQueryToken();
+				if(oldAlias.equals(column.getTable().getAlias())){
+					column.getTable().setAlias(newAlias);
+				}
+			}
+		}
+		
+	}
 
     /**
      * Returns a DiagramField for the given name or null is no matching field is found...

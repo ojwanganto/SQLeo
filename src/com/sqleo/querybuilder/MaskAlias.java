@@ -32,7 +32,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.TreeNode;
 
+import com.sqleo.querybuilder.BrowserItems.DiagramQueryTreeItem;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Table;
@@ -128,24 +130,16 @@ public class MaskAlias extends BaseMask
 				BrowserItems.DiagramQueryTreeItem dqti = (BrowserItems.DiagramQueryTreeItem)builder.browser.getQueryItem();
 				if(querytoken!=null){
 					final String fieldName = querytoken.getAlias()!=null ? querytoken.getAlias() : querytoken.getName();
-					if(dqti.getDiagramObject()!=null){
-						final DiagramField field = dqti.getDiagramObject().getField(fieldName);
-						if(field!=null){
-							field.getLabelComponent().setText(value.getText());
-							field.getQueryToken().setName(value.getText());
-							field.setName(value.getText());
-							dqti.getDiagramObject().pack();
-							builder.browser.reload(dqti.getParent().getParent().getChildAt(0));
-						}
-					}
+					reloadParentWithAlias(dqti,fieldName, value.getText());
 				}else if (derivedTable!=null){
 					final DiagramQuery diagQuery = dqti.getDiagramObject();
+					final String oldAlias = derivedTable.getAlias();
 					derivedTable.setAlias(value.getText());
 					if(diagQuery!=null){
 						diagQuery.setQueryToken(derivedTable);
 					}
 					dqti.setUserObject(value.getText());
-					builder.browser.reload(dqti.getParent().getParent().getChildAt(0));
+					reloadParentWithAlias(dqti,oldAlias, value.getText());
 				}
 			}
 			if(querytoken!=null) {		
@@ -154,6 +148,29 @@ public class MaskAlias extends BaseMask
 		}
 		
 		return true;
+	}
+	
+	private void reloadParentWithAlias(final BrowserItems.DiagramQueryTreeItem dqti,final String fieldName, final String text) {
+		if(dqti!=null){
+			if(dqti.getDiagramObject()!=null){
+				if (derivedTable!=null){
+					dqti.getDiagramObject().setFieldsWithAlias(fieldName, text);
+				}else {
+					DiagramField field = dqti.getDiagramObject().getField(fieldName);
+					if(field!=null){
+						field.getLabelComponent().setText(text);
+						field.getQueryToken().setName(text);
+						field.setName(text);
+						dqti.getDiagramObject().pack();
+					}
+				}
+				final TreeNode parent = dqti.getParent().getParent();
+				builder.browser.reload(parent.getChildAt(0));
+				if(parent instanceof BrowserItems.DiagramQueryTreeItem){
+					reloadParentWithAlias((DiagramQueryTreeItem) parent, fieldName, text);
+				}
+			}
+		}
 	}
 
 	protected void onShow()
