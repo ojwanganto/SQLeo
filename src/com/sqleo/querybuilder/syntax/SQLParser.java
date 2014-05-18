@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.ListIterator;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 
 import com.sqleo.environment.Application;
 import com.sqleo.querybuilder.QueryBuilder;
@@ -37,10 +38,12 @@ import com.sqleo.querybuilder.QueryModel;
 public class SQLParser
 {
 	public static Hashtable cte;
+	public static Boolean DisplayMsg = true;
 
 	public static QueryModel toQueryModel(String sql)
 		throws IOException
 	{
+
 		// ticket #83 remove -- comment
 		sql = sql.replace("--","//");
 
@@ -584,7 +587,7 @@ public class SQLParser
 					// fix #92 
 					else
 					{	
-						// let contaisKey case sensitive but raise exception if Alias or Table not fount
+						// let contaisKey case sensitive but raise exception if Alias or Table not found
 						// to do raise exception
 						if(dot!=-1){
 							Application.alert("!!! condition table or alias not found: " + ref + " !!!");
@@ -883,6 +886,7 @@ public class SQLParser
 				qs.addSelectList(selectList[i]);				
 			} 
 		}
+		DisplayMsg = true; 
 	}
 	
 	public static QueryTokens.Column doConvertColumn(Hashtable tables, QueryTokens._Expression e)
@@ -939,8 +943,15 @@ public class SQLParser
 					// fix #92
 					else
 					{
-						// to do raise and display error message
-						Application.alert("Table or alias not found: " + owner);
+						// raise and display error message
+						// fix #199 Application.alert("Table or alias not found: " + owner);
+				                if (DisplayMsg) {
+							int opti = JOptionPane.showConfirmDialog(Application.window,
+							"Table or alias not found: " + owner +"\ncontinue display ?",
+							Application.PROGRAM,JOptionPane.YES_NO_OPTION);
+							if (opti==JOptionPane.NO_OPTION) DisplayMsg = false;
+						}
+
 					}
 					// end fix #92
 				}
