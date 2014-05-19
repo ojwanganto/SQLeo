@@ -28,6 +28,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
 import com.sqleo.common.util.Appearance;
+import com.sqleo.environment.Preferences;
+import com.sqleo.environment.mdi.DialogPreferences;
 
 
 public class LineNumberView extends JTable
@@ -45,6 +47,13 @@ public class LineNumberView extends JTable
 		getColumnModel().getColumn(0).setCellRenderer(new InternalCellRenderer());
 			
 		setPreferredScrollableViewportSize(getPreferredSize());
+		
+		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, 100);
+        if (fontSizePercentage != 100) {
+        	final float multiplier = fontSizePercentage / 100.0f;
+        	final int newHeight = Math.round(getRowHeight() * multiplier);
+        	setRowHeight(newHeight);
+        }
 	}
  
 	public boolean isCellEditable(int row, int column)
