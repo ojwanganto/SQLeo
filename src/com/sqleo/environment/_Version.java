@@ -31,7 +31,7 @@ public interface _Version
     public static final String WEB = "http://sqleo.sourceforge.net/";
     public static final String SVN_BUILD_XML_FILE = "http://svn.code.sf.net/p/sqleo/code/trunk/build.xml";
     public static final String SF_WEB = "http://sourceforge.net/projects/sqleo/";
-    public static final String DONATE_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=legrand_legrand@hotmail.com&item_name=Donation+to+SQLeo&currency_code=EUR";
+    public static final String DONATE_URL = "http://sourceforge.net/p/sqleo/discussion/donation/thread/07f7f9ca/";
     
     public static final String MAJOR = "2014";
     public static final String MINOR = "05.rc1";
