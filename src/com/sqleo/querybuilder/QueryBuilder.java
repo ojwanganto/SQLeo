@@ -288,7 +288,8 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 						field =  entity.getField(whereToken.toString());
 						if(null == field && whereToken.toString().lastIndexOf(SQLFormatter.DOT)!=-1 
 								&& (whereToken.toString().startsWith(entity.getQueryToken().toString())
-									|| whereToken.toString().startsWith(entity.getQueryToken().getAlias()))
+									|| (entity.getQueryToken().getAlias()!=null &&
+											whereToken.toString().startsWith(entity.getQueryToken().getAlias())))
 						){
 							QueryTokens.DefaultExpression exp = (QueryTokens.DefaultExpression)whereToken;
 							//add dummy column
@@ -305,7 +306,8 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 						field = entity.getField(exp.getValue());
 						if(null == field && exp.getValue().lastIndexOf(SQLFormatter.DOT)!=-1
 								&& (exp.getValue().startsWith(entity.getQueryToken().toString())
-									|| exp.getValue().startsWith(entity.getQueryToken().getAlias()))
+									|| (entity.getQueryToken().getAlias()!=null &&
+											exp.getValue().startsWith(entity.getQueryToken().getAlias())))
 						){
 							//add dummy column
 							final String realColumn = getRealColumn(exp.getAlias(), exp.getValue());
