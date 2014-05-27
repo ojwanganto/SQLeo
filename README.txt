@@ -33,6 +33,19 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2014.06.rc1.zip: 2014-05-27
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.06/
+
+	206 	change donation link from paypal to a web page with all instructions
+	202 	Font size percentage modification for high resolution screens
+			font size should not be more than 130% yet
+	201 	Query builder: adding a join between two subqueries not working
+	200 	Query Builder: adding/changing Alias for Subquery not possible
+	199 	Reverse query: repetitiv message "table or alias not found"
+
 
 SQLeoVQB.2014.05.rc1.zip: 2014-05-09
 
