@@ -513,6 +513,9 @@ public class ViewDiagram extends BorderLayoutPanel
 		double vx = 0;
 	    	double vy = 0;
 
+		double ox = 0;
+	    	double oy = 0;
+
 		double dx = 0;
 	    	double dy = 0;
 
@@ -602,6 +605,11 @@ public class ViewDiagram extends BorderLayoutPanel
 			vx = (entities[i].getX()+entities[i].getWidth()/2) - (entities[j].getX()+entities[j].getWidth()/2);
 			vy = (entities[i].getY()+entities[i].getHeight()/2) - (entities[j].getY()+entities[j].getHeight()/2);
 
+
+			// Ticket #208: check if overlapping
+			ox = Math.abs(vx) - (entities[i].getWidth()/2 + entities[j].getWidth()/2);
+			oy = Math.abs(vy) - (entities[i].getHeight()/2 + entities[j].getHeight()/2);
+
 			double len_sq = vx * vx + vy * vy;
 		
 			if (len_sq <1 ) {
@@ -609,9 +617,16 @@ public class ViewDiagram extends BorderLayoutPanel
 			    dx += Math.random()*SPRING_NATURAL_LENGTH/2;
 			    dy += Math.random()*SPRING_NATURAL_LENGTH/2;
 			} else if (len_sq < view.width*view.height/4){
-			    //
-			    dx += GRAVITY_REPULSION * vx / len_sq;
-			    dy += GRAVITY_REPULSION * vy / len_sq;
+			    // to keep non joined entities in view
+				if (ox < 5 && oy < 5 ) {
+				// overlapping entities
+				    dx += 4 * GRAVITY_REPULSION * vx / len_sq;
+				    dy += 4 * GRAVITY_REPULSION * vy / len_sq;
+				} else {
+				// standard magnetic force
+				    dx += GRAVITY_REPULSION * vx / len_sq;
+				    dy += GRAVITY_REPULSION * vy / len_sq;
+				}
 			}
 
 
