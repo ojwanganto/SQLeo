@@ -198,7 +198,10 @@ public class SQLFormatter implements _ReservedWords
 					
 					String right = cR.getTable().toString();
 					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString(wrap,offset+4);
-					
+
+					// ticket #209 "ON AND" after move up or delete table
+					token.getCondition().setAppend(null);  
+
 					buffer.append(token.getTypeName() + SPACE + right + delimiter + SPACE + _ReservedWords.ON + SPACE + token.getCondition() + delimiter);
 				}
 			}
