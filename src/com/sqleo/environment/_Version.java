@@ -34,5 +34,5 @@ public interface _Version
     public static final String DONATE_URL = "http://sqleo.sourceforge.net/support.htm";
     
     public static final String MAJOR = "2014";
-    public static final String MINOR = "06.rc1";
+    public static final String MINOR = "07.rc1";
 }

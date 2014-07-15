@@ -33,6 +33,21 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+
+SQLeoVQB.2014.07.rc1.zip: 2014-07-15
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.07/
+
+	215 	New responsive web site:
+			http://sqleo.sourceforge.net/index.html
+	209 	reverse query: syntax ON AND
+	208 	Designer: improve arrange spring
+	206 	change donation link from paypal to:
+			http://sqleo.sourceforge.net/support.html
+			
+
 SQLeoVQB.2014.06.rc1.zip: 2014-05-27
 
   Thanks to Anudeep Gade for his contribution to this release

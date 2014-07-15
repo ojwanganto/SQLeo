@@ -618,7 +618,7 @@ public class ViewDiagram extends BorderLayoutPanel
 			    dy += Math.random()*SPRING_NATURAL_LENGTH/2;
 			} else if (len_sq < view.width*view.height/4){
 			    // to keep non joined entities in view
-				if (ox < 5 && oy < 5 ) {
+				if (ox < 10 && oy < 10 ) {
 				// overlapping entities
 				    dx += 4 * GRAVITY_REPULSION * vx / len_sq;
 				    dy += 4 * GRAVITY_REPULSION * vy / len_sq;
