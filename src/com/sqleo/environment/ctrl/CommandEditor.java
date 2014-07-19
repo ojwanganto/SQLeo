@@ -196,11 +196,11 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		                    // Line is a comment	
 							continue;
 		                } else if (line.endsWith(";")) {
-		                	sqlBuilder.append(line.substring(0, line.lastIndexOf(";")));
+		                	sqlBuilder.append(line.substring(0, line.lastIndexOf(";"))).append("\n");
 		                	executeCommandQuery(sqlBuilder.toString());
 		                	sqlBuilder = new StringBuilder();
 		                }else{
-		                	sqlBuilder.append(line);
+		                	sqlBuilder.append(line).append("\n");
 		                }
 					}
 					if(!stopped && sqlBuilder.toString().length()>0){
