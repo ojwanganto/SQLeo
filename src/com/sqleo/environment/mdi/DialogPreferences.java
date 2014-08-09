@@ -143,11 +143,9 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		jLabelLanguage.setText(I18n.getString(
 				"application.preferences.language", "Language"));
 		jLabelAutoCommitInfo.setText(I18n.getString(
-				"application.preferences.autoCommitInfo",
-				I18n.getString(
 						"application.preferences.autoCommitWarning",
 						"Warning:Commit in a window affects all opened windows for a connection when auto commit disabled!")		
-		));
+		);
 		jLabelAutoCommitInfo.setEditable(false);
 		jLabelAutoCommitInfo.setForeground(Color.RED);
 		jLabelAutoCommitInfo.setFont(new Font(jLabelAutoCommitInfo.getFont().getName(),Font.BOLD,jLabelAutoCommitInfo.getFont().getSize()));

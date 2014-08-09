@@ -61,7 +61,7 @@ public class DiagramEntity extends DiagramAbstractEntity
 	protected class ActionShowContent extends AbstractActionContent
 	{
 		private String keych;
-		ActionShowContent(String keych){this.putValue(NAME,"show content");this.keych = keych;}
+		ActionShowContent(String keych){this.putValue(NAME,I18n.getString("application.tool.content","Show content"));this.keych = keych;}
 		
 		protected boolean isShowCountRecordsPopup(){
 			return false;
@@ -105,7 +105,7 @@ public class DiagramEntity extends DiagramAbstractEntity
 		private String keych;
 		ActionShowDefinition(String keych)
 		{
-			super("show definition");
+			super(I18n.getString("application.tool.definition","Show definition"));
 			this.keych = keych;
 		}
 		

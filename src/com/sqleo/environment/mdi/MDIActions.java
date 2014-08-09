@@ -422,9 +422,9 @@ public abstract class MDIActions implements _Constants
 	{
 		public ShowPreferences()
 		{
-			super("Preferences...");
+			super(I18n.getString("application.tool.preferences","Preferences"));
 			setIcon(ICON_PREFERENCES);
-			setTooltip("Edit preferences");
+			setTooltip(I18n.getString("application.tool.preferences","Preferences"));
 		}
         
 		public void actionPerformed(ActionEvent ae)

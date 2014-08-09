@@ -194,7 +194,7 @@ public class ClientQueryBuilder extends MDIClient {
 		int selectLength = _ReservedWords.SELECT.length();
 		if(builder.getSyntax().getDocument().getLength()>selectLength ||
 				builder.getDiagramLayout().getQueryModel().toString().length() > selectLength ){
-			int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save query to a file ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
+			int option = JOptionPane.showConfirmDialog(Application.window,I18n.getString("application.message.saveQuery","Do you want to save query to a file ?"),Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
 			if(option == JOptionPane.YES_OPTION){
 				toolbar.getActionMap().get("save").actionPerformed(null);
 			}
@@ -208,7 +208,7 @@ public class ClientQueryBuilder extends MDIClient {
 				QueryActions.DIAGRAM_SAVE_AS_IMAGE));
 		btn.setIcon(Application.resources
 				.getIcon(Application.ICON_DIAGRAM_SAVE));
-		btn.setToolTipText("Save as image");
+		btn.setToolTipText(I18n.getString("querybuilder.action.saveDiagramAsImage","save as image"));
 		btn.setText(null);
 
 		toolbar = new Toolbar(Toolbar.HORIZONTAL);

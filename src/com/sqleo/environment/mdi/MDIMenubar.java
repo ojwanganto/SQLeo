@@ -88,12 +88,12 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		history = new History();
 		winGroup = new WindowGroup();
     	
-		JMenu menu = add("File");
+		JMenu menu = add(I18n.getString("application.menu.file","File"));
 		menu.setMnemonic('f');
 		menu.add(createItem(MDIActions.ACTION_NEW_QUERY));
 		menu.add(createItem(MDIActions.ACTION_LOAD_QUERY));
 
-		recentQueryMenu = add("Recent queries");
+		recentQueryMenu = add(I18n.getString("application.menu.recentQueries","Recent queries"));
 		MDIActions.LoadGivenQuery action = new MDIActions.LoadGivenQuery();  
 
 		if(Preferences.containsKey(RECENT_QUERIES)){
@@ -125,15 +125,15 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		menu.add(recentQueryMenu);
 
 		menu.addSeparator();
-		menu.add(createItem(new MDIActions.Dummy("Print..."))).setEnabled(false);
+		menu.add(createItem(new MDIActions.Dummy(I18n.getString("application.menu.print","Print")))).setEnabled(false);
 		menu.addSeparator();
 		menu.add(createItem(MDIActions.ACTION_EXIT));
         
-		menu = add("Actions");
+		menu = add(I18n.getString("application.menu.actions","Actions"));
 		menu.setMnemonic('a');
 		menu.add("<empty>").setEnabled(false);
         
-		menu = add("Tools");
+		menu = add(I18n.getString("application.menu.tools","Tools"));
 		menu.setMnemonic('t');
 		menu.add(winGroup.add(MDIActions.ACTION_MDI_SHOW_EXPLORER));
 		menu.add(winGroup.add(MDIActions.ACTION_MDI_SHOW_EDITOR));
@@ -144,7 +144,7 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		menu.addSeparator();
 		menu.add(createItem(MDIActions.ACTION_SHOW_PREFERENCES));
         
-        menu = add("Window");
+        menu = add(I18n.getString("application.menu.window","Window"));
 		menu.setMnemonic('w');
         menu.add(createItem(MDIActions.ACTION_MDI_CASCADE));
 		menu.add(createItem(MDIActions.ACTION_MDI_TILEH));
@@ -153,7 +153,7 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		menu.addSeparator();
 		menu.add("<empty>").setEnabled(false);
 		
-        menu = add("Help");
+        menu = add(I18n.getString("application.menu.help","Help"));
         menu.setMnemonic('h');
 		menu.add(createItem(MDIActions.ACTION_HOWTOUSE));
 		menu.addSeparator();
