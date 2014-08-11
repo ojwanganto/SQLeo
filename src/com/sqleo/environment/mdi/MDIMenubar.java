@@ -204,7 +204,7 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 	private String getLatestVersionName(){
 		try {
 			// check if sf url can be reached first 
-             URL url = new URL(Application.WEB);
+             URL url = new URL(Application.VERSION_TRACK);
              HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
              urlConnect.setConnectTimeout(5000);//max time out 5 seconds
              urlConnect.connect();

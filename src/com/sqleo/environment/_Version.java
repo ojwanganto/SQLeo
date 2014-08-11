@@ -35,4 +35,6 @@ public interface _Version
     
     public static final String MAJOR = "2014";
     public static final String MINOR = "07.rc1";
+    public static final String VERSION_TRACK = "http://sqleo.sourceforge.net/features.htm?version="+MAJOR+"."+MINOR;
+
 }
