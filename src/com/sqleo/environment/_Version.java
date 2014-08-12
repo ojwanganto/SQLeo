@@ -35,6 +35,6 @@ public interface _Version
     
     public static final String MAJOR = "2014";
     public static final String MINOR = "07.rc1";
-    public static final String VERSION_TRACK = "http://sqleo.sourceforge.net/features.htm?version="+MAJOR+"."+MINOR;
+    public static final String VERSION_TRACK = "http://www.google-analytics.com/collect?v=1&tid=UA-38580300-2&cid=555&t=pageview&dt=Version&dp=%2Fversion_"+MAJOR+"."+MINOR.replace("+","%2B");
 
 }

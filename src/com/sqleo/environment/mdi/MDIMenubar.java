@@ -207,7 +207,12 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
              URL url = new URL(Application.VERSION_TRACK);
              HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
              urlConnect.setConnectTimeout(5000);//max time out 5 seconds
+	     urlConnect.setInstanceFollowRedirects(true);
+	     urlConnect.setRequestMethod("GET");
+	     urlConnect.setRequestProperty("User-Agent","Java/"+System.getProperty("java.version")+" ("+System.getProperty("os.arch")+")");
+//	     System.out.println("Java/"+System.getProperty("java.version")+" ("+System.getProperty("os.arch")+")");
              urlConnect.connect();
+//	     System.out.println(urlConnect.getResponseCode());
          } catch (UnknownHostException e) {
              e.printStackTrace();
              return null;
