@@ -212,7 +212,7 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 	     urlConnect.setRequestProperty("User-Agent","Java/"+System.getProperty("java.version")+" ("+System.getProperty("os.arch")+")");
 //	     System.out.println("Java/"+System.getProperty("java.version")+" ("+System.getProperty("os.arch")+")");
              urlConnect.connect();
-//	     System.out.println(urlConnect.getResponseCode());
+	     System.out.println("HTTP status: "+ urlConnect.getResponseCode());
          } catch (UnknownHostException e) {
              e.printStackTrace();
              return null;
