@@ -34,6 +34,22 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2014.08.rc1.zip: 2014-08
+
+  Thanks to 
+	- Philipp Blaszczyk, Marcin Chojnacki, Miguel Angel Gil Rios for translations
+	- Anudeep Gade for his contribution to the code of this release
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.08/
+
+	195	Fix command editor fails in executing queries which are multi-line.
+	44 	New Translations of the Menus/Query Builder/Preferences in
+			- GERMAN by Philipp Blaszczyk
+			- POLISH by Marcin Chojnacki
+			- SPANISH by Miguel Angel Gil Rios
+
+
 SQLeoVQB.2014.07.rc1.zip: 2014-07-15
 
   Thanks to Anudeep Gade for his contribution to this release
