@@ -157,7 +157,8 @@ public class DialogQuery extends AbstractDialogWizard
 			mkc = new DefaultMaskChooser(AbstractMaskChooser.OPEN_DIALOG,AbstractMaskChooser.FILES_ONLY,false);
 			addStep(mkc);
 			addStep(mkp);
-			mkc.setFileFilter(new LQYFilter());
+// #76			mkc.setFileFilter(new LQYFilter());
+			mkc.setFileFilter(new XLQFilter());
 		}
 		else
 		{
@@ -169,7 +170,7 @@ public class DialogQuery extends AbstractDialogWizard
 				mkp.setText(queryBuilder.getSyntax().getText());
 			}
 		}
-		mkc.setFileFilter(new XLQFilter());
+// #76		mkc.setFileFilter(new XLQFilter());
 		mkc.setFileFilter(new SQLFilter());
 		
 		getContentPane().validate();		
@@ -241,9 +242,12 @@ public class DialogQuery extends AbstractDialogWizard
 		
 		try
 		{
-			if(filter.getPerformType() == 1) // xlq
-				FileStreamXLQ.write(filename,mkp.layout);
-			else if(filter.getPerformType() == 2) {// sql 
+// ticket #76
+//			if(filter.getPerformType() == 1) // xlq
+//				FileStreamXLQ.write(filename,mkp.layout);
+//			else if(filter.getPerformType() == 2) {// sql 
+
+			if(filter.getPerformType() == 2) {// sql 
 				if(queryBuilder!=null && queryBuilder.getSelectedIndex()==1){
 					//save from syntax view
 					FileStreamSQL.writeSQL(filename,queryBuilder.getSyntax().getText());
