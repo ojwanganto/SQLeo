@@ -21,6 +21,7 @@
 package com.sqleo.querybuilder;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.sqleo.querybuilder.syntax.QuerySpecification;
@@ -89,6 +90,13 @@ public class DiagramLayout
     public void setExtras(QuerySpecification qs,EntityExtra[] extras)
     {
     	map.put(qs,extras);
+    }
+    
+    public void resetExtras(final HashMap newExtras){
+    	map.clear(); map.putAll(newExtras);
+    }
+    public HashMap getExtras(){
+    	return map;
     }
 
     void setQueryBuilder(QueryBuilder builder)

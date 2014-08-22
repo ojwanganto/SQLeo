@@ -457,7 +457,7 @@ public class SuggestionsView {
 				suggestion.moveUp();
 			} else if (Character.isLetterOrDigit(e.getKeyChar()) || e.getKeyChar() == '.') {
 				showSuggestionLater();
-			} else if (Character.isWhitespace(e.getKeyChar())) {
+			} else if (Character.isWhitespace(e.getKeyChar()) || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				hideSuggestion();
 			}
 		}

@@ -163,6 +163,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 	public final void setQueryModel(QueryModel qm)
 	{
 		layout = new DiagramLayout();
+		layout.resetExtras(qm.getExtrasMap());
 		layout.setQueryBuilder(this);
 		layout.setQueryModel(qm);
 
@@ -237,10 +238,11 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		load(browser.getQuerySpecification().getFromClause());
 		load(browser.getQuerySpecification().getSelectList());
 		load(browser.getQuerySpecification().getWhereClause());
-		
+		layout.resume();
 		loading = false;
 		
 		convertJoins(browser.getQuerySpecification().getWhereClause());
+		layout.freeze();
 	}
 	
 	
@@ -372,7 +374,6 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				doJoin((QueryTokens.Join)tokens[i]);
 			}
 		}
-		layout.resume();
 	}
 	
 	private void load(QueryTokens._Expression[] tokens)
@@ -635,8 +636,11 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				cqb.setDiagramLayout(layout);
 			}
 		}
-		else
+		else{
+			layout.freeze();
+			this.getQueryModel().resetExtrasMap(layout.getExtras());
 			syntax.setText(this.getQueryModel().toString(true));
+		}
 	}
 
 	public TextView getSyntax() {

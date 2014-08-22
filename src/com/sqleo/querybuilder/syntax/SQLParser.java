@@ -20,35 +20,44 @@
 
 package com.sqleo.querybuilder.syntax;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.ListIterator;
-import java.util.regex.Pattern;
+import java.util.Map.Entry;
+
 import javax.swing.JOptionPane;
 
 import com.sqleo.environment.Application;
+import com.sqleo.querybuilder.DiagramLayout.EntityExtra;
 import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.QueryModel;
 
 
 public class SQLParser
 {
-	public static Hashtable cte;
-	public static Boolean DisplayMsg = true;
+	private static Hashtable cte;
+	private static Boolean DisplayMsg = true;
+	private static HashMap<QuerySpecification,List<EntityExtra>> extrasMap = new HashMap();
 
 	public static QueryModel toQueryModel(String sql)
 		throws IOException
 	{
-
+		extrasMap = new HashMap();
 		// ticket #83 remove -- comment
 		sql = sql.replace("--","//");
 
 		// ticket #73 oracle (+) join support
 		sql = sql.replace("(+)"," _ORACLE_OUTER_JOIN_");
+
+		// ticket #76 entity attribute
+		sql = sql.replaceAll("\\/\\*SQLeo\\((\\w+)\\)\\*\\/","SQLEO_$1");
 
 		// ticket #90 EXTRACT (X FROM field)
 		sql = sql.replaceAll("(?i)(extract\\s*\\(\\s*\\w+)\\s+(from)\\s+","$1 _EXTRACT_FROM_ ");
@@ -71,6 +80,13 @@ public class SQLParser
 		if(li.hasNext() && li.next().toString().toUpperCase().equalsIgnoreCase(_ReservedWords.ORDER_BY))
 			doParseOrderBy(li,qm);
 		
+		final HashMap extrasArrayMap = new HashMap(); 
+		for(Entry<QuerySpecification, List<EntityExtra>> entry : extrasMap.entrySet()){
+			final List<EntityExtra> vals = entry.getValue();
+			final EntityExtra[] valsArray = (EntityExtra[]) vals.toArray(new EntityExtra[vals.size()]);
+			extrasArrayMap.put(entry.getKey(), valsArray);
+		}
+		qm.resetExtrasMap(extrasArrayMap);
 		return qm;
 	}
 
@@ -285,8 +301,10 @@ public class SQLParser
 	            }
 	            if (seenSubquery && !value.equals(""))
 	            {
-	            	sub.setAlias(value);
-	            	sub.setAs(false);
+	            	if(sub!=null){
+		            	sub.setAlias(value);
+		            	sub.setAs(false);
+	            	}
 	            	value = new String();
 	            }
 			}
@@ -665,6 +683,15 @@ public class SQLParser
 				}
 
 			}
+			else if(next.toString().startsWith("SQLEO_"))
+			{
+				if(dt!=null){
+					attributeToPos(next.toString(),qs,dt);
+				}else{
+					attributeToPos(next.toString(),qs,t);
+				}
+
+			}
 			else if(!next.toString().equalsIgnoreCase("AS"))
 			{
 //				System.out.println("table or alias");
@@ -848,7 +875,7 @@ public class SQLParser
 		return (QueryTokens.Condition[])tokens.toArray(new QueryTokens.Condition[tokens.size()]);
 	}
 	
-	public static void doConvertColumns(QuerySpecification qs)
+	private static void doConvertColumns(QuerySpecification qs)
 		throws IOException
 	{
 		Hashtable tables = new Hashtable();
@@ -967,7 +994,7 @@ public class SQLParser
 		return c;
 	}
 	
-	public static boolean isOperator(String s)
+	private static boolean isOperator(String s)
 	{
 		return isOperatorSimbol(s)
 			|| s.equalsIgnoreCase("IS") || s.equalsIgnoreCase("IS NOT")
@@ -977,18 +1004,18 @@ public class SQLParser
 			|| s.equalsIgnoreCase("BETWEEN") || s.equalsIgnoreCase("NOT BETWEEN");
 	}
 	
-	public static boolean isOperatorSimbol(String s)
+	private static boolean isOperatorSimbol(String s)
 	{
 		return s.equals("<") || s.equals(">") || s.equals("=") || s.equals("<=") || s.equals("=>") || s.equals("<=") || s.equals(">=") 
 			|| s.equals("<>")  || s.equals("!=");
 	}
 	
-	public static boolean isReservedWord(String s)
+	private static boolean isReservedWord(String s)
 	{
 		return isClauseWord(s) || isJoinWord(s) || s.equals(_ReservedWords.ON) || s.equals(_ReservedWords.AND) || s.equals(_ReservedWords.OR);
 	}
 
-	public static boolean isJoinWord(String s)
+	private static boolean isJoinWord(String s)
 	{
 		return s.equalsIgnoreCase(_ReservedWords.INNER_JOIN) || s.equalsIgnoreCase(_ReservedWords.FULL_OUTER_JOIN)
 			|| s.equalsIgnoreCase(_ReservedWords.LEFT_OUTER_JOIN) || s.equalsIgnoreCase(_ReservedWords.RIGHT_OUTER_JOIN)
@@ -996,7 +1023,7 @@ public class SQLParser
 			|| s.equalsIgnoreCase(_ReservedWords.LEFT_JOIN) || s.equalsIgnoreCase(_ReservedWords.RIGHT_JOIN);
 	}
 	
-	public static boolean isClauseWord(String s)
+	private static boolean isClauseWord(String s)
 	{
 		return s.equalsIgnoreCase(_ReservedWords.SELECT) || s.equalsIgnoreCase(_ReservedWords.FROM)
 			|| s.equalsIgnoreCase(_ReservedWords.WHERE) || s.equalsIgnoreCase(_ReservedWords.GROUP_BY)
@@ -1169,6 +1196,37 @@ public class SQLParser
 	}
  */
 
+	private static void attributeToPos(String a,QuerySpecification qs,QueryTokens._TableReference token)
+	{
+		if(null == token) return;
+		final String reference;
+		if(token instanceof SubQuery)
+		{
+			final SubQuery subQuery = (SubQuery)token;
+			reference = subQuery.getAlias();
+		}else{
+			reference = token.toString();
+		}
+		//System.out.println(a); // for ticket #76 testing
+		final EntityExtra extra = new EntityExtra();
+		extra.setReference(reference);
+		final String[] str = a.split("_");
+		final int x = Integer.valueOf(str[1]);
+		final int y = Integer.valueOf(str[2]);
+		extra.setLocation(new Point(x,y));
+		extra.setPack(Boolean.valueOf(str[3]).booleanValue());
+		
+		final List<EntityExtra> extras; 
+		if(extrasMap.containsKey(qs)){
+			extras = (List<EntityExtra>)extrasMap.get(qs);
+		}else{	
+			extras = new ArrayList<EntityExtra>();
+			extrasMap.put(qs,extras);
+		}
+		extras.add(extra);
+		
+	}
+	
 	public static void main(String[] args)
 	{
 		QueryBuilder.useAlwaysQuote = false;

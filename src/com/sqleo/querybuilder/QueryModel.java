@@ -21,6 +21,7 @@
 package com.sqleo.querybuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.sqleo.querybuilder.syntax.QueryExpression;
 import com.sqleo.querybuilder.syntax.QueryTokens;
@@ -32,6 +33,7 @@ public class QueryModel implements Cloneable
 {
 	private QueryExpression queryExpression;
 	private ArrayList orderClause;
+	private HashMap extrasMap = new HashMap();
 	
 	private String schema;
 	
@@ -109,6 +111,15 @@ public class QueryModel implements Cloneable
 	public String toString()
 	{
 		return toString(false);
+	}
+
+	public void resetExtrasMap(HashMap extrasMap) {
+		this.extrasMap.clear();
+		this.extrasMap.putAll(extrasMap);
+	}
+
+	public HashMap getExtrasMap() {
+		return extrasMap;
 	}
 	
 /*	public static void main(String[] args)

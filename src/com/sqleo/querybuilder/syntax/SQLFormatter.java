@@ -22,8 +22,15 @@ package com.sqleo.querybuilder.syntax;
 
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 
+import com.sqleo.common.util.Text;
+import com.sqleo.environment.Application;
+import com.sqleo.environment.mdi.ClientQueryBuilder;
+import com.sqleo.environment.mdi.MDIClient;
+import com.sqleo.querybuilder.DiagramLayout.EntityExtra;
+import com.sqleo.querybuilder.DiagramAbstractEntity;
 import com.sqleo.querybuilder.QueryBuilder;
 
 
@@ -101,8 +108,8 @@ public class SQLFormatter implements _ReservedWords
 		
 		return buffer.substring(0,buffer.length()-delimiter.length());
 	}
-	
-	public static String concat(QueryTokens._TableReference tokens[], boolean wrap, int offset)
+
+	public static String concat(QueryTokens._TableReference tokens[], boolean wrap, int offset,QuerySpecification qs)
 	{
 		if(tokens.length == 0) return "<empty>";
 		
@@ -120,27 +127,7 @@ public class SQLFormatter implements _ReservedWords
 				if(!subs.containsKey(dt.getAlias()))
 					subs.put(dt.getAlias(),dt);
 			}
-			
-//			if(tokens[i] instanceof QueryTokens.Table)
-//			{
-//				QueryTokens.Table t = (QueryTokens.Table)tokens[i];
-//				if(!hTokens.containsKey(t.getReference()))
-//					hTokens.put(t.getReference(),t);
-//			}
-//			else if(tokens[i] instanceof QueryTokens.Join)
-//			{
-//				QueryTokens.Join j = (QueryTokens.Join)tokens[i];
-//				if(!hTokens.containsKey(j.getPrimary().getTable().getReference()))
-//					hTokens.put(j.getPrimary().getTable().getReference(),j.getPrimary().getTable());
-//				if(!hTokens.containsKey(j.getForeign().getTable().getReference()))
-//					hTokens.put(j.getForeign().getTable().getReference(),j.getForeign().getTable());
-//			}
-//			else if(tokens[i] instanceof DerivedTable)
-//			{
-//				DerivedTable dt = (DerivedTable)tokens[i];
-//				if(!hTokens.containsKey(dt.getAlias()))
-//					hTokens.put(dt.getAlias(),dt);
-//			}
+
 		}
 		
 		ArrayList declared = new ArrayList();
@@ -174,8 +161,7 @@ public class SQLFormatter implements _ReservedWords
 					String right = cR.getTable().toString();
 					if(cR.getTable().getName() == null && subs.containsKey(cR.getTable().getAlias())) right = subs.get(cR.getTable().getAlias()).toString(wrap,offset+4);					
 					token.getCondition().setAppend(null);
-					buffer.append(left + delimiter + token.getTypeName() + SPACE + right + delimiter + SPACE + _ReservedWords.ON + SPACE + token.getCondition() + delimiter);
-//					buffer.append(token.toString() + delimiter);
+					buffer.append(left + posToAttribute("3",qs, cL.getTable()) + delimiter + token.getTypeName() + SPACE + right + posToAttribute("4", qs,cR.getTable()) + delimiter + SPACE + _ReservedWords.ON + SPACE + token.getCondition() + delimiter);
 				}
 				else if(bLeft && bRight)
 				{
@@ -201,8 +187,7 @@ public class SQLFormatter implements _ReservedWords
 
 					// ticket #209 "ON AND" after move up or delete table
 					token.getCondition().setAppend(null);  
-
-					buffer.append(token.getTypeName() + SPACE + right + delimiter + SPACE + _ReservedWords.ON + SPACE + token.getCondition() + delimiter);
+					buffer.append(token.getTypeName() + SPACE + right + posToAttribute("5", qs, cR.getTable()) + delimiter + SPACE + _ReservedWords.ON + SPACE + token.getCondition() + delimiter);
 				}
 			}
 		}
@@ -227,9 +212,10 @@ public class SQLFormatter implements _ReservedWords
 						final SubQuery subQuery  = (SubQuery) tokens[i];
 						buffer.append(subQuery.toString(wrap, offset+1));
 					}
-					buffer.append(delimiter);
+					buffer.append(posToAttribute("6", qs, tokens[i]) + delimiter);
+
 				}else{
-					buffer.append(tokens[i] + delimiter);
+					buffer.append(tokens[i] + posToAttribute("7", qs, tokens[i]) + delimiter);
 				}
 			}
 		}
@@ -378,17 +364,57 @@ public class SQLFormatter implements _ReservedWords
 		
 		switch(sqltype)
 		{
-			case Types.CHAR:
-			case Types.VARCHAR:
-				return "'" + value.toString() + "'";
-			case Types.DATE:
-				return "{d '" + value.toString() + "'}";
-			case Types.TIME:
-				return "{t '" + value.toString() + "'}";
-			case Types.TIMESTAMP:
-				return "{ts '" + value.toString() + "'}";
-			default:
-				return value.toString();
+		case Types.CHAR:
+		case Types.VARCHAR:
+			return "'" + value.toString() + "'";
+		case Types.DATE:
+			return "{d '" + value.toString() + "'}";
+		case Types.TIME:
+			return "{t '" + value.toString() + "'}";
+		case Types.TIMESTAMP:
+			return "{ts '" + value.toString() + "'}";
+		default:
+			return value.toString();
 		}
 	}
+
+	private static String posToAttribute(String a,  QuerySpecification qs, QueryTokens._TableReference token)
+	{
+//		System.out.println(a+"formatter-here");
+		if(qs!=null){
+			final String reference;
+			if(token instanceof SubQuery)
+			{
+				final SubQuery subQuery = (SubQuery)token;
+				reference = subQuery.getAlias();
+			}else{
+				reference = token.toString();
+			}
+			final MDIClient[] clients =
+				Application.window.getClientsOfConnection(ClientQueryBuilder.DEFAULT_TITLE, null);
+			if (clients.length >= 1) {
+				final ClientQueryBuilder ce = (ClientQueryBuilder) clients[0];
+				final HashMap extrasMap = ce.getQueryBuilder().getQueryModel().getExtrasMap();
+				if(extrasMap!=null)
+				{
+					EntityExtra[] extras = (EntityExtra[]) extrasMap.get(qs);
+					if(extras!=null && extras.length > 0)
+					{
+						for(int i=0; i<extras.length; i++)
+						{
+							if(reference.equals(extras[i].getReference())){
+								final Integer x = new Integer(extras[i].getLocation().x);
+								final Integer y = new Integer(extras[i].getLocation().y);
+								final String s = " /*SQLeo("+x+"_"+y+"_"+new Boolean(extras[i].isPack())+")*/ ";
+//								System.out.println(s);
+								return s;
+							}
+						}
+					}
+				}
+			}
+		}
+		return "";
+	}
+
 }

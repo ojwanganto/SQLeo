@@ -231,7 +231,7 @@ public class QuerySpecification implements Cloneable
 		if(fromClause.size() > 0)
 			syntax = syntax + concat + 
 				(wrap ? indentPrefix + _ReservedWords.FROM : _ReservedWords.FROM)
-				+ concat + SQLFormatter.concat(this.getFromClause(),wrap, offset);
+				+ concat + SQLFormatter.concat(this.getFromClause(),wrap, offset,  this);
 
 		if(whereClause.size() > 0)
 			syntax = syntax + concat + 
