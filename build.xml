@@ -11,7 +11,7 @@
   <property name="build.sysclasspath" value="ignore"/>
 
   <property name="name" value="SQLeoVQB"/>
-  <property name="version" value="2014.07.rc1"/>
+  <property name="version" value="2014.08.rc1"/>
 
   <property name="src" value="${basedir}/src"/>
   <property name="lib" value="${basedir}/lib"/>
@@ -74,6 +74,10 @@
            source="6">
       <classpath refid="compile.classpath"/>
     </javac>
+
+    <!-- convert unicode files into ASCII properties. -->      
+    <native2ascii encoding="UTF8" src="${src}" dest="${src}"
+	   includes="**/*.utf8" ext=".properties"/>
 
     <!-- copy over the language and other properties files. -->      
     <copy todir="${classes}">
@@ -222,5 +226,6 @@
     />
   </target>
   
+
   
 </project>
