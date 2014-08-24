@@ -634,6 +634,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				}
 			}else if(isSQLFile){
 				cqb.setDiagramLayout(layout);
+				QueryBuilder.this.setQueryModel(layout.getQueryModel());
 			}
 		}
 		else{

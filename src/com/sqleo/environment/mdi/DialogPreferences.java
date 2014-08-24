@@ -69,6 +69,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	private JCheckBox optQbSelectAll;
 	private JRadioButton optQbRelrenderArc;
 	private JRadioButton optQbRelrenderLinear; 
+	private JCheckBox optQbSavePosInSQL;
 
 	private JLabel jLabelLanguage = new JLabel();
 	private JTextArea jLabelAutoCommitInfo = new JTextArea();
@@ -90,10 +91,11 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	public static final String AUTO_COMPLETE_KEY = "application.autoComplete";
 	public static final String QB_RELATION_RENDER_ARC_KEY = "querybuilder.isArcRelationRender";
 	public static final String FONT_SIZE_PERCENTAGE = "application.fontSizePercentage";
+	public static final String QB_SAVE_POS_IN_SQL = "querybuilder.savePosInSQL";
 
 	public DialogPreferences() {
 		super(Application.window, Application.PROGRAM + ".preferences", 350,
-				400);
+				460);
 
 		JPanel pnlQB = new JPanel(new GridLayout(0, 1));
 		pnlQB.setBorder(new EmptyBorder(10, 5, 90, 5));
@@ -139,6 +141,11 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		buttonPanel.add(optQbRelrenderArc);
 		buttonPanel.add(optQbRelrenderLinear);
 		pnlQB.add(buttonPanel);
+		
+		pnlQB.add(optQbSavePosInSQL = new JCheckBox(I18n.getString(
+				"application.preferences.qb.savePosInSQL",
+				"Save positions in SQL"), Preferences.getBoolean(
+				QB_SAVE_POS_IN_SQL, false)));
 
 		jLabelLanguage.setText(I18n.getString(
 				"application.preferences.language", "Language"));
@@ -306,6 +313,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 					optQbSelectAll.setEnabled(false);
 					optQbRelrenderArc.setEnabled(false);
 					optQbRelrenderLinear.setEnabled(false);
+					optQbSavePosInSQL.setEnabled(false);
 					break;
 				}
 			}
@@ -334,6 +342,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				optQbLoadAtOnce.isSelected()));
 		Preferences.set("querybuilder.select-all-columns", new Boolean(
 				optQbSelectAll.isSelected()));
+		Preferences.set(QB_SAVE_POS_IN_SQL, new Boolean(
+				optQbSavePosInSQL.isSelected()));
 
 		if (jComboBoxLanguage.getSelectedIndex() >= 0) {
 			LocaleAdapter la = (LocaleAdapter) jComboBoxLanguage

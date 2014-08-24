@@ -35,6 +35,7 @@ import java.util.Map.Entry;
 import javax.swing.JOptionPane;
 
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.querybuilder.DiagramLayout.EntityExtra;
 import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.QueryModel;
@@ -1198,6 +1199,7 @@ public class SQLParser
 
 	private static void attributeToPos(String a,QuerySpecification qs,QueryTokens._TableReference token)
 	{
+		if(!Preferences.savePosInSQL()) return;
 		if(null == token) return;
 		final String reference;
 		if(token instanceof SubQuery)

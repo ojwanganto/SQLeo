@@ -27,7 +27,9 @@ import java.util.Hashtable;
 
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.mdi.ClientQueryBuilder;
+import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.environment.mdi.MDIClient;
 import com.sqleo.querybuilder.DiagramLayout.EntityExtra;
 import com.sqleo.querybuilder.DiagramAbstractEntity;
@@ -381,7 +383,7 @@ public class SQLFormatter implements _ReservedWords
 	private static String posToAttribute(String a,  QuerySpecification qs, QueryTokens._TableReference token)
 	{
 //		System.out.println(a+"formatter-here");
-		if(qs!=null){
+		if(qs!=null && Preferences.savePosInSQL()){
 			final String reference;
 			if(token instanceof SubQuery)
 			{

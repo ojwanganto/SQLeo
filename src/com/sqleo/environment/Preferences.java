@@ -80,6 +80,10 @@ public class Preferences
 		return getBoolean(DialogPreferences.AUTO_COMPLETE_KEY, false);
 	}
 	
+	public static boolean savePosInSQL(){
+		return getBoolean(DialogPreferences.QB_SAVE_POS_IN_SQL, false);
+	}
+	
 	public static boolean getBoolean(String key, boolean defaultValue)
 	{
 		if(!get().containsKey(key))

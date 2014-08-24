@@ -113,9 +113,11 @@ public class QueryModel implements Cloneable
 		return toString(false);
 	}
 
-	public void resetExtrasMap(HashMap extrasMap) {
-		this.extrasMap.clear();
-		this.extrasMap.putAll(extrasMap);
+	public void resetExtrasMap(HashMap newExtrasMap) {
+		if(!newExtrasMap.isEmpty()){
+			this.extrasMap.clear();
+			this.extrasMap.putAll(newExtrasMap);
+		}
 	}
 
 	public HashMap getExtrasMap() {

@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
+import com.sqleo.environment.Preferences;
+import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.QueryModel;
 import com.sqleo.querybuilder.syntax.SQLParser;
 
@@ -37,10 +39,14 @@ public class FileStreamSQL
 		throws IOException, ClassNotFoundException
 	{
 		String sqlRead = readSQL(filename);
+		
 		return SQLParser.toQueryModel(sqlRead);
 	}
 	
 	public static String readSQL(String filename) throws IOException {
+		if(!Preferences.savePosInSQL()){
+			Preferences.set(DialogPreferences.QB_SAVE_POS_IN_SQL, true);
+		}
 		Reader in = new FileReader(filename);
 		StringBuffer sb = new StringBuffer();
 		
