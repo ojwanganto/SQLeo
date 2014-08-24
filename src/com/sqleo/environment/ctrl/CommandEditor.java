@@ -64,9 +64,9 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 	public CommandEditor() {
 		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		split.setTopComponent(request = new TextView(new SQLStyledDocument()));
+		split.setTopComponent(request = new TextView(new SQLStyledDocument(), true));
 		split.setBottomComponent(response = new TextView(
-				new DefaultStyledDocument()));
+				new DefaultStyledDocument(), true));
 		split.setOneTouchExpandable(true);
 
 		response.setTabSize(4);

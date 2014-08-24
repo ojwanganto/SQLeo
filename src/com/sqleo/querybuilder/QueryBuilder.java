@@ -44,6 +44,7 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.mdi.ClientQueryBuilder;
 import com.sqleo.querybuilder.BrowserItems.DefaultTreeItem;
 import com.sqleo.querybuilder.syntax.DerivedTable;
@@ -122,7 +123,7 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		designer.setComponentCenter(split);
 		
 		add(I18n.getString("querybuilder.designer","designer"),designer);
-		add(I18n.getString("querybuilder.syntax","syntax"),syntax = new TextView(new QueryStyledDocument()));
+		add(I18n.getString("querybuilder.syntax","syntax"),syntax = new TextView(new SQLStyledDocument(), false));
 		addChangeListener(this);		
 	}
 	

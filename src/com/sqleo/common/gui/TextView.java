@@ -71,7 +71,7 @@ public class TextView extends BorderLayoutPanel
 	private JScrollPane scroll;
 	private static final Color DEFAULT_CURRENT_LINE_HIGHLIGHT_COLOR	= new Color(255,255,170);
 
-	public TextView(StyledDocument doc)
+	public TextView(StyledDocument doc,final boolean calledFromCommandEditor)
 	{
 		editor = new JTextPane();
 		editor.setDocument(doc);
@@ -98,7 +98,7 @@ public class TextView extends BorderLayoutPanel
 			lineNumberView.setCurrentLineForeground(Color.blue); 
 			// add suggestions for auto complete
 			if (Preferences.isAutoCompleteEnabled()) {
-				suggestions = new SuggestionsView(editor, doc instanceof SQLStyledDocument);
+				suggestions = new SuggestionsView(editor, calledFromCommandEditor);
 			}
 		}
 		editor.addMouseListener(new InternalPopup());
