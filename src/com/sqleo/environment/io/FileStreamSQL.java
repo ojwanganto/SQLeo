@@ -44,9 +44,6 @@ public class FileStreamSQL
 	}
 	
 	public static String readSQL(String filename) throws IOException {
-		if(!Preferences.savePosInSQL()){
-			Preferences.set(DialogPreferences.QB_SAVE_POS_IN_SQL, true);
-		}
 		Reader in = new FileReader(filename);
 		StringBuffer sb = new StringBuffer();
 		
