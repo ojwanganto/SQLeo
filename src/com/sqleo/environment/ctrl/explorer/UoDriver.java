@@ -47,7 +47,7 @@ public class UoDriver
 	
 	public static void loadDefaults(MetadataExplorer explorer)
 	{
-		UoDriver[] drivers = new UoDriver[13];
+		UoDriver[] drivers = new UoDriver[14];
 
 		drivers[0] = new UoDriver();
 		drivers[0].name			= "ODBC Bridge";
@@ -107,12 +107,17 @@ public class UoDriver
 		drivers[11] = new UoDriver();
 		drivers[11].name		= "CsvJdbc";
 		drivers[11].classname	= "org.relique.jdbc.csv.CsvDriver";
-		drivers[11].example		= "jdbc:relique:csv:<directory_path>?raiseUnsupportedOperationException=false&separator=;";
+		drivers[11].example		= "jdbc:relique:csv:<directory_path>?separator=;";
 
 		drivers[12] = new UoDriver();
 		drivers[12].name		= "Apache Derby - Embedded";
 		drivers[12].classname	= "org.apache.derby.jdbc.EmbeddedDriver";
 		drivers[12].example		= "jdbc:derby:<derbyDB>;create=true";
+
+		drivers[13] = new UoDriver();
+		drivers[13].name			= "MySQL (MariaDB Jdbc Driver)";
+		drivers[13].classname	= "org.mariadb.jdbc.Driver";
+		drivers[13].example		= "jdbc:mysql://<host>:<port3306>";
 
 		for(int i=0; i<drivers.length; i++)
 		{
