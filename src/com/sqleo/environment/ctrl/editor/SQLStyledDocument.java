@@ -21,6 +21,8 @@
 package com.sqleo.environment.ctrl.editor;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.MutableAttributeSet;
@@ -34,7 +36,7 @@ public class SQLStyledDocument extends QueryStyledDocument
 {
 	private static final String DELIMITER_COMMENT_MULTI_LINE_START = "/*";
 	private static final String DELIMITER_COMMENT_MULTI_LINE_END = "*/";		
-	private static final String DELIMITER_COMMENT_SINGLE_LINE = "//";
+	private static final List<String> DELIMITER_COMMENT_SINGLE_LINE = Arrays.asList("//","--","#");
 
 	private MutableAttributeSet commentAttributSet;
 	
@@ -70,43 +72,18 @@ public class SQLStyledDocument extends QueryStyledDocument
 				return;
 			}
 		}
- 
-		index = content.indexOf( DELIMITER_COMMENT_SINGLE_LINE, startOffset );
-		if ( (index > -1) && (index < endOffset) )
-		{
-			this.setCharacterAttributes(index, endOffset - index + 1, commentAttributSet, false);
-			endOffset = index - 1;
+		for(final String delimCommentSingleLine : DELIMITER_COMMENT_SINGLE_LINE){
+			index = content.indexOf( delimCommentSingleLine, startOffset );
+			if ( (index > -1) && (index < endOffset) )
+			{
+				this.setCharacterAttributes(index, endOffset - index + 1, commentAttributSet, false);
+				endOffset = index - 1;
+				break;
+			}
 		}
 		
 		if(startOffset>endOffset) return;
 		checkKeywords(content, startOffset, endOffset);
 	}
 	
-	protected void checkKeywords(String content, int startOffset, int endOffset)
-	{
-		super.checkKeywords(content,startOffset,endOffset);
-		
-		String line = content.substring(startOffset,endOffset);
-//		System.out.println("startOffset:"+startOffset+",endOffset:"+endOffset+" = "+line);		
-		
-		checkKeyword(line,"DELETE",startOffset);
-		checkKeyword(line,"INSERT",startOffset);
-		checkKeyword(line,"INTO",startOffset);
-		checkKeyword(line,"VALUES",startOffset);
-		checkKeyword(line,"UPDATE",startOffset);
-		checkKeyword(line,"SET",startOffset);
-		
-		checkKeyword(line,"ADD",startOffset);
-		checkKeyword(line,"ALTER",startOffset);
-		checkKeyword(line,"CREATE",startOffset);
-		checkKeyword(line,"DROP",startOffset);
-		checkKeyword(line,"CONSTRAINT",startOffset);
-		checkKeyword(line,"REFERENCES",startOffset);
-		checkKeyword(line,"PRIMARY KEY",startOffset);
-		checkKeyword(line,"FOREIGN KEY",startOffset);
-		checkKeyword(line,"COLUMN",startOffset);
-		checkKeyword(line,"INDEX",startOffset);
-		checkKeyword(line,"TABLE",startOffset);
-		checkKeyword(line,"VIE",startOffset);
-	}
 }
