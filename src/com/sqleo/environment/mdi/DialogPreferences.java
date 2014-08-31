@@ -366,8 +366,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				new Integer(jTextFieldMaxColSize.getText()));
 		Preferences.set(CONTENT_MAX_ROWS_FETCH_SIZE_KEY,
 				new Integer(jTextFieldMaxRowFetchSize.getText()));
-		Preferences.set(FONT_SIZE_PERCENTAGE,
-				new Integer(jTextFieldFontSize.getText()));
+		final Integer fontSizeVal = new Integer(jTextFieldFontSize.getText());
+		Preferences.set(FONT_SIZE_PERCENTAGE, fontSizeVal>200 ? 200 : fontSizeVal);
 
 
 		return true;
