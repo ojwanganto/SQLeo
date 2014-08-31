@@ -27,11 +27,13 @@ package com.sqleo.querybuilder;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.dnd.DropTarget;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,6 +41,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultDesktopManager;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
@@ -50,11 +53,10 @@ import javax.swing.SwingUtilities;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment._Version;
 import com.sqleo.querybuilder.dnd.EntityDropTargetListener;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryTokens;
-
-import javax.imageio.ImageIO;
 
 public class ViewDiagram extends BorderLayoutPanel
 {
@@ -447,11 +449,20 @@ public class ViewDiagram extends BorderLayoutPanel
 		image = (BufferedImage)capture;
 		if (image != null)
 		{
+			 // add the watermark text
+			 Graphics2D graphics = (Graphics2D) image.getGraphics();
+			 graphics.drawImage(capture, 0, 0, null);
+			 graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+               RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		     graphics.setFont(new Font("Arial", Font.ITALIC, 13));
+		     graphics.drawString(_Version.SQLEO_IMAGE_WATERMARK, (int)desktop.getWidth() * 0.8f , desktop.getHeight());
+		     graphics.dispose();
+			
 			ImageIO.write(image, "jpeg", out);
 			out.flush();
 		}
 		out.close();
-	}	
+	}
 	
 	void doArrangeEntitiesGrid()
 	{

@@ -37,4 +37,6 @@ public interface _Version
     public static final String MINOR = "08.rc1";
     public static final String VERSION_TRACK = "http://www.google-analytics.com/collect?v=1&tid=UA-38580300-2&cid=555&t=pageview&dt=Version&dp=%2Fversion_"+MAJOR+"."+MINOR.replace("+","%2B");
 
+    //unicode characters for (c) is \u00a9
+    public static String SQLEO_IMAGE_WATERMARK = "\u00a9 SQLeo " + MAJOR;
 }
