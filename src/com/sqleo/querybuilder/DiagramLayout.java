@@ -44,7 +44,7 @@ public class DiagramLayout
 		qmodel = qm;
 	}
 	
-    void freeze()
+    public void freeze()
     {
     	DiagramAbstractEntity[] entities = builder.diagram.getEntities();
     	EntityExtra[] extras = new EntityExtra[entities.length];

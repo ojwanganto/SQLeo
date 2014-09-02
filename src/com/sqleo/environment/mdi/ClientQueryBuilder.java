@@ -24,10 +24,6 @@
 
 package com.sqleo.environment.mdi;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -37,7 +33,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Vector;
 
 import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
@@ -45,11 +40,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.Toolbar;
@@ -428,6 +420,8 @@ public class ClientQueryBuilder extends MDIClient {
 		}
 
 		private void saveAs() {
+			ClientQueryBuilder.this.builder.getDiagramLayout().freeze();
+			ClientQueryBuilder.this.builder.getQueryModel().resetExtrasMap(ClientQueryBuilder.this.builder.getDiagramLayout().getExtras());
 			Object[] ret = DialogQuery.showSave(ClientQueryBuilder.this.builder);
 			if (ret[0] != null) {
 				setFileName(ret[0].toString());
@@ -436,14 +430,15 @@ public class ClientQueryBuilder extends MDIClient {
 
 		private void replace() {
 			try {
-				QueryModel qm = ClientQueryBuilder.this.builder.getQueryModel();
-
 				String fn = ClientQueryBuilder.this.filename;
 				if (fn.endsWith(".sql")) {
 					if(ClientQueryBuilder.this.builder.getSelectedIndex()==1){
 						//save from syntax view
 						FileStreamSQL.writeSQL(fn,ClientQueryBuilder.this.builder.getSyntax().getText());
 					}else {
+						ClientQueryBuilder.this.builder.getDiagramLayout().freeze();
+						ClientQueryBuilder.this.builder.getQueryModel().resetExtrasMap(ClientQueryBuilder.this.builder.getDiagramLayout().getExtras());
+						QueryModel qm = ClientQueryBuilder.this.builder.getQueryModel();
 						//save from design view
 						FileStreamSQL.write(fn, qm);
 					}
