@@ -510,7 +510,7 @@ public class ViewBrowser extends BorderLayoutPanel implements TreeSelectionListe
 				builder.diagram.remove(all[i]);
 			
 			builder.diagram.repaint();
-			builder.diagram.doResizeDesktop();			
+			builder.diagram.doResize();			
 		}
 		queryItem = nextQueryItem;
 		
@@ -529,6 +529,6 @@ public class ViewBrowser extends BorderLayoutPanel implements TreeSelectionListe
 		{
 			builder.onLoad();
 		}
-		builder.diagram.doResizeDesktop();
+		builder.diagram.doResize();
 	}
 }
