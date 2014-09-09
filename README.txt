@@ -34,7 +34,20 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
-SQLeoVQB.2014.08.rc1.zip: 2014-08
+SQLeoVQB.2014.09.rc1.zip: 2014-09-09
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.00/
+
+	221 	limit font size increase to 200
+	218 	MySQL ready ( with mariaDB jdbc driver included)
+	214 	Sign saved images
+	210 	Query syntax: /* comments */ should be colored in green
+	76 	Query builder: save table position and pack as a comment in SQL
+
+
+SQLeoVQB.2014.08.rc1.zip: 2014-08-23
 
   Thanks to 
 	- Philipp Blaszczyk, Marcin Chojnacki, Miguel Angel Gil Rios for translations
