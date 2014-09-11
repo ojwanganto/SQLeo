@@ -84,10 +84,16 @@ public class ViewDiagram extends BorderLayoutPanel
 	{
 		this.setBuilder(builder);
 		
-		desktop = new JDesktopPane();
+		desktop = new JDesktopPane() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				// tiket #223: set white background color for designer with all L&F
+				g.setColor(Color.WHITE);
+		        g.fillRect(0, 0, getWidth(), getHeight());
+			};
+		};
 		desktop.setDesktopManager(manager = new InternalDiagramManager());
-		// tiket #223: set white background color for designer with all L&F
-		desktop.setBackground(Color.WHITE);
 		desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
         desktop.setDropTarget(new DropTarget(this, new EntityDropTargetListener(this)) );
 		
@@ -116,6 +122,7 @@ public class ViewDiagram extends BorderLayoutPanel
             }
         });
 	}
+	
 	
 	public Component add(Component c)
 	{
