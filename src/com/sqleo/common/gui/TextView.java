@@ -102,7 +102,7 @@ public class TextView extends BorderLayoutPanel
 			}
 		}
 		editor.addMouseListener(new InternalPopup());
-		
+		editor.addCaretListener(new ParenthesisMatcher());
 		
 		editor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT,KeyEvent.SHIFT_MASK),DefaultEditorKit.pasteAction);
 		editor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT,KeyEvent.CTRL_MASK),DefaultEditorKit.copyAction);
