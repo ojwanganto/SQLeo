@@ -86,6 +86,8 @@ public class ViewDiagram extends BorderLayoutPanel
 		
 		desktop = new JDesktopPane();
 		desktop.setDesktopManager(manager = new InternalDiagramManager());
+		// tiket #223: set white background color for designer with all L&F
+		desktop.setBackground(Color.WHITE);
 		desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
         desktop.setDropTarget(new DropTarget(this, new EntityDropTargetListener(this)) );
 		
