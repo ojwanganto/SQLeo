@@ -1229,26 +1229,24 @@ public class SQLParser
 		
 	}
 	
-	public static void main(String[] args)
-	{
-		QueryBuilder.useAlwaysQuote = false;
-		
-		try
-		{
-			String fname = "E:/SQLeonardo/tmp/test.sql";
-			QueryModel qm = toQueryModel(new java.io.FileReader(fname));
-			
+//	public static void main(String[] args)
+//	{
+//		QueryBuilder.useAlwaysQuote = false;
+//		
+//		try
+//		{
+//			String fname = "E:/SQLeonardo/tmp/test.sql";
+//			QueryModel qm = toQueryModel(new java.io.FileReader(fname));
 //			QueryBuilder.identifierQuoteString = new String("`");
 //			String sql = "SELECT `nome tabella`.`primo campo`, `nome tabella`.`secondo campo` FROM `nome tabella` WHERE `nome tabella`.`primo campo` BETWEEN 1 AND 10";
 //			String sql = "SELECT \"nome tabella\".\"primo campo\", \"nome tabella\".\"secondo campo\" FROM \"nome tabella\"";
 //			String sql = "SELECT aa.idSoggetto AS aa_idSoggetto,bb.idCliente,bb.cCognome,bb.cNome FROM aa aa INNER JOIN bb bb ON aa.idSoggetto = bb.idSoggetto WHERE (aa.cPartitaIva = '' OR aa.cPartitaIva IS null) AND (aa.cCodiceFiscale = '' OR aa.cCodiceFiscale IS null) AND bb.idCliente NOT IN (select idcliente from cc)";		
 //			QueryModel qm = toQueryModel(sql);
-			
-			System.out.println(qm.toString(true));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+//			System.out.println(qm.toString(true));
+//		}
+//		catch(Exception e)
+//		{
+//			e.printStackTrace();
+//		}
+//	}
 }

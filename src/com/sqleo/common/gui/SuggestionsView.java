@@ -468,36 +468,36 @@ public class SuggestionsView {
 		}
 	}
 
-	public static void main(final String[] args) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (final ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (final InstantiationException e) {
-			e.printStackTrace();
-		} catch (final IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (final UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				final JFrame frame = new JFrame();
-				frame.setTitle("Test frame on two screens");
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				final JPanel panel = new JPanel(new BorderLayout());
-				final JTextPane textPanes = new JTextPane();
-				textPanes.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
-				new SuggestionsView(textPanes, true);
-				panel.add(textPanes, BorderLayout.CENTER);
-				frame.add(panel);
-				frame.pack();
-				frame.setVisible(true);
-
-			}
-		});
-	}
+//	public static void main(final String[] args) {
+//		try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//		} catch (final ClassNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (final InstantiationException e) {
+//			e.printStackTrace();
+//		} catch (final IllegalAccessException e) {
+//			e.printStackTrace();
+//		} catch (final UnsupportedLookAndFeelException e) {
+//			e.printStackTrace();
+//		}
+//		SwingUtilities.invokeLater(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				final JFrame frame = new JFrame();
+//				frame.setTitle("Test frame on two screens");
+//				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//				final JPanel panel = new JPanel(new BorderLayout());
+//				final JTextPane textPanes = new JTextPane();
+//				textPanes.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
+//				new SuggestionsView(textPanes, true);
+//				panel.add(textPanes, BorderLayout.CENTER);
+//				frame.add(panel);
+//				frame.pack();
+//				frame.setVisible(true);
+//
+//			}
+//		});
+//	}
 
 }

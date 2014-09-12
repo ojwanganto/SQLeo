@@ -331,30 +331,29 @@ public class Store
 		}
 	}
 	
-	public static void main(String[] args)
-	{
-		Store s = new Store();
-		try
-		{
-			String filename = System.getProperty("user.home") + "/.sqleo";
-			System.out.println("### " + filename + " ###");
-			s.load(filename);
-			s.print();
-			
+//	public static void main(String[] args)
+//	{
+//		Store s = new Store();
+//		try
+//		{
+//			String filename = System.getProperty("user.home") + "/.sqleo";
+//			System.out.println("### " + filename + " ###");
+//			s.load(filename);
+//			s.print();
 //			s.reset();
 //			
 //			filename = "D:/Temp/w2k/test.2006.05.rc1.lqy";
 //			System.out.println("### " + filename + " ###");
 //			s.load(filename);			
 //			s.print();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-	}
+//		}
+//		catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		}
+//		catch (ClassNotFoundException e)
+//		{
+//			e.printStackTrace();
+//		}
+//	}
 }

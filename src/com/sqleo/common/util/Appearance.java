@@ -93,8 +93,8 @@ public class Appearance
 		UIManager.getDefaults().put("Tree.rowHeight"				, new Integer(18));
 	}
 	
-	public static void main(String args[])
-	{
-		for(Enumeration e = UIManager.getDefaults().keys(); e.hasMoreElements(); ) System.out.println(e.nextElement());
-	}
+//	public static void main(String args[])
+//	{
+//		for(Enumeration e = UIManager.getDefaults().keys(); e.hasMoreElements(); ) System.out.println(e.nextElement());
+//	}
 }

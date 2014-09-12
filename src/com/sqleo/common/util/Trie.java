@@ -160,13 +160,13 @@ public class Trie{
 		}
 	}
 
-	public static void main(String[] args) {
-		Trie tree = new Trie();
-		tree.addWord("world");
-		tree.addWord("work");
-		tree.addWord("wolf");
-		tree.addWord("life");
-		tree.addWord("love");
-		System.out.println(tree.getWordsForPrefix("wo"));
-	}
+//	public static void main(String[] args) {
+//		Trie tree = new Trie();
+//		tree.addWord("world");
+//		tree.addWord("work");
+//		tree.addWord("wolf");
+//		tree.addWord("life");
+//		tree.addWord("love");
+//		System.out.println(tree.getWordsForPrefix("wo"));
+//	}
 }
