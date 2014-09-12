@@ -1,0 +1,33 @@
+:: use :: on begining of line to comment
+:: For Windows users - rename this file extension to "bat" 
+:: For linux users - rename this file extension to "sh" 
+:: For MacOSX users - rename this file extension to "command"
+:: Note - Java should be already in your PATH variable
+
+java -jar SQLeoVQB.jar
+
+:: Manage export/import files in UTF-8 with java encoding
+:: java -Dfile.encoding=UTF-8 -jar SQLeoVQB.jar
+
+:: Other available look and feels from jdk
+
+:: java -Dcom.sqleo.laf.class=com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel -jar SQLeoVQB.jar
+
+:: replace the class name below mentioned in above command 
+:: javax.swing.plaf.metal.MetalLookAndFeel (this is default one)
+:: com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel
+:: com.sun.java.swing.plaf.windows.WindowsLookAndFeel(Windows)
+:: com.sun.java.swing.plaf.motif.MotifLookAndFeel
+:: com.sun.java.swing.plaf.gtk.GTKLookAndFeel (For some linux variants like Ubuntu)
+:: com.apple.laf.AquaLookAndFeel(MacOS)
+
+:: This one is external look and feel similar to Nimbus but more MacOS styled  
+:: download the seaglasslookandfeel-0.2.jar from http://seaglass.googlecode.com/svn/doc/downloads.html
+:: and place it just beside sqleo jar and use following command to launch SQLeo
+:: On the Mac as in Linux you need to separate classpaths with : instead of ; iin below command
+:: Note seaglasslookandfeel is not working well with sqleo
+
+:: java -classpath .;SQLeoVQB.jar;seaglasslookandfeel-0.2.jar -Dcom.sqleo.laf.class=com.seaglasslookandfeel.SeaGlassLookAndFeel com.sqleo.environment.Application
+
+
+
