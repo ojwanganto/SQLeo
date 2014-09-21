@@ -138,6 +138,7 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		menu.add(winGroup.add(MDIActions.ACTION_MDI_SHOW_EXPLORER));
 		menu.add(winGroup.add(MDIActions.ACTION_MDI_SHOW_EDITOR));
 		menu.add(winGroup.add(MDIActions.ACTION_MDI_SHOW_COMPARER));
+		menu.add(winGroup.add(MDIActions.ACTION_MDI_SHOW_HISTORY));
 		menu.addSeparator();
 		menu.add(createItem(MDIActions.ACTION_SHOW_CONTENT));
 		menu.add(createItem(MDIActions.ACTION_SHOW_DEFINITION));

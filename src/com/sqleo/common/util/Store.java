@@ -24,19 +24,32 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.HiddenAction;
+
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
+import com.sqleo.environment.mdi.ClientSQLHistoryViewer;
+import com.sqleo.environment.mdi.DialogPreferences;
+import com.sqleo.environment.mdi.MDIClient;
 
 public class Store
 {
@@ -53,14 +66,49 @@ public class Store
 	//Cache tables prefixTree, Cache table columns, Cache joinColums (All needed for autocomplete feature)
 	private Hashtable columnsCache;
 	
+	private LinkedList<SQLHistoryData> sqlHistoryData;
+	
 	public Store()
 	{
 		mountpoints = new Hashtable();
 		columnsCache = new Hashtable();
+		sqlHistoryData = new LinkedList<SQLHistoryData>();
 		
 		cmp = new Object[3];
 		cmp[INDEX_DATA] = new ArrayList();
 		cmp[INDEX_SUBS] = new Hashtable();
+	}
+	
+	public void addSQLToHistory(final SQLHistoryData historyData){
+		final Integer max =  Preferences.getInteger(DialogPreferences.MAX_QUERIES_IN_HISTORY, 
+				DialogPreferences.DEFAULT_MAX_QUERIES_IN_HISTORY);
+		if(max>0){
+			if(sqlHistoryData.size() == max){
+				// if we reach max, remove last one 
+				sqlHistoryData.removeLast();
+			}
+			//add to first, as we need to store last N queries by timestamp
+			sqlHistoryData.addFirst(historyData);
+			//notify sqlhistory viewer
+			final MDIClient historyView = Application.window.getClient(ClientSQLHistoryViewer.DEFAULT_TITLE);
+			if(historyView!=null){
+				final ClientSQLHistoryViewer historyViewer = (ClientSQLHistoryViewer)historyView;
+				historyViewer.addSQLHistoryDataLine(historyData);
+			}
+		}
+	}
+	
+	public void removeSQLFromHistory(final String timestamp){
+		for(int i = 0; i<sqlHistoryData.size();i++){
+			if(sqlHistoryData.get(i).timestamp.equals(timestamp)){
+				sqlHistoryData.remove(i);
+				break;
+			}
+		}
+	}
+	
+	public LinkedList<SQLHistoryData> getSQLHistoryData(){
+		return  sqlHistoryData;
 	}
 	
 	protected Object[] get(String entry)
@@ -269,6 +317,56 @@ public class Store
 			decoder.close();
 			zin.close();
 		}
+	}
+	
+	public void saveSQLHistory(String filename){
+		BufferedWriter writer = null;
+        try {
+        	writer = new BufferedWriter(new FileWriter(filename));
+        	writeSQLHistoryDataLine(writer, SQLHistoryData.getHeaderRow());
+            final Integer maxQueriesToSave = Preferences.getInteger(DialogPreferences.MAX_QUERIES_IN_HISTORY,
+            		DialogPreferences.DEFAULT_MAX_QUERIES_IN_HISTORY);
+            final Integer subListMax = sqlHistoryData.size() > maxQueriesToSave ? maxQueriesToSave : sqlHistoryData.size(); 
+            for(SQLHistoryData line : sqlHistoryData.subList(0, subListMax)) {
+                writeSQLHistoryDataLine(writer, line);
+            }
+            writer.flush();
+        } catch (IOException ioe) {
+            System.out.println(ioe.getMessage());
+        } finally {
+            try { if (writer!=null) writer.close(); } catch (Exception e) {}
+        }
+	}
+	private void writeSQLHistoryDataLine(BufferedWriter writer,SQLHistoryData line) throws IOException{
+		 if(line.timestamp!=null){
+			 writer.write(line.timestamp);
+	         writer.write(SQLHistoryData.DELIMITER);
+	         writer.write(line.connection);
+	         writer.write(SQLHistoryData.DELIMITER);
+	         writer.write(line.window);
+	         writer.write(SQLHistoryData.DELIMITER);
+	         writer.write(line.query);
+	         writer.write("\n");
+		 }
+	}
+	
+	public void loadSQLHistory(String filename){
+		BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(filename));
+            String line = reader.readLine();//header line 
+            line = reader.readLine();
+            while (line!=null && !line.isEmpty()) {
+            	final String[] x = line.split("\\"+SQLHistoryData.DELIMITER);
+            	sqlHistoryData.add(new SQLHistoryData(x[0],x[1],x[2],x[3]));
+                line = reader.readLine();
+            }
+        } catch (IOException ioe) {
+            System.out.println(ioe.getMessage());
+        } finally {
+            try { if (reader!=null) reader.close(); } catch (Exception e) {}
+        }
+		
 	}
 	
 	public void saveXMLAndMetaviews(String filename,String metaviewFileName) throws IOException

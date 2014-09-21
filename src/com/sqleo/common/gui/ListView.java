@@ -183,6 +183,13 @@ public class ListView extends BorderLayoutPanel
 		cb.setContents(contents, defaultClipboardOwner);
 	}
 	
+	public void copyValueAt(int row,int col){
+		final String value = (String) getValueAt(row,col);
+		Clipboard cb = this.getToolkit().getSystemClipboard();
+		StringSelection contents = new StringSelection(value);
+		cb.setContents(contents, defaultClipboardOwner);
+	}
+	
 	public void reset()
 	{
 		lastSortType = SORT_ASCENDING;

@@ -73,6 +73,7 @@ public class Application extends Appearance implements _Constants,_Version
     
 	public static final Store session		= new Store();
     public static final Resources resources	= new Resources();
+    private static String CONFIG_FOLDER = "";
     
     private static void loadIcons()
     {
@@ -129,6 +130,10 @@ public class Application extends Appearance implements _Constants,_Version
 			}else if(new File(sessionFilename()).exists()){
 				session.load(sessionFilename());
 			}
+			if(new File(sessionSQLHistoryFilename()).exists()){
+				session.loadSQLHistory(sessionSQLHistoryFilename());
+			}
+			
 			Preferences.loadDefaults();
 			
 	    	if(Preferences.getBoolean("application.trace",false))
@@ -167,7 +172,9 @@ public class Application extends Appearance implements _Constants,_Version
 				else
 					session.jump().set(0,getVersion());
 				
+				Application.initConfigFolder();
 				session.saveXMLAndMetaviews(sessionXMLFilename(),sessionMetaviewFilename());
+				session.saveSQLHistory(sessionSQLHistoryFilename());
 			}
 			catch (IOException e)
 			{
@@ -180,19 +187,37 @@ public class Application extends Appearance implements _Constants,_Version
 		}
 	}	
 	
+	//.sqleo file is the old file used , now replaced by sessionXMLFileName method .sqleo.xml
+	@Deprecated
 	private static String sessionFilename()
 	{
 		return System.getProperty("user.home") + File.separator + ".sqleo";
 	}
 	
+	private static void initConfigFolder(){
+		final String userDir = System.getProperty("user.home");
+		final File configDir = new File(userDir, ".sqleo.config");
+		if(!configDir.exists()){
+			configDir.mkdir();
+			// first time load config from old location - userDir
+			CONFIG_FOLDER =  userDir;
+		}else{
+			CONFIG_FOLDER =  configDir.getAbsolutePath();
+		}
+	}
+	
 	private static String sessionXMLFilename()
 	{
-		return System.getProperty("user.home") + File.separator + ".sqleo.xml";
+		return  CONFIG_FOLDER + File.separator + ".sqleo.xml";
 	}
 	
 	private static String sessionMetaviewFilename()
 	{
-		return System.getProperty("user.home") + File.separator + ".sqleo.metaview";
+		return  CONFIG_FOLDER + File.separator + ".sqleo.metaview";
+	}
+	
+	private static String sessionSQLHistoryFilename(){
+		return  CONFIG_FOLDER + File.separator + ".sqleo.history";
 	}
 	
     public static String getVersion()
@@ -335,9 +360,10 @@ public class Application extends Appearance implements _Constants,_Version
         System.out.println("SystemLookAndFeel: "+javax.swing.UIManager.getSystemLookAndFeelClassName());
         System.out.println("SQLeoUsingLookAndFeel: "+javax.swing.UIManager.getLookAndFeel());
         
+        Application.initConfigFolder();
 		Application.loadSession();
 		Application.initI18n();
-		initializeFontSize();
+		Application.initializeFontSize();
 		
 		Application.println("Loading resources...");
 		Application.loadIcons();

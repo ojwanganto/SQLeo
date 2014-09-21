@@ -98,7 +98,8 @@ public class MDIWindow extends JFrame implements _Constants
 		this.getRootPane().getActionMap().put(ACTION_SHOW_DEFINITION	, new MDIActions.ShowDefinition());
 		
         this.getRootPane().getActionMap().put(ACTION_MDI_SHOW_EXPLORER	, new MDIActions.ShowMetadataExplorer());
-		this.getRootPane().getActionMap().put(ACTION_MDI_SHOW_EDITOR	, new MDIActions.ShowCommandEditor());
+        this.getRootPane().getActionMap().put(ACTION_MDI_SHOW_HISTORY	, new MDIActions.ShowSQLHistoryViewer());
+        this.getRootPane().getActionMap().put(ACTION_MDI_SHOW_EDITOR	, new MDIActions.ShowCommandEditor());
 		this.getRootPane().getActionMap().put(ACTION_MDI_SHOW_COMPARER	, new MDIActions.ShowSchemaComparer());
 
 		this.getRootPane().getActionMap().put(ACTION_MDI_GOBACK	, new MDIActions.GoBack());

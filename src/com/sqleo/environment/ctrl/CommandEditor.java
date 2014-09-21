@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.util.Date;
 import java.util.StringTokenizer;
 
 import javax.swing.AbstractAction;
@@ -43,12 +44,15 @@ import javax.swing.text.StyleConstants;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.TextView;
+import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.ctrl.editor.Task;
 import com.sqleo.environment.ctrl.editor._TaskSource;
 import com.sqleo.environment.ctrl.editor._TaskTarget;
 import com.sqleo.environment.mdi.ClientCommandEditor;
+import com.sqleo.environment.mdi.DialogPreferences;
 
 
 public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
@@ -229,6 +233,9 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					keycah.length(), keycahAttributSet, true);
 			CommandEditor.this.response.append("\n"
 					+ source.getSyntax() + "\n");
+			
+			Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
+					keycah, "CommandEditor", sql));
 
 			ClientCommandEditor cce = (ClientCommandEditor) Application.window
 					.getClient(ClientCommandEditor.DEFAULT_TITLE);

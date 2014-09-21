@@ -25,6 +25,7 @@
 package com.sqleo.environment.mdi;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -34,10 +35,10 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -48,6 +49,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.NumberFormatter;
 
 import com.sqleo.common.gui.AbstractDialogConfirm;
 import com.sqleo.common.gui.Toolbar;
@@ -75,11 +77,13 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	private JTextArea jLabelAutoCommitInfo = new JTextArea();
 	private JComboBox jComboBoxLanguage = new JComboBox();
 	private JCheckBox jCheckBoxTrace = new JCheckBox();
-	private JTextField jTextFieldMaxRowFetchSize = new JTextField();
-	private JTextField jTextFieldFontSize = new JTextField();
-
-
-	private JTextField jTextFieldMaxColSize = new JTextField();
+	
+	private NumberFormatter numberFormatter = new NumberFormatter();
+	private JTextField jTextFieldFontSize = new JFormattedTextField(numberFormatter);
+	private JTextField jTextFieldMaxQueriesInHistory = new JFormattedTextField(numberFormatter);
+	private JTextField jTextFieldMaxRowFetchSize = new JFormattedTextField(numberFormatter);
+	private JTextField jTextFieldMaxColSize = new JFormattedTextField(numberFormatter);
+	
 	private JCheckBox jCheckBoxAutoCommit = new JCheckBox();
 	private JCheckBox jCheckBoxAutoComplete = new JCheckBox();
 	private JCheckBox jCheckBoxAskBeforeExit = new JCheckBox();
@@ -92,10 +96,12 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	public static final String QB_RELATION_RENDER_ARC_KEY = "querybuilder.isArcRelationRender";
 	public static final String FONT_SIZE_PERCENTAGE = "application.fontSizePercentage";
 	public static final String QB_SAVE_POS_IN_SQL = "querybuilder.savePosInSQL";
+	public static final String MAX_QUERIES_IN_HISTORY = "application.maxQueriesInHistory";
+	public static final Integer DEFAULT_MAX_QUERIES_IN_HISTORY = 10;
 
 	public DialogPreferences() {
-		super(Application.window, Application.PROGRAM + ".preferences", 350,
-				460);
+		super(Application.window, Application.PROGRAM + ".preferences", 360,
+				480);
 
 		JPanel pnlQB = new JPanel(new GridLayout(0, 1));
 		pnlQB.setBorder(new EmptyBorder(10, 5, 90, 5));
@@ -124,7 +130,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				"application.preferences.selectAllColumns",
 				"Auto select all colmuns"), Preferences.getBoolean(
 				"querybuilder.select-all-columns", true)));
-		
+		pnlQB.add(new JSeparator());
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,2,2));
 		boolean relationRendering = Preferences.getBoolean(QB_RELATION_RENDER_ARC_KEY , true);
 		optQbRelrenderArc  = new JRadioButton(I18n.getString(
@@ -265,8 +271,19 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				FONT_SIZE_PERCENTAGE, "Font size scaling % (need restart)")));
 		jTextFieldFontSize.setText(String.valueOf(Preferences.getInteger(
 				FONT_SIZE_PERCENTAGE, 100)));
+		jTextFieldFontSize.setColumns(5);
 		pnlFont.add(jTextFieldFontSize);
 		pnlGeneral.add(pnlFont);
+		
+		// add max queries in history
+		JPanel pnlMaxQueries = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlMaxQueries.add(new JLabel(I18n.getString(
+				MAX_QUERIES_IN_HISTORY, "Max queries in history")));
+		jTextFieldMaxQueriesInHistory.setText(String.valueOf(Preferences.getInteger(
+				MAX_QUERIES_IN_HISTORY, DEFAULT_MAX_QUERIES_IN_HISTORY)));
+		jTextFieldMaxQueriesInHistory.setColumns(10);
+		pnlMaxQueries.add(jTextFieldMaxQueriesInHistory);
+		pnlGeneral.add(pnlMaxQueries);
 		
 		pnlGeneral.add(jCheckBoxTrace);
 		pnlGeneral.add(jCheckBoxCheckUpdate);
@@ -276,17 +293,27 @@ public class DialogPreferences extends AbstractDialogConfirm {
 
 		JPanel pnlCommand = new JPanel(new GridLayout(0, 1));
 		pnlCommand.setBorder(new EmptyBorder(10, 5, 150, 5));
-		pnlCommand.add(new JLabel(I18n.getString(
+		
+		//add max colums size
+		JPanel pnlMaxColumns = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlMaxColumns.add(new JLabel(I18n.getString(
 				"application.preferences.maxcolsize", "Maximum column size:")));
 		jTextFieldMaxColSize.setText(String.valueOf(Preferences.getInteger(
 				"editor.maxcolsize", 50)));
-		pnlCommand.add(jTextFieldMaxColSize);
+		jTextFieldMaxColSize.setColumns(10);
+		pnlMaxColumns.add(jTextFieldMaxColSize);
+		pnlCommand.add(pnlMaxColumns);
+		
 		// add max rows fetch size
-		pnlCommand.add(new JLabel(I18n.getString(
+		JPanel pnlMaxRows = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlMaxRows.add(new JLabel(I18n.getString(
 				"application.preferences.maxrowfetchsize", "Maximum rows fetch size:")));
 		jTextFieldMaxRowFetchSize.setText(String.valueOf(Preferences.getInteger(
 				CONTENT_MAX_ROWS_FETCH_SIZE_KEY, 100)));
-		pnlCommand.add(jTextFieldMaxRowFetchSize);
+		jTextFieldMaxRowFetchSize.setColumns(10);
+		pnlMaxRows.add(jTextFieldMaxRowFetchSize);
+		pnlCommand.add(pnlMaxRows);
+		
 		pnlCommand.add(jCheckBoxAutoComplete);
 
 		JTabbedPane options = new JTabbedPane();
@@ -368,7 +395,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				new Integer(jTextFieldMaxRowFetchSize.getText()));
 		final Integer fontSizeVal = new Integer(jTextFieldFontSize.getText());
 		Preferences.set(FONT_SIZE_PERCENTAGE, fontSizeVal>200 ? 200 : fontSizeVal);
-
+		Preferences.set(MAX_QUERIES_IN_HISTORY, new Integer(jTextFieldMaxQueriesInHistory.getText()));
 
 		return true;
 	}

@@ -516,6 +516,24 @@ public abstract class MDIActions implements _Constants
 			return new ClientSchemaComparer();
 		}        
 	}
+	
+	 public static class ShowSQLHistoryViewer extends AbstractShowTool
+	    {
+	        public ShowSQLHistoryViewer()
+	        {
+				super(KeyStroke.getKeyStroke(KeyEvent.VK_4,InputEvent.CTRL_MASK),ICON_EXPLORER);
+	        }
+	        
+	        public String getMDIClientName()
+	        {
+				return ClientSQLHistoryViewer.DEFAULT_TITLE;
+	        }
+	        
+			protected MDIClient create()
+			{
+				return new ClientSQLHistoryViewer();
+			}        
+	    }
 
 	public static class CascadeClients extends AbstractBase
 	{

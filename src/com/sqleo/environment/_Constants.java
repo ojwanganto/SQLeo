@@ -46,6 +46,7 @@ public interface _Constants
 	public static final String ACTION_MDI_SHOW_COMPARER	= "action.103";
 	public static final String ACTION_SHOW_CONTENT		= "action.104";
 	public static final String ACTION_SHOW_DEFINITION	= "action.105";
+	public static final String ACTION_MDI_SHOW_HISTORY	= "action.106";
 
 	public static final String ACTION_MDI_CASCADE	= "action.110";
 	public static final String ACTION_MDI_TILEH		= "action.111";

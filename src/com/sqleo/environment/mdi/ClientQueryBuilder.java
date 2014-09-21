@@ -30,6 +30,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.Action;
@@ -47,6 +48,7 @@ import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.Toolbar;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.util.I18n;
+import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.ContentPane;
 import com.sqleo.environment.ctrl.content.UpdateModel;
@@ -350,6 +352,8 @@ public class ClientQueryBuilder extends MDIClient {
 		}
 		
 		private void onLaunch(String subtitle,ClientContent newClient){
+			Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
+					ClientQueryBuilder.this.keycah, "QueryBuilder", newClient.getControl().getQuery()));
 			Vector<Integer> prevColWidths = null;
 			if(client!=null){
 				client.getControl().getView().cacheColumnWidths();
