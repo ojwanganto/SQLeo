@@ -131,7 +131,7 @@ public class Application extends Appearance implements _Constants,_Version
 				session.load(sessionFilename());
 			}
 			if(new File(sessionSQLHistoryFilename()).exists()){
-				session.loadSQLHistory(sessionSQLHistoryFilename());
+				session.loadSQLHistoryAsXml(sessionSQLHistoryFilename());
 			}
 			
 			Preferences.loadDefaults();
@@ -174,7 +174,7 @@ public class Application extends Appearance implements _Constants,_Version
 				
 				Application.initConfigFolder();
 				session.saveXMLAndMetaviews(sessionXMLFilename(),sessionMetaviewFilename());
-				session.saveSQLHistory(sessionSQLHistoryFilename());
+				session.saveSQLHistoryAsXml(sessionSQLHistoryFilename());
 			}
 			catch (IOException e)
 			{
@@ -217,7 +217,7 @@ public class Application extends Appearance implements _Constants,_Version
 	}
 	
 	private static String sessionSQLHistoryFilename(){
-		return  CONFIG_FOLDER + File.separator + ".sqleo.history";
+		return  CONFIG_FOLDER + File.separator + ".sqleo.history.xml";
 	}
 	
     public static String getVersion()

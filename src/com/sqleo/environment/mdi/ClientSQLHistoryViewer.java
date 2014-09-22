@@ -82,7 +82,11 @@ public class ClientSQLHistoryViewer extends MDIClient
 	{
 	}
 	
-	public void addSQLHistoryDataLine(SQLHistoryData line){
-		control.addSQLHistoryDataLine(line);
+	public void addRowAtFirst(SQLHistoryData line){
+		control.addRowAtFirst(line);
+	}
+
+	public void removeLastRow() {
+		control.removeLastRow();
 	}
 }

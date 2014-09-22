@@ -46,27 +46,34 @@ public class SQLHistoryViewer extends ListView  implements MouseListener
 	{
 		addMouseListener(this);
 		
-		final SQLHistoryData header = SQLHistoryData.getHeaderRow();
-		addColumn(header.timestamp);
-		addColumn(header.connection);
-		addColumn(header.window);
-		addColumn(header.query);
+		addColumn("Timestamp");
+		addColumn("Connection");
+		addColumn("Window");
+		addColumn("Query");
 		
 		for(SQLHistoryData line : Application.session.getSQLHistoryData()){
-			addSQLHistoryDataLine(line);
+			final Object[] rowdata = toRowData(line);
+			addRow(rowdata);
 		}
 	}
-
-	public void addSQLHistoryDataLine(SQLHistoryData line) {
+	
+	private Object[] toRowData(final SQLHistoryData line){
 		final Object[] rowdata = new Object[4];
-		rowdata[0] = line.timestamp;
-		rowdata[1] = line.connection;
-		rowdata[2] = line.window;
-		rowdata[3] = line.query;
-
-		addRow(rowdata);
+		rowdata[0] = line.getTimestamp();
+		rowdata[1] = line.getConnection();
+		rowdata[2] = line.getWindow();
+		rowdata[3] = line.getQuery();
+		return rowdata;
 	}
 	
+	public void addRowAtFirst(final SQLHistoryData line) {
+		final Object[] rowdata = toRowData(line);
+		addRowAtFirst(rowdata);
+	}
+
+	public void removeLastRow(){
+		removeRow(getRowCount()-1);
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {	}

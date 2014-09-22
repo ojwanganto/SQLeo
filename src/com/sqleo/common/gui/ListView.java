@@ -112,6 +112,12 @@ public class ListView extends BorderLayoutPanel
 		model.addRow(rowdata);
 	}
 	
+	public void addRowAtFirst(Object[] rowdata)
+	{
+		DefaultTableModel model = (DefaultTableModel)table.getModel();
+		model.insertRow(0,rowdata);
+	}
+	
 	public boolean isSelectionEmpty()
 	{
 		return table.getSelectedRowCount() < 1;

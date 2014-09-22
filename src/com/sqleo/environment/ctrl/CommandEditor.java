@@ -235,7 +235,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					+ source.getSyntax() + "\n");
 			
 			Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
-					keycah, "CommandEditor", sql));
+					source.getHandlerKey(), "CommandEditor", sql));
 
 			ClientCommandEditor cce = (ClientCommandEditor) Application.window
 					.getClient(ClientCommandEditor.DEFAULT_TITLE);

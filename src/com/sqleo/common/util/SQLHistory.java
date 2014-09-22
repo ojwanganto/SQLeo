@@ -21,62 +21,26 @@
  */
 package com.sqleo.common.util;
 
+import java.util.LinkedList;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class SQLHistoryData {
+@XmlAccessorType (XmlAccessType.FIELD)
+public class SQLHistory {
 	
-	private String timestamp;
-	private String connection;
-	private String window;
-	private String query;
-	
-	public SQLHistoryData(String timestamp, String connection,String window,String query) {
-		this.timestamp = timestamp;
-		this.connection = connection;
-		this.window = window;
-		this.query = query;
+	@XmlElement(name = "sqlHistoryLine")
+	private LinkedList<SQLHistoryData> sqlHistoryLines = null;
+
+	public LinkedList<SQLHistoryData> getSqlHistoryLines() {
+		return sqlHistoryLines;
 	}
-	
-	public SQLHistoryData(){
-		
+
+	public void setSqlHistoryLines(LinkedList<SQLHistoryData> sqlHistoryLines) {
+		this.sqlHistoryLines = sqlHistoryLines;
 	}
 	
-	public String getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public String getConnection() {
-		return connection;
-	}
-
-	public void setConnection(String connection) {
-		this.connection = connection;
-	}
-
-	public String getWindow() {
-		return window;
-	}
-
-	public void setWindow(String window) {
-		this.window = window;
-	}
-
-	public String getQuery() {
-		return query;
-	}
-
-	public void setQuery(String query) {
-		this.query = query;
-	}
-
 	
 }
