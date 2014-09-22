@@ -71,9 +71,6 @@ public class SQLHistoryViewer extends ListView  implements MouseListener
 		addRowAtFirst(rowdata);
 	}
 
-	public void removeLastRow(){
-		removeRow(getRowCount()-1);
-	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {	}

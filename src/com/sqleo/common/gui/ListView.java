@@ -118,6 +118,10 @@ public class ListView extends BorderLayoutPanel
 		model.insertRow(0,rowdata);
 	}
 	
+	public void removeLastRow(){
+		removeRow(getRowCount()-1);
+	}
+	
 	public boolean isSelectionEmpty()
 	{
 		return table.getSelectedRowCount() < 1;
