@@ -340,6 +340,7 @@ public class Store
 			jaxbMarshaller.marshal(history, new File(filename));
 			
 		} catch (JAXBException e) {
+			Application.println(e, false);
 			e.printStackTrace();
 		}
 	}
@@ -349,9 +350,12 @@ public class Store
 			final JAXBContext jaxbContext = JAXBContext.newInstance(SQLHistory.class);
 			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			final SQLHistory history = (SQLHistory) jaxbUnmarshaller.unmarshal(new File(filename)); 
-			sqlHistoryData = history.getSqlHistoryLines();
+			if(history!=null && history.getSqlHistoryLines()!=null){
+				sqlHistoryData = history.getSqlHistoryLines();	
+			}
 			
 		} catch (JAXBException e) {
+			Application.println(e, false);
 			e.printStackTrace();
 		}
 		
