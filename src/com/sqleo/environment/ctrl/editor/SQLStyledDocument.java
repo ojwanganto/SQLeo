@@ -50,30 +50,14 @@ public class SQLStyledDocument extends QueryStyledDocument
 	
 	protected void doSyntaxHighlight(String content, int startOffset, int endOffset) throws BadLocationException
 	{
-		this.setCharacterAttributes(startOffset, (endOffset-startOffset), defaultAttributSet, true);
-		checkComments(content, startOffset, endOffset);
+		super.doSyntaxHighlight(content, startOffset, endOffset);
+		checkSingleLineComments(content, startOffset, endOffset);
+		checkMultiLineComments(content, startOffset, endOffset);
 	}
 	
-	private void checkComments(String content, int startOffset, int endOffset)
-	{
-		int index = content.lastIndexOf( DELIMITER_COMMENT_MULTI_LINE_START, endOffset );
-		if (index > -1)
-		{
-			int index2 = content.indexOf( DELIMITER_COMMENT_MULTI_LINE_END, index );
- 
-			if ( (index2 == -1) || (index2 > endOffset) )
-			{
-				this.setCharacterAttributes(index, endOffset - index + 1, commentAttributSet, false);
-				return;
-			}
-			else if (index2 >= startOffset)
-			{
-				this.setCharacterAttributes(index, index2 + 2 - index, commentAttributSet, false);
-				return;
-			}
-		}
+	private void checkSingleLineComments(String content, int startOffset, int endOffset){
 		for(final String delimCommentSingleLine : DELIMITER_COMMENT_SINGLE_LINE){
-			index = content.indexOf( delimCommentSingleLine, startOffset );
+			int index = content.indexOf( delimCommentSingleLine, startOffset );
 			if ( (index > -1) && (index < endOffset) )
 			{
 				this.setCharacterAttributes(index, endOffset - index + 1, commentAttributSet, false);
@@ -83,7 +67,34 @@ public class SQLStyledDocument extends QueryStyledDocument
 		}
 		
 		if(startOffset>endOffset) return;
-		checkKeywords(content, startOffset, endOffset);
+	}
+	
+	private void checkMultiLineComments(String content, int startOffset, int endOffset)
+	{
+		if(startOffset>endOffset) return;
+		while(true){
+			int index = content.indexOf( DELIMITER_COMMENT_MULTI_LINE_START, startOffset );
+			if (index > -1)
+			{
+				int index2 = content.indexOf( DELIMITER_COMMENT_MULTI_LINE_END, index );
+	 
+				if ( (index2 == -1) || (index2 > endOffset) )
+				{
+					this.setCharacterAttributes(index, index2 - index + 1, commentAttributSet, false);
+					if (index2 == -1) return;
+					else startOffset = index2;
+				}
+				else if (index2 >= startOffset)
+				{
+					this.setCharacterAttributes(index, index2 + 2 - index, commentAttributSet, false);
+					startOffset = index2;
+				}
+			}else{
+				return;
+			}
+			if(startOffset>endOffset) return;
+		}
+		
 	}
 	
 }
