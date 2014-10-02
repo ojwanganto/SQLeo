@@ -18,11 +18,11 @@ To run SQLeo Visual Query Builder, launch:
 
   java -jar SQLeoVQB.jar
 
-or rename sqleo-start.txt to:
+or rename sqleo-start-xxx.yyy to:
 
-  sqleo-start.bat 
-  sqleo-start.sh
-  sqleo-start.command
+  sqleo-start-xxx.bat 
+  sqleo-start-xxx.sh
+  sqleo-start-xxx.command
 
 With the expected LookAndFeel 
 (Warning Metal is set by default because it is the only one that has been fully tested)
@@ -34,17 +34,30 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2014.10.rc1.zip: 2014-10-02
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.10/
+
+	224 Syntax: join type is not highlighted
+	223 Designer: force background color to white for all L&F
+	220 Syntax: display corresponding pairs of parenthesis in same color
+	203 Query builder: wrong filter icons
+	 34 SQL history view and log sql queries in a file  
+
+
 SQLeoVQB.2014.09.rc1.zip: 2014-09-09
 
   Thanks to Anudeep Gade for his contribution to this release
   For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2014.00/
+     http://sourceforge.net/p/sqleo/tickets/milestone/2014.09/
 
-	221 	limit font size increase to 200
-	218 	MySQL ready ( with mariaDB jdbc driver included)
-	214 	Sign saved images
-	210 	Query syntax: /* comments */ should be colored in green
-	76 	Query builder: save table position and pack as a comment in SQL
+	221 limit font size increase to 200
+	218 MySQL ready ( with mariaDB jdbc driver included)
+	214 Sign saved images
+	210 Query syntax: /* comments */ should be colored in green
+	 76 Query builder: save table position and pack as a comment in SQL
 
 
 SQLeoVQB.2014.08.rc1.zip: 2014-08-23
@@ -56,11 +69,11 @@ SQLeoVQB.2014.08.rc1.zip: 2014-08-23
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2014.08/
 
-	195	Fix command editor fails in executing queries which are multi-line.
-	44 	New Translations of the Menus/Query Builder/Preferences in
-			- GERMAN by Philipp Blaszczyk
-			- POLISH by Marcin Chojnacki
-			- SPANISH by Miguel Angel Gil Rios
+	195 Fix command editor fails in executing queries which are multi-line.
+	 44 New Translations of the Menus/Query Builder/Preferences in
+		- GERMAN by Philipp Blaszczyk
+		- POLISH by Marcin Chojnacki
+		- SPANISH by Miguel Angel Gil Rios
 
 
 SQLeoVQB.2014.07.rc1.zip: 2014-07-15
@@ -69,12 +82,12 @@ SQLeoVQB.2014.07.rc1.zip: 2014-07-15
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2014.07/
 
-	215 	New responsive web site:
-			http://sqleo.sourceforge.net/index.html
-	209 	reverse query: syntax ON AND
-	208 	Designer: improve arrange spring
-	206 	change donation link from paypal to:
-			http://sqleo.sourceforge.net/support.html
+	215 New responsive web site:
+		http://sqleo.sourceforge.net/index.html
+	209 reverse query: syntax ON AND
+	208 Designer: improve arrange spring
+	206 change donation link from paypal to:
+		http://sqleo.sourceforge.net/support.html
 			
 
 SQLeoVQB.2014.06.rc1.zip: 2014-05-27
