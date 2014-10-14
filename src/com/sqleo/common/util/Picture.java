@@ -20,13 +20,18 @@
 
 package com.sqleo.common.util;
 
+import java.awt.Image;
 import java.net.URL;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import com.sqleo.environment.Preferences;
+import com.sqleo.environment.mdi.DialogPreferences;
+
 public class Picture
 {
+	
 	public static Icon createIcon(String filename)
 	{
 		Class c = Resources.class;
@@ -38,6 +43,16 @@ public class Picture
 	
 	public static Icon createIcon(URL url)
 	{
-		return new ImageIcon(url);
+		final ImageIcon original = new ImageIcon(url);
+        final int iconSizePercentage = Preferences.getInteger(DialogPreferences.ICON_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_ICON_PERCENT);
+        if (iconSizePercentage != 100) {
+        	final float multiplier = iconSizePercentage / 100.0f;
+			final Image img = original.getImage();  
+			final Image scaled = img.getScaledInstance(Math.round(original.getIconWidth() * multiplier) , Math.round(original.getIconHeight() * multiplier) ,  
+					java.awt.Image.SCALE_SMOOTH);  
+			return new ImageIcon(scaled);
+		}else{
+			return original;
+		}
 	}
 }

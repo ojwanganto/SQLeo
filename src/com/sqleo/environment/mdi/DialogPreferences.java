@@ -80,6 +80,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	
 	private NumberFormatter numberFormatter = new NumberFormatter();
 	private JTextField jTextFieldFontSize = new JFormattedTextField(numberFormatter);
+	private JTextField jTextFieldIconSize = new JFormattedTextField(numberFormatter);
 	private JTextField jTextFieldMaxQueriesInHistory = new JFormattedTextField(numberFormatter);
 	private JTextField jTextFieldMaxRowFetchSize = new JFormattedTextField(numberFormatter);
 	private JTextField jTextFieldMaxColSize = new JFormattedTextField(numberFormatter);
@@ -99,6 +100,9 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	public static final String MAX_QUERIES_IN_HISTORY = "application.maxQueriesInHistory";
 	public static final Integer DEFAULT_MAX_QUERIES_IN_HISTORY = 10;
 	public static final Integer DEFAULT_FONT_PERCENT = 110;
+	public static final String ICON_SIZE_PERCENTAGE = "application.iconSizePercentage";
+	public static final Integer DEFAULT_ICON_PERCENT = 110;
+	
 
 	public DialogPreferences() {
 		super(Application.window, Application.PROGRAM + ".preferences", 360,
@@ -275,7 +279,17 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		jTextFieldFontSize.setColumns(5);
 		pnlFont.add(jTextFieldFontSize);
 		pnlGeneral.add(pnlFont);
-		
+	
+		// add icon size percentage
+		JPanel pnlIcon = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlIcon.add(new JLabel(I18n.getString(
+				ICON_SIZE_PERCENTAGE, "Icon size scaling % (need restart)")));
+		jTextFieldIconSize.setText(String.valueOf(Preferences.getInteger(
+				ICON_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_ICON_PERCENT)));
+		jTextFieldIconSize.setColumns(5);
+		pnlIcon.add(jTextFieldIconSize);
+		pnlGeneral.add(pnlIcon);
+
 		// add max queries in history
 		JPanel pnlMaxQueries = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		pnlMaxQueries.add(new JLabel(I18n.getString(
@@ -396,6 +410,9 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				new Integer(jTextFieldMaxRowFetchSize.getText()));
 		final Integer fontSizeVal = new Integer(jTextFieldFontSize.getText());
 		Preferences.set(FONT_SIZE_PERCENTAGE, fontSizeVal>200 ? 200 : fontSizeVal);
+		final Integer iconSizeVal = new Integer(jTextFieldIconSize.getText());
+		Preferences.set(ICON_SIZE_PERCENTAGE, iconSizeVal>400 ? 400 : iconSizeVal);
+
 		Preferences.set(MAX_QUERIES_IN_HISTORY, new Integer(jTextFieldMaxQueriesInHistory.getText()));
 
 		return true;
