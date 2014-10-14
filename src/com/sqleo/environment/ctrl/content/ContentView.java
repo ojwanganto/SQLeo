@@ -96,7 +96,7 @@ public class ContentView extends JPanel implements ListSelectionListener
 				}
 			}
 		});
-		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, 100);
+		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_FONT_PERCENT);
         if (fontSizePercentage != 100) {
         	final float multiplier = fontSizePercentage / 100.0f;
         	final int newHeight = Math.round(data.getRowHeight() * multiplier);

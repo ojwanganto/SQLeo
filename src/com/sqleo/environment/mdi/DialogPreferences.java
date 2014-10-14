@@ -98,6 +98,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	public static final String QB_SAVE_POS_IN_SQL = "querybuilder.savePosInSQL";
 	public static final String MAX_QUERIES_IN_HISTORY = "application.maxQueriesInHistory";
 	public static final Integer DEFAULT_MAX_QUERIES_IN_HISTORY = 10;
+	public static final Integer DEFAULT_FONT_PERCENT = 110;
 
 	public DialogPreferences() {
 		super(Application.window, Application.PROGRAM + ".preferences", 360,
@@ -270,7 +271,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		pnlFont.add(new JLabel(I18n.getString(
 				FONT_SIZE_PERCENTAGE, "Font size scaling % (need restart)")));
 		jTextFieldFontSize.setText(String.valueOf(Preferences.getInteger(
-				FONT_SIZE_PERCENTAGE, 100)));
+				FONT_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_FONT_PERCENT)));
 		jTextFieldFontSize.setColumns(5);
 		pnlFont.add(jTextFieldFontSize);
 		pnlGeneral.add(pnlFont);

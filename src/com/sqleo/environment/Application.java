@@ -306,7 +306,7 @@ public class Application extends Appearance implements _Constants,_Version
     }
     
     private static void initializeFontSize() {
-        final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, 100);
+        final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_FONT_PERCENT);
         if (fontSizePercentage != 100) {
         	final float multiplier = fontSizePercentage / 100.0f;
         	final UIDefaults defaults = UIManager.getDefaults();

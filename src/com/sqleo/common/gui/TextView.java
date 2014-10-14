@@ -76,7 +76,7 @@ public class TextView extends BorderLayoutPanel
 		editor = new JTextPane();
 		editor.setDocument(doc);
 		
-		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, 100);
+		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_FONT_PERCENT);
         final int editorFontSize;
         if (fontSizePercentage != 100) {
         	final float multiplier = fontSizePercentage / 100.0f;

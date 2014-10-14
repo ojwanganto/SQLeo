@@ -48,7 +48,7 @@ public class LineNumberView extends JTable
 			
 		setPreferredScrollableViewportSize(getPreferredSize());
 		
-		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, 100);
+		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_FONT_PERCENT);
         if (fontSizePercentage != 100) {
         	final float multiplier = fontSizePercentage / 100.0f;
         	final int newHeight = Math.round(getRowHeight() * multiplier);
