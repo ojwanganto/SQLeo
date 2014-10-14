@@ -136,6 +136,17 @@ public class SQLParser
 			}
 			else if(next.toString().equalsIgnoreCase(_ReservedWords.UNION))
 			{
+				// ticket #91: Warning when UNION ALL is transformed in UNION
+				next = li.next();
+				if(next.toString().equalsIgnoreCase(_ReservedWords.ALL))
+				{
+					Application.alert("!!! UNION ALL changed in UNION syntax !!!");
+
+				}
+				else
+				{
+					li.previous();
+				}
 				QueryExpression union = new QueryExpression();
 				doParseQuery(li,union);
 				qe.setUnion(union);
