@@ -35,6 +35,7 @@ package com.sqleo.querybuilder;
 import  javax.swing.tree.*;
 import  javax.swing.*;
 
+import com.sqleo.environment.Application;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax._ReservedWords;
 
@@ -65,20 +66,20 @@ public class QueryModelTreeCellRenderer extends DefaultTreeCellRenderer
     {
         super();
         
-        if (queryIcon == null) queryIcon = new javax.swing.ImageIcon(getClass().getResource("/images/page_white_database.png"));
-        if (whereIcon == null) whereIcon = new javax.swing.ImageIcon(getClass().getResource("/images/filter_where.png"));
-        if (keyAndWhereIcon == null) keyAndWhereIcon = new javax.swing.ImageIcon(getClass().getResource("/images/bullet_key_filter.png"));
-        if (fromIcon == null) fromIcon = new javax.swing.ImageIcon(getClass().getResource("/images/table_relationship.png"));
-        if (selectIcon == null) selectIcon = new javax.swing.ImageIcon(getClass().getResource("/images/layout.png"));
-        if (tableIcon == null) tableIcon = new javax.swing.ImageIcon(getClass().getResource("/images/database_table.png"));
+        if (queryIcon == null) queryIcon = Application.resources.getIcon(Application.ICON_QB_QUERY);
+        if (whereIcon == null) whereIcon = Application.resources.getIcon(Application.ICON_QB_WHERE);
+        if (keyAndWhereIcon == null) keyAndWhereIcon = Application.resources.getIcon(Application.ICON_QB_KEYANDWHERE);
+        if (fromIcon == null) fromIcon = Application.resources.getIcon(Application.ICON_QB_FROM);
+        if (selectIcon == null) selectIcon = Application.resources.getIcon(Application.ICON_QB_SELECT);
+        if (tableIcon == null) tableIcon = Application.resources.getIcon(Application.ICON_QB_TABLE);
 
-        if (orderByIcon == null) orderByIcon = new javax.swing.ImageIcon(getClass().getResource("/images/table_sort.png"));
-        if (groupByIcon == null) groupByIcon = new javax.swing.ImageIcon(getClass().getResource("/images/chart_organisation.png"));
-        if (havingIcon == null) havingIcon = new javax.swing.ImageIcon(getClass().getResource("/images/filter.png"));
-        if (fieldIcon == null) fieldIcon = new javax.swing.ImageIcon(getClass().getResource("/images/textfield.png"));
-        if (expressionIcon == null) expressionIcon = new javax.swing.ImageIcon(getClass().getResource("/images/sum.png"));
+        if (orderByIcon == null) orderByIcon = Application.resources.getIcon(Application.ICON_QB_ORDER);
+        if (groupByIcon == null) groupByIcon = Application.resources.getIcon(Application.ICON_QB_GROUP);
+        if (havingIcon == null) havingIcon = Application.resources.getIcon(Application.ICON_QB_HAVING);
+        if (fieldIcon == null) fieldIcon = Application.resources.getIcon(Application.ICON_QB_FIELD);
+        if (expressionIcon == null) expressionIcon = Application.resources.getIcon(Application.ICON_QB_EXPR);
         
-        if (customFolderIcon == null) customFolderIcon = new javax.swing.ImageIcon(getClass().getResource("/images/bullet_pink.png"));
+        if (customFolderIcon == null) customFolderIcon = Application.resources.getIcon(Application.ICON_QB_FOLDER);
         
         Font f = this.getFont();
         if (f!=null)

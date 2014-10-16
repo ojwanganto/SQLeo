@@ -94,20 +94,20 @@ public class Application extends Appearance implements _Constants,_Version
         resources.loadIcon(ICON_EDITOR		,"/images/page_edit.png");
 		resources.loadIcon(ICON_PREFERENCES	,"/images/wrench.png");
         
-		resources.loadIcon(ICON_EXPLORER_DRIVER_OK		,"/images/cog.png");
-		resources.loadIcon(ICON_EXPLORER_DRIVER_KO		,"/images/cog_error.png");
+		resources.loadIcon(ICON_EXPLORER_DRIVER_OK		,"/images/cog.png", false);
+		resources.loadIcon(ICON_EXPLORER_DRIVER_KO		,"/images/cog_error.png", false);
 		resources.loadIcon(ICON_EXPLORER_DRIVER_NEW		,"/images/cog_add.png");
 		resources.loadIcon(ICON_EXPLORER_DATASOURCE_NEW	,"/images/database_add.png");
-		resources.loadIcon(ICON_EXPLORER_DATASOURCE_OK	,"/images/database_connect.png");
-		resources.loadIcon(ICON_EXPLORER_DATASOURCE_KO	,"/images/database.png");
-		resources.loadIcon(ICON_EXPLORER_SCHEMA			,"/images/folder_database.png");
-		resources.loadIcon(ICON_EXPLORER_TYPES			,"/images/folder_table.png");
-		resources.loadIcon(ICON_EXPLORER_ALL			,"/images/table_multiple.png");
-		resources.loadIcon(ICON_EXPLORER_LINKS			,"/images/table_link.png");
+		resources.loadIcon(ICON_EXPLORER_DATASOURCE_OK	,"/images/database_connect.png", false);
+		resources.loadIcon(ICON_EXPLORER_DATASOURCE_KO	,"/images/database.png", false);
+		resources.loadIcon(ICON_EXPLORER_SCHEMA			,"/images/folder_database.png", false);
+		resources.loadIcon(ICON_EXPLORER_TYPES			,"/images/folder_table.png", false);
+		resources.loadIcon(ICON_EXPLORER_ALL			,"/images/table_multiple.png", false);
+		resources.loadIcon(ICON_EXPLORER_LINKS			,"/images/table_link.png", false);
 		resources.loadIcon(ICON_EXPLORER_ADD_GROUP		,"/images/cart_add.png");
 		resources.loadIcon(ICON_EXPLORER_REMOVE_GROUP	,"/images/cart_delete.png");
 
-		resources.loadIcon(ICON_EDITOR_OPEN ,"/images/folder_page.png");
+		resources.loadIcon(ICON_EDITOR_OPEN ,"/images/folder_page.png", false);
 		resources.loadIcon(ICON_EDITOR_SAVE ,"/images/page_save.png");
 		resources.loadIcon(ICON_EDITOR_RUN	,"/images/page_gear.png");
 		
@@ -118,7 +118,29 @@ public class Application extends Appearance implements _Constants,_Version
 		resources.loadIcon(ICON_QUERY_LAUNCH,"/images/table_gear.png");
 		resources.loadIcon(ICON_DIAGRAM_SAVE,"/images/picture_save.png");
 		resources.loadIcon(ICON_QUERY_DESIGNER,"/images/chart_organisation.png");
+
+		resources.loadIcon(ICON_SQLEO,"/images/sqleo.png");
 		
+		//query builder tree icons 
+		resources.loadIcon(ICON_QB_QUERY, "/images/page_white_database.png");
+		resources.loadIcon(ICON_QB_WHERE, "/images/filter_where.png");
+		resources.loadIcon(ICON_QB_KEYANDWHERE, "/images/bullet_key_filter.png");
+		resources.loadIcon(ICON_QB_FROM, "/images/table_relationship.png");
+		resources.loadIcon(ICON_QB_SELECT, "/images/layout.png");
+		resources.loadIcon(ICON_QB_TABLE, "/images/database_table.png");
+		resources.loadIcon(ICON_QB_ORDER, "/images/table_sort.png");
+		resources.loadIcon(ICON_QB_GROUP, "/images/chart_organisation.png");
+		resources.loadIcon(ICON_QB_HAVING, "/images/filter.png");
+		resources.loadIcon(ICON_QB_FIELD, "/images/textfield.png");
+		resources.loadIcon(ICON_QB_EXPR, "/images/sum.png");
+		resources.loadIcon(ICON_QB_FOLDER, "/images/bullet_pink.png");
+		
+		//Diagram icons
+		resources.loadIcon(ICON_DIAG_TABLE, "/images/database_table.png");
+		resources.loadIcon(ICON_DIAG_FIELD, "/images/bullet_key.png");
+		resources.loadIcon(ICON_DIAG_QUERY, "/images/page_white_database.png");
+		resources.loadIcon(ICON_DIAG_OBJECT, "/images/database_table.png");
+
 	}
 	
 	private static void loadSession()
@@ -374,8 +396,8 @@ public class Application extends Appearance implements _Constants,_Version
 		// ticket #126: Compatibility Java Web Start
 		//URL imgUrl = ClassLoader.getSystemResource("images/sqleo.png");
 		// check if compatible with PNSPlugin 
-        URL imgUrl = Resources.class.getResource("/images/sqleo.png");
-		Application.window.setIconImage(new ImageIcon(imgUrl).getImage());
+        //URL imgUrl = Resources.class.getResource("/images/sqleo.png");
+		Application.window.setIconImage(Application.resources.getIcon(Application.ICON_SQLEO).getImage());
 		Application.window.show();
 		
 		JWindow wait = new JWindow(window);

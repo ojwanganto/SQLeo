@@ -23,7 +23,6 @@ package com.sqleo.common.util;
 import java.awt.Image;
 import java.net.URL;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import com.sqleo.environment.Preferences;
@@ -32,25 +31,29 @@ import com.sqleo.environment.mdi.DialogPreferences;
 public class Picture
 {
 	
-	public static Icon createIcon(String filename)
+	public static ImageIcon createIcon(String filename, boolean scale)
 	{
 		Class c = Resources.class;
 		if(filename!=null)
-		    return createIcon(c.getResource(filename));
+		    return createIcon(c.getResource(filename), scale);
 		
 		return null;
 	}
 	
-	public static Icon createIcon(URL url)
+	public static ImageIcon createIcon(URL url, boolean scale)
 	{
 		final ImageIcon original = new ImageIcon(url);
-        final int iconSizePercentage = Preferences.getInteger(DialogPreferences.ICON_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_ICON_PERCENT);
-        if (iconSizePercentage != 100) {
-        	final float multiplier = iconSizePercentage / 100.0f;
-			final Image img = original.getImage();  
-			final Image scaled = img.getScaledInstance(Math.round(original.getIconWidth() * multiplier) , Math.round(original.getIconHeight() * multiplier) ,  
-					java.awt.Image.SCALE_SMOOTH);  
-			return new ImageIcon(scaled);
+		if(scale){
+	        final int iconSizePercentage = Preferences.getInteger(DialogPreferences.ICON_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_ICON_PERCENT);
+	        if (iconSizePercentage != 100) {
+	        	final float multiplier = iconSizePercentage / 100.0f;
+				final Image img = original.getImage();  
+				final Image scaled = img.getScaledInstance(Math.round(original.getIconWidth() * multiplier) , Math.round(original.getIconHeight() * multiplier) ,  
+						java.awt.Image.SCALE_SMOOTH);  
+				return new ImageIcon(scaled);
+			}else{
+				return original;
+			}
 		}else{
 			return original;
 		}

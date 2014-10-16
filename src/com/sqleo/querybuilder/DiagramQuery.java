@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import com.sqleo.environment.Application;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
@@ -40,7 +41,7 @@ public class DiagramQuery extends DiagramAbstractEntity
 	{
 		super(builder);
 		
-		if (icon == null) icon = new javax.swing.ImageIcon(getClass().getResource("/images/page_white_database.png"));
+		if (icon == null) icon = Application.resources.getIcon(Application.ICON_DIAG_QUERY);
 		getHeaderMenu().setIcon(icon);
 		
 		setQueryToken(subquery);

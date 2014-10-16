@@ -47,6 +47,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment.Application;
 import com.sqleo.querybuilder.dnd.DragMouseAdapter;
 import com.sqleo.querybuilder.dnd.RelationDropTargetListener;
 import com.sqleo.querybuilder.dnd.RelationTransferHandler;
@@ -83,7 +84,7 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 		setName(label);
 		
 		if (keyIcon == null)
-			keyIcon = new javax.swing.ImageIcon(getClass().getResource("/images/bullet_key.png"));
+			keyIcon = Application.resources.getIcon(Application.ICON_DIAG_FIELD);
 
 		this.setLayout(new BorderLayout());
 		checkboxComponent = new JCheckBox();

@@ -23,27 +23,33 @@ package com.sqleo.common.util;
 import java.net.URL;
 import java.util.HashMap;
 
-import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 public class Resources
 {
 	private HashMap icons = new HashMap();
 	
 	/* icons */
-	public Icon getIcon(String iconkey)
+	public ImageIcon getIcon(String iconkey)
 	{
-		return (Icon)icons.get(iconkey);
+		return (ImageIcon)icons.get(iconkey);
 	}
 	
-	public Icon loadIcon(String iconkey, String filename)
+	public ImageIcon loadIcon(String iconkey, String filename)
 	{
-		icons.put(iconkey,Picture.createIcon(filename));	    
+		icons.put(iconkey,Picture.createIcon(filename, true));	    
 	    return getIcon(iconkey);
 	}
 	
-	public Icon loadIcon(String iconkey, URL url)
+	public ImageIcon loadIcon(String iconkey, String filename, boolean scale)
 	{
-		icons.put(iconkey,Picture.createIcon(url));	    
+		icons.put(iconkey,Picture.createIcon(filename, scale));	    
+	    return getIcon(iconkey);
+	}
+	
+	public ImageIcon loadIcon(String iconkey, URL url)
+	{
+		icons.put(iconkey,Picture.createIcon(url, true));	    
 	    return getIcon(iconkey);
 	}
 }

@@ -56,6 +56,7 @@ public interface _Constants
 /*******************************************************************************/
 // icons
 /*******************************************************************************/
+	public static final String ICON_SQLEO  = "icon.000";
 	public static final String ICON_CONNECT		= "icon.001";
 	public static final String ICON_DISCONNECT	= "icon.002";
 	
@@ -98,4 +99,26 @@ public interface _Constants
 	public static final String ICON_CONTENT_DELETE	= "icon.161";
 	public static final String ICON_CONTENT_UPDATE	= "icon.162";
 	public static final String ICON_QUERY_DESIGNER  = "icon.163";
+	
+	//querybuilder tree icons 
+	public static final String ICON_QB_QUERY	= "icon.164";
+	public static final String ICON_QB_WHERE	= "icon.165";
+	public static final String ICON_QB_KEYANDWHERE	= "icon.166";
+	public static final String ICON_QB_FROM  = "icon.167";
+	public static final String ICON_QB_SELECT  = "icon.168";
+	public static final String ICON_QB_TABLE  = "icon.169";
+	public static final String ICON_QB_ORDER  = "icon.170";
+	public static final String ICON_QB_GROUP  = "icon.171";
+	public static final String ICON_QB_HAVING  = "icon.172";
+	public static final String ICON_QB_FIELD  = "icon.173";
+	public static final String ICON_QB_EXPR  = "icon.174";
+	public static final String ICON_QB_FOLDER  = "icon.175";
+	
+	//Diagram icons
+	public static final String ICON_DIAG_TABLE  = "icon.180";
+	public static final String ICON_DIAG_FIELD  = "icon.181";
+	public static final String ICON_DIAG_QUERY  = "icon.182";
+	public static final String ICON_DIAG_OBJECT  = "icon.183";
+
+	
 }

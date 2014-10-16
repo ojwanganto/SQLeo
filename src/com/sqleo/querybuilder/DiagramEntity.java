@@ -45,7 +45,7 @@ public class DiagramEntity extends DiagramAbstractEntity
 	{
 		super(builder);
 		
-		if (icon == null) icon = new javax.swing.ImageIcon(getClass().getResource("/images/database_table.png"));
+		if (icon == null) icon = Application.resources.getIcon(Application.ICON_DIAG_TABLE);
 		getHeaderMenu().setIcon(icon);
 		
 		getHeaderMenu().addSeparator();

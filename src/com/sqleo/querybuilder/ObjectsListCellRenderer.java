@@ -33,6 +33,8 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import com.sqleo.environment.Application;
+
 /**
  *
  * @author gtoffoli
@@ -45,7 +47,7 @@ public class ObjectsListCellRenderer extends DefaultListCellRenderer {
     public ObjectsListCellRenderer() {
         super();
         
-        if (objectIcon == null) objectIcon = new javax.swing.ImageIcon(getClass().getResource("/images/database_table.png"));
+        if (objectIcon == null) objectIcon = Application.resources.getIcon(Application.ICON_DIAG_OBJECT);
 
     }
     
