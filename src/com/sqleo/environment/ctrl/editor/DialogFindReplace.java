@@ -26,14 +26,18 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
@@ -79,10 +83,36 @@ public class DialogFindReplace extends JDialog implements ActionListener
 		{
 			public void windowClosing(WindowEvent e)
 			{
-				DialogFindReplace.this.view.getHighlighter().removeAllHighlights();
+				beforeClose();
 			}
+
+			
 		});
+		
+		initKeyListener();
 	}
+	
+	private void beforeClose() {
+		DialogFindReplace.this.view.getHighlighter().removeAllHighlights();
+	}
+	
+	private void initKeyListener() {
+	    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+	        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE , 0), "close");
+	    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+	        KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "find");
+	    getRootPane().getActionMap().put("close", new AbstractAction() {
+	        public void actionPerformed(ActionEvent e) {
+	        	beforeClose();
+	        	dispose();
+	        }
+	    });
+	    getRootPane().getActionMap().put("find", new AbstractAction() {
+	        public void actionPerformed(ActionEvent e) {
+	            btnFind.doClick();
+	        }
+	    });
+	  }
 	
 	private void init()
 	{

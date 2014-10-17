@@ -183,10 +183,10 @@ public class ClientContent extends MDIClientWithCRActions
 			toolbar.getActionMap().put("action-rollback",rollback);
 			toolbar.add(commit);
 			toolbar.add(rollback);
-			toolbar.addSeparator();
-			toolbar.add(new ActionShowExportExcel());
-			toolbar.addSeparator();
 		}
+		toolbar.addSeparator();
+		toolbar.add(new ActionShowExportExcel());
+		toolbar.addSeparator();
 		setComponentEast(toolbar);
 	}
 	@Override

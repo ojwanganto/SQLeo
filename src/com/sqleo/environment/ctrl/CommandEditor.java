@@ -36,6 +36,7 @@ import java.util.StringTokenizer;
 import javax.swing.AbstractAction;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.MutableAttributeSet;
@@ -52,6 +53,8 @@ import com.sqleo.environment.ctrl.editor.Task;
 import com.sqleo.environment.ctrl.editor._TaskSource;
 import com.sqleo.environment.ctrl.editor._TaskTarget;
 import com.sqleo.environment.mdi.ClientCommandEditor;
+import com.sqleo.environment.mdi.ClientContent;
+import com.sqleo.environment.mdi.ClientQueryBuilder;
 import com.sqleo.environment.mdi.DialogPreferences;
 
 
@@ -62,16 +65,21 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 	private TextView request;
 	private TextView response;
+	
+	private JSplitPane split;
+	private ClientContent gridClient;
+	private BorderLayoutPanel gridPanel;
 
 	protected MutableAttributeSet errorAttributSet;
 	protected MutableAttributeSet keycahAttributSet;
 
 	public CommandEditor() {
-		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		split.setTopComponent(request = new TextView(new SQLStyledDocument(), true));
 		split.setBottomComponent(response = new TextView(
 				new DefaultStyledDocument(), true));
 		split.setOneTouchExpandable(true);
+		gridPanel = new BorderLayoutPanel();
 
 		response.setTabSize(4);
 		response.setEditable(false);
@@ -188,7 +196,8 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			Boolean PLsql=false;
 			String sqlcmd = requestString.length() > 7 ? requestString.toUpperCase().substring(0, 7) : requestString;
 			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("CREATE") || sqlcmd.startsWith("EXECUTE")) PLsql=true;
-
+			boolean isSelectQuery = sqlcmd.startsWith("SELECT");
+			
 			if (requestString != null && requestString.trim().length() > 0 ) {
 				requestString = requestString.trim();
 				if (!PLsql){
@@ -201,18 +210,18 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 							continue;
 		                } else if (line.endsWith(";")) {
 		                	sqlBuilder.append(line.substring(0, line.lastIndexOf(";"))).append("\n");
-		                	executeCommandQuery(sqlBuilder.toString());
+		                	executeCommandQuery(sqlBuilder.toString(), isSelectQuery);
 		                	sqlBuilder = new StringBuilder();
 		                }else{
 		                	sqlBuilder.append(line).append("\n");
 		                }
 					}
 					if(!stopped && sqlBuilder.toString().length()>0){
-						executeCommandQuery(sqlBuilder.toString());
+						executeCommandQuery(sqlBuilder.toString(), isSelectQuery);
 					}
 				}else{
 					//pl-sql, execute whole selected text
-					executeCommandQuery(requestString);
+					executeCommandQuery(requestString, false);
 				}
 			}
 			setEnabled(true);
@@ -222,26 +231,51 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 
-		private void executeCommandQuery(final String sql) {
+		private void executeCommandQuery(final String sql, final boolean isSelectQuery) {
 			_TaskSource source = new TaskSource(sql);
-
-			String keycah = "*** " + source.getHandlerKey() + " ***";
-			CommandEditor.this.response.append("\n" + keycah);
-			int offset = CommandEditor.this.response.getDocument()
-					.getLength() - keycah.length();
-			response.getDocument().setCharacterAttributes(offset,
-					keycah.length(), keycahAttributSet, true);
-			CommandEditor.this.response.append("\n"
-					+ source.getSyntax() + "\n");
-			
 			Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
 					source.getHandlerKey(), "CommandEditor", sql));
-
 			ClientCommandEditor cce = (ClientCommandEditor) Application.window
 					.getClient(ClientCommandEditor.DEFAULT_TITLE);
-			new Task(source, CommandEditor.this, cce.getLimitRows())
-					.run();
+			if(isSelectQuery && cce.isGridOutput()){
+				if(gridClient!=null){
+					gridClient.dispose();
+				}
+				gridClient = new ClientContent(source.getHandlerKey(), sql,true);
+				// adds the content and buttons to gridPanel
+				gridPanel.removeAll();
+				//add content toolbar
+				gridPanel.setComponentNorth(gridClient.getContentPane().getComponent(1)); 
+				//add content view
+				ContentPane content = (ContentPane)gridClient.getContentPane().getComponent(0);
+				
+				//remove sql status component
+				BorderLayoutPanel pnlSouth = (BorderLayoutPanel)content.getComponent(0);
+				pnlSouth.remove(pnlSouth.getComponent(2));
+				gridPanel.setComponentCenter(content);
+				split.setBottomComponent(gridPanel);
+			}else{
+				split.setBottomComponent(response);
+				String keycah = "*** " + source.getHandlerKey() + " ***";
+				CommandEditor.this.response.append("\n" + keycah);
+				int offset = CommandEditor.this.response.getDocument()
+						.getLength() - keycah.length();
+				response.getDocument().setCharacterAttributes(offset,
+						keycah.length(), keycahAttributSet, true);
+				CommandEditor.this.response.append("\n"
+						+ source.getSyntax() + "\n");
+				new Task(source, CommandEditor.this, cce.getLimitRows())
+						.run();
+			}
+			SwingUtilities.invokeLater(new Runnable() {
+	            @Override
+	            public void run() {
+					split.setDividerLocation(0.5);
+		    		split.validate();
+	            }
+			 });
 		}
+		
 	}
 
 	private class ActionStopTask extends AbstractAction {

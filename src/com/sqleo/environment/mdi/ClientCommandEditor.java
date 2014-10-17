@@ -81,6 +81,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	private JComboBox cbx;
 	private JCheckBox cbxLimit;
 	private JTextField txtLimit;
+	private JCheckBox cbxGridOutput;
 
 	private DialogFindReplace dlg;
 	private DialogFindReplace dlg2;
@@ -197,9 +198,12 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		
 		toolbar.add(cbxLimit);
 		toolbar.add(txtLimit);
+		cbxGridOutput= new JCheckBox("Grid output", false);
+		toolbar.add(cbxGridOutput);
 		toolbar.addSeparator();
 		toolbar.add(new JLabel("Use connection: "));
 		toolbar.add(cbx);
+		
 
 		setComponentEast(toolbar);
 	}
@@ -259,6 +263,10 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 			limit = "0";
 		}
 		return cbxLimit.isSelected() ? Integer.valueOf(limit).intValue() : 0;
+	}
+	
+	public boolean isGridOutput(){
+		return cbxGridOutput.isSelected() ;
 	}
 
 	@Override
