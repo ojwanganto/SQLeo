@@ -71,16 +71,18 @@ public class Application extends Appearance implements _Constants,_Version
 	
     public static MDIWindow window = null;
     
-	public static final Store session		= new Store();
+    public static final Store session		= new Store();
     public static final Resources resources	= new Resources();
     private static String CONFIG_FOLDER = "";
     
     private static void loadIcons()
     {
+	boolean Icon_scaling = false;
+
 		resources.loadIcon(ICON_CONNECT		,"/images/connect.png");
 		resources.loadIcon(ICON_DISCONNECT	,"/images/disconnect.png");
 		resources.loadIcon(ICON_ACCEPT	,"/images/accept.png");
-    	resources.loadIcon(ICON_SAVE	,"/images/disk.png");
+    		resources.loadIcon(ICON_SAVE	,"/images/disk.png");
 		resources.loadIcon(ICON_STOP	,"/images/stop.png");
 		resources.loadIcon(ICON_FIND	,"/images/find.png");
 		resources.loadIcon(ICON_FILTER	,"/images/filter.png");
@@ -90,24 +92,24 @@ public class Application extends Appearance implements _Constants,_Version
 		resources.loadIcon(ICON_EXCEL	,"/images/export_excel.png");
 
 		resources.loadIcon(ICON_COMPARER	,"/images/table_error.png");
-        resources.loadIcon(ICON_EXPLORER	,"/images/database_lightning.png");
-        resources.loadIcon(ICON_EDITOR		,"/images/page_edit.png");
+        	resources.loadIcon(ICON_EXPLORER	,"/images/database_lightning.png");
+        	resources.loadIcon(ICON_EDITOR		,"/images/page_edit.png");
 		resources.loadIcon(ICON_PREFERENCES	,"/images/wrench.png");
         
-		resources.loadIcon(ICON_EXPLORER_DRIVER_OK		,"/images/cog.png", false);
-		resources.loadIcon(ICON_EXPLORER_DRIVER_KO		,"/images/cog_error.png", false);
+		resources.loadIcon(ICON_EXPLORER_DRIVER_OK		,"/images/cog.png", Icon_scaling);
+		resources.loadIcon(ICON_EXPLORER_DRIVER_KO		,"/images/cog_error.png", Icon_scaling);
 		resources.loadIcon(ICON_EXPLORER_DRIVER_NEW		,"/images/cog_add.png");
 		resources.loadIcon(ICON_EXPLORER_DATASOURCE_NEW	,"/images/database_add.png");
-		resources.loadIcon(ICON_EXPLORER_DATASOURCE_OK	,"/images/database_connect.png", false);
+		resources.loadIcon(ICON_EXPLORER_DATASOURCE_OK	,"/images/database_connect.png", Icon_scaling);
 		resources.loadIcon(ICON_EXPLORER_DATASOURCE_KO	,"/images/database.png", false);
-		resources.loadIcon(ICON_EXPLORER_SCHEMA			,"/images/folder_database.png", false);
-		resources.loadIcon(ICON_EXPLORER_TYPES			,"/images/folder_table.png", false);
-		resources.loadIcon(ICON_EXPLORER_ALL			,"/images/table_multiple.png", false);
-		resources.loadIcon(ICON_EXPLORER_LINKS			,"/images/table_link.png", false);
+		resources.loadIcon(ICON_EXPLORER_SCHEMA			,"/images/folder_database.png", Icon_scaling);
+		resources.loadIcon(ICON_EXPLORER_TYPES			,"/images/folder_table.png", Icon_scaling);
+		resources.loadIcon(ICON_EXPLORER_ALL			,"/images/table_multiple.png", Icon_scaling);
+		resources.loadIcon(ICON_EXPLORER_LINKS			,"/images/table_link.png", Icon_scaling);
 		resources.loadIcon(ICON_EXPLORER_ADD_GROUP		,"/images/cart_add.png");
 		resources.loadIcon(ICON_EXPLORER_REMOVE_GROUP	,"/images/cart_delete.png");
 
-		resources.loadIcon(ICON_EDITOR_OPEN ,"/images/folder_page.png", false);
+		resources.loadIcon(ICON_EDITOR_OPEN ,"/images/folder_page.png", Icon_scaling);
 		resources.loadIcon(ICON_EDITOR_SAVE ,"/images/page_save.png");
 		resources.loadIcon(ICON_EDITOR_RUN	,"/images/page_gear.png");
 		
@@ -122,24 +124,24 @@ public class Application extends Appearance implements _Constants,_Version
 		resources.loadIcon(ICON_SQLEO,"/images/sqleo.png");
 		
 		//query builder tree icons 
-		resources.loadIcon(ICON_QB_QUERY, "/images/page_white_database.png");
-		resources.loadIcon(ICON_QB_WHERE, "/images/filter_where.png");
-		resources.loadIcon(ICON_QB_KEYANDWHERE, "/images/bullet_key_filter.png");
-		resources.loadIcon(ICON_QB_FROM, "/images/table_relationship.png");
-		resources.loadIcon(ICON_QB_SELECT, "/images/layout.png");
-		resources.loadIcon(ICON_QB_TABLE, "/images/database_table.png");
-		resources.loadIcon(ICON_QB_ORDER, "/images/table_sort.png");
-		resources.loadIcon(ICON_QB_GROUP, "/images/chart_organisation.png");
-		resources.loadIcon(ICON_QB_HAVING, "/images/filter.png");
-		resources.loadIcon(ICON_QB_FIELD, "/images/textfield.png");
-		resources.loadIcon(ICON_QB_EXPR, "/images/sum.png");
-		resources.loadIcon(ICON_QB_FOLDER, "/images/bullet_pink.png");
+		resources.loadIcon(ICON_QB_QUERY, "/images/page_white_database.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_WHERE, "/images/filter_where.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_KEYANDWHERE, "/images/bullet_key_filter.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_FROM, "/images/table_relationship.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_SELECT, "/images/layout.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_TABLE, "/images/database_table.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_ORDER, "/images/table_sort.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_GROUP, "/images/chart_organisation.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_HAVING, "/images/filter.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_FIELD, "/images/textfield.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_EXPR, "/images/sum.png", Icon_scaling);
+		resources.loadIcon(ICON_QB_FOLDER, "/images/bullet_pink.png", Icon_scaling);
 		
 		//Diagram icons
-		resources.loadIcon(ICON_DIAG_TABLE, "/images/database_table.png");
-		resources.loadIcon(ICON_DIAG_FIELD, "/images/bullet_key.png");
-		resources.loadIcon(ICON_DIAG_QUERY, "/images/page_white_database.png");
-		resources.loadIcon(ICON_DIAG_OBJECT, "/images/database_table.png");
+		resources.loadIcon(ICON_DIAG_TABLE, "/images/database_table.png", Icon_scaling);
+		resources.loadIcon(ICON_DIAG_FIELD, "/images/bullet_key.png", Icon_scaling);
+		resources.loadIcon(ICON_DIAG_QUERY, "/images/page_white_database.png", Icon_scaling);
+		resources.loadIcon(ICON_DIAG_OBJECT, "/images/database_table.png", Icon_scaling);
 
 	}
 	
