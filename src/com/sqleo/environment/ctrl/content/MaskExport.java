@@ -87,7 +87,7 @@ public class MaskExport extends AbstractMaskPerform
 		{
 			if(!fname.endsWith(".csv")) fname = fname + ".csv";
 			TxtChoice csvChoice = new TxtChoice();
-			csvChoice.setDefaultDelimiter(",");
+			// csvChoice.setDefaultDelimiter(",");
 			setComponentCenter(eChoice = csvChoice);
 		}
 			

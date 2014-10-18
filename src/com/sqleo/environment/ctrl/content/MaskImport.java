@@ -66,6 +66,12 @@ public class MaskImport extends AbstractMaskPerform
 			if(!fname.endsWith(".txt")) fname = fname + ".txt"; 
 			setComponentCenter(iChoice = new TxtChoice());
 		}
+		else if(type == CSV)
+		{
+			if(!fname.endsWith(".csv")) fname = fname + ".txt"; 
+			TxtChoice csvChoice = new TxtChoice();
+			setComponentCenter(iChoice = new TxtChoice());
+		}
 			
 		lblFile.setText("file: " + fname);
 	}
@@ -127,41 +133,7 @@ public class MaskImport extends AbstractMaskPerform
 		{
 			setBorder(new TitledBorder("Options"));
 		}
-/*		
-		void initComponents()
-		{
-			JPanel pnl = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			setComponentSouth(pnl);
-
-			pnl.add(new JLabel("records:"));
-			pnl.add(rbAll	= new JRadioButton("all",true));
-			pnl.add(rbUser	= new JRadioButton("define:"));
-			pnl.add(txtInterval = new JTextField("1..",8));
-			txtInterval.setEditable(false);
-			txtInterval.setEnabled(false);
-			
-			ButtonGroup bg = new ButtonGroup();
-			ItemListener il = new ItemListener()
-			{
-				public void itemStateChanged(ItemEvent e)
-				{
-					txtInterval.setEditable(rbUser.isSelected());
-					txtInterval.setEnabled(rbUser.isSelected());
-					
-					if(rbAll.isSelected())
-					{
-						txtInterval.setText("1..");
-					}
-				}
-			};
-			
-			bg.add(rbAll);			
-			bg.add(rbUser);
-								
-			rbAll.addItemListener(il);
-			rbUser.addItemListener(il);
-		}
-*/		
+		
 		int open()
 		{
 			try

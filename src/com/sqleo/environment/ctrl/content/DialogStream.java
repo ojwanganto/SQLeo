@@ -135,6 +135,7 @@ public class DialogStream extends AbstractDialogWizard
 				mkc = new DefaultMaskChooser(AbstractMaskChooser.OPEN_DIALOG,AbstractMaskChooser.FILES_ONLY,false);
 			}
 			mkc.addChoosableFileFilter(new TXTFilter());
+			mkc.addChoosableFileFilter(new CSVFilter()); // ticket #233
 		}
 		
 		addStep(mkc);
