@@ -109,7 +109,7 @@ public class Application extends Appearance implements _Constants,_Version
 		resources.loadIcon(ICON_EXPLORER_ADD_GROUP		,"/images/cart_add.png");
 		resources.loadIcon(ICON_EXPLORER_REMOVE_GROUP	,"/images/cart_delete.png");
 
-		resources.loadIcon(ICON_EDITOR_OPEN ,"/images/folder_page.png", Icon_scaling);
+		resources.loadIcon(ICON_EDITOR_OPEN ,"/images/folder_page.png");
 		resources.loadIcon(ICON_EDITOR_SAVE ,"/images/page_save.png");
 		resources.loadIcon(ICON_EDITOR_RUN	,"/images/page_gear.png");
 		
