@@ -145,7 +145,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 			}
 		 });
 		}
-		cbxLimit = new JCheckBox("Limit rows:", true);
+		cbxLimit = new JCheckBox("Limit rows:", false);
 		cbxLimit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -167,6 +167,8 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 				return getPreferredSize();
 			}
 		};
+		cbxLimit.setEnabled(false);
+		txtLimit.setEnabled(false);
 
 		toolbar = new Toolbar(Toolbar.HORIZONTAL);
 		toolbar.add(new ActionOpen());
@@ -198,7 +200,15 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		
 		toolbar.add(cbxLimit);
 		toolbar.add(txtLimit);
-		cbxGridOutput= new JCheckBox("Grid output", false);
+		cbxGridOutput= new JCheckBox("Grid output", true);
+		cbxGridOutput.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               	cbxLimit.setEnabled(!cbxGridOutput.isSelected());
+               	cbxLimit.setSelected(!cbxGridOutput.isSelected());
+               	txtLimit.setEnabled(!cbxGridOutput.isSelected());
+            }
+        });
 		toolbar.add(cbxGridOutput);
 		toolbar.addSeparator();
 		toolbar.add(new JLabel("Use connection: "));
