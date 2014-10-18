@@ -1171,6 +1171,7 @@ public class SQLParser
 		stream.ordinaryChar('/'); // fix for ticket #48
 		stream.wordChars('$','$'); // fix for ticket #48
 		stream.wordChars('#','#'); // fix for ticket #86
+		stream.wordChars('@','@'); // fix for ticket #226
 		stream.wordChars('_','_');
 
 	
