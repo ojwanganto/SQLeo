@@ -196,7 +196,6 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			Boolean PLsql=false;
 			String sqlcmd = requestString.length() > 7 ? requestString.toUpperCase().substring(0, 7) : requestString;
 			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("CREATE") || sqlcmd.startsWith("EXECUTE")) PLsql=true;
-			boolean isSelectQuery = sqlcmd.startsWith("SELECT");
 			
 			if (requestString != null && requestString.trim().length() > 0 ) {
 				requestString = requestString.trim();
@@ -210,18 +209,18 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 							continue;
 		                } else if (line.endsWith(";")) {
 		                	sqlBuilder.append(line.substring(0, line.lastIndexOf(";"))).append("\n");
-		                	executeCommandQuery(sqlBuilder.toString(), isSelectQuery);
+		                	executeCommandQuery(sqlBuilder.toString());
 		                	sqlBuilder = new StringBuilder();
 		                }else{
 		                	sqlBuilder.append(line).append("\n");
 		                }
 					}
 					if(!stopped && sqlBuilder.toString().length()>0){
-						executeCommandQuery(sqlBuilder.toString(), isSelectQuery);
+						executeCommandQuery(sqlBuilder.toString());
 					}
 				}else{
 					//pl-sql, execute whole selected text
-					executeCommandQuery(requestString, false);
+					executeCommandQuery(requestString);
 				}
 			}
 			setEnabled(true);
@@ -231,13 +230,13 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 
-		private void executeCommandQuery(final String sql, final boolean isSelectQuery) {
+		private void executeCommandQuery(final String sql) {
 			_TaskSource source = new TaskSource(sql);
 			Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
 					source.getHandlerKey(), "CommandEditor", sql));
 			ClientCommandEditor cce = (ClientCommandEditor) Application.window
 					.getClient(ClientCommandEditor.DEFAULT_TITLE);
-			if(isSelectQuery && cce.isGridOutput()){
+			if(cce.isGridOutput() && sql.toUpperCase().startsWith("SELECT")){
 				if(gridClient!=null){
 					gridClient.dispose();
 				}
