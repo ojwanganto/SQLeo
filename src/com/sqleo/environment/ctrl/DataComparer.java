@@ -64,7 +64,7 @@ public class DataComparer extends BorderLayoutPanel
 		super(2,2);
 		
 		source = new DataComparerCriteriaPane(I18n.getString("datacomparer.source", "SOURCE"));
-		target = new DataComparerCriteriaPane(I18n.getString("datacomparer.source", "TARGET"));
+		target = new DataComparerCriteriaPane(I18n.getString("datacomparer.target", "TARGET"));
 		
 		final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,source,target);
 		split.setResizeWeight(.5d);
@@ -132,12 +132,15 @@ public class DataComparer extends BorderLayoutPanel
 		for(final String column : columns.split(",")){
 			buffer.append(column).append(";");
 		}
-		for(final String sourceAggr : sourceAggregates){
-			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
-			if(sourceAggrName!=null){
-				buffer.append(sourceAggrName).append(";");
-			}
+		for(int i = 1; i<=sourceAggregates.length; i++){
+			buffer.append("MAX(NB").append(i).append(");");
 		}
+//		for(final String sourceAggr : sourceAggregates){
+//			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
+//			if(sourceAggrName!=null){
+//				buffer.append(sourceAggrName).append(";");
+//			}
+//		}
 		if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
 		return buffer.toString();
 	}
@@ -176,13 +179,17 @@ public class DataComparer extends BorderLayoutPanel
 	private String getMergedQuery(final String mergedTableName,final String columns,
 			final String[] sourceAggregates,final String[] targetAggregates){
 		final StringBuilder result = new StringBuilder();
-		result.append("SELECT ").append(columns);
-		for(final String sourceAggr : sourceAggregates){
-			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
-			if(sourceAggrName!=null){
-				result.append("\n,MAX(").append(sourceAggrName).append(")");
-			}
+		result.append("SELECT \n").append(columns).append(",\n");
+		for(int i = 1; i<=sourceAggregates.length; i++){
+			result.append("MAX(NB").append(i).append("),");
 		}
+		result.deleteCharAt(result.length()-1);
+//		for(final String sourceAggr : sourceAggregates){
+//			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
+//			if(sourceAggrName!=null){
+//				result.append("\n,MAX(").append(sourceAggrName).append(")");
+//			}
+//		}
 		result.append("\nFROM ").append(mergedTableName);
 		result.append("\nGROUP BY ").append(columns);
 		result.append("\nORDER BY ").append(columns);

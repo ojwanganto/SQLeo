@@ -217,7 +217,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		if(columnsGiven){
 			val.append("SELECT ");
 			selectAppended = true;
-			val.append(cols);
+			val.append("\n"+cols);
 		}
 		final boolean aggregatesGiven = aggr!=null && !aggr.isEmpty();
 		if(aggregatesGiven){
@@ -227,7 +227,13 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			}else{
 				val.append(",");
 			}
-			val.append(aggr);
+			val.append("\n");
+			int i = 1;
+			for(String aggrSplitted : aggr.split(",")){
+				val.append(aggrSplitted).append(" AS NB").append(i).append(",");
+				i++;
+			}
+			val.deleteCharAt(val.length()-1);
 		}
 		if(selectAppended){
 			final String tableFinalName = 
