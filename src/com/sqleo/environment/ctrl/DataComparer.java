@@ -63,8 +63,8 @@ public class DataComparer extends BorderLayoutPanel
 	{
 		super(2,2);
 		
-		source = new DataComparerCriteriaPane(I18n.getString("datacomparer.source", "SOURCE"));
-		target = new DataComparerCriteriaPane(I18n.getString("datacomparer.target", "TARGET"));
+		source = new DataComparerCriteriaPane(I18n.getString("datacomparer.source", "SOURCE"), this);
+		target = new DataComparerCriteriaPane(I18n.getString("datacomparer.target", "TARGET"), this);
 		
 		final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,source,target);
 		split.setResizeWeight(.5d);
@@ -73,6 +73,14 @@ public class DataComparer extends BorderLayoutPanel
 		final JPanel buttonPanel = new JPanel(); 
 		buttonPanel.add(getCompareButton());
 		add(buttonPanel, BorderLayout.PAGE_END);
+	}
+	
+	public DataComparerCriteriaPane getSource(){
+		return source;
+	}
+	
+	public DataComparerCriteriaPane getTarget(){
+		return target;
 	}
 	
 	private JButton getCompareButton() {

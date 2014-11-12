@@ -46,6 +46,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
 import com.sqleo.common.gui.AbstractDialogConfirm;
@@ -55,6 +56,7 @@ import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.ctrl.DataComparer;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
 import com.sqleo.environment.ctrl.content.AbstractMaskPerform;
 import com.sqleo.environment.ctrl.content.MaskExport;
@@ -72,8 +74,10 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 	private Map<DATA_TYPE,DataComparerCriteriaDialogPane> dataTypePanelMap = 
 		new HashMap<DATA_TYPE,DataComparerCriteriaDialogPane>(3);
 	private String query;
+	private DataComparer owner;
 
-	public DataComparerCriteriaPane(final String headerText){
+	public DataComparerCriteriaPane(final String headerText,final DataComparer owner){
+		this.owner = owner;
 		Application.window.addListener(this);
 		
 		setBackground(Color.white);
@@ -201,9 +205,31 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 
 		@Override
 		protected void onOpen() {
+			updateTargetTextIfEmpty();
 			syntax.setText(query);
 		}
 		
+	}
+	
+	private void updateTargetTextIfEmpty(){
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				setTextIfEmpty(DATA_TYPE.COLUMNS);
+				setTextIfEmpty(DATA_TYPE.AGGREGATES);
+				setTextIfEmpty(DATA_TYPE.FILTERS);
+			}
+			private void setTextIfEmpty(final DATA_TYPE dataType){
+				final String text = owner.getTarget().getDataType(dataType);
+				if(null == text || text.isEmpty()) {
+					owner.getTarget().getDataTypePanelMap().get(dataType).setText(getDataType(dataType));
+				}
+			}
+		});
+	}
+	
+	public Map<DATA_TYPE, DataComparerCriteriaDialogPane> getDataTypePanelMap () {
+		return dataTypePanelMap;
 	}
 	
 	private void setQuery(){
