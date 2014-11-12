@@ -51,6 +51,7 @@ import javax.swing.border.LineBorder;
 import com.sqleo.common.gui.AbstractDialogConfirm;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
@@ -178,7 +179,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		private JTextArea syntax;
 		
 		protected QueryDialog() {
-			super(Application.window, "Query");
+			super(Application.window, I18n.getString("datacomparer.generatedQueryButton", "Generated query text"));
 			
 			syntax = new JTextArea();
 			syntax.setWrapStyleWord(true);
@@ -229,7 +230,9 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			val.append(aggr);
 		}
 		if(selectAppended){
-			val.append("\nFROM ").append(getTable());
+			final String tableFinalName = 
+				getSchema()!=null ? getSchema()+"."+getTable() : getTable();
+			val.append("\nFROM ").append(tableFinalName);
 			if(filters!=null && !filters.isEmpty()){
 				val.append("\nWHERE ").append(filters);
 			}

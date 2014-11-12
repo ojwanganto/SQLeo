@@ -39,6 +39,7 @@ import javax.swing.JSplitPane;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.CommandButton;
+import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.comparer.CriteriaPane;
 import com.sqleo.environment.ctrl.comparer.ReportPane;
@@ -62,8 +63,8 @@ public class DataComparer extends BorderLayoutPanel
 	{
 		super(2,2);
 		
-		source = new DataComparerCriteriaPane("First environment to compare");
-		target = new DataComparerCriteriaPane("Second environment to compare");
+		source = new DataComparerCriteriaPane(I18n.getString("datacomparer.source", "SOURCE"));
+		target = new DataComparerCriteriaPane(I18n.getString("datacomparer.source", "TARGET"));
 		
 		final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,source,target);
 		split.setResizeWeight(.5d);
@@ -107,19 +108,20 @@ public class DataComparer extends BorderLayoutPanel
 						stream.close();
 					}
 				}
-				File mergedCsvFile = new File(filePath);
+				final File mergedCsvFile = new File(filePath);
 			    FileHelper.openFile(mergedCsvFile);
 			    final String mergedTableName = mergedCsvFile.getName().substring(0, mergedCsvFile.getName().lastIndexOf("."));;
 			    // get merged query 
 			    Application.alertAsText(getMergedQuery(mergedTableName, columns, sourceAggregates, targetAggregates));
 				
+			    //TODO
 				// open connection to csvjdbc using merged.csv
 				// open command editor / content window on above connection and merged query
 				// run the merged query 
 			}
 		};
 		final CommandButton compare = new CommandButton(action);
-		compare.setText("Compare data");
+		compare.setText(I18n.getString("datacomparer.start","Start"));
 		return compare;
 	}
 	

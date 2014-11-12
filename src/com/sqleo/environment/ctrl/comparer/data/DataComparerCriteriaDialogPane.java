@@ -33,6 +33,7 @@ import javax.swing.border.TitledBorder;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
 
 public class DataComparerCriteriaDialogPane extends BorderLayoutPanel{
 
@@ -70,6 +71,9 @@ public class DataComparerCriteriaDialogPane extends BorderLayoutPanel{
 		syntax.setTabSize(4);
 		syntax.setCaretPosition(0);
 		syntax.setBackground(Color.white);
+		if(DATA_TYPE.AGGREGATES == dataType){
+			syntax.setText("count(*)");
+		}
 		
 		final String title = dialog.getDataType().name().toLowerCase();
 		setBorder(new TitledBorder(title));
