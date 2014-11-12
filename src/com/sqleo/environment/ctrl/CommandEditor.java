@@ -98,10 +98,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent evt) {
-				JSplitPane split = (JSplitPane) CommandEditor.this
-						.getComponent(0);
-				split.setDividerLocation(0.5);
-				split.validate();
+				adjustSplit();
 			}
 		});
 
@@ -237,6 +234,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					source.getHandlerKey(), "CommandEditor", sql));
 			ClientCommandEditor cce = (ClientCommandEditor) Application.window
 					.getClient(ClientCommandEditor.DEFAULT_TITLE);
+
 			if(cce.isGridOutput() && sql.toUpperCase().startsWith("SELECT")){
 				if(gridClient!=null){
 					gridClient.dispose();
@@ -254,7 +252,9 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				pnlSouth.remove(pnlSouth.getComponent(2));
 				gridPanel.setComponentCenter(content);
 				split.setBottomComponent(gridPanel);
+				adjustSplit();
 			}else{
+				adjustSplit();
 				split.setBottomComponent(response);
 				String keycah = "*** " + source.getHandlerKey() + " ***";
 				CommandEditor.this.response.append("\n" + keycah);
@@ -267,15 +267,19 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				new Task(source, CommandEditor.this, cce.getLimitRows())
 						.run();
 			}
-			SwingUtilities.invokeLater(new Runnable() {
-	            @Override
-	            public void run() {
-					split.setDividerLocation(0.5);
-		    		split.validate();
-	            }
-			 });
+			
 		}
 		
+	}
+	
+	private void adjustSplit(){
+		SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+				split.setDividerLocation(0.5);
+	    		split.validate();
+            }
+		 });
 	}
 
 	private class ActionStopTask extends AbstractAction {
