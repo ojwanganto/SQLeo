@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.environment.Application;
 
 public class SQLHelper {
@@ -37,6 +38,13 @@ public class SQLHelper {
 	private static final String JOINCOLUMNS = "joincolumns";
 	private static final String COLUMNS = "columns";
 
+	public static String[] getColumns(final String chKey, final String schema, final String table) {
+		if(null == chKey || null == table || table.isEmpty()){
+			return new String[0];
+		}
+		final Connection connection = ConnectionAssistant.getHandler(chKey).get();
+		return getColumns(chKey, connection, schema, table);
+	}
 	public static String[] getColumns(final String chKey,final Connection connection, final String schema, final String table) {
 		final String schemaFinal = getFinalSchema(schema);
 		final String cacheKey = getCacheKey(chKey, schemaFinal, table, COLUMNS);

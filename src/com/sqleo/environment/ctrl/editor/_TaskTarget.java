@@ -20,6 +20,8 @@
 
 package com.sqleo.environment.ctrl.editor;
 
+import java.sql.ResultSet;
+
 public interface _TaskTarget
 {
 	public boolean continueRun();
@@ -27,4 +29,8 @@ public interface _TaskTarget
 	public void onTaskFinished(String message, boolean error);
 
 	public void write(String text);
+	
+	public boolean printSelect();
+	
+	public void processResult(ResultSet rs);
 }

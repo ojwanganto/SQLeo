@@ -50,7 +50,12 @@ public class BaseDynamicTable extends JTable
 		initTableModel(col);
 	}
 	
-	void initTableModel(int col)
+	protected BaseDynamicTable()
+	{
+		
+	}
+	
+	protected void initTableModel(int col)
 	{
 		DefaultTableModel model = new DefaultTableModel(1,col+1)
 		{
@@ -75,9 +80,11 @@ public class BaseDynamicTable extends JTable
 		tableColumn.setMaxWidth(15);
 		tableColumn.setResizable(false);
 		
-		DefaultCellEditor singleclick = new DefaultCellEditor(new JTextField());
-		singleclick.setClickCountToStart(1);
-		this.getColumn(col-1).setCellEditor(singleclick);
+		if(col>1){
+			DefaultCellEditor singleclick = new DefaultCellEditor(new JTextField());
+			singleclick.setClickCountToStart(1);
+			this.getColumn(col-1).setCellEditor(singleclick);
+		}
 		this.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 	}
 	

@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -346,5 +347,15 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		public String getSyntax() {
 			return query;
 		}
+	}
+
+	@Override
+	public boolean printSelect() {
+		return true;
+	}
+
+	@Override
+	public void processResult(ResultSet rs) {
+		//Nothing to process as printSelect = true 
 	}
 }

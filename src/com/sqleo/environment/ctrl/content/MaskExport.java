@@ -461,7 +461,7 @@ public class MaskExport extends AbstractMaskPerform
 			JPanel pnl1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			pnl1.add(cbxHeader = new JCheckBox("With header"));
 			pnl1.add(cbxNull = new JCheckBox("Empty if null"));
-			pnl1.add(cbxCote = new JCheckBox("Cote text"));
+			pnl1.add(cbxCote = new JCheckBox("Quote text"));
 			
 			JPanel pnl2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			pnl2.add(new JLabel("Delimiter:"));

@@ -63,6 +63,9 @@ public class Task implements Runnable {
 
 		try {
 			String syntax = source.getSyntax().trim();
+			if(syntax.isEmpty()){
+				return;
+			}
 			if (ConnectionAssistant.hasHandler(source.getHandlerKey())) {
 				if (syntax.length() >= 4) {
 					ConnectionHandler ch = ConnectionAssistant
@@ -78,7 +81,11 @@ public class Task implements Runnable {
 						rs.close();
 					}else if (sqlcmd.startsWith("SELECT")) {
 						rs = stmt.executeQuery(syntax);
-						printSelect();
+						if(target.printSelect()){
+							printSelect();
+						}else{
+							target.processResult(rs);
+						}
 						rs.close();
 					} else if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN")) {
 						stmt.executeUpdate("begin dbms_output.enable(1000000); end;");
@@ -127,7 +134,7 @@ public class Task implements Runnable {
 	}
 
 	private void printSelect() throws SQLException {
-		if (rs == null) {
+		if (rs == null || !target.printSelect()) {
 			return;
 		}
 

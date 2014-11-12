@@ -20,36 +20,44 @@
 
 package com.sqleo.environment.mdi;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.border.EmptyBorder;
 
+import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.gui.Toolbar;
-import com.sqleo.common.util.SQLHistoryData;
-import com.sqleo.environment.ctrl.SQLHistoryViewer;
+import com.sqleo.common.util.I18n;
+import com.sqleo.environment.Application;
+import com.sqleo.environment.ctrl.DataComparer;
+import com.sqleo.querybuilder.QueryActions;
 
 
-public class ClientSQLHistoryViewer extends MDIClient
+public class ClientDataComparer extends MDIClient
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6741254332433687641L;
 
-	public static final String DEFAULT_TITLE = "SQL history";
+	public static final String DEFAULT_TITLE = "Data comparer";
 	
-	private SQLHistoryViewer control;
+	private DataComparer control;
 	private JMenuItem[] m_actions;
 	
-	ClientSQLHistoryViewer()
+	ClientDataComparer()
 	{
 		super(DEFAULT_TITLE);
 		
-		setComponentCenter(control = new SQLHistoryViewer());
+		setComponentCenter(control = new DataComparer());
 		control.setBorder(new EmptyBorder(2,2,2,2));
-		
+
 		initMenuActions();
 	}
-    
+	
 	private void initMenuActions()
 	{
 		m_actions = new JMenuItem[]
@@ -79,11 +87,5 @@ public class ClientSQLHistoryViewer extends MDIClient
 	{
 	}
 	
-	public void addRowAtFirst(SQLHistoryData line){
-		control.addRowAtFirst(line);
-	}
 
-	public void removeLastRow() {
-		control.removeLastRow();
-	}
 }

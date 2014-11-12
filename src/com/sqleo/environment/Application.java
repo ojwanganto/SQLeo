@@ -40,6 +40,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.JWindow;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -263,6 +264,12 @@ public class Application extends Appearance implements _Constants,_Version
     {
        	JOptionPane.showMessageDialog(window,message,title,JOptionPane.WARNING_MESSAGE);
     }
+	
+	public static void alertAsText(String message)
+    {
+       	JOptionPane.showMessageDialog(window,new JTextArea(message),PROGRAM,JOptionPane.WARNING_MESSAGE);
+    }
+	
 	
 	public static void alert(String message)
     {

@@ -41,7 +41,7 @@ public class ClauseCondition extends BaseDynamicTable
 		super(owner,4);
 	}
 	
-	void initTableModel(int col)
+	protected void initTableModel(int col)
 	{
 		super.initTableModel(col);
 		
