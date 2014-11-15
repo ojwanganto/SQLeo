@@ -32,7 +32,6 @@ import java.awt.font.TextAttribute;
 import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +45,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
 import com.sqleo.common.gui.AbstractDialogConfirm;
@@ -54,12 +52,9 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHelper;
-import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.DataComparer;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
-import com.sqleo.environment.ctrl.content.AbstractMaskPerform;
-import com.sqleo.environment.ctrl.content.MaskExport;
 import com.sqleo.environment.ctrl.editor.Task;
 import com.sqleo.environment.ctrl.editor._TaskSource;
 import com.sqleo.environment.ctrl.editor._TaskTarget;
@@ -205,14 +200,13 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 
 		@Override
 		protected void onOpen() {
-			updateTargetTextIfEmpty();
 			syntax.setText(query);
 		}
 		
 	}
 	
-	private void updateTargetTextIfEmpty(){
-		SwingUtilities.invokeLater(new Runnable() {
+	private void updateTargetTextIfEmpty() {
+		final Thread t  = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				setTextIfEmpty(DATA_TYPE.COLUMNS);
@@ -224,19 +218,34 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 				if(null == text || text.isEmpty()) {
 					owner.getTarget().getDataTypePanelMap().get(dataType).setText(getDataType(dataType));
 				}
+				final String textS = owner.getTarget().getDataType(dataType);
+				if(null == textS || textS.isEmpty()) {
+					owner.getTarget().getDataTypePanelMap().get(dataType).setText(owner.getSource().getDataType(dataType));
+				}
 			}
 		});
+		t.start();
+		try {
+			Thread.currentThread().sleep(100L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Map<DATA_TYPE, DataComparerCriteriaDialogPane> getDataTypePanelMap () {
 		return dataTypePanelMap;
 	}
 	
-	private void setQuery(){
+	public void setQuery(){
+		updateTargetTextIfEmpty();
+
 		final String cols =  dataTypePanelMap.get(DATA_TYPE.COLUMNS).getText();
-		final String aggr =  dataTypePanelMap.get(DATA_TYPE.AGGREGATES).getText();
 		final String filters =  dataTypePanelMap.get(DATA_TYPE.FILTERS).getText();
-		
+		final String sourceAggrText = owner.getSource().getDataType(DATA_TYPE.AGGREGATES);
+		final String targetAggrText = owner.getTarget().getDataType(DATA_TYPE.AGGREGATES);
+		final String[] sourceAggregates = sourceAggrText!=null ? sourceAggrText.split(",") : new String[0];
+		final String[] targetAggregates = targetAggrText!=null ? targetAggrText.split(",") : new String[0];
+
 		final StringBuilder val = new StringBuilder();
 		boolean selectAppended = false;
 		final boolean columnsGiven = cols!=null && !cols.isEmpty();
@@ -245,7 +254,12 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			selectAppended = true;
 			val.append("\n"+cols);
 		}
-		final boolean aggregatesGiven = aggr!=null && !aggr.isEmpty();
+		final boolean aggregatesGiven;
+		if(this == owner.getSource()){
+			aggregatesGiven = sourceAggrText!=null && !sourceAggrText.isEmpty();
+		}else{
+			aggregatesGiven = targetAggrText!=null && !targetAggrText.isEmpty();
+		}
 		if(aggregatesGiven){
 			if(!selectAppended){
 				val.append("SELECT ");
@@ -254,10 +268,20 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 				val.append(",");
 			}
 			val.append("\n");
-			int i = 1;
-			for(String aggrSplitted : aggr.split(",")){
-				val.append(aggrSplitted).append(" AS NB").append(i).append(",");
-				i++;
+			if(this == owner.getSource()){
+				int i = 1;
+				for(String aggrSplitted : sourceAggregates){
+					val.append(aggrSplitted).append(" AS SRC").append(i).append(",");
+					val.append("''").append(" AS TGT").append(i).append(",");
+					i++;
+				}
+			}else{
+				int i = 1;
+				for(String aggrSplitted : targetAggregates){
+					val.append("''").append(" AS SRC").append(i).append(",");
+					val.append(aggrSplitted).append(" AS TGT").append(i).append(",");
+					i++;
+				}
 			}
 			val.deleteCharAt(val.length()-1);
 		}
@@ -354,7 +378,6 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 
 	@Override
 	public String getSyntax() {
-		setQuery();
 		return query;
 	}
 	

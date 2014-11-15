@@ -87,6 +87,8 @@ public class DataComparer extends BorderLayoutPanel
 		final AbstractAction action = new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				source.setQuery();
+				target.setQuery();
 				final boolean generateMergeCsv = source.getSyntax()!=null && target.getSyntax()!=null;
 				if(!generateMergeCsv) return;
 				
@@ -141,7 +143,8 @@ public class DataComparer extends BorderLayoutPanel
 			buffer.append(column).append(";");
 		}
 		for(int i = 1; i<=sourceAggregates.length; i++){
-			buffer.append("MAX(NB").append(i).append(");");
+			buffer.append("MAX(SRC").append(i).append(");");
+			buffer.append("MAX(TGT").append(i).append(");");
 		}
 //		for(final String sourceAggr : sourceAggregates){
 //			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
@@ -189,7 +192,8 @@ public class DataComparer extends BorderLayoutPanel
 		final StringBuilder result = new StringBuilder();
 		result.append("SELECT \n").append(columns).append(",\n");
 		for(int i = 1; i<=sourceAggregates.length; i++){
-			result.append("MAX(NB").append(i).append("),");
+			result.append("MAX(SRC").append(i).append("),");
+			result.append("MAX(TGT").append(i).append("),");
 		}
 		result.deleteCharAt(result.length()-1);
 //		for(final String sourceAggr : sourceAggregates){
