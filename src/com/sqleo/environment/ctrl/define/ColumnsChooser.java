@@ -155,7 +155,8 @@ public class ColumnsChooser extends AbstractDialogConfirm implements ItemListene
 		{
 			for(int i=1; i<=rsmd.getColumnCount(); i++)
 			{
-				String name = rsmd.getColumnName(i);
+// Ticket #250			String name = rsmd.getColumnName(i);
+				String name = rsmd.getColumnLabel(i);
 				lv.addColumn(name);
 				
 				cols.add(new Object[]{name,new Boolean(true)});
