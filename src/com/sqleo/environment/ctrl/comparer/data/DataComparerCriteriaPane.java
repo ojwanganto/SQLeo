@@ -33,6 +33,7 @@ import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +53,7 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHelper;
+import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.DataComparer;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
@@ -438,6 +440,9 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			}
 			
 		};
+		Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
+				getHandlerKey(), "DataComparer", getSyntax()));
+
 		new Task(this , target , 0).run();
 	}
 	

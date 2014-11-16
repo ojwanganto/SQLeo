@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.StringTokenizer;
 
 import javax.swing.AbstractAction;
@@ -41,6 +42,7 @@ import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.I18n;
+import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerCriteriaPane;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
@@ -102,6 +104,7 @@ public class DataComparer extends BorderLayoutPanel
 					final File file = File.createTempFile("merged_", ".csv");
 					filePath = file.getAbsolutePath();
 					stream = new PrintStream(new FileOutputStream(file));
+					file.deleteOnExit();
 
 					stream.println(getColumnHeaderRow(columns, sourceAggregates, targetAggregates));
 					source.retrieveData(stream);
@@ -132,6 +135,8 @@ public class DataComparer extends BorderLayoutPanel
 					// open connection to csvjdbc using merged.csv
 					// open content window on above connection and run merged query
 					try {
+						Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
+								csvjdbcKeych, "DataComparer", mergedQuery));
 						final ClientContent client = 
 							new ClientContent(csvjdbcKeych, SQLParser.toQueryModel(mergedQuery),null);
 						Application.window.add(client);
