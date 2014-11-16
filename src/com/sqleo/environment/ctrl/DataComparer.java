@@ -21,15 +21,13 @@
 package com.sqleo.environment.ctrl;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.StringTokenizer;
 
 import javax.swing.AbstractAction;
@@ -39,19 +37,14 @@ import javax.swing.JSplitPane;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.CommandButton;
+import com.sqleo.common.jdbc.ConnectionAssistant;
+import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
-import com.sqleo.environment.ctrl.comparer.CriteriaPane;
-import com.sqleo.environment.ctrl.comparer.ReportPane;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerCriteriaPane;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
-import com.sqleo.environment.ctrl.content.MaskExport;
-import com.sqleo.environment.ctrl.editor.Task;
-import com.sqleo.environment.ctrl.editor._TaskTarget;
 import com.sqleo.environment.io.FileHelper;
-import com.sqleo.querybuilder.QueryModel;
-import com.sqleo.querybuilder.syntax.QueryTokens._Expression;
-import com.sqleo.querybuilder.syntax.SQLParser;
+import com.sqleo.environment.mdi.ClientContent;
 
 
 public class DataComparer extends BorderLayoutPanel
@@ -119,22 +112,40 @@ public class DataComparer extends BorderLayoutPanel
 					}
 				}
 				final File mergedCsvFile = new File(filePath);
-			    FileHelper.openFile(mergedCsvFile);
 			    final String mergedTableName = mergedCsvFile.getName().substring(0, mergedCsvFile.getName().lastIndexOf("."));;
 			    // get merged query 
-			    Application.alertAsText(getMergedQuery(mergedTableName, columns, sourceAggregates, targetAggregates));
-				
-			    //TODO
-				// open connection to csvjdbc using merged.csv
-				// open command editor / content window on above connection and merged query
-				// run the merged query 
+			    final String mergedQuery = getMergedQuery(mergedTableName, columns, sourceAggregates, targetAggregates);
+				final String csvjdbcKeych = getCsvJdbcConnectionKey();
+				if(null == csvjdbcKeych){
+					Application.alertAsText(mergedQuery);
+					FileHelper.openFile(mergedCsvFile);
+				}else{
+					// open connection to csvjdbc using merged.csv
+					// open content window on above connection and run merged query
+					ClientContent client = new ClientContent(csvjdbcKeych,mergedQuery,true);
+					client.setTitle(ClientContent.PREVIEW_TITLE+" : " + csvjdbcKeych);
+					Application.window.add(client);
+				}
+			}
+			
+			private String getCsvJdbcConnectionKey(){
+				for(final Object keych : ConnectionAssistant.getHandlers()){
+					final ConnectionHandler ch = ConnectionAssistant.getHandler((String)keych);
+					try {
+						if(ch.get().getMetaData().getDriverName().equals("CsvJdbc")){
+							return (String)keych;
+						}
+					} catch (SQLException e) {
+							e.printStackTrace();
+					}
+				}
+				return null;
 			}
 		};
 		final CommandButton compare = new CommandButton(action);
 		compare.setText(I18n.getString("datacomparer.start","Start"));
 		return compare;
 	}
-	
 	
 	private String getColumnHeaderRow(final String columns,
 					final String[] sourceAggregates,final String[] targetAggregates){
@@ -143,8 +154,8 @@ public class DataComparer extends BorderLayoutPanel
 			buffer.append(column).append(";");
 		}
 		for(int i = 1; i<=sourceAggregates.length; i++){
-			buffer.append("MAX(SRC").append(i).append(");");
-			buffer.append("MAX(TGT").append(i).append(");");
+			buffer.append("SRC").append(i).append(";");
+			buffer.append("TGT").append(i).append(";");
 		}
 //		for(final String sourceAggr : sourceAggregates){
 //			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
