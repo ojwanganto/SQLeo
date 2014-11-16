@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
@@ -43,14 +44,15 @@ import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerCriteriaPane;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
-import com.sqleo.environment.io.FileHelper;
 import com.sqleo.environment.mdi.ClientContent;
+import com.sqleo.querybuilder.syntax.SQLParser;
 
 
 public class DataComparer extends BorderLayoutPanel
 {
 	private DataComparerCriteriaPane source;
 	private DataComparerCriteriaPane target;
+	private JCheckBox onlyDifferentValues;
 	
 	public DataComparer()
 	{
@@ -64,6 +66,8 @@ public class DataComparer extends BorderLayoutPanel
 		setComponentCenter(split);
 		
 		final JPanel buttonPanel = new JPanel(); 
+		onlyDifferentValues = new JCheckBox(I18n.getString("datacomparer.onlyDifferentValues", "Only different values"));
+		buttonPanel.add(onlyDifferentValues);
 		buttonPanel.add(getCompareButton());
 		add(buttonPanel, BorderLayout.PAGE_END);
 	}
@@ -101,7 +105,13 @@ public class DataComparer extends BorderLayoutPanel
 
 					stream.println(getColumnHeaderRow(columns, sourceAggregates, targetAggregates));
 					source.retrieveData(stream);
+					if(!source.isQueryExecutionSuccess()){
+						return;
+					}
 					target.retrieveData(stream);
+					if(!target.isQueryExecutionSuccess()){
+						return;
+					}
 				}catch (FileNotFoundException e){
 					Application.println(e,true);
 				} catch (IOException e) {
@@ -118,13 +128,16 @@ public class DataComparer extends BorderLayoutPanel
 				final String csvjdbcKeych = getCsvJdbcConnectionKey();
 				if(null == csvjdbcKeych){
 					Application.alertAsText(mergedQuery);
-					FileHelper.openFile(mergedCsvFile);
 				}else{
 					// open connection to csvjdbc using merged.csv
 					// open content window on above connection and run merged query
-					ClientContent client = new ClientContent(csvjdbcKeych,mergedQuery,true);
-					client.setTitle(ClientContent.PREVIEW_TITLE+" : " + csvjdbcKeych);
-					Application.window.add(client);
+					try {
+						final ClientContent client = 
+							new ClientContent(csvjdbcKeych, SQLParser.toQueryModel(mergedQuery),null);
+						Application.window.add(client);
+					} catch (IOException e) {
+						Application.println(e, true);
+					}
 				}
 			}
 			
@@ -150,8 +163,10 @@ public class DataComparer extends BorderLayoutPanel
 	private String getColumnHeaderRow(final String columns,
 					final String[] sourceAggregates,final String[] targetAggregates){
 		final StringBuffer buffer = new StringBuffer();
-		for(final String column : columns.split(",")){
-			buffer.append(column).append(";");
+		if(columns!=null && !columns.isEmpty()){
+			for(final String column : columns.split(",")){
+				buffer.append(column).append(";");
+			}
 		}
 		for(int i = 1; i<=sourceAggregates.length; i++){
 			buffer.append("SRC").append(i).append(";");
@@ -200,22 +215,51 @@ public class DataComparer extends BorderLayoutPanel
 	
 	private String getMergedQuery(final String mergedTableName,final String columns,
 			final String[] sourceAggregates,final String[] targetAggregates){
-		final StringBuilder result = new StringBuilder();
-		result.append("SELECT \n").append(columns).append(",\n");
-		for(int i = 1; i<=sourceAggregates.length; i++){
-			result.append("MAX(SRC").append(i).append("),");
-			result.append("MAX(TGT").append(i).append("),");
+		final String tableAlias = "data";
+		final boolean colsGiven = columns!=null && !columns.isEmpty();
+		final StringBuilder colsWithAlias = new StringBuilder();
+		if(colsGiven){
+			for(String col : columns.split(",")){
+				colsWithAlias.append(tableAlias).append(".").append(col).append(",");
+			}
+			colsWithAlias.deleteCharAt(colsWithAlias.length()-1);
 		}
-		result.deleteCharAt(result.length()-1);
+		final StringBuilder result = new StringBuilder();
+		result.append("SELECT \n");
+		if(colsGiven){
+			result.append(colsWithAlias.toString()).append(",\n");
+		}
+		final int totalAggregates = sourceAggregates.length;
+		for(int i = 1; i<=totalAggregates; i++){
+			result.append("MAX(SRC").append(i).append(") as agg_SOURCE").append(i).append(",");
+			result.append("MAX(TGT").append(i).append(") as agg_TARGET").append(i);
+			if(i<totalAggregates){
+				result.append(",\n");
+			}
+		}
 //		for(final String sourceAggr : sourceAggregates){
 //			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
 //			if(sourceAggrName!=null){
 //				result.append("\n,MAX(").append(sourceAggrName).append(")");
 //			}
 //		}
-		result.append("\nFROM ").append(mergedTableName);
-		result.append("\nGROUP BY ").append(columns);
-		result.append("\nORDER BY ").append(columns);
+		result.append("\nFROM ").append(mergedTableName).append(" ").append(tableAlias);
+		if(colsGiven){
+			result.append("\nGROUP BY ").append(colsWithAlias.toString());
+		}
+		if(onlyDifferentValues.isSelected()){
+			result.append("\nHAVING ");
+			for(int i = 1; i<=totalAggregates; i++){
+				result.append("MAX(SRC").append(i).append(")!=").append("MAX(TGT").append(i).append(")");
+				if(i<totalAggregates){
+					result.append(" OR\n");
+				}
+			}
+		}
+		if(colsGiven){
+			result.append("\nORDER BY ").append(colsWithAlias.toString());
+		}
+		
 		return result.toString();
 	}
 	

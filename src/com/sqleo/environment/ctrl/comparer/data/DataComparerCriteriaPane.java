@@ -70,6 +70,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		new HashMap<DATA_TYPE,DataComparerCriteriaDialogPane>(3);
 	private String query;
 	private DataComparer owner;
+	private boolean queryExecutionSuccess = false;
 
 	public DataComparerCriteriaPane(final String headerText,final DataComparer owner){
 		this.owner = owner;
@@ -209,6 +210,10 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		final Thread t  = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				final String table = owner.getTarget().getTable();
+				if(null == table || table.isEmpty()){
+					owner.getTarget().txtTable.setText(owner.getSource().getTable());
+				}
 				setTextIfEmpty(DATA_TYPE.COLUMNS);
 				setTextIfEmpty(DATA_TYPE.AGGREGATES);
 				setTextIfEmpty(DATA_TYPE.FILTERS);
@@ -382,6 +387,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 	}
 	
 	public void retrieveData(final PrintStream stream){
+		queryExecutionSuccess = false;
 		final _TaskTarget target = new _TaskTarget(){
 			@Override
 			public boolean continueRun() {
@@ -389,6 +395,12 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			}
 			@Override
 			public void onTaskFinished(String message, boolean error) {
+				if(error){
+					Application.alert(message);
+					queryExecutionSuccess = false;
+				}else{
+					queryExecutionSuccess = true;
+				}
 			}
 			@Override
 			public void write(String text) {
@@ -420,12 +432,17 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 						stream.println(buffer.toString());
 					}
 				} catch (SQLException e) {
-					e.printStackTrace();
+					queryExecutionSuccess = false;
+					Application.println(e, true);
 				}
 			}
 			
 		};
 		new Task(this , target , 0).run();
+	}
+	
+	public boolean isQueryExecutionSuccess(){
+		return queryExecutionSuccess;
 	}
 	
 
