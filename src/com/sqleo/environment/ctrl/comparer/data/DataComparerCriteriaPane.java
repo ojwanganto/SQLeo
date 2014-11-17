@@ -73,9 +73,11 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 	private String query;
 	private DataComparer owner;
 	private boolean queryExecutionSuccess = false;
+	private boolean isSource;
 
-	public DataComparerCriteriaPane(final String headerText,final DataComparer owner){
+	public DataComparerCriteriaPane(final String headerText,final DataComparer owner,final boolean isSource){
 		this.owner = owner;
+		this.isSource = isSource;
 		Application.window.addListener(this);
 		
 		setBackground(Color.white);
@@ -172,9 +174,26 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		gbc.fill = GridBagConstraints.CENTER;
 		final JButton query = new JButton();
 		query.setAction(new ShowQueryAction(new QueryDialog()));
-		gbl.setConstraints(query,gbc);
-		add(query);
 
+		if(isSource){
+			gbl.setConstraints(query,gbc);
+			add(query);
+		}else{
+			gbc.weightx = 0;
+			gbc.weighty = 0.2;
+			gbl.setConstraints(query,gbc);
+			add(query);
+			
+			gbc.gridx = 0;
+			gbc.gridy = 12;
+			final JTextArea label=  new JTextArea("Note: Right side texts are automatically\ncopied from left when empty!");
+			label.setEditable(false);
+			label.setBackground(Color.yellow);
+			gbl.setConstraints(label,gbc);
+			add(label);
+			
+		}
+		
 	}
 	
 	private class QueryDialog extends AbstractDialogConfirm{
@@ -356,14 +375,22 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		else
 		{
 			ArrayList schemas = (ArrayList)ch.getObject("$schema_names");
-			cbxSchema.setModel(new DefaultComboBoxModel(schemas.toArray()));
+			final Object[] array = new Object[schemas.size()+1];
+			array[0] = "";
+			int i = 1; 
+			for(Object schema : schemas){
+				array[i] = schema;
+				i++;
+			}
+			cbxSchema.setModel(new DefaultComboBoxModel(array));
 		}
 		
 		cbxSchema.setEnabled(cbxSchema.getItemCount()>0);
 	}
 	
 	public String getSchema(){
-		return cbxSchema.getSelectedIndex() != -1 ? cbxSchema.getSelectedItem().toString() : null;
+		return cbxSchema.getSelectedIndex() != -1 ? 
+				(!cbxSchema.getSelectedItem().toString().isEmpty() ? cbxSchema.getSelectedItem().toString() :  null)  : null;
 	}
 
 	public String getTable(){

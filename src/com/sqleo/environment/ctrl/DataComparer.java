@@ -60,8 +60,8 @@ public class DataComparer extends BorderLayoutPanel
 	{
 		super(2,2);
 		
-		source = new DataComparerCriteriaPane(I18n.getString("datacomparer.source", "SOURCE"), this);
-		target = new DataComparerCriteriaPane(I18n.getString("datacomparer.target", "TARGET"), this);
+		source = new DataComparerCriteriaPane(I18n.getString("datacomparer.source", "SOURCE"), this, true);
+		target = new DataComparerCriteriaPane(I18n.getString("datacomparer.target", "TARGET"), this, false);
 		
 		final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,source,target);
 		split.setResizeWeight(.5d);
@@ -130,7 +130,14 @@ public class DataComparer extends BorderLayoutPanel
 			    final String mergedQuery = getMergedQuery(mergedTableName, columns, sourceAggregates, targetAggregates);
 				final String csvjdbcKeych = getCsvJdbcConnectionKey();
 				if(null == csvjdbcKeych){
-					Application.alertAsText(mergedQuery);
+					final StringBuilder messageBuilder = new StringBuilder();
+					messageBuilder.append("Please create and OPEN a csvjdbc connection using jar file\n"); 
+					messageBuilder.append("provided in sqleo/lib directory with\n");
+					messageBuilder.append("DRIVER: ").append("org.relique.jdbc.csv.CsvDriver").append("\n");
+					final String tempFilePath = filePath.substring(0,filePath.lastIndexOf(File.separator));
+					messageBuilder.append("URL: ").append("jdbc:relique:csv:").append(tempFilePath).append("?separator=;");
+					messageBuilder.append("\n\nThen RE-LAUNCH the data comparer!");
+					Application.alertAsText(messageBuilder.toString());
 				}else{
 					// open connection to csvjdbc using merged.csv
 					// open content window on above connection and run merged query

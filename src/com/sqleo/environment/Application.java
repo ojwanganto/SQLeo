@@ -267,7 +267,9 @@ public class Application extends Appearance implements _Constants,_Version
 	
 	public static void alertAsText(String message)
     {
-       	JOptionPane.showMessageDialog(window,new JTextArea(message),PROGRAM,JOptionPane.WARNING_MESSAGE);
+       	final JTextArea jTextArea = new JTextArea(message);
+       	jTextArea.setEditable(false);
+		JOptionPane.showMessageDialog(window,jTextArea,PROGRAM,JOptionPane.WARNING_MESSAGE);
     }
 	
 	
