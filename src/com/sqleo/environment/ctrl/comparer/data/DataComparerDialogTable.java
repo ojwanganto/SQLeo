@@ -40,7 +40,7 @@ public class DataComparerDialogTable extends BaseDynamicTable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final String[] operation = new String[]{"=","<",">","<=",">=","<>","like","not like","is","is not","in","not in"};
-	private static final String[] aggregates = new String[]{"count","min","max","sum"};
+	private static final String[] aggregates = new String[]{"count","avg","min","max","sum"};
 	public static enum DATA_TYPE { COLUMNS, AGGREGATES , FILTERS};
 	
 	private Vector<String> querytokens;

@@ -140,7 +140,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 
 		gbc.gridx = 0;
 		gbc.gridy = 3;
-		final JLabel table = new JLabel("Table:");
+		final JLabel table = new JLabel("Table/View or (Query):");
 		gbl.setConstraints(table, gbc);
 		add(table);
 
@@ -204,7 +204,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			
 			syntax = new JTextArea();
 			syntax.setWrapStyleWord(true);
-			syntax.setEditable(true);
+			syntax.setEditable(false);
 			syntax.setLineWrap(true);
 			syntax.setOpaque(true);
 			syntax.setTabSize(4);
@@ -312,7 +312,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			val.deleteCharAt(val.length()-1);
 		}
 		if(selectAppended){
-			final String tableFinalName = 
+			final String tableFinalName =
 				getSchema()!=null ? getSchema()+"."+getTable() : getTable();
 			val.append("\nFROM ").append(tableFinalName);
 			if(filters!=null && !filters.isEmpty()){
