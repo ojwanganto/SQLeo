@@ -99,9 +99,9 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	public static final String QB_SAVE_POS_IN_SQL = "querybuilder.savePosInSQL";
 	public static final String MAX_QUERIES_IN_HISTORY = "application.maxQueriesInHistory";
 	public static final Integer DEFAULT_MAX_QUERIES_IN_HISTORY = 10;
-	public static final Integer DEFAULT_FONT_PERCENT = 110;
+	public static final Integer DEFAULT_FONT_PERCENT = 100;
 	public static final String ICON_SIZE_PERCENTAGE = "application.iconSizePercentage";
-	public static final Integer DEFAULT_ICON_PERCENT = 160;
+	public static final Integer DEFAULT_ICON_PERCENT = 100;
 	
 
 	public DialogPreferences() {
