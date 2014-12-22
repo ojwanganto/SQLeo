@@ -73,6 +73,7 @@ public class Task implements Runnable {
 					stmt = ch.get().createStatement();
 					stmt.setFetchSize(limit);
 					stmt.setMaxRows(limit);
+					long started = System.nanoTime();
 
 					String sqlcmd = syntax.length() > 7 ?  syntax.toUpperCase().substring(0, 7) : syntax.toUpperCase();
 					if (sqlcmd.startsWith("WITH")) {
@@ -119,6 +120,13 @@ public class Task implements Runnable {
 					}
 					stmt.close();
 
+					long ended = System.nanoTime();
+					long nano = ended - started;	
+					double seconds = (double) nano / (double) 1000000000;
+
+					target.write( " [ seconds: " + NumberFormat.getInstance().format(seconds) + " ]");
+
+
 					if (!target.continueRun()) {
 						message = "Execution has been stopped";
 					}
@@ -140,7 +148,6 @@ public class Task implements Runnable {
 
 		int maxSize = Preferences.getInteger("editor.maxcolsize",
 				MAX_DISPLAY_SIZE);
-		long started = System.currentTimeMillis();
 
 		// System.out.println("reading...");
 
@@ -220,17 +227,11 @@ public class Task implements Runnable {
 			target.write(row.toString() + "\n");
 		}
 
-		long ended = System.currentTimeMillis();
-		long millis = ended - started;
-		double seconds = (double) millis / (double) 1000;
-
 		if (rowcount > 0) {
 			target.write(divider.toString() + "\n");
 		}
-		target.write("Record(s): "
-				+ NumberFormat.getInstance().format(rowcount) + " [ seconds: "
-				+ NumberFormat.getInstance().format(seconds) + " bytes: "
-				+ NumberFormat.getInstance().format(bytes) + " ]");
+		target.write("Record(s): " + NumberFormat.getInstance().format(rowcount) 
+				+ " [ bytes: " + NumberFormat.getInstance().format(bytes) + " ]");
 	}
 
 	public int getColumnCount() throws SQLException {
