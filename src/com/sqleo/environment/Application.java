@@ -277,6 +277,11 @@ public class Application extends Appearance implements _Constants,_Version
     {
        	JOptionPane.showMessageDialog(window,message,PROGRAM,JOptionPane.WARNING_MESSAGE);
     }
+	
+	public static void alertInfo(String message)
+    {
+       	JOptionPane.showMessageDialog(window,message,PROGRAM,JOptionPane.INFORMATION_MESSAGE);
+    }
     
 	public static boolean confirm(String title,String message)
 	{
@@ -427,4 +432,8 @@ public class Application extends Appearance implements _Constants,_Version
 		}
 		
     }
+    
+    public static boolean isFullVersion() {
+		return Application.MINOR.endsWith("+");
+	}
 }

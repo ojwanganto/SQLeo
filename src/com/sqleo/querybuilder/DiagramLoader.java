@@ -254,7 +254,7 @@ public class DiagramLoader extends JDialog implements Runnable
 	private void createAndJoin(QueryTokens.Table table,boolean tableExists) throws SQLException{
 		DiagramEntity item = creatEntity(table,tableExists);
 		// #157
-		if(Application.MINOR.endsWith("+") || builder.diagram.getEntities().length < 3){
+		if(Application.isFullVersion() || builder.diagram.getEntities().length < 3){
 			builder.diagram.addEntity(item);
 		}
 		else{
@@ -271,6 +271,8 @@ public class DiagramLoader extends JDialog implements Runnable
 		if(autoJoinRequested && QueryBuilder.autoJoin)
 			doAutoJoin(item);
 	}
+
+	
 	
 	private void addTables(ArrayList mtdKeys,int rsSchemaIndex,int rsTableIndex) throws SQLException{
 		

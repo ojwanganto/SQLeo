@@ -101,7 +101,7 @@ public class ClientDataComparer extends MDIClient
 				final File file = fc.getSelectedFile();
 				final DataComparerConfig setup = FileHelper.loadXml(file, DataComparerConfig.class);
 				ClientDataComparer.this.control.loadSetup(setup);
-				Application.println("Datacomparer setup reloaded succesfully.");
+				Application.alertInfo("Datacomparer setup reloaded succesfully.");
 			}
 		}
 	}
@@ -132,7 +132,7 @@ public class ClientDataComparer extends MDIClient
 				final DataComparerConfig setup = 
 					ClientDataComparer.this.control.getSetup();
 				FileHelper.saveAsXml(filename,setup);
-				Application.println("Datacomparer setup saved succesfully.");
+				Application.alertInfo("Datacomparer setup saved succesfully.");
 			}
 		}
 	}

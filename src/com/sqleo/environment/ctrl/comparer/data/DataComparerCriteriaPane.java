@@ -66,6 +66,7 @@ import com.sqleo.environment.mdi._ConnectionListener;
 
 public class DataComparerCriteriaPane extends JPanel implements _ConnectionListener, ItemListener, _TaskSource{
 	
+	private static final int LIMITED_ROWS_FOR_FREE_VERSION = 100;
 	private JComboBox cbxConnection;
 	private JComboBox cbxSchema;
 	private JTextField txtTable;
@@ -418,6 +419,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 	
 	public void retrieveData(final PrintStream stream){
 		queryExecutionSuccess = false;
+		final boolean isFullVersion = Application.isFullVersion();
 		final _TaskTarget target = new _TaskTarget(){
 			@Override
 			public boolean continueRun() {
@@ -444,6 +446,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 				try {
 					int cols= rs.getMetaData().getColumnCount();
 					Object[] vals = null;
+					int rowCount = 0;
 					while(rs.next()){
 						vals = new Object[cols];
 						for(int i=1; i<=cols;i++){
@@ -460,6 +463,14 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 						}
 						if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
 						stream.println(buffer.toString());
+						
+						if(!isFullVersion){
+							rowCount++;
+							if(rowCount > LIMITED_ROWS_FOR_FREE_VERSION) {
+								Application.alert("Version with max 100 rows for data comparer query result, Please Donate for more");
+								break;
+							}
+						}
 					}
 				} catch (SQLException e) {
 					queryExecutionSuccess = false;
@@ -471,7 +482,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
 				getHandlerKey(), "DataComparer", getSyntax()));
 
-		new Task(this , target , 0).run();
+		new Task(this , target , isFullVersion ? 0 : LIMITED_ROWS_FOR_FREE_VERSION+1).run();
 	}
 	
 	public boolean isQueryExecutionSuccess(){
