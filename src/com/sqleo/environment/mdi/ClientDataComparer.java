@@ -20,20 +20,21 @@
 
 package com.sqleo.environment.mdi;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
+import javax.swing.Action;
+import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 
-import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.gui.Toolbar;
-import com.sqleo.common.util.I18n;
+import com.sqleo.common.util.DataComparerConfig;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.DataComparer;
-import com.sqleo.querybuilder.QueryActions;
+import com.sqleo.environment.io.FileHelper;
 
 
 public class ClientDataComparer extends MDIClient
@@ -47,6 +48,19 @@ public class ClientDataComparer extends MDIClient
 	
 	private DataComparer control;
 	private JMenuItem[] m_actions;
+	private Toolbar toolbar;
+	private static final FileFilter setUpFileFilter = new FileFilter() {
+		@Override
+		public boolean accept(File file) {
+			return file.isDirectory()
+					|| file.getName().endsWith(".xml");
+		}
+
+		@Override
+		public String getDescription() {
+			return "Datacomparer setup files (*.xml)";
+		}
+	};
 	
 	ClientDataComparer()
 	{
@@ -56,6 +70,71 @@ public class ClientDataComparer extends MDIClient
 		control.setBorder(new EmptyBorder(2,2,2,2));
 
 		initMenuActions();
+		
+		toolbar = new Toolbar(Toolbar.HORIZONTAL);
+		toolbar.add(new ActionOpen());
+		Action saveAction = new ActionSave();
+		toolbar.getActionMap().put("save",saveAction);
+		toolbar.add(saveAction);
+
+	}
+	
+	private class ActionOpen extends MDIActions.AbstractBase {
+		private ActionOpen() {
+			setIcon(Application.ICON_EDITOR_OPEN);
+			setTooltip("Load setup");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			final String currentDirectory = Preferences.getString("lastDirectory",
+					System.getProperty("user.home"));
+
+			final JFileChooser fc = new JFileChooser(currentDirectory);
+			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			fc.setMultiSelectionEnabled(false);
+			fc.setFileFilter(setUpFileFilter);
+
+			if (fc.showOpenDialog(Application.window) == JFileChooser.APPROVE_OPTION) {
+				Preferences.set("lastDirectory", fc.getCurrentDirectory()
+						.toString());
+				final File file = fc.getSelectedFile();
+				final DataComparerConfig setup = FileHelper.loadXml(file, DataComparerConfig.class);
+				ClientDataComparer.this.control.loadSetup(setup);
+				Application.println("Datacomparer setup reloaded succesfully.");
+			}
+		}
+	}
+
+	private class ActionSave extends MDIActions.AbstractBase {
+		private ActionSave() {
+			setIcon(Application.ICON_EDITOR_SAVE);
+			setTooltip("Save setup");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			final String currentDirectory = Preferences.getString("lastDirectory",
+					System.getProperty("user.home"));
+			final JFileChooser fc = new JFileChooser(currentDirectory);
+			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			fc.setFileFilter(setUpFileFilter);
+
+			if (fc.showSaveDialog(Application.window) == JFileChooser.APPROVE_OPTION) {
+				Preferences.set("lastDirectory", fc.getCurrentDirectory()
+						.toString());
+				String filename = fc.getSelectedFile().toString();
+				if (fc.getFileFilter().getDescription().endsWith("(*.xml)")) {
+					if (!filename.endsWith(".xml")) {
+						filename += ".xml";
+					}
+				}
+				final DataComparerConfig setup = 
+					ClientDataComparer.this.control.getSetup();
+				FileHelper.saveAsXml(filename,setup);
+				Application.println("Datacomparer setup saved succesfully.");
+			}
+		}
 	}
 	
 	private void initMenuActions()
@@ -75,7 +154,7 @@ public class ClientDataComparer extends MDIClient
 
 	public Toolbar getSubToolbar()
 	{
-		return null;
+		return toolbar;
 	}
     
 	public final String getName()

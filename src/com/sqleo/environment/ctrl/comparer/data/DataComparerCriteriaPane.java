@@ -51,6 +51,7 @@ import javax.swing.border.LineBorder;
 import com.sqleo.common.gui.AbstractDialogConfirm;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.DataComparerPanelConfig;
 import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.common.util.SQLHistoryData;
@@ -407,7 +408,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 
 	@Override
 	public String getHandlerKey() {
-		return cbxSchema.getSelectedIndex() != -1 ? cbxConnection.getSelectedItem().toString() : null;
+		return cbxConnection.getSelectedIndex() != -1 ? cbxConnection.getSelectedItem().toString() : null;
 	}
 
 	@Override
@@ -477,5 +478,24 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		return queryExecutionSuccess;
 	}
 	
+	public DataComparerPanelConfig getSetup(){
+		final DataComparerPanelConfig panelConfig = new DataComparerPanelConfig();
+		panelConfig.setConnection(getHandlerKey());
+		panelConfig.setSchema(getSchema());
+		panelConfig.setTableOrQuery(getTable());
+		panelConfig.setColumns(dataTypePanelMap.get(DATA_TYPE.COLUMNS).getText());
+		panelConfig.setAggregates(dataTypePanelMap.get(DATA_TYPE.AGGREGATES).getText());
+		panelConfig.setFilters(dataTypePanelMap.get(DATA_TYPE.FILTERS).getText());
+		return panelConfig;
+	}
+
+	public void loadSetup(final DataComparerPanelConfig panelConfig) {
+		cbxConnection.setSelectedItem(panelConfig.getConnection());
+		cbxSchema.setSelectedItem(panelConfig.getSchema());
+		txtTable.setText(panelConfig.getTableOrQuery());
+		dataTypePanelMap.get(DATA_TYPE.COLUMNS).setText(panelConfig.getColumns());
+		dataTypePanelMap.get(DATA_TYPE.AGGREGATES).setText(panelConfig.getAggregates());
+		dataTypePanelMap.get(DATA_TYPE.FILTERS).setText(panelConfig.getFilters());
+	}
 
 }

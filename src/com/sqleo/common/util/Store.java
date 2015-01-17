@@ -24,7 +24,6 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,13 +37,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
+import com.sqleo.environment.io.FileHelper;
 import com.sqleo.environment.mdi.ClientSQLHistoryViewer;
 import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.environment.mdi.MDIClient;
@@ -322,42 +317,22 @@ public class Store
 	}
 	
 	public void saveSQLHistoryAsXml(final String filename){
-		try {
-			final Integer maxQueriesToSave = Preferences.getInteger(DialogPreferences.MAX_QUERIES_IN_HISTORY,
-					DialogPreferences.DEFAULT_MAX_QUERIES_IN_HISTORY);
-			final Integer subListMax = sqlHistoryData.size() > maxQueriesToSave ? maxQueriesToSave : sqlHistoryData.size();
+		final Integer maxQueriesToSave = Preferences.getInteger(DialogPreferences.MAX_QUERIES_IN_HISTORY,
+				DialogPreferences.DEFAULT_MAX_QUERIES_IN_HISTORY);
+		final Integer subListMax = sqlHistoryData.size() > maxQueriesToSave ? maxQueriesToSave : sqlHistoryData.size();
 
-			final SQLHistory history = new SQLHistory();
-			history.setSqlHistoryLines(new LinkedList<SQLHistoryData>(sqlHistoryData.subList(0, subListMax)));
-
-			final JAXBContext jaxbContext = JAXBContext.newInstance(SQLHistory.class);
-			final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			jaxbMarshaller.marshal(history, new File(filename));
-			
-		} catch (JAXBException e) {
-			Application.println(e, false);
-			e.printStackTrace();
-		}
+		final SQLHistory history = new SQLHistory();
+		history.setSqlHistoryLines(new LinkedList<SQLHistoryData>(sqlHistoryData.subList(0, subListMax)));
+		
+		FileHelper.saveAsXml(filename, history);
 	}
 	
 	public void loadSQLHistoryAsXml(final String filename){
-		try {
-			final JAXBContext jaxbContext = JAXBContext.newInstance(SQLHistory.class);
-			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-			final SQLHistory history = (SQLHistory) jaxbUnmarshaller.unmarshal(new File(filename)); 
-			if(history!=null && history.getSqlHistoryLines()!=null){
-				sqlHistoryData = history.getSqlHistoryLines();	
-			}
-			
-		} catch (JAXBException e) {
-			Application.println(e, false);
-			e.printStackTrace();
+		final SQLHistory history = FileHelper.loadXml(filename, SQLHistory.class); 
+		if(history!=null && history.getSqlHistoryLines()!=null){
+			sqlHistoryData = history.getSqlHistoryLines();	
 		}
-		
 	}
-
-
 
 	public void saveXMLAndMetaviews(String filename,String metaviewFileName) throws IOException
 	{

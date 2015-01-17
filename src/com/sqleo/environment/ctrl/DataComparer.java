@@ -41,6 +41,8 @@ import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.DataComparerConfig;
+import com.sqleo.common.util.DataComparerPanelConfig;
 import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.environment.Application;
@@ -273,6 +275,22 @@ public class DataComparer extends BorderLayoutPanel
 		}
 		
 		return result.toString();
+	}
+
+	public void loadSetup(final DataComparerConfig setup) {
+		if(null == setup)
+			return;
+		source.loadSetup(setup.getSourcePanelConfig());
+		target.loadSetup(setup.getTargetPanelConfig());
+		onlyDifferentValues.setSelected(setup.isOnlyDifferentValues());
+	}
+
+	public DataComparerConfig getSetup() {
+		final DataComparerConfig setup = new DataComparerConfig();
+		setup.setSourcePanelConfig(source.getSetup());
+		setup.setTargetPanelConfig(target.getSetup());
+		setup.setOnlyDifferentValues(onlyDifferentValues.isSelected());
+		return setup;
 	}
 	
 }
