@@ -26,7 +26,11 @@ import java.io.File;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 import javax.swing.filechooser.FileFilter;
 
 import com.sqleo.common.gui.Toolbar;
@@ -76,6 +80,26 @@ public class ClientDataComparer extends MDIClient
 		Action saveAction = new ActionSave();
 		toolbar.getActionMap().put("save",saveAction);
 		toolbar.add(saveAction);
+		
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		InternalFrameListener ifl = new InternalFrameAdapter() {
+			@Override
+			public void internalFrameDeactivated(InternalFrameEvent e) {
+			}
+			@Override
+			public void internalFrameClosing(InternalFrameEvent e) {
+				int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save datacomparer setup to a file ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
+				if(option == JOptionPane.YES_OPTION){
+					toolbar.getActionMap().get("save").actionPerformed(null);
+				}
+				if(option != JOptionPane.CANCEL_OPTION){
+					ClientDataComparer.this.dispose();
+				}
+			}
+			
+		};
+		addInternalFrameListener(ifl);
+
 
 	}
 	
@@ -101,7 +125,6 @@ public class ClientDataComparer extends MDIClient
 				final File file = fc.getSelectedFile();
 				final DataComparerConfig setup = FileHelper.loadXml(file, DataComparerConfig.class);
 				ClientDataComparer.this.control.loadSetup(setup);
-				Application.alertInfo("Datacomparer setup reloaded succesfully.");
 			}
 		}
 	}
@@ -132,7 +155,6 @@ public class ClientDataComparer extends MDIClient
 				final DataComparerConfig setup = 
 					ClientDataComparer.this.control.getSetup();
 				FileHelper.saveAsXml(filename,setup);
-				Application.alertInfo("Datacomparer setup saved succesfully.");
 			}
 		}
 	}
