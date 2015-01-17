@@ -31,6 +31,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -237,7 +238,11 @@ public class ListView extends BorderLayoutPanel
 					cmp = 1;
 				else if(d1 < d2)
 					cmp = -1;
-			} 
+			}
+			else if(value1 instanceof Date && value2 instanceof Date)
+			{
+				cmp = ((Date)value1).compareTo((Date)value2);
+			}
 			else
 			{
 				cmp = value1.toString().toLowerCase().compareTo(value2.toString().toLowerCase());
