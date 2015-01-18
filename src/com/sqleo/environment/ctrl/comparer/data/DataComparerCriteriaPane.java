@@ -479,7 +479,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			}
 			
 		};
-		Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
+		Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
 				getHandlerKey(), "DataComparer", getSyntax()));
 
 		new Task(this , target , isFullVersion ? 0 : LIMITED_ROWS_FOR_FREE_VERSION+1).run();

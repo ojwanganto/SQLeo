@@ -230,7 +230,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 		private void executeCommandQuery(final String sql) {
 			_TaskSource source = new TaskSource(sql);
-			Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
+			Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
 					source.getHandlerKey(), "CommandEditor", sql));
 			ClientCommandEditor cce = (ClientCommandEditor) Application.window
 					.getClient(ClientCommandEditor.DEFAULT_TITLE);

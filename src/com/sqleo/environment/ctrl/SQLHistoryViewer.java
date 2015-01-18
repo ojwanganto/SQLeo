@@ -41,7 +41,6 @@ import com.sqleo.environment.Application;
 
 public class SQLHistoryViewer extends ListView  implements MouseListener
 {
-	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd hh:mm:ss zzz yyyy");
 	/**
 	 * 
 	 */
@@ -64,11 +63,7 @@ public class SQLHistoryViewer extends ListView  implements MouseListener
 	
 	private Object[] toRowData(final SQLHistoryData line){
 		final Object[] rowdata = new Object[4];
-		try {
-			rowdata[0] = SIMPLE_DATE_FORMAT.parse(line.getTimestamp());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		rowdata[0] = line.getTimestamp();
 		rowdata[1] = line.getConnection();
 		rowdata[2] = line.getWindow();
 		rowdata[3] = line.getQuery();

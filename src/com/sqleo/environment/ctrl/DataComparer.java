@@ -144,7 +144,7 @@ public class DataComparer extends BorderLayoutPanel
 					// open connection to csvjdbc using merged.csv
 					// open content window on above connection and run merged query
 					try {
-						Application.session.addSQLToHistory(new SQLHistoryData(new Date().toString(), 
+						Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
 								csvjdbcKeych, "DataComparer", mergedQuery));
 						final ClientContent client = 
 							new ClientContent(csvjdbcKeych, SQLParser.toQueryModel(mergedQuery),null);

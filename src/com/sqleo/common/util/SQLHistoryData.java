@@ -21,10 +21,14 @@
  */
 package com.sqleo.common.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,9 +38,12 @@ public class SQLHistoryData {
 	private String connection;
 	private String window;
 	private String query;
+
+	@XmlTransient
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	public SQLHistoryData(String timestamp, String connection,String window,String query) {
-		this.timestamp = timestamp;
+	public SQLHistoryData(Date timestamp, String connection,String window,String query) {
+		this.timestamp = SIMPLE_DATE_FORMAT.format(timestamp);
 		this.connection = connection;
 		this.window = window;
 		this.query = query;
