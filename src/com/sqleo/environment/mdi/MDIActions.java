@@ -31,6 +31,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
@@ -266,58 +267,83 @@ public abstract class MDIActions implements _Constants
 		public void actionPerformed(ActionEvent ae)
 		{
 			String fileName = ae.getActionCommand();
-			if(!new File(fileName).exists()){
+			final File file = new File(fileName);
+			if(!file.exists()){
 				Application.alert(Application.getVersion2(),"File not found : "+fileName);
 				return;
 			}
-			if(!ConnectionAssistant.getHandlers().isEmpty())
-			{
+			Application.window.menubar.addMenuItemAtFirst(fileName);
+
+			final Object selectedWindow
+				= JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.loadQueryInWindow","Load file in:")
+					,Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,
+					new String[]{"Query builder", ClientCommandEditor.DEFAULT_TITLE 
+					, ClientDataComparer.DEFAULT_TITLE},null);
+			
+			if(ClientDataComparer.DEFAULT_TITLE.equals(selectedWindow.toString())){
+				final Action action = Application.window.getAction(MDIActions.ACTION_MDI_SHOW_DATA_COMPARER);
+				final ShowDataComparer showCmp = (ShowDataComparer) action;
+				showCmp.actionPerformed(null);
+				final ClientDataComparer comparer = (ClientDataComparer)
+					Application.window.getClient(ClientDataComparer.DEFAULT_TITLE);
+				comparer.loadSetupFile(file);
+
+			}else if(!ConnectionAssistant.getHandlers().isEmpty()){
 				Object keycah = null;
 				if(ConnectionAssistant.getHandlers().size() > 1)
 					keycah = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.useConnection","Use connection:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,ConnectionAssistant.getHandlers().toArray(),null);
 				else
 					keycah = ConnectionAssistant.getHandlers().toArray()[0];
-
-				if(keycah != null)
-				{
-
-					ClientQueryBuilder cqb = new ClientQueryBuilder(keycah.toString());
-					cqb.setFileName(fileName);
-					final boolean isSQLFile = cqb.isSQLFile();
-					DiagramLayout dl = null;
-					if(!isSQLFile){
-						dl = DialogQuery.getDiagramLayoutForFile(fileName);
-					}
-					if(!Preferences.getBoolean("querybuilder.use-schema"))
-					{
-						ConnectionHandler ch = ConnectionAssistant.getHandler(keycah.toString());
-						ArrayList schemas = (ArrayList)ch.getObject("$schema_names");
-						if(schemas.size()>0)
-						{
-							Object schema = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.schema","Schema:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,schemas.toArray(),null);
-							if(schema == null) return;
-							if(!isSQLFile){
-							 dl.getQueryModel().setSchema(schema.toString());
-							}else{
-								cqb.setSchema(schema.toString());
-							}
-						}
-					}
-					Application.window.menubar.addMenuItemAtFirst(fileName);
-					Application.window.add(cqb);
-					if(!isSQLFile){
-						cqb.setDiagramLayout(dl);
-					}else {
-						cqb.getQueryBuilder().setSelectedIndex(1);
-						try {
-							cqb.getQueryBuilder().getSyntax().setText(FileStreamSQL.readSQL(fileName));
-						} catch (IOException e) {
-							e.printStackTrace();
-						} 
+				if(keycah != null){
+					if("Query builder".equals(selectedWindow.toString())){
+						loadFileInQueryBuilder(fileName, keycah);
+					}else if(ClientCommandEditor.DEFAULT_TITLE.equals(selectedWindow.toString())){
+						final Action action = Application.window.getAction(MDIActions.ACTION_MDI_SHOW_EDITOR);
+						final ShowCommandEditor showCmd = (ShowCommandEditor) action;
+						showCmd.actionPerformed(null);
+						final ClientCommandEditor editor = (ClientCommandEditor)
+							Application.window.getClient(ClientCommandEditor.DEFAULT_TITLE);
+						editor.loadSQLFile(fileName, keycah.toString());
 					}
 				}
 			}else{
 				Application.alert(Application.window.getTitle(),"No connections exists!");
+			}
+		}
+
+		private void loadFileInQueryBuilder(String fileName, Object keycah) {
+			ClientQueryBuilder cqb = new ClientQueryBuilder(keycah.toString());
+			cqb.setFileName(fileName);
+			final boolean isSQLFile = cqb.isSQLFile();
+			DiagramLayout dl = null;
+			if(!isSQLFile){
+				dl = DialogQuery.getDiagramLayoutForFile(fileName);
+			}
+			if(!Preferences.getBoolean("querybuilder.use-schema"))
+			{
+				ConnectionHandler ch = ConnectionAssistant.getHandler(keycah.toString());
+				ArrayList schemas = (ArrayList)ch.getObject("$schema_names");
+				if(schemas.size()>0)
+				{
+					Object schema = JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.schema","Schema:"),Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,schemas.toArray(),null);
+					if(schema == null) return;
+					if(!isSQLFile){
+					 dl.getQueryModel().setSchema(schema.toString());
+					}else{
+						cqb.setSchema(schema.toString());
+					}
+				}
+			}
+			Application.window.add(cqb);
+			if(!isSQLFile){
+				cqb.setDiagramLayout(dl);
+			}else {
+				cqb.getQueryBuilder().setSelectedIndex(1);
+				try {
+					cqb.getQueryBuilder().getSyntax().setText(FileStreamSQL.readSQL(fileName));
+				} catch (IOException e) {
+					e.printStackTrace();
+				} 
 			}
 		}
 	}

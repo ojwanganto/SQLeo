@@ -123,10 +123,14 @@ public class ClientDataComparer extends MDIClient
 				Preferences.set("lastDirectory", fc.getCurrentDirectory()
 						.toString());
 				final File file = fc.getSelectedFile();
-				final DataComparerConfig setup = FileHelper.loadXml(file, DataComparerConfig.class);
-				ClientDataComparer.this.control.loadSetup(setup);
+				loadSetupFile(file);
 			}
 		}
+
+	}
+	public void loadSetupFile(final File file) {
+		final DataComparerConfig setup = FileHelper.loadXml(file, DataComparerConfig.class);
+		ClientDataComparer.this.control.loadSetup(setup);
 	}
 
 	private class ActionSave extends MDIActions.AbstractBase {
@@ -155,6 +159,7 @@ public class ClientDataComparer extends MDIClient
 				final DataComparerConfig setup = 
 					ClientDataComparer.this.control.getSetup();
 				FileHelper.saveAsXml(filename,setup);
+				Application.window.menubar.addMenuItemAtFirst(filename);
 			}
 		}
 	}

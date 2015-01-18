@@ -407,18 +407,31 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 			}
 		}
 
-		private void load(SQLStyledDocument doc, String filename)
-				throws IOException, BadLocationException {
-			Reader in = new FileReader(filename);
+	}
 
-			int nch;
-			char[] buff = new char[4096];
-			while ((nch = in.read(buff, 0, buff.length)) != -1) {
-				doc.insertString(doc.getLength(), new String(buff, 0, nch),
-						null);
-			}
-			in.close();
+	private void load(SQLStyledDocument doc, String filename) throws IOException, BadLocationException {
+		Reader in = new FileReader(filename);
+		int nch;
+		char[] buff = new char[4096];
+		while ((nch = in.read(buff, 0, buff.length)) != -1) {
+			doc.insertString(doc.getLength(), new String(buff, 0, nch),
+					null);
 		}
+		in.close();
+	}
+
+	public void loadSQLFile(String filename, String keycah) {
+		setActiveConnection(keycah);
+		SQLStyledDocument doc = new SQLStyledDocument();
+		try {
+			load(doc, filename);
+			doc.insertString(doc.getLength(), "\n", null);
+		} catch (BadLocationException ble) {
+			Application.println(ble, false);
+		} catch (IOException ioe) {
+			Application.println(ioe, false);
+		}
+		ClientCommandEditor.this.control.setDocument(doc);
 	}
 
 	private class ActionSave extends MDIActions.AbstractBase {
@@ -470,6 +483,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 				out.write(doc.getText(0, doc.getLength()));
 				out.flush();
 				out.close();
+				Application.window.menubar.addMenuItemAtFirst(filename);
 			} catch (BadLocationException ble) {
 				Application.println(ble, false);
 			} catch (IOException ioe) {
