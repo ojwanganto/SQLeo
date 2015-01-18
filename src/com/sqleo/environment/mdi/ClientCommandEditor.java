@@ -401,6 +401,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 					} catch (IOException ioe) {
 						Application.println(ioe, false);
 					}
+					Application.window.menubar.addMenuItemAtFirst(filename);
 				}
 
 				ClientCommandEditor.this.control.setDocument(doc);

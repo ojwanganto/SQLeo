@@ -124,6 +124,7 @@ public class ClientDataComparer extends MDIClient
 						.toString());
 				final File file = fc.getSelectedFile();
 				loadSetupFile(file);
+				Application.window.menubar.addMenuItemAtFirst(file.getName());
 			}
 		}
 
