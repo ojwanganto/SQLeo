@@ -33,6 +33,22 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2015.01.rc1.zip: 2015-01-25
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.01/
+
+
+	253 SQL history: data is sorted by day name not by timestamp
+	251 Command editor: Display Query duration (in text mode)
+	249 Data comparer
+		- save configuration in xml format,
+		- load configaration in xml format,
+		- limit Source and Target queries to 100 rows in Public edition
+
+	247 File recent queries: choose to open file in Query Builder OR Command Editor OR Data comparer
+
 
 SQLeoVQB.2014.12.rc1.zip: 2014-12-07
 
