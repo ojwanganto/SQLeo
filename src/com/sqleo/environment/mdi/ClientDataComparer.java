@@ -35,6 +35,7 @@ import javax.swing.filechooser.FileFilter;
 
 import com.sqleo.common.gui.Toolbar;
 import com.sqleo.common.util.DataComparerConfig;
+import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.DataComparer;
@@ -49,7 +50,7 @@ public class ClientDataComparer extends MDIClient
 	private static final long serialVersionUID = 6741254332433687641L;
 
 	public static final String DEFAULT_TITLE = "Data comparer";
-	
+	private String filename = null;
 	private DataComparer control;
 	private JMenuItem[] m_actions;
 	private Toolbar toolbar;
@@ -95,6 +96,11 @@ public class ClientDataComparer extends MDIClient
 			
 		};
 		addInternalFrameListener(ifl);
+	}
+	
+	public final void setFileName(final String filename) {
+		this.filename = filename;
+		super.setTitle(DEFAULT_TITLE + " : " + filename);
 	}
 
 	private void createToolbar() {
@@ -149,6 +155,7 @@ public class ClientDataComparer extends MDIClient
 	public void loadSetupFile(final File file) {
 		final DataComparerConfig setup = FileHelper.loadXml(file, DataComparerConfig.class);
 		ClientDataComparer.this.control.loadSetup(setup);
+		setFileName(file.getAbsolutePath());
 	}
 
 	private class ActionSave extends MDIActions.AbstractBase {
@@ -159,6 +166,26 @@ public class ClientDataComparer extends MDIClient
 
 		@Override
 		public void actionPerformed(ActionEvent ae) {
+			if (ClientDataComparer.this.filename == null) {
+				saveAs();
+			} else {
+				String message = I18n.getFormattedString(
+						"application.message.replaceFile",
+						"{0}\nReplace existing file?", new Object[] { ""
+								+ ClientDataComparer.this.filename });
+				int ret = JOptionPane
+						.showConfirmDialog(Application.window, message,
+								"query.save", JOptionPane.YES_NO_CANCEL_OPTION);
+
+				if (ret == JOptionPane.YES_OPTION) {
+					save(filename);
+				} else if (ret == JOptionPane.NO_OPTION) {
+					saveAs();
+				}
+			}
+		}
+
+		private void saveAs() {
 			final String currentDirectory = Preferences.getString("lastDirectory",
 					System.getProperty("user.home"));
 			final JFileChooser fc = new JFileChooser(currentDirectory);
@@ -174,11 +201,15 @@ public class ClientDataComparer extends MDIClient
 						filename += ".xml";
 					}
 				}
-				final DataComparerConfig setup = 
-					ClientDataComparer.this.control.getSetup();
-				FileHelper.saveAsXml(filename,setup);
-				Application.window.menubar.addMenuItemAtFirst(filename);
+				save(filename);
 			}
+		}
+
+		private void save(String filename) {
+			final DataComparerConfig setup = 
+				ClientDataComparer.this.control.getSetup();
+			FileHelper.saveAsXml(filename,setup);
+			Application.window.menubar.addMenuItemAtFirst(filename);
 		}
 	}
 	

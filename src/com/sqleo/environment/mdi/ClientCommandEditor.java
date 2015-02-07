@@ -59,6 +59,7 @@ import javax.swing.text.Document;
 import com.sqleo.common.gui.Toolbar;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
@@ -85,6 +86,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 	private DialogFindReplace dlg;
 	private DialogFindReplace dlg2;
+	private String filename = null;
 
 	public ClientCommandEditor() {
 		super(DEFAULT_TITLE);
@@ -128,6 +130,11 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 				ClientCommandEditor.this.dispose();
 		} else
 			ClientCommandEditor.this.dispose();
+	}
+	
+	public final void setFileName(final String filename) {
+		this.filename = filename;
+		super.setTitle(DEFAULT_TITLE + " : " + filename);
 	}
 
 	private void createToolbar() {
@@ -419,6 +426,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 					null);
 		}
 		in.close();
+		setFileName(filename);
 	}
 
 	public void loadSQLFile(String filename, String keycah) {
@@ -443,6 +451,26 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 		@Override
 		public void actionPerformed(ActionEvent ae) {
+			if (ClientCommandEditor.this.filename == null) {
+				saveAs();
+			} else {
+				String message = I18n.getFormattedString(
+						"application.message.replaceFile",
+						"{0}\nReplace existing file?", new Object[] { ""
+								+ ClientCommandEditor.this.filename });
+				int ret = JOptionPane
+						.showConfirmDialog(Application.window, message,
+								"query.save", JOptionPane.YES_NO_CANCEL_OPTION);
+
+				if (ret == JOptionPane.YES_OPTION) {
+					save(filename);
+				} else if (ret == JOptionPane.NO_OPTION) {
+					saveAs();
+				}
+			}
+		}
+
+		private void saveAs() {
 			String currentDirectory = Preferences.getString("lastDirectory",
 					System.getProperty("user.home"));
 
