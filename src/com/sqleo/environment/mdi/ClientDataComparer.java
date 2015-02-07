@@ -66,22 +66,18 @@ public class ClientDataComparer extends MDIClient
 		}
 	};
 	
-	ClientDataComparer()
+	public ClientDataComparer()
 	{
 		super(DEFAULT_TITLE);
 		
 		setComponentCenter(control = new DataComparer());
 		control.setBorder(new EmptyBorder(2,2,2,2));
 
+		createToolbar();
 		initMenuActions();
 		
-		toolbar = new Toolbar(Toolbar.HORIZONTAL);
-		toolbar.add(new ActionOpen());
-		Action saveAction = new ActionSave();
-		toolbar.getActionMap().put("save",saveAction);
-		toolbar.add(saveAction);
-		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		
 		InternalFrameListener ifl = new InternalFrameAdapter() {
 			@Override
 			public void internalFrameDeactivated(InternalFrameEvent e) {
@@ -99,7 +95,28 @@ public class ClientDataComparer extends MDIClient
 			
 		};
 		addInternalFrameListener(ifl);
+	}
 
+	private void createToolbar() {
+		toolbar = new Toolbar(Toolbar.HORIZONTAL);
+		toolbar.add(new ActionOpen());
+		Action saveAction = new ActionSave();
+		toolbar.getActionMap().put("save",saveAction);
+		toolbar.add(saveAction);
+		toolbar.addSeparator();
+		toolbar.add(new ActionGeneratePivotData());
+	}
+	
+	private class ActionGeneratePivotData extends MDIActions.AbstractBase {
+		private ActionGeneratePivotData() {
+			setIcon(Application.ICON_QUERY_LAUNCH);
+			setTooltip("Generate pivot html");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			control.generatePivotData();
+		}
 
 	}
 	

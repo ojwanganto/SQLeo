@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -42,9 +43,9 @@ import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.DataComparerConfig;
-import com.sqleo.common.util.DataComparerPanelConfig;
 import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHistoryData;
+import com.sqleo.common.util.UriHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerCriteriaPane;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
@@ -54,6 +55,7 @@ import com.sqleo.querybuilder.syntax.SQLParser;
 
 public class DataComparer extends BorderLayoutPanel
 {
+	public static final String CSV_SEP = ";";
 	private DataComparerCriteriaPane source;
 	private DataComparerCriteriaPane target;
 	private JCheckBox onlyDifferentValues;
@@ -90,8 +92,9 @@ public class DataComparer extends BorderLayoutPanel
 			public void actionPerformed(ActionEvent arg0) {
 				source.setQuery();
 				target.setQuery();
-				final boolean generateMergeCsv = source.getSyntax()!=null && target.getSyntax()!=null;
-				if(!generateMergeCsv) return;
+				if(null == source.getSyntax() || null == target.getSyntax() ) {
+					return;
+				}
 				
 				final String columns = source.getDataType(DATA_TYPE.COLUMNS);
 				final String sourceAggregateText = source.getDataType(DATA_TYPE.AGGREGATES);
@@ -108,12 +111,12 @@ public class DataComparer extends BorderLayoutPanel
 					stream = new PrintStream(new FileOutputStream(file));
 					file.deleteOnExit();
 
-					stream.println(getColumnHeaderRow(columns, sourceAggregates, targetAggregates));
-					source.retrieveData(stream);
+					stream.println(getColumnHeaderRow(columns, sourceAggregates, targetAggregates, false));
+					source.retrieveData(stream, false);
 					if(!source.isQueryExecutionSuccess()){
 						return;
 					}
-					target.retrieveData(stream);
+					target.retrieveData(stream, false);
 					if(!target.isQueryExecutionSuccess()){
 						return;
 					}
@@ -174,17 +177,77 @@ public class DataComparer extends BorderLayoutPanel
 		return compare;
 	}
 	
+	public void generatePivotData() {
+		source.setQuery();
+		target.setQuery();
+		if(null == source.getSyntax() || null == target.getSyntax() ) {
+			return;
+		}
+		
+		final String columns = source.getDataType(DATA_TYPE.COLUMNS);
+		final String sourceAggregateText = source.getDataType(DATA_TYPE.AGGREGATES);
+		final String targetAggregateText = target.getDataType(DATA_TYPE.AGGREGATES);
+		final String[] sourceAggregates = sourceAggregateText!=null ? sourceAggregateText.split(",") : new String[0];
+		final String[] targetAggregates = targetAggregateText!=null ? targetAggregateText.split(",") : new String[0];
+
+		PrintStream stream = null;
+		try {
+			final File jarFile =
+				new File(Application.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+			final String absolutePath = jarFile.getAbsolutePath();
+			final String jarFileDirectory = absolutePath.substring(0,absolutePath.lastIndexOf(File.separator));
+			final String pivotFile=jarFileDirectory+File.separator+"lib"+File.separator+"pivotInputTable.js";
+
+			stream = new PrintStream(new FileOutputStream(new File(pivotFile)));
+			
+			stream.println("document.write('<table id=\"input\" border=\"1\">')");
+			stream.println("document.write('<thead><tr>')");
+			//header columns
+			stream.print("document.write('");
+			stream.print(getColumnHeaderRow(columns, sourceAggregates, targetAggregates, true));
+			stream.println("')");
+
+			stream.println("document.write('</tr></thead>')");
+			stream.println("document.write('<tbody>')");
+			//rows
+			source.retrieveData(stream, true);
+			if(!source.isQueryExecutionSuccess()){
+				return;
+			}
+			target.retrieveData(stream,true);
+			if(!target.isQueryExecutionSuccess()){
+				return;
+			}
+			stream.println("document.write('</tbody></table>')");
+			stream.close();
+			
+			
+			UriHelper.openUrl(new File(jarFileDirectory+File.separator+"lib"+File.separator+"PivotDemo.html"));
+		}
+		catch (FileNotFoundException e){
+			Application.println(e,true);
+		} catch (URISyntaxException e) {
+			Application.println(e,true);
+		} finally{
+			if(stream!=null){
+				stream.close();
+			}
+		}
+		
+		
+	}
+	
 	private String getColumnHeaderRow(final String columns,
-					final String[] sourceAggregates,final String[] targetAggregates){
+					final String[] sourceAggregates,final String[] targetAggregates, final boolean isHtml){
 		final StringBuffer buffer = new StringBuffer();
 		if(columns!=null && !columns.isEmpty()){
 			for(final String column : columns.split(",")){
-				buffer.append(column).append(";");
+				write(buffer,isHtml,column);
 			}
 		}
 		for(int i = 1; i<=sourceAggregates.length; i++){
-			buffer.append("SRC").append(i).append(";");
-			buffer.append("TGT").append(i).append(";");
+			write(buffer,isHtml,"SRC"+i);
+			write(buffer,isHtml,"TGT"+i);
 		}
 //		for(final String sourceAggr : sourceAggregates){
 //			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
@@ -192,10 +255,22 @@ public class DataComparer extends BorderLayoutPanel
 //				buffer.append(sourceAggrName).append(";");
 //			}
 //		}
-		if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
+		if(!isHtml && buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
 		return buffer.toString();
 	}
-
+	
+	private void write(final StringBuffer buffer, final boolean isHtml, final String text){
+		if(isHtml){
+			buffer.append("<th>");
+		}
+		buffer.append(text);
+		if(isHtml){
+			buffer.append("</th>");
+		}else{
+			buffer.append(CSV_SEP);
+		}
+	}
+	
 	private String getRealAggregateName(final String aggregate){
 		final StringTokenizer tokenizer = new StringTokenizer(aggregate);
 		if(tokenizer.hasMoreTokens()){
@@ -292,5 +367,7 @@ public class DataComparer extends BorderLayoutPanel
 		setup.setOnlyDifferentValues(onlyDifferentValues.isSelected());
 		return setup;
 	}
+
+	
 	
 }

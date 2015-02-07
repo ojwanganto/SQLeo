@@ -417,7 +417,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		return query;
 	}
 	
-	public void retrieveData(final PrintStream stream){
+	public void retrieveData(final PrintStream stream,final boolean isHtml){
 		queryExecutionSuccess = false;
 		final boolean isFullVersion = Application.isFullVersion();
 		final _TaskTarget target = new _TaskTarget(){
@@ -441,6 +441,17 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			public boolean printSelect() {
 				return false;
 			}
+			private void write(final StringBuffer buffer, final String text){
+				if(isHtml){
+					buffer.append("<td>");
+				}
+				buffer.append(text);
+				if(isHtml){
+					buffer.append("</td>");
+				}else{
+					buffer.append(DataComparer.CSV_SEP);
+				}
+			}
 			@Override
 			public void processResult(ResultSet rs) {
 				try {
@@ -459,11 +470,19 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 							} else {
 								vals[i] = vals[i].toString();
 							}
-							buffer.append(vals[i] + ";");
+							write(buffer, vals[i].toString());
 						}
-						if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
-						stream.println(buffer.toString());
 						
+						if(isHtml){
+							stream.print("document.write('<tr>");
+							stream.print(buffer.toString());
+							stream.println("</tr>')");
+						}else {
+							if(buffer.length() > 0){
+								buffer.deleteCharAt(buffer.length()-1);
+							}
+							stream.println(buffer.toString());
+						}
 						if(!isFullVersion){
 							rowCount++;
 							if(rowCount > LIMITED_ROWS_FOR_FREE_VERSION) {
@@ -484,6 +503,8 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 
 		new Task(this , target , isFullVersion ? 0 : LIMITED_ROWS_FOR_FREE_VERSION+1).run();
 	}
+	
+
 	
 	public boolean isQueryExecutionSuccess(){
 		return queryExecutionSuccess;
