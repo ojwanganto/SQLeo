@@ -109,21 +109,6 @@ public class ClientDataComparer extends MDIClient
 		Action saveAction = new ActionSave();
 		toolbar.getActionMap().put("save",saveAction);
 		toolbar.add(saveAction);
-		toolbar.addSeparator();
-		toolbar.add(new ActionGeneratePivotData());
-	}
-	
-	private class ActionGeneratePivotData extends MDIActions.AbstractBase {
-		private ActionGeneratePivotData() {
-			setIcon(Application.ICON_QUERY_LAUNCH);
-			setTooltip("Generate pivot html");
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent ae) {
-			control.generatePivotData();
-		}
-
 	}
 	
 	private class ActionOpen extends MDIActions.AbstractBase {

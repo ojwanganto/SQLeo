@@ -22,6 +22,8 @@ package com.sqleo.environment.ctrl;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -50,6 +52,7 @@ import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerCriteriaPane;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
 import com.sqleo.environment.mdi.ClientContent;
+import com.sqleo.environment.mdi.MDIActions;
 import com.sqleo.querybuilder.syntax.SQLParser;
 
 
@@ -75,6 +78,14 @@ public class DataComparer extends BorderLayoutPanel
 		onlyDifferentValues = new JCheckBox(I18n.getString("datacomparer.onlyDifferentValues", "Only different values"));
 		buttonPanel.add(onlyDifferentValues);
 		buttonPanel.add(getCompareButton());
+		final CommandButton startHtmlButton = new CommandButton(new ActionGeneratePivotData()); 
+		buttonPanel.add(startHtmlButton);
+		onlyDifferentValues.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+            	startHtmlButton.setEnabled(!onlyDifferentValues.isSelected());
+            }
+        });
 		add(buttonPanel, BorderLayout.PAGE_END);
 	}
 	
@@ -85,6 +96,17 @@ public class DataComparer extends BorderLayoutPanel
 	public DataComparerCriteriaPane getTarget(){
 		return target;
 	}
+	
+	private class ActionGeneratePivotData extends MDIActions.AbstractBase {
+		private ActionGeneratePivotData() {
+			setText(I18n.getString("datacomparer.startHtml","Start (HTML)"));
+		}
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			generatePivotData();
+		}
+	}
+	
 	
 	private JButton getCompareButton() {
 		final AbstractAction action = new AbstractAction(){
@@ -173,11 +195,11 @@ public class DataComparer extends BorderLayoutPanel
 			}
 		};
 		final CommandButton compare = new CommandButton(action);
-		compare.setText(I18n.getString("datacomparer.start","Start"));
+		compare.setText(I18n.getString("datacomparer.start","Start (Grid)"));
 		return compare;
 	}
 	
-	public void generatePivotData() {
+	private void generatePivotData() {
 		source.setQuery();
 		target.setQuery();
 		if(null == source.getSyntax() || null == target.getSyntax() ) {
