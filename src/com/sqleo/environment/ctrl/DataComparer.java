@@ -262,14 +262,15 @@ public class DataComparer extends BorderLayoutPanel
 	private String getColumnHeaderRow(final String columns,
 					final String[] sourceAggregates,final String[] targetAggregates, final boolean isHtml){
 		final StringBuffer buffer = new StringBuffer();
+		write(buffer,isHtml,"ENV");
 		if(columns!=null && !columns.isEmpty()){
 			for(final String column : columns.split(",")){
 				write(buffer,isHtml,column);
 			}
 		}
 		for(int i = 1; i<=sourceAggregates.length; i++){
-			write(buffer,isHtml,"SRC"+i);
-			write(buffer,isHtml,"TGT"+i);
+			write(buffer,isHtml,"AGG"+i);
+//			write(buffer,isHtml,"TGT"+i);
 		}
 //		for(final String sourceAggr : sourceAggregates){
 //			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);

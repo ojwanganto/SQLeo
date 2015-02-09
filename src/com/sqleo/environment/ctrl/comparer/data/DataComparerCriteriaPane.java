@@ -275,11 +275,17 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		final String[] targetAggregates = targetAggrText!=null ? targetAggrText.split(",") : new String[0];
 
 		final StringBuilder val = new StringBuilder();
-		boolean selectAppended = false;
+//		boolean selectAppended = false;
 		final boolean columnsGiven = cols!=null && !cols.isEmpty();
+		val.append("SELECT ");
+		if(this == owner.getSource()){
+			val.append("'SOURCE' AS ENV,");
+		}else{
+			val.append("'TARGET' AS ENV,");
+		}
+
 		if(columnsGiven){
-			val.append("SELECT ");
-			selectAppended = true;
+//			selectAppended = true;
 			val.append("\n"+cols);
 		}
 		final boolean aggregatesGiven;
@@ -289,31 +295,35 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			aggregatesGiven = targetAggrText!=null && !targetAggrText.isEmpty();
 		}
 		if(aggregatesGiven){
-			if(!selectAppended){
-				val.append("SELECT ");
-				selectAppended = true;
-			}else{
+//			if(!selectAppended){
+//				val.append("SELECT ");
+//				selectAppended = true;
+//			}else{
+//				val.append(",");
+//			}
+			if(columnsGiven){
 				val.append(",");
 			}
+
 			val.append("\n");
 			if(this == owner.getSource()){
 				int i = 1;
 				for(String aggrSplitted : sourceAggregates){
-					val.append(aggrSplitted).append(" AS SRC").append(i).append(",");
-					val.append("''").append(" AS TGT").append(i).append(",");
+					val.append(aggrSplitted).append(" AS AGG").append(i).append(",");
+//					val.append("''").append(" AS TGT").append(i).append(",");
 					i++;
 				}
 			}else{
 				int i = 1;
 				for(String aggrSplitted : targetAggregates){
-					val.append("''").append(" AS SRC").append(i).append(",");
-					val.append(aggrSplitted).append(" AS TGT").append(i).append(",");
+//					val.append("''").append(" AS SRC").append(i).append(",");
+					val.append(aggrSplitted).append(" AS AGG").append(i).append(",");
 					i++;
 				}
 			}
 			val.deleteCharAt(val.length()-1);
 		}
-		if(selectAppended){
+//		if(selectAppended){
 			final String tableFinalName =
 				getSchema()!=null ? getSchema()+"."+getTable() : getTable();
 			val.append("\nFROM ").append(tableFinalName);
@@ -323,7 +333,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			if(columnsGiven && aggregatesGiven){
 				val.append("\nGROUP BY ").append(cols);
 			}
-		}
+//		}
 		query = val.toString();
 	}
 	
