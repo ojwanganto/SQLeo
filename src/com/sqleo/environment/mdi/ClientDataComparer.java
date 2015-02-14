@@ -42,6 +42,7 @@ import com.sqleo.environment.ctrl.DataComparer;
 import com.sqleo.environment.io.FileHelper;
 
 
+
 public class ClientDataComparer extends MDIClient
 {
 	/**
@@ -67,18 +68,22 @@ public class ClientDataComparer extends MDIClient
 		}
 	};
 	
-	public ClientDataComparer()
+	ClientDataComparer()
 	{
 		super(DEFAULT_TITLE);
 		
 		setComponentCenter(control = new DataComparer());
 		control.setBorder(new EmptyBorder(2,2,2,2));
 
-		createToolbar();
 		initMenuActions();
 		
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		toolbar = new Toolbar(Toolbar.HORIZONTAL);
+		toolbar.add(new ActionOpen());
+		Action saveAction = new ActionSave();
+		toolbar.getActionMap().put("save",saveAction);
+		toolbar.add(saveAction);
 		
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		InternalFrameListener ifl = new InternalFrameAdapter() {
 			@Override
 			public void internalFrameDeactivated(InternalFrameEvent e) {
@@ -101,14 +106,6 @@ public class ClientDataComparer extends MDIClient
 	public final void setFileName(final String filename) {
 		this.filename = filename;
 		super.setTitle(DEFAULT_TITLE + " : " + filename);
-	}
-
-	private void createToolbar() {
-		toolbar = new Toolbar(Toolbar.HORIZONTAL);
-		toolbar.add(new ActionOpen());
-		Action saveAction = new ActionSave();
-		toolbar.getActionMap().put("save",saveAction);
-		toolbar.add(saveAction);
 	}
 	
 	private class ActionOpen extends MDIActions.AbstractBase {
@@ -171,6 +168,7 @@ public class ClientDataComparer extends MDIClient
 		}
 
 		private void saveAs() {
+
 			final String currentDirectory = Preferences.getString("lastDirectory",
 					System.getProperty("user.home"));
 			final JFileChooser fc = new JFileChooser(currentDirectory);
