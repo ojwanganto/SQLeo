@@ -27,7 +27,11 @@ package com.sqleo.environment.mdi;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -54,6 +58,7 @@ import com.sqleo.environment.ctrl.content.DialogStream;
 import com.sqleo.environment.ctrl.content.DialogUpdateCriteria;
 import com.sqleo.environment.ctrl.content.UpdateModel;
 import com.sqleo.environment.ctrl.define.TableMetaData;
+import com.sqleo.environment.io.PivotTableExport;
 import com.sqleo.querybuilder.DiagramLayout;
 import com.sqleo.querybuilder.QueryModel;
 import com.sqleo.querybuilder.syntax.SQLParser;
@@ -187,6 +192,7 @@ public class ClientContent extends MDIClientWithCRActions
 		toolbar.addSeparator();
 		toolbar.add(new ActionShowExportExcel());
 		toolbar.addSeparator();
+		toolbar.add(new ActionShowExportPivotHtml());
 		setComponentEast(toolbar);
 	}
 	@Override
@@ -363,6 +369,63 @@ public class ClientContent extends MDIClientWithCRActions
 		{
 			if(ClientContent.this.control.isBusy()) return;
 			DialogStream.showExportExcel(ClientContent.this.control);
+		}
+	}
+	private class ActionShowExportPivotHtml extends AbstractAction
+	{
+		ActionShowExportPivotHtml()
+		{
+			this.putValue(NAME, "Export pivot HTML...");
+			this.putValue(SMALL_ICON,
+					Application.resources.getIcon(Application.ICON_QB_GROUP));
+			putValue(SHORT_DESCRIPTION, "export pivot HTML...");
+		}
+
+		public void actionPerformed(ActionEvent ae)
+		{
+			if(ClientContent.this.control.isBusy() || control.getHandlerKey()==null) return;
+			final ConnectionHandler ch = ConnectionAssistant.getHandler(control.getHandlerKey());
+			try{
+				final Statement stmt = ch.get().createStatement();
+				final ResultSet rs = stmt.executeQuery(control.getQuery());
+				final int cols= rs.getMetaData().getColumnCount();
+				new PivotTableExport() {
+					@Override
+					protected void printRows(final PrintStream stream) throws SQLException {
+						Object[] vals = null;
+						while(rs.next()){
+							vals = new Object[cols];
+							for(int i=1; i<=cols;i++){
+								vals[i-1] = rs.getString(i);
+							}
+							final StringBuffer buffer = new StringBuffer();
+							for(int i=0; i<vals.length; i++){
+								if(vals[i]==null) {
+									vals[i]="";
+								} else {
+									vals[i] = vals[i].toString();
+								}
+								appendTableData(buffer, vals[i].toString());
+							}
+							writeTableRow(stream, buffer.toString());
+						}
+					}
+					
+					@Override
+					protected String getColumnHeaderRow() throws SQLException {
+						final StringBuffer columnHeader = new StringBuffer();
+						for(int i=1; i<=cols; i++)	{
+							final String val = rs.getMetaData().getColumnLabel(i);
+							appendTableHeader(columnHeader, val);
+						}
+						return columnHeader.toString();
+					}
+			};
+			}catch(SQLException sqle){
+				Application.println(sqle,true);
+			}
+
+
 		}
 	}
 		
