@@ -193,6 +193,7 @@ public class ClientDataComparer extends MDIClient
 				ClientDataComparer.this.control.getSetup();
 			FileHelper.saveAsXml(filename,setup);
 			Application.window.menubar.addMenuItemAtFirst(filename);
+			setFileName(filename);
 		}
 	}
 	

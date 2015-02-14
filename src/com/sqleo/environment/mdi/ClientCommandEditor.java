@@ -513,6 +513,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 				out.flush();
 				out.close();
 				Application.window.menubar.addMenuItemAtFirst(filename);
+				setFileName(filename);
 			} catch (BadLocationException ble) {
 				Application.println(ble, false);
 			} catch (IOException ioe) {
