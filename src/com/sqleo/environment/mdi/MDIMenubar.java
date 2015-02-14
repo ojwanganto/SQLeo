@@ -24,12 +24,21 @@
 
 package com.sqleo.environment.mdi;
 
+import java.awt.Desktop;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.Action;
@@ -38,6 +47,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -57,7 +67,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.sqleo.common.util.I18n;
-import com.sqleo.common.util.UriHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 
@@ -172,9 +181,10 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					try {
-						UriHelper.openURI(e.getURL().toURI());
-					} catch (URISyntaxException e1) {
-						e1.printStackTrace();
+						Desktop.getDesktop().browse(e.getURL().toURI());
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(null,"Cannot connect to url",
+								"Error opening link "+e.getURL(), JOptionPane.WARNING_MESSAGE);
 					}
 				}
 			}

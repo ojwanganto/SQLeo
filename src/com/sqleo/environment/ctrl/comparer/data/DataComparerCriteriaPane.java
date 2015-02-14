@@ -275,17 +275,11 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		final String[] targetAggregates = targetAggrText!=null ? targetAggrText.split(",") : new String[0];
 
 		final StringBuilder val = new StringBuilder();
-//		boolean selectAppended = false;
+		boolean selectAppended = false;
 		final boolean columnsGiven = cols!=null && !cols.isEmpty();
-		val.append("SELECT ");
-		if(this == owner.getSource()){
-			val.append("'SOURCE' AS ENV,");
-		}else{
-			val.append("'TARGET' AS ENV,");
-		}
-
 		if(columnsGiven){
-//			selectAppended = true;
+			val.append("SELECT ");
+			selectAppended = true;
 			val.append("\n"+cols);
 		}
 		final boolean aggregatesGiven;
@@ -295,35 +289,31 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			aggregatesGiven = targetAggrText!=null && !targetAggrText.isEmpty();
 		}
 		if(aggregatesGiven){
-//			if(!selectAppended){
-//				val.append("SELECT ");
-//				selectAppended = true;
-//			}else{
-//				val.append(",");
-//			}
-			if(columnsGiven){
+			if(!selectAppended){
+				val.append("SELECT ");
+				selectAppended = true;
+			}else{
 				val.append(",");
 			}
-
 			val.append("\n");
 			if(this == owner.getSource()){
 				int i = 1;
 				for(String aggrSplitted : sourceAggregates){
-					val.append(aggrSplitted).append(" AS AGG").append(i).append(",");
-//					val.append("''").append(" AS TGT").append(i).append(",");
+					val.append(aggrSplitted).append(" AS SRC").append(i).append(",");
+					val.append("''").append(" AS TGT").append(i).append(",");
 					i++;
 				}
 			}else{
 				int i = 1;
 				for(String aggrSplitted : targetAggregates){
-//					val.append("''").append(" AS SRC").append(i).append(",");
-					val.append(aggrSplitted).append(" AS AGG").append(i).append(",");
+					val.append("''").append(" AS SRC").append(i).append(",");
+					val.append(aggrSplitted).append(" AS TGT").append(i).append(",");
 					i++;
 				}
 			}
 			val.deleteCharAt(val.length()-1);
 		}
-//		if(selectAppended){
+		if(selectAppended){
 			final String tableFinalName =
 				getSchema()!=null ? getSchema()+"."+getTable() : getTable();
 			val.append("\nFROM ").append(tableFinalName);
@@ -333,7 +323,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			if(columnsGiven && aggregatesGiven){
 				val.append("\nGROUP BY ").append(cols);
 			}
-//		}
+		}
 		query = val.toString();
 	}
 	
@@ -427,7 +417,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		return query;
 	}
 	
-	public void retrieveData(final PrintStream stream,final boolean isHtml){
+	public void retrieveData(final PrintStream stream){
 		queryExecutionSuccess = false;
 		final boolean isFullVersion = Application.isFullVersion();
 		final _TaskTarget target = new _TaskTarget(){
@@ -451,17 +441,6 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			public boolean printSelect() {
 				return false;
 			}
-			private void write(final StringBuffer buffer, final String text){
-				if(isHtml){
-					buffer.append("<td>");
-				}
-				buffer.append(text);
-				if(isHtml){
-					buffer.append("</td>");
-				}else{
-					buffer.append(DataComparer.CSV_SEP);
-				}
-			}
 			@Override
 			public void processResult(ResultSet rs) {
 				try {
@@ -480,19 +459,11 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 							} else {
 								vals[i] = vals[i].toString();
 							}
-							write(buffer, vals[i].toString());
+							buffer.append(vals[i] + ";");
 						}
+						if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
+						stream.println(buffer.toString());
 						
-						if(isHtml){
-							stream.print("document.write('<tr>");
-							stream.print(buffer.toString());
-							stream.println("</tr>')");
-						}else {
-							if(buffer.length() > 0){
-								buffer.deleteCharAt(buffer.length()-1);
-							}
-							stream.println(buffer.toString());
-						}
 						if(!isFullVersion){
 							rowCount++;
 							if(rowCount > LIMITED_ROWS_FOR_FREE_VERSION) {
@@ -513,8 +484,6 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 
 		new Task(this , target , isFullVersion ? 0 : LIMITED_ROWS_FOR_FREE_VERSION+1).run();
 	}
-	
-
 	
 	public boolean isQueryExecutionSuccess(){
 		return queryExecutionSuccess;

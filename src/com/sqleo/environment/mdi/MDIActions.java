@@ -20,11 +20,14 @@
 
 package com.sqleo.environment.mdi;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -32,17 +35,19 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
+import com.sqleo.common.gui.TextView;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.I18n;
-import com.sqleo.common.util.UriHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment._Constants;
 import com.sqleo.environment.ctrl.content.AbstractActionContent;
 import com.sqleo.environment.ctrl.define.TableMetaData;
+import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.io.FileStreamSQL;
 import com.sqleo.querybuilder.DiagramLayout;
+import com.sqleo.querybuilder.QueryStyledDocument;
 import com.sqleo.querybuilder.syntax.QueryExpression;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
@@ -90,7 +95,28 @@ public abstract class MDIActions implements _Constants
 		public HowToUse(){super(I18n.getString("application.menu.help.howtouse","How to use..."));}
 		public void actionPerformed(ActionEvent ae)
 		{
-			UriHelper.openUrl(Application.WEB);
+
+			URI uri = null;
+			try {
+				uri = new URI(Application.WEB);
+			} catch (URISyntaxException e1) {
+				e1.printStackTrace();
+			}
+			if (Desktop.isDesktopSupported() && uri!=null) {
+				Desktop desktop = Desktop.getDesktop();
+				try {
+					desktop.browse(uri);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null,
+							"Failed to launch the link, " +
+							"your computer is likely misconfigured.",
+							"Cannot Launch Link "+Application.WEB,JOptionPane.WARNING_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Java is not able to launch links on your computer.",
+						"Cannot Launch Link "+Application.WEB,JOptionPane.WARNING_MESSAGE);
+			}
 		}
 	}
 	public static class NewQuery extends AbstractBase
