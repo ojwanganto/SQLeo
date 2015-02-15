@@ -377,7 +377,7 @@ public class ClientContent extends MDIClientWithCRActions
 		{
 			this.putValue(NAME, "Export pivot HTML...");
 			this.putValue(SMALL_ICON,
-					Application.resources.getIcon(Application.ICON_QB_GROUP));
+					Application.resources.getIcon(Application.ICON_QB_SELECT));
 			putValue(SHORT_DESCRIPTION, "export pivot HTML...");
 		}
 

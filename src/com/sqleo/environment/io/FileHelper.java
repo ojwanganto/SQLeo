@@ -96,5 +96,13 @@ public class FileHelper {
 		}
 		return null;
 	}
+	
+	public static String getFileExtension(final String fileName){
+	    int lastIndexOf = fileName.lastIndexOf(".");
+	    if (lastIndexOf == -1) {
+	        return ""; // empty extension
+	    }
+	    return fileName.substring(lastIndexOf+1);
+	}
 		
 }

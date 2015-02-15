@@ -41,6 +41,7 @@ import com.sqleo.environment.Preferences;
 import com.sqleo.environment._Constants;
 import com.sqleo.environment.ctrl.content.AbstractActionContent;
 import com.sqleo.environment.ctrl.define.TableMetaData;
+import com.sqleo.environment.io.FileHelper;
 import com.sqleo.environment.io.FileStreamSQL;
 import com.sqleo.querybuilder.DiagramLayout;
 import com.sqleo.querybuilder.syntax.QueryExpression;
@@ -247,12 +248,17 @@ public abstract class MDIActions implements _Constants
 				return;
 			}
 			Application.window.menubar.addMenuItemAtFirst(fileName);
-
+			final boolean isXmlFile = FileHelper.getFileExtension(fileName).equalsIgnoreCase("xml");
+			final String[] options = new String[ isXmlFile ? 3 : 2 ];
+			options[0] = "Query builder";
+			options[1] = ClientCommandEditor.DEFAULT_TITLE;
+			if(isXmlFile){
+				options[2] = ClientDataComparer.DEFAULT_TITLE;
+			}
 			final Object selectedWindow
 				= JOptionPane.showInputDialog(Application.window,I18n.getString("application.message.loadQueryInWindow","Load file in:")
-					,Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,
-					new String[]{"Query builder", ClientCommandEditor.DEFAULT_TITLE 
-					, ClientDataComparer.DEFAULT_TITLE},null);
+					,Application.PROGRAM,JOptionPane.PLAIN_MESSAGE,null,options
+					,null);
 			
 			if(ClientDataComparer.DEFAULT_TITLE.equals(selectedWindow.toString())){
 				final Action action = Application.window.getAction(MDIActions.ACTION_MDI_SHOW_DATA_COMPARER);

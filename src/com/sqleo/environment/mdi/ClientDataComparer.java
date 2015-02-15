@@ -123,6 +123,7 @@ public class ClientDataComparer extends MDIClient
 			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			fc.setMultiSelectionEnabled(false);
 			fc.setFileFilter(setUpFileFilter);
+			fc.setAcceptAllFileFilterUsed(false);
 
 			if (fc.showOpenDialog(Application.window) == JFileChooser.APPROVE_OPTION) {
 				Preferences.set("lastDirectory", fc.getCurrentDirectory()
@@ -174,6 +175,7 @@ public class ClientDataComparer extends MDIClient
 			final JFileChooser fc = new JFileChooser(currentDirectory);
 			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			fc.setFileFilter(setUpFileFilter);
+			fc.setAcceptAllFileFilterUsed(false);
 
 			if (fc.showSaveDialog(Application.window) == JFileChooser.APPROVE_OPTION) {
 				Preferences.set("lastDirectory", fc.getCurrentDirectory()
