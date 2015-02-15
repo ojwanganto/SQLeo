@@ -95,6 +95,7 @@ public interface _Constants
 
 	public static final String ICON_QUERY_LAUNCH	= "icon.151";
 	public static final String ICON_DIAGRAM_SAVE	= "icon.152";
+	public static final String ICON_EXPORT_PIVOT	= "icon.153";
 	
 	public static final String ICON_CONTENT_INSERT	= "icon.160";
 	public static final String ICON_CONTENT_DELETE	= "icon.161";

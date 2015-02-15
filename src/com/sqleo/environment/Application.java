@@ -123,6 +123,7 @@ public class Application extends Appearance implements _Constants,_Version
 		resources.loadIcon(ICON_QUERY_DESIGNER,"/images/chart_organisation.png");
 
 		resources.loadIcon(ICON_SQLEO,"/images/sqleo.png");
+		resources.loadIcon(ICON_EXPORT_PIVOT, "/images/layout.png");
 		
 		//query builder tree icons 
 		resources.loadIcon(ICON_QB_QUERY, "/images/page_white_database.png", Icon_scaling);
