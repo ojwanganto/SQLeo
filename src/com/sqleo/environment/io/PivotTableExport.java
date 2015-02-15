@@ -28,6 +28,7 @@ import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 
+import com.sqleo.common.util.Text;
 import com.sqleo.common.util.UriHelper;
 import com.sqleo.environment.Application;
 
@@ -44,15 +45,12 @@ public abstract class PivotTableExport {
 			stream = new PrintStream(new FileOutputStream(new File(pivotFile)));
 
 			stream.println("document.write('<table id=\"input\" border=\"1\">')");
-			stream.println("document.write('<thead><tr>')");
-			//print columns
-			stream.print("document.write('");
-			stream.print(getColumnHeaderRow());
-			stream.println("')");
-			stream.println("document.write('</tr></thead>')");
-			stream.println("document.write('<tbody>')");
 
+			//print columns
+			printHeaderRow(stream);
+			
 			//print rows
+			stream.println("document.write('<tbody>')");
 			printRows(stream);
 			stream.println("document.write('</tbody></table>')");
 			stream.close();
@@ -71,21 +69,29 @@ public abstract class PivotTableExport {
 		}
 	}
 
-	protected abstract String getColumnHeaderRow() throws SQLException;
+	protected abstract void printHeaderRow(final PrintStream stream) throws SQLException;
 
 	protected abstract void printRows(final PrintStream stream) throws SQLException;
 	
-	protected void appendTableHeader(final StringBuffer buffer, final String text){
-		buffer.append("<th>").append(text).append("</th>");
+	protected void writeTableHeaderRow(final PrintStream stream,final Object[] vals){
+		stream.print("document.write('<thead><tr>");
+		final StringBuffer buffer = new StringBuffer();
+		for(int i = 0 ; i < vals.length ; i++){
+			buffer.append("<th>").append(Text.escapeHTML(vals[i].toString())).append("</th>");
+		}
+		stream.print(buffer.toString());
+		stream.println("</tr></thead>')");
 	}
 	
-	protected void appendTableData(final StringBuffer buffer, final String text){
-		buffer.append("<td>").append(text).append("</td>");
-	}
-	
-	protected void writeTableRow(final PrintStream stream,final String row){
+	protected void writeTableRow(final PrintStream stream,final Object[] vals){
 		stream.print("document.write('<tr>");
-		stream.print(row);
+		final StringBuffer buffer = new StringBuffer();
+		for(int i = 0 ; i < vals.length ; i++){
+			buffer.append("<td>").append(Text.escapeHTML(vals[i].toString())).append("</td>");
+		}
+		stream.print(buffer.toString());
 		stream.println("</tr>')");
 	}
+	
+
 }

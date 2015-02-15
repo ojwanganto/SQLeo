@@ -326,7 +326,7 @@ public class MaskExport extends AbstractMaskPerform
 					for(int col=1; col<=mtd.getColumnCount(); col++)
 					{
 						// Ticket #171 replace getColumnName per getColumnLabel
-						print("<th>" + mtd.getColumnLabel(col) + "</th>");
+						print("<th>" + Text.escapeHTML(mtd.getColumnLabel(col)) + "</th>");
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -343,7 +343,7 @@ public class MaskExport extends AbstractMaskPerform
 			for(int i=0; i<vals.length; i++)
 			{
 				String val = vals[i] == null ? "null" : vals[i].toString();
-				print("<td>" + val + "</td>");
+				print("<td>" + Text.escapeHTML(val) + "</td>");
 			}		
 			println("</tr>");
 		}

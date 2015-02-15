@@ -137,4 +137,21 @@ public class Text
 		
 		return sb.toString();
 	}
+	
+	public static String escapeHTML(final String s) {
+		final int slen = s.length();
+	    final StringBuilder out = new StringBuilder(Math.max(16, slen));
+	    char c;
+	    for (int i = 0; i < slen; i++) {
+	        c = s.charAt(i);
+	        if (c > 127 || c == '"' || c == '<' || c == '>' || c == '&') {
+	            out.append("&#");
+	            out.append((int) c);
+	            out.append(';');
+	        } else {
+	            out.append(c);
+	        }
+	    }
+	    return out.toString();
+	}
 }

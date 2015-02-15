@@ -389,7 +389,24 @@ public class ClientContent extends MDIClientWithCRActions
 				final Statement stmt = ch.get().createStatement();
 				final ResultSet rs = stmt.executeQuery(control.getQuery());
 				final int cols= rs.getMetaData().getColumnCount();
+				
 				new PivotTableExport() {
+					
+					@Override
+					protected void printHeaderRow(final PrintStream stream) throws SQLException {
+						final Object[] vals = new Object[cols];
+						for(int i=1; i<=cols; i++)	{
+							vals[i-1] = rs.getMetaData().getColumnLabel(i);
+							if(vals[i-1]==null) {
+								vals[i-1]="";
+							} else {
+								vals[i-1] = vals[i-1].toString();
+							}
+						}
+						writeTableHeaderRow(stream, vals);
+					}
+					
+					
 					@Override
 					protected void printRows(final PrintStream stream) throws SQLException {
 						Object[] vals = null;
@@ -397,30 +414,20 @@ public class ClientContent extends MDIClientWithCRActions
 							vals = new Object[cols];
 							for(int i=1; i<=cols;i++){
 								vals[i-1] = rs.getString(i);
-							}
-							final StringBuffer buffer = new StringBuffer();
-							for(int i=0; i<vals.length; i++){
-								if(vals[i]==null) {
-									vals[i]="";
+								if(vals[i-1]==null) {
+									vals[i-1]="";
 								} else {
-									vals[i] = vals[i].toString();
+									vals[i-1] = vals[i-1].toString();
 								}
-								appendTableData(buffer, vals[i].toString());
 							}
-							writeTableRow(stream, buffer.toString());
+							writeTableRow(stream, vals);
 						}
 					}
 					
-					@Override
-					protected String getColumnHeaderRow() throws SQLException {
-						final StringBuffer columnHeader = new StringBuffer();
-						for(int i=1; i<=cols; i++)	{
-							final String val = rs.getMetaData().getColumnLabel(i);
-							appendTableHeader(columnHeader, val);
-						}
-						return columnHeader.toString();
-					}
+
 			};
+			
+			rs.close();
 			}catch(SQLException sqle){
 				Application.println(sqle,true);
 			}
