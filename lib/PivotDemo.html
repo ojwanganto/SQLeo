@@ -3,9 +3,11 @@
 	<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Pivot Demo</title>
         <link rel="stylesheet" type="text/css" href="./PivotDemo_files/pivot.css">
+		<script type="text/javascript" src="./PivotDemo_files/jsapi"></script>
         <script type="text/javascript" src="./PivotDemo_files/jquery-1.8.3.min.js"></script>
         <script type="text/javascript" src="./PivotDemo_files/jquery-ui-1.9.2.custom.min.js"></script>
         <script type="text/javascript" src="./PivotDemo_files/pivot.js"></script>
+		<script type="text/javascript" src="./PivotDemo_files/gchart_renderers.js"></script>
         <style>
             * {font-family: Verdana;}
         </style>
@@ -22,9 +24,17 @@
 		</div>
 		
 		<script type="text/javascript">
+			google.load("visualization", "1", {packages:["corechart", "charteditor"]});
             $(function(){
+				var derivers = $.pivotUtilities.derivers;
+                var renderers = $.extend($.pivotUtilities.renderers, 
+                    $.pivotUtilities.gchart_renderers);
+
 				var input = $("#input");
-                $("#output").pivotUI(input);
+                $("#output").pivotUI(input, {
+					renderers: renderers
+				}
+				);
              });
         </script>
 	</body>
