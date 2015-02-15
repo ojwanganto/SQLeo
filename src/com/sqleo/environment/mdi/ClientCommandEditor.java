@@ -243,6 +243,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		Preferences.set("editor.limit.rows", new Integer(limit));
 		Preferences.set("editor.limit.enabled",
 				new Boolean(cbxLimit.isSelected()));
+		Preferences.set("editor.gridoutput.enabled", new Boolean(cbxGridOutput.isSelected()));
 
 		super.dispose();
 	}
@@ -272,6 +273,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 				true));
 		txtLimit.setText(String.valueOf(Preferences.getInteger(
 				"editor.limit.rows", 100)));
+		cbxGridOutput.setSelected(Preferences.getBoolean("editor.gridoutput.enabled", true));
 	}
 
 	public int getLimitRows() {
@@ -293,7 +295,8 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 	@Override
 	public void onConnectionOpened(String keycah) {
-		cbx.addItem(keycah);
+		cbx.insertItemAt(keycah, 0);
+		cbx.setSelectedIndex(0);
 	}
 
 	public String getActiveConnection() {
