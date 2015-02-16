@@ -144,7 +144,7 @@ public class Text
 	    char c;
 	    for (int i = 0; i < slen; i++) {
 	        c = s.charAt(i);
-	        if (c > 127 || c == '"' || c == '<' || c == '>' || c == '&') {
+	        if (c > 127 || c == '"' || c == '\'' || c == '<' || c == '>' || c == '&') {
 	            out.append("&#");
 	            out.append((int) c);
 	            out.append(';');
