@@ -33,6 +33,17 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2015.02.rc1.zip: 2015-02-20
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.02/
+
+	262 Command Dditor - store gridoutput preference, display latest connection in connections list
+	258 Sending query result to pivottable.html
+	257 Command Editor/​ Data comparer: display current opened file name in title
+
+
 SQLeoVQB.2015.01.rc1.zip: 2015-01-25
 
   Thanks to Anudeep Gade for his contribution to this release
