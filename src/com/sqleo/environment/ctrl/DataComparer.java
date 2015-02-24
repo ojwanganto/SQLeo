@@ -245,18 +245,18 @@ public class DataComparer extends BorderLayoutPanel
 		}
 		final int totalAggregates = sourceAggregates.length;
 		for(int i = 1; i<=totalAggregates; i++){
-			result.append("MAX(SRC").append(i).append(") as agg_SOURCE").append(i).append(",");
-			result.append("MAX(TGT").append(i).append(") as agg_TARGET").append(i);
+			result.append("MAX(SRC").append(i).append(") as agg").append(i).append("_SOURCE,");
+			result.append("MAX(TGT").append(i).append(") as agg").append(i).append("_TARGET,");
+			// ticket #260 add diff status for each line (can help when exporting in excel AND pitvot table
+			result.append("case when MAX(SRC").append(i).append(")='' then 'TGT'");
+			result.append(" when MAX(TGT").append(i).append(")='' then 'SRC'");	
+			result.append(" when MAX(SRC").append(i).append(")=").append("MAX(TGT").append(i).append(")||'' then 'EQU'");	
+			result.append(" else 'DIFF' end as DIFF").append(i);	
 			if(i<totalAggregates){
 				result.append(",\n");
 			}
 		}
-//		for(final String sourceAggr : sourceAggregates){
-//			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
-//			if(sourceAggrName!=null){
-//				result.append("\n,MAX(").append(sourceAggrName).append(")");
-//			}
-//		}
+
 		result.append("\nFROM ").append(mergedTableName).append(" ").append(tableAlias);
 		if(colsGiven){
 			result.append("\nGROUP BY ").append(colsWithAlias.toString());
