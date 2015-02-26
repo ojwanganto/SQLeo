@@ -57,6 +57,7 @@ public class DataComparer extends BorderLayoutPanel
 	private DataComparerCriteriaPane source;
 	private DataComparerCriteriaPane target;
 	private JCheckBox onlyDifferentValues;
+	private JCheckBox addDiffStatusInOutput;
 	
 	public DataComparer()
 	{
@@ -72,6 +73,8 @@ public class DataComparer extends BorderLayoutPanel
 		final JPanel buttonPanel = new JPanel(); 
 		onlyDifferentValues = new JCheckBox(I18n.getString("datacomparer.onlyDifferentValues", "Only different values"));
 		buttonPanel.add(onlyDifferentValues);
+		addDiffStatusInOutput = new JCheckBox(I18n.getString("datacomparer.addDiffStatusInOutput", "Add diff status in output"));
+		buttonPanel.add(addDiffStatusInOutput);
 		buttonPanel.add(getCompareButton());
 		add(buttonPanel, BorderLayout.PAGE_END);
 	}
@@ -141,17 +144,11 @@ public class DataComparer extends BorderLayoutPanel
 					messageBuilder.append("\n\nThen RE-LAUNCH the data comparer!");
 					Application.alertAsText(messageBuilder.toString());
 				}else{
-					// open connection to csvjdbc using merged.csv
-					// open content window on above connection and run merged query
-					try {
-						Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
-								csvjdbcKeych, "DataComparer", mergedQuery));
-						final ClientContent client = 
-							new ClientContent(csvjdbcKeych, SQLParser.toQueryModel(mergedQuery),null);
-						Application.window.add(client);
-					} catch (IOException e) {
-						Application.println(e, true);
-					}
+					Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
+							csvjdbcKeych, "DataComparer", mergedQuery));
+					final ClientContent client = 
+						new ClientContent(csvjdbcKeych, mergedQuery ,true);
+					Application.window.add(client);
 				}
 			}
 			
@@ -246,12 +243,14 @@ public class DataComparer extends BorderLayoutPanel
 		final int totalAggregates = sourceAggregates.length;
 		for(int i = 1; i<=totalAggregates; i++){
 			result.append("MAX(SRC").append(i).append(") as agg").append(i).append("_SOURCE,");
-			result.append("MAX(TGT").append(i).append(") as agg").append(i).append("_TARGET,");
+			result.append("MAX(TGT").append(i).append(") as agg").append(i).append("_TARGET");
 			// ticket #260 add diff status for each line (can help when exporting in excel AND pitvot table
-			result.append("case when MAX(SRC").append(i).append(")='' then 'TGT'");
-			result.append(" when MAX(TGT").append(i).append(")='' then 'SRC'");	
-			result.append(" when MAX(SRC").append(i).append(")=").append("MAX(TGT").append(i).append(")||'' then 'EQU'");	
-			result.append(" else 'DIFF' end as DIFF").append(i);	
+			if(addDiffStatusInOutput.isSelected()){
+				result.append(",\n").append(" case when MAX(SRC").append(i).append(")='' then 'TARGET'");
+				result.append(" when MAX(TGT").append(i).append(")='' then 'SOURCE'");	
+				result.append(" when MAX(SRC").append(i).append(")!=").append("MAX(TGT").append(i).append(") then 'DIFF'");	
+				result.append(" else 'EQU' end as diff");	
+			}
 			if(i<totalAggregates){
 				result.append(",\n");
 			}
@@ -283,6 +282,7 @@ public class DataComparer extends BorderLayoutPanel
 		source.loadSetup(setup.getSourcePanelConfig());
 		target.loadSetup(setup.getTargetPanelConfig());
 		onlyDifferentValues.setSelected(setup.isOnlyDifferentValues());
+		addDiffStatusInOutput.setSelected(setup.isAddDiffStatusInOutput());
 	}
 
 	public DataComparerConfig getSetup() {
@@ -290,6 +290,7 @@ public class DataComparer extends BorderLayoutPanel
 		setup.setSourcePanelConfig(source.getSetup());
 		setup.setTargetPanelConfig(target.getSetup());
 		setup.setOnlyDifferentValues(onlyDifferentValues.isSelected());
+		setup.setAddDiffStatusInOutput(addDiffStatusInOutput.isSelected());
 		return setup;
 	}
 	

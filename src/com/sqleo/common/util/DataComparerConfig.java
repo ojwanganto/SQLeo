@@ -38,6 +38,9 @@ public class DataComparerConfig {
 
 	@XmlElement(name = "onlyDifferentValues")
 	private boolean onlyDifferentValues;
+	
+	@XmlElement(name = "addDiffStatusInOutput")
+	private boolean addDiffStatusInOutput;
 
 	public DataComparerPanelConfig getSourcePanelConfig() {
 		return sourcePanelConfig;
@@ -61,6 +64,14 @@ public class DataComparerConfig {
 
 	public void setOnlyDifferentValues(boolean onlyDifferentValues) {
 		this.onlyDifferentValues = onlyDifferentValues;
+	}
+
+	public void setAddDiffStatusInOutput(boolean addDiffStatusInOutput) {
+		this.addDiffStatusInOutput = addDiffStatusInOutput;
+	}
+
+	public boolean isAddDiffStatusInOutput() {
+		return addDiffStatusInOutput;
 	}
 
 	
