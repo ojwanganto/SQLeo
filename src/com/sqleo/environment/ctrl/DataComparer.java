@@ -246,10 +246,10 @@ public class DataComparer extends BorderLayoutPanel
 			result.append("MAX(TGT").append(i).append(") as agg").append(i).append("_TARGET");
 			// ticket #260 add diff status for each line (can help when exporting in excel AND pitvot table
 			if(addDiffStatusInOutput.isSelected()){
-				result.append(",\n").append(" case when MAX(SRC").append(i).append(")='' then 'TARGET'");
-				result.append(" when MAX(TGT").append(i).append(")='' then 'SOURCE'");	
-				result.append(" when MAX(SRC").append(i).append(")!=").append("MAX(TGT").append(i).append(") then 'DIFF'");	
-				result.append(" else 'EQU' end as diff");	
+				result.append(",\n").append(" case when MAX(SRC").append(i).append(")='' then 'TGT'");
+				result.append(" when MAX(TGT").append(i).append(")='' then 'SRC'");	
+				result.append(" when MAX(SRC").append(i).append(")=").append("MAX(TGT").append(i).append(")||'' then 'EQU'");	
+				result.append(" else 'DIFF' end as DIFF").append(i);	
 			}
 			if(i<totalAggregates){
 				result.append(",\n");
