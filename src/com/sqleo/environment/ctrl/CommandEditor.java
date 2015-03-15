@@ -33,6 +33,7 @@ import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.util.Date;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
@@ -97,7 +98,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent evt) {
-				adjustSplit();
+				adjustSplitPaneDivider();
 			}
 		});
 
@@ -262,7 +263,12 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					.getClient(ClientCommandEditor.DEFAULT_TITLE);
 
 			if(cce.isGridOutput() && sql.toUpperCase().startsWith("SELECT")){
+				Vector<Integer> prevColWidths = null;
 				if(gridClient!=null){
+					gridClient.getControl().getView().cacheColumnWidths();
+					if(!gridClient.getControl().getView().getColumnWidths().isEmpty()){
+						prevColWidths = new Vector<Integer>(gridClient.getControl().getView().getColumnWidths());
+					}
 					gridClient.dispose();
 				}
 				gridClient = new ClientContent(source.getHandlerKey(), sql,true);
@@ -272,7 +278,9 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				gridPanel.setComponentNorth(gridClient.getContentPane().getComponent(1)); 
 				//add content view
 				ContentPane content = (ContentPane)gridClient.getContentPane().getComponent(0);
-				
+				if(prevColWidths!=null){
+					content.getView().setColumnWidths(prevColWidths);
+				}
 				//remove sql status component
 				BorderLayoutPanel pnlSouth = (BorderLayoutPanel)content.getComponent(0);
 				pnlSouth.remove(pnlSouth.getComponent(2));
@@ -290,9 +298,9 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				Application.window.menubar.internalFrameActivated(
 						new InternalFrameEvent(cce,0));
 				
-				adjustSplit();
+				adjustSplitPaneDivider();
 			}else{
-				adjustSplit();
+				adjustSplitPaneDivider();
 				split.setBottomComponent(response);
 				String keycah = "*** " + source.getHandlerKey() + " ***";
 				CommandEditor.this.response.append("\n" + keycah);
@@ -310,7 +318,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		
 	}
 	
-	private void adjustSplit(){
+	private void adjustSplitPaneDivider(){
 		SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
