@@ -48,15 +48,12 @@ import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.TextView;
 import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.environment.Application;
-import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.ctrl.editor.Task;
 import com.sqleo.environment.ctrl.editor._TaskSource;
 import com.sqleo.environment.ctrl.editor._TaskTarget;
 import com.sqleo.environment.mdi.ClientCommandEditor;
 import com.sqleo.environment.mdi.ClientContent;
-import com.sqleo.environment.mdi.ClientQueryBuilder;
-import com.sqleo.environment.mdi.DialogPreferences;
 
 
 public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
@@ -173,11 +170,38 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			if (requestString == null || requestString.trim().length() == 0) {
 				// line
 				try {
-					int line = request.getLineOfOffset(request
+					int currentLine = request.getLineOfOffset(request
 							.getCaretPosition());
-
-					request.setSelectionStart(request.getLineStartOffset(line));
-					request.setSelectionEnd(request.getLineEndOffset(line));
+					int totalLines = request.getLineCount();
+					int start = currentLine, end = currentLine;
+					int currentStartOffset = request.getLineStartOffset(currentLine);
+					int currentEndOffset = request.getLineEndOffset(currentLine);
+					int startOffset = currentStartOffset;
+					int endOffset = currentEndOffset;
+					//find previous line with ; or beginning
+					start--;
+					while(start>=0){
+						startOffset = request.getLineStartOffset(start);
+						currentEndOffset = request.getLineEndOffset(start);
+						final String lineText = request.getDocument().getText(startOffset,currentEndOffset-startOffset);
+						if(lineText!=null && lineText.trim().endsWith(";")){
+							startOffset = currentEndOffset+1;
+							break;
+						}
+						start--;
+					};
+					//find current line with ; or end 
+					do{
+						final String lineText = request.getDocument().getText(currentStartOffset,endOffset-currentStartOffset);
+						if(lineText!=null && lineText.trim().endsWith(";")){
+							break;
+						}
+						end++;
+						currentStartOffset = request.getLineStartOffset(end);
+						endOffset = request.getLineEndOffset(end);
+					}while(end < totalLines);
+					request.setSelectionStart(startOffset);
+					request.setSelectionEnd(endOffset);
 					requestString = request.getSelectedText();
 				} catch (BadLocationException e) {
 					Application.println(e, false);
