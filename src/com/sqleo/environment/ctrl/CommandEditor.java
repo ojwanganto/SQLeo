@@ -35,9 +35,11 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 import javax.swing.AbstractAction;
+import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.MutableAttributeSet;
@@ -276,6 +278,18 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				pnlSouth.remove(pnlSouth.getComponent(2));
 				gridPanel.setComponentCenter(content);
 				split.setBottomComponent(gridPanel);
+				
+				//append client menu actions inside builder menu actions
+				int len1 = cce.getMenuActions().length;
+				if(len1 == 6){
+					JMenuItem[] allMenuItems = new JMenuItem[len1+1];
+					System.arraycopy(cce.getMenuActions(), 0, allMenuItems, 0, len1);
+					allMenuItems[len1] = gridClient.getMenuActions()[6];
+				    cce.setMenuActions(allMenuItems);
+				}
+				Application.window.menubar.internalFrameActivated(
+						new InternalFrameEvent(cce,0));
+				
 				adjustSplit();
 			}else{
 				adjustSplit();

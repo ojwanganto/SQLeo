@@ -214,6 +214,9 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
                	cbxLimit.setEnabled(!cbxGridOutput.isSelected());
                	cbxLimit.setSelected(!cbxGridOutput.isSelected());
                	txtLimit.setEnabled(!cbxGridOutput.isSelected());
+               	if(m_actions.length == 7){
+               		m_actions[6].setEnabled(cbxGridOutput.isSelected());
+               	}
             }
         });
 		toolbar.add(cbxGridOutput);
@@ -255,6 +258,9 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	@Override
 	public JMenuItem[] getMenuActions() {
 		return m_actions;
+	}
+	public void setMenuActions(JMenuItem[] mActions) {
+		this.m_actions = mActions;
 	}
 
 	@Override
