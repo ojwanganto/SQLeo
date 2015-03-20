@@ -87,10 +87,6 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		recentQueryMenu = add(I18n.getString("application.menu.recentQueries","Recent queries"));
 		MDIActions.LoadGivenQuery action = new MDIActions.LoadGivenQuery();  
 
-// notes for ticket #247: file recent queries could be opened in command editor or in Query Builder
-// MDIActions.ShowCommandEditor action = new MDIActions.ShowCommandEditor();
-// ActionOpen with fileName should follow
-
 		if(Preferences.containsKey(RECENT_QUERIES)){
 			String value = Preferences.getString(RECENT_QUERIES);
 			if(value.length()>0){

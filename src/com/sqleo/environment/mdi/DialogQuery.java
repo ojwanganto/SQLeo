@@ -189,8 +189,10 @@ public class DialogQuery extends AbstractDialogWizard
 				layout = FileStreamXLQ.read(filename);
 			else if(filename.toLowerCase().endsWith(".lqy"))
 				layout.setQueryModel(FileStreamLQY.read(filename));
-			else if(filename.toLowerCase().endsWith(".sql"))
-				layout.setQueryModel(FileStreamSQL.read(filename));
+			else if(filename.toLowerCase().endsWith(".sql")){
+				//ticket:234 should not parse sql when loading sql file at first time
+				//layout.setQueryModel(FileStreamSQL.read(filename));
+			}
 			else
 				return false;
 
