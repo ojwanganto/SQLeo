@@ -172,43 +172,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 			if (requestString == null || requestString.trim().length() == 0) {
 				// line
-				try {
-					int currentLine = request.getLineOfOffset(request
-							.getCaretPosition());
-					int totalLines = request.getLineCount();
-					int start = currentLine, end = currentLine;
-					int currentStartOffset = request.getLineStartOffset(currentLine);
-					int currentEndOffset = request.getLineEndOffset(currentLine);
-					int startOffset = currentStartOffset;
-					int endOffset = currentEndOffset;
-					//find previous line with ; or beginning
-					start--;
-					while(start>=0){
-						startOffset = request.getLineStartOffset(start);
-						currentEndOffset = request.getLineEndOffset(start);
-						final String lineText = request.getDocument().getText(startOffset,currentEndOffset-startOffset);
-						if(lineText!=null && lineText.trim().endsWith(";")){
-							startOffset = currentEndOffset+1;
-							break;
-						}
-						start--;
-					};
-					//find current line with ; or end 
-					do{
-						final String lineText = request.getDocument().getText(currentStartOffset,endOffset-currentStartOffset);
-						if(lineText!=null && lineText.trim().endsWith(";")){
-							break;
-						}
-						end++;
-						currentStartOffset = request.getLineStartOffset(end);
-						endOffset = request.getLineEndOffset(end);
-					}while(end < totalLines);
-					request.setSelectionStart(startOffset);
-					request.setSelectionEnd(endOffset);
-					requestString = request.getSelectedText();
-				} catch (BadLocationException e) {
-					Application.println(e, false);
-				}
+				requestString = parseAndSelect(requestString);
 			}
 
 			if (requestString == null || requestString.trim().length() == 0) {
@@ -253,6 +217,100 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 			getActionMap().get("stop-task").setEnabled(false);
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
+
+		private String parseAndSelect(String requestString) {
+			try {
+				int caretLine = request.getLineOfOffset(request
+						.getCaretPosition());
+				int totalLines = request.getLineCount();
+				int startLine = caretLine, endLine = caretLine;
+				int caretStartOffset = request.getLineStartOffset(caretLine);
+				int caretEndOffset = request.getLineEndOffset(caretLine);
+				String currentLineText = request.getDocument().getText(caretStartOffset,caretEndOffset-caretStartOffset);
+				String currentTrimmedLineText = currentLineText!=null ? currentLineText.trim():"";
+				boolean caretLineEnds = currentTrimmedLineText.endsWith(";");
+				boolean caretLineHasText = !currentTrimmedLineText.isEmpty();
+				//find startOffset by searching previous ; in the line or beginning
+				int foundStartOffset = -1, foundEndOffset = -1;
+				int cntSemicolons = 0 , semiColonIndex = -1, tempStartOffSet = caretStartOffset, tempEndOffset = caretEndOffset;
+				boolean oneNonEmptyLineFound = caretLineHasText;
+				while(startLine>=0){
+					if(startLine<caretLine){
+						oneNonEmptyLineFound = oneNonEmptyLineFound || !currentTrimmedLineText.isEmpty();
+					}
+					tempStartOffSet = request.getLineStartOffset(startLine);
+					tempEndOffset = request.getLineEndOffset(startLine);
+					currentLineText = request.getDocument().getText(tempStartOffSet,tempEndOffset-tempStartOffSet);
+					currentTrimmedLineText = currentLineText!=null ? currentLineText.trim():"";
+					semiColonIndex = currentTrimmedLineText.lastIndexOf(';');
+					if(semiColonIndex >= 0){
+						cntSemicolons++;
+						if(caretLine == startLine){
+							if(currentTrimmedLineText.length()-1 == semiColonIndex){
+								final int oneMore = currentTrimmedLineText.lastIndexOf(';', semiColonIndex-1);
+								if(oneMore>=0){
+									foundStartOffset = tempStartOffSet+oneMore+1;
+									break;
+								}else{
+									startLine--;
+									continue;
+								}
+							}else {
+								foundStartOffset = tempStartOffSet+semiColonIndex+1;
+								break;
+							}
+						}
+						if(caretLineHasText){
+							if(caretLineEnds && cntSemicolons == 2){
+								foundStartOffset = tempStartOffSet+semiColonIndex+1;
+								break;
+							}else if(cntSemicolons == 1){
+								foundStartOffset = tempStartOffSet+semiColonIndex+1;
+								break;
+							}
+						}else{
+							if(cntSemicolons ==1){
+								if(oneNonEmptyLineFound){
+									foundStartOffset = tempStartOffSet+semiColonIndex+1;
+									break;
+								}
+								foundEndOffset = tempStartOffSet+semiColonIndex+1;
+							}else if(cntSemicolons == 2){
+								foundStartOffset = tempStartOffSet+semiColonIndex+1;
+								break;
+							}
+						}
+					}
+					startLine--;
+				}
+
+				if(caretLineEnds){
+					foundEndOffset = caretEndOffset;
+				}else if(foundEndOffset<0){
+					//find next ; or end  
+					endLine++;
+					while(endLine < totalLines){
+						tempStartOffSet = request.getLineStartOffset(endLine);
+						tempEndOffset = request.getLineEndOffset(endLine);
+						currentLineText = request.getDocument().getText(tempStartOffSet,tempEndOffset-tempStartOffSet);
+						currentTrimmedLineText = currentLineText!=null ? currentLineText.trim():"";
+						semiColonIndex = currentTrimmedLineText.indexOf(';');
+						if(semiColonIndex>=0){
+							foundEndOffset = tempStartOffSet+semiColonIndex+1;
+							break;
+						}
+						endLine++;
+					}
+				}
+
+				request.setSelectionStart(foundStartOffset!=-1?foundStartOffset:0);
+				request.setSelectionEnd(foundEndOffset!=-1?foundEndOffset:request.getText().length());
+				requestString = request.getSelectedText();
+			} catch (BadLocationException e) {
+				Application.println(e, false);
+			}
+			return requestString;
 		}
 
 		private void executeCommandQuery(final String sql) {
