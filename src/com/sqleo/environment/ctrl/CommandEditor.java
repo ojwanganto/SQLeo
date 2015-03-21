@@ -27,8 +27,6 @@ package com.sqleo.environment.ctrl;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.util.Date;
@@ -70,6 +68,8 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 	private JSplitPane split;
 	private ClientContent gridClient;
 	private BorderLayoutPanel gridPanel;
+	private int splitPanePosition = -1;
+	
 
 	protected MutableAttributeSet errorAttributSet;
 	protected MutableAttributeSet keycahAttributSet;
@@ -95,12 +95,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 		getActionMap().setParent(request.getViewActionMap());
 
-		addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent evt) {
-				adjustSplitPaneDivider();
-			}
-		});
+		adjustSplitPaneDivider();
 
 		errorAttributSet = new SimpleAttributeSet();
 		StyleConstants.setForeground(errorAttributSet, Color.red);
@@ -319,7 +314,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					source.getHandlerKey(), "CommandEditor", sql));
 			ClientCommandEditor cce = (ClientCommandEditor) Application.window
 					.getClient(ClientCommandEditor.DEFAULT_TITLE);
-
+        	splitPanePosition  = split.getDividerLocation();
 			if(cce.isGridOutput() && sql.toUpperCase().startsWith("SELECT")){
 				Vector<Integer> prevColWidths = null;
 				if(gridClient!=null){
@@ -380,8 +375,16 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-				split.setDividerLocation(0.5);
-	    		split.validate();
+            	if(splitPanePosition != -1) {
+                    boolean isCollapsed = splitPanePosition > split.getMaximumDividerLocation();
+                    if(isCollapsed) {
+                    	split.setDividerLocation(0.5d);
+                    }else {
+                    	split.setDividerLocation(splitPanePosition);
+                    }
+                }else{
+                	split.setDividerLocation(0.5d);
+                }
             }
 		 });
 	}
