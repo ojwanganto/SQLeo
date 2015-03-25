@@ -176,6 +176,10 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				request.setSelectionEnd(request.getText().length());
 				requestString = request.getSelectedText();
 			}
+			
+			if (requestString == null){
+				requestString ="";
+			}
 
 			Boolean PLsql=false;
 			String sqlcmd = requestString.length() > 7 ? requestString.toUpperCase().substring(0, 7) : requestString;

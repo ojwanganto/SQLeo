@@ -35,6 +35,7 @@ public class DataComparerPanelConfig {
 	private String columns;
 	private String aggregates;
 	private String filters;
+	private String headerAlias;
 	
 	public String getConnection() {
 		return connection;
@@ -71,5 +72,11 @@ public class DataComparerPanelConfig {
 	}
 	public void setFilters(String filters) {
 		this.filters = filters;
+	}
+	public void setHeaderAlias(String headerAlias) {
+		this.headerAlias = headerAlias;
+	}
+	public String getHeaderAlias() {
+		return headerAlias;
 	}
 }

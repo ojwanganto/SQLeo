@@ -76,6 +76,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 	private DataComparer owner;
 	private boolean queryExecutionSuccess = false;
 	private boolean isSource;
+	private JTextField headerAlias;
 
 	public DataComparerCriteriaPane(final String headerText,final DataComparer owner,final boolean isSource){
 		this.owner = owner;
@@ -94,20 +95,22 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		setLayout(gbl);
 		gbc.anchor = GridBagConstraints.NORTH;
 
-		gbc.gridx = 0;
+		gbc.gridx = 1;
 		gbc.gridy = 0;
-		gbc.gridwidth = 2;
-		gbc.fill = GridBagConstraints.CENTER;
-		final JLabel header = new JLabel(headerText);
+		gbc.gridwidth = 1;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		headerAlias = new JTextField();
+		headerAlias.setText(headerText);
+		headerAlias.setColumns(20);
 
-		final Font font = new Font(header.getFont().getName(), Font.BOLD, header.getFont().getSize());
+		final Font font = new Font(headerAlias.getFont().getName(), Font.BOLD, headerAlias.getFont().getSize());
 		final Map<TextAttribute, Object> map = new HashMap<TextAttribute, Object>();
 		map.put(TextAttribute.FONT, font);
 		map.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-		header.setFont(Font.getFont(map));
+		headerAlias.setFont(Font.getFont(map));
 		
-		gbl.setConstraints(header, gbc);
-		add(header);
+		gbl.setConstraints(headerAlias, gbc);
+		add(headerAlias);
 
 		gbc.insets = new Insets(5,5,5,5);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -399,6 +402,10 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		return txtTable.getText();
 	}
 	
+	public String getHeaderAlias() {
+		return headerAlias.getText();
+	}
+	
 	public String[] getTableColumns(){
 		return SQLHelper.getColumns(getHandlerKey(), getSchema(), getTable());
 	}
@@ -494,6 +501,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		panelConfig.setConnection(getHandlerKey());
 		panelConfig.setSchema(getSchema());
 		panelConfig.setTableOrQuery(getTable());
+		panelConfig.setHeaderAlias(getHeaderAlias());
 		panelConfig.setColumns(dataTypePanelMap.get(DATA_TYPE.COLUMNS).getText());
 		panelConfig.setAggregates(dataTypePanelMap.get(DATA_TYPE.AGGREGATES).getText());
 		panelConfig.setFilters(dataTypePanelMap.get(DATA_TYPE.FILTERS).getText());
@@ -504,6 +512,9 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		cbxConnection.setSelectedItem(panelConfig.getConnection());
 		cbxSchema.setSelectedItem(panelConfig.getSchema());
 		txtTable.setText(panelConfig.getTableOrQuery());
+		if(panelConfig.getHeaderAlias()!=null){
+			headerAlias.setText(panelConfig.getHeaderAlias());
+		}
 		dataTypePanelMap.get(DATA_TYPE.COLUMNS).setText(panelConfig.getColumns());
 		dataTypePanelMap.get(DATA_TYPE.AGGREGATES).setText(panelConfig.getAggregates());
 		dataTypePanelMap.get(DATA_TYPE.FILTERS).setText(panelConfig.getFilters());

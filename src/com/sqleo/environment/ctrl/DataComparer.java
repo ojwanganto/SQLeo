@@ -42,14 +42,12 @@ import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.DataComparerConfig;
-import com.sqleo.common.util.DataComparerPanelConfig;
 import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerCriteriaPane;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
 import com.sqleo.environment.mdi.ClientContent;
-import com.sqleo.querybuilder.syntax.SQLParser;
 
 
 public class DataComparer extends BorderLayoutPanel
@@ -63,8 +61,8 @@ public class DataComparer extends BorderLayoutPanel
 	{
 		super(2,2);
 		
-		source = new DataComparerCriteriaPane(I18n.getString("datacomparer.source", "SOURCE"), this, true);
-		target = new DataComparerCriteriaPane(I18n.getString("datacomparer.target", "TARGET"), this, false);
+		source = new DataComparerCriteriaPane("SOURCE", this, true);
+		target = new DataComparerCriteriaPane("TARGET", this, false);
 		
 		final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,source,target);
 		split.setResizeWeight(.5d);
@@ -132,7 +130,7 @@ public class DataComparer extends BorderLayoutPanel
 				final File mergedCsvFile = new File(filePath);
 			    final String mergedTableName = mergedCsvFile.getName().substring(0, mergedCsvFile.getName().lastIndexOf("."));;
 			    // get merged query 
-			    final String mergedQuery = getMergedQuery(mergedTableName, columns, sourceAggregates, targetAggregates);
+			    final String mergedQuery = getMergedQuery(mergedTableName, columns, sourceAggregates, targetAggregates, source.getHeaderAlias(), target.getHeaderAlias());
 				final String csvjdbcKeych = getCsvJdbcConnectionKey();
 				if(null == csvjdbcKeych){
 					final StringBuilder messageBuilder = new StringBuilder();
@@ -225,7 +223,7 @@ public class DataComparer extends BorderLayoutPanel
 	}
 	
 	private String getMergedQuery(final String mergedTableName,final String columns,
-			final String[] sourceAggregates,final String[] targetAggregates){
+			final String[] sourceAggregates,final String[] targetAggregates,final String sourceAlias,final String targetAlias){
 		final String tableAlias = "data";
 		final boolean colsGiven = columns!=null && !columns.isEmpty();
 		final StringBuilder colsWithAlias = new StringBuilder();
@@ -241,9 +239,11 @@ public class DataComparer extends BorderLayoutPanel
 			result.append(colsWithAlias.toString()).append(",\n");
 		}
 		final int totalAggregates = sourceAggregates.length;
+		final String realSourceAlias = sourceAlias!=null?sourceAlias:"SOURCE";
+		final String realTargetAlias = targetAlias!=null?targetAlias:"TARGET";
 		for(int i = 1; i<=totalAggregates; i++){
-			result.append("MAX(SRC").append(i).append(") as agg").append(i).append("_SOURCE,");
-			result.append("MAX(TGT").append(i).append(") as agg").append(i).append("_TARGET");
+			result.append("MAX(SRC").append(i).append(") as agg").append(i).append("_").append(realSourceAlias).append(",");
+			result.append("MAX(TGT").append(i).append(") as agg").append(i).append("_").append(realTargetAlias);
 			// ticket #260 add diff status for each line (can help when exporting in excel AND pitvot table
 			if(addDiffStatusInOutput.isSelected()){
 				result.append(",\n").append(" case when MAX(SRC").append(i).append(")='' then 'TGT'");
