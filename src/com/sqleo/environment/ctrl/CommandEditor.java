@@ -95,7 +95,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 		getActionMap().setParent(request.getViewActionMap());
 
-		adjustSplitPaneDivider();
+		adjustSplitPaneDivider(false);
 
 		errorAttributSet = new SimpleAttributeSet();
 		StyleConstants.setForeground(errorAttributSet, Color.red);
@@ -342,7 +342,6 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				BorderLayoutPanel pnlSouth = (BorderLayoutPanel)content.getComponent(0);
 				pnlSouth.remove(pnlSouth.getComponent(2));
 				gridPanel.setComponentCenter(content);
-				split.setBottomComponent(gridPanel);
 				
 				//append client menu actions inside builder menu actions
 				int len1 = cce.getMenuActions().length;
@@ -355,9 +354,9 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				Application.window.menubar.internalFrameActivated(
 						new InternalFrameEvent(cce,0));
 				
-				adjustSplitPaneDivider();
+				adjustSplitPaneDivider(true);
 			}else{
-				adjustSplitPaneDivider();
+				adjustSplitPaneDivider(false);
 				split.setBottomComponent(response);
 				String keycah = "*** " + source.getHandlerKey() + " ***";
 				CommandEditor.this.response.append("\n" + keycah);
@@ -375,7 +374,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		
 	}
 	
-	private void adjustSplitPaneDivider(){
+	private void adjustSplitPaneDivider(final boolean setGridPanel){
 		SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -389,6 +388,9 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
                 }else{
                 	split.setDividerLocation(0.5d);
                 }
+            	if(setGridPanel){
+            		split.setBottomComponent(gridPanel);
+            	}
             }
 		 });
 	}
