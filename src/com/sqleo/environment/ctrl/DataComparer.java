@@ -48,6 +48,7 @@ import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerCriteriaPane;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
 import com.sqleo.environment.mdi.ClientContent;
+import com.sqleo.querybuilder.syntax.SQLParser;
 
 
 public class DataComparer extends BorderLayoutPanel
@@ -142,11 +143,16 @@ public class DataComparer extends BorderLayoutPanel
 					messageBuilder.append("\n\nThen RE-LAUNCH the data comparer!");
 					Application.alertAsText(messageBuilder.toString());
 				}else{
+					// open connection to csvjdbc using merged.csv
+					// open content window on above connection and run merged query
 					Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
 							csvjdbcKeych, "DataComparer", mergedQuery));
-					final ClientContent client = 
-						new ClientContent(csvjdbcKeych, mergedQuery ,true);
-					Application.window.add(client);
+					try {
+						final ClientContent client = new ClientContent(csvjdbcKeych, SQLParser.toQueryModel(mergedQuery),null);
+						Application.window.add(client);
+					} catch (IOException e) {
+						Application.println(e, true);
+					}
 				}
 			}
 			

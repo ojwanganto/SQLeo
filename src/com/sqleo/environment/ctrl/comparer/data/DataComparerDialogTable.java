@@ -61,7 +61,7 @@ public class DataComparerDialogTable extends BaseDynamicTable{
 		switch(dataType){
 		case COLUMNS : 
 		case AGGREGATES:
-			separator = ", ";
+			separator = ",";
 			break;
 		case FILTERS:
 			separator = "\n";
