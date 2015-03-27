@@ -29,6 +29,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.querybuilder.QueryBuilder;
 
@@ -101,7 +102,7 @@ public class ViewSearchResult extends AbstractViewObjects
 			String[] rowdata = new String[4];
 			for(int i=1; i<=4; i++)
 			{
-				rowdata[i-1] = rs.getString(i);
+				rowdata[i-1] =  SQLHelper.getRowValue(rs, i);;
 			}
 			addRow(rowdata);
 		}

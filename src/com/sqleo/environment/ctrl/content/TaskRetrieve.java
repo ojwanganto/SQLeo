@@ -31,6 +31,7 @@ import javax.swing.JSlider;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.ContentPane;
 
@@ -92,7 +93,7 @@ public class TaskRetrieve implements Runnable
 					Object[] rowdata = new Object[this.getColumnCount()];
 					for(int i=1; i<=this.getColumnCount(); i++)
 					{
-						rowdata[i-1] = rs.getString(i);
+						rowdata[i-1] =  SQLHelper.getRowValue(rs, i);
 					}
 					target.getView().addRow(rowdata,false);
 					
@@ -130,7 +131,7 @@ public class TaskRetrieve implements Runnable
 				Object[] rowdata = new Object[this.getColumnCount()];
 				for(int i=1; i<=this.getColumnCount(); i++)
 				{
-					rowdata[i-1] = rs.getString(i);
+					rowdata[i-1] =  SQLHelper.getRowValue(rs, i);
 				}
 				target.getView().addRow(rowdata,false);
 				

@@ -457,7 +457,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 					while(rs.next()){
 						vals = new Object[cols];
 						for(int i=1; i<=cols;i++){
-							vals[i-1] = rs.getString(i);
+							vals[i-1] = SQLHelper.getRowValue(rs, i);
 						}
 						final StringBuffer buffer = new StringBuffer();
 						for(int i=0; i<vals.length; i++){

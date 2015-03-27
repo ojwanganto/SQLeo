@@ -47,6 +47,7 @@ import javax.swing.event.InternalFrameListener;
 import com.sqleo.common.gui.Toolbar;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
@@ -413,7 +414,7 @@ public class ClientContent extends MDIClientWithCRActions
 						while(rs.next()){
 							vals = new Object[cols];
 							for(int i=1; i<=cols;i++){
-								vals[i-1] = rs.getString(i);
+								vals[i-1] =  SQLHelper.getRowValue(rs, i);
 								if(vals[i-1]==null) {
 									vals[i-1]="";
 								} else {

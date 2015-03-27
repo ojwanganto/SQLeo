@@ -35,6 +35,7 @@ import java.util.Arrays;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Preferences;
 
 
@@ -202,10 +203,7 @@ public class Task implements Runnable {
 			StringBuffer row = new StringBuffer("| ");
 
 			for (int i = 1; i <= getColumnCount(); i++) {
-				String value = rs.getString(i);
-				if (value == null) {
-					value = new String();
-				}
+				String value = SQLHelper.getRowValue(rs, i);
 
 				bytes += value.length();
 

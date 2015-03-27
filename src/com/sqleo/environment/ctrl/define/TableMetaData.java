@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.content.UpdateModel;
 import com.sqleo.environment.io.ManualDBMetaData;
@@ -309,7 +310,7 @@ public class TableMetaData
 			al.add(row);
 			
 			for(int i=0; i<row.length; i++)
-				row[i] = rs.getString(i+1);
+				row[i] =  SQLHelper.getRowValue(rs, i+1);
 		}
 		rs.close();
 	}

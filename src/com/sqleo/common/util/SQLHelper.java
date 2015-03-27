@@ -193,4 +193,14 @@ public class SQLHelper {
 		return schemaPrefix;
 	}
 
+	public static String getRowValue(final ResultSet rs, final int index) throws SQLException {
+		final String value = rs.getString(index);
+		if (null == value) {
+			// try with object (blob,clob etc...types)
+			final Object obj = rs.getObject(index);
+			return obj != null ? obj.toString() : new String();
+		}
+		return value;
+	}
+
 }
