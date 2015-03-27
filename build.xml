@@ -11,7 +11,7 @@
   <property name="build.sysclasspath" value="ignore"/>
 
   <property name="name" value="SQLeoVQB"/>
-  <property name="version" value="2015.02.rc1"/>
+  <property name="version" value="2015.03.rc1"/>
 
   <property name="src" value="${basedir}/src"/>
   <property name="lib" value="${basedir}/lib"/>

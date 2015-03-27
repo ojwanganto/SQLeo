@@ -33,14 +33,31 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2015.03.rc1.zip: 2015-03-27
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.03/
+
+	264 Command Editor: keep user resized windows (after execution)
+	260 Data comparer: add diff status for each line
+		minimun csvjdbc-1.0-23.jar driver version (found in /lib directory) is needed
+	256 Data comparer: add user alias for source and target
+	242 command Editor: remember column sizes in datagrid after refres
+	241 command Editor: F5 for refreshing datagrid content
+	237 command Editor: CTRL ENTER should select previous or current statement not all
+		all statements should be separated with semicolons ;
+	234 SQLeo should not parse sql when loading sql file at first time
+
+
 SQLeoVQB.2015.02.rc1.zip: 2015-02-20
 
   Thanks to Anudeep Gade for his contribution to this release
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2015.02/
 
-	262 Command Dditor - store gridoutput preference, display latest connection in connections list
-	258 Sending query result to pivottable.html
+	262 Command Editor - store gridoutput preference, display latest connection in connections list
+	258 Sending query result to pivottable.html for OLAP purpose  
 	257 Command Editor/​ Data comparer: display current opened file name in title
 
 
