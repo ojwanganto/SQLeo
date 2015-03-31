@@ -80,6 +80,10 @@ public class Preferences
 		return getBoolean(DialogPreferences.AUTO_COMPLETE_KEY, false);
 	}
 	
+	public static boolean isAutoSelectConnectionEnabled(){
+		return getBoolean(DialogPreferences.AUTO_SELECT_CON_KEY, false);
+	}
+	
 	public static boolean savePosInSQL(){
 		return getBoolean(DialogPreferences.QB_SAVE_POS_IN_SQL, false);
 	}

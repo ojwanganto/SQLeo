@@ -89,11 +89,13 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	private JCheckBox jCheckBoxAutoComplete = new JCheckBox();
 	private JCheckBox jCheckBoxAskBeforeExit = new JCheckBox();
 	private JCheckBox jCheckBoxCheckUpdate = new JCheckBox();
+	private JCheckBox jCheckBoxAutoSelectConnection = new JCheckBox();
 
 	public static final String CONTENT_MAX_ROWS_FETCH_SIZE_KEY = "content.maxrowfetchsize";
 	public static final String CHECK_FOR_UPDATE_KEY = "application.checkforupdate";
 	public static final String ASK_BEFORE_EXIT_KEY = "application.askBeforeExit";
 	public static final String AUTO_COMPLETE_KEY = "application.autoComplete";
+	public static final String AUTO_SELECT_CON_KEY = "application.commandEditor.autoSelectConnection";
 	public static final String QB_RELATION_RENDER_ARC_KEY = "querybuilder.isArcRelationRender";
 	public static final String FONT_SIZE_PERCENTAGE = "application.fontSizePercentage";
 	public static final String QB_SAVE_POS_IN_SQL = "querybuilder.savePosInSQL";
@@ -208,6 +210,10 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				"application.preferences.autoComplete", "Auto complete"));
 		jCheckBoxAutoComplete.setSelected(Preferences.getBoolean(
 				AUTO_COMPLETE_KEY, false));
+		jCheckBoxAutoSelectConnection.setText(I18n.getString(
+				AUTO_SELECT_CON_KEY, "Auto select latest connection"));
+		jCheckBoxAutoSelectConnection.setSelected(Preferences.getBoolean(
+				AUTO_SELECT_CON_KEY, false));
 		jCheckBoxAskBeforeExit.setText(I18n.getString(
 				"application.preferences.askBeforeExit", "Always ask before exit"));
 		jCheckBoxAskBeforeExit.setSelected(Preferences.getBoolean(
@@ -330,6 +336,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		pnlCommand.add(pnlMaxRows);
 		
 		pnlCommand.add(jCheckBoxAutoComplete);
+		pnlCommand.add(jCheckBoxAutoSelectConnection);
 
 		JTabbedPane options = new JTabbedPane();
 		options.addTab("General", pnlGeneral);
@@ -404,6 +411,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				jCheckBoxAskBeforeExit.isSelected()));
 		Preferences.set(AUTO_COMPLETE_KEY, new Boolean(
 				jCheckBoxAutoComplete.isSelected()));
+		Preferences.set(AUTO_SELECT_CON_KEY, new Boolean(
+				jCheckBoxAutoSelectConnection.isSelected()));
 		Preferences.set("editor.maxcolsize",
 				new Integer(jTextFieldMaxColSize.getText()));
 		Preferences.set(CONTENT_MAX_ROWS_FETCH_SIZE_KEY,
