@@ -107,22 +107,25 @@ public class Text
 	
 	public static String trimLeft(String source)
 	{
-		while(source.startsWith(" "))
+		int len = source.length();
+		for(int i=0;i<len;i++)
 		{
-			source = source.substring(1);
+		  if(!Character.isWhitespace(source.charAt(i))){
+			 return source.substring(i);
+		  }
 		}
-		
 		return source;
 	}
 	
 	public static String trimRight(String source)
 	{
-		while(source.endsWith(" "))
+		int len = source.length();
+		for(;len>0;len--)
 		{
-			source = left(source, source.length()-1);
+		  if(!Character.isWhitespace(source.charAt(len-1)))
+		     break;
 		}
-		
-		return source;
+		return source.substring( 0, len);
 	}
 	
 	public static String wrap(String s, int len)

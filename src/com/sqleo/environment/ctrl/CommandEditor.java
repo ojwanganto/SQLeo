@@ -48,6 +48,7 @@ import javax.swing.text.StyleConstants;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.TextView;
 import com.sqleo.common.util.SQLHistoryData;
+import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.ctrl.editor.Task;
@@ -212,7 +213,11 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				}
 			}
 			setEnabled(true);
-			transferFocus();
+			final ClientCommandEditor cce = (ClientCommandEditor) Application.window
+			.getClient(ClientCommandEditor.DEFAULT_TITLE);
+			if(!cce.isGridOutput()){
+				transferFocus();
+			}
 
 			getActionMap().get("stop-task").setEnabled(false);
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -227,9 +232,9 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				int caretStartOffset = request.getLineStartOffset(caretLine);
 				int caretEndOffset = request.getLineEndOffset(caretLine);
 				String currentLineText = request.getDocument().getText(caretStartOffset,caretEndOffset-caretStartOffset);
-				String currentTrimmedLineText = currentLineText!=null ? currentLineText.trim():"";
+				String currentTrimmedLineText = currentLineText!=null ? Text.trimRight(currentLineText):"";
 				boolean caretLineEnds = currentTrimmedLineText.endsWith(";");
-				boolean caretLineHasText = !currentTrimmedLineText.isEmpty();
+				boolean caretLineHasText = currentLineText!=null && !currentLineText.trim().isEmpty();
 				//find startOffset by searching previous ; in the line or beginning
 				int foundStartOffset = -1, foundEndOffset = -1;
 				int cntSemicolons = 0 , semiColonIndex = -1, tempStartOffSet = caretStartOffset, tempEndOffset = caretEndOffset;
@@ -241,7 +246,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					tempStartOffSet = request.getLineStartOffset(startLine);
 					tempEndOffset = request.getLineEndOffset(startLine);
 					currentLineText = request.getDocument().getText(tempStartOffSet,tempEndOffset-tempStartOffSet);
-					currentTrimmedLineText = currentLineText!=null ? currentLineText.trim():"";
+					currentTrimmedLineText = currentLineText!=null ? Text.trimRight(currentLineText):"";
 					semiColonIndex = currentTrimmedLineText.lastIndexOf(';');
 					if(semiColonIndex >= 0){
 						cntSemicolons++;
@@ -274,6 +279,11 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 									foundStartOffset = tempStartOffSet+semiColonIndex+1;
 									break;
 								}
+								final int oneMore = currentTrimmedLineText.substring(0, semiColonIndex).lastIndexOf(';');
+								if(oneMore>=0){
+									foundStartOffset = tempStartOffSet+oneMore+1;
+									break;
+								}
 								foundEndOffset = tempStartOffSet+semiColonIndex+1;
 							}else if(cntSemicolons == 2){
 								foundStartOffset = tempStartOffSet+semiColonIndex+1;
@@ -293,7 +303,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 						tempStartOffSet = request.getLineStartOffset(endLine);
 						tempEndOffset = request.getLineEndOffset(endLine);
 						currentLineText = request.getDocument().getText(tempStartOffSet,tempEndOffset-tempStartOffSet);
-						currentTrimmedLineText = currentLineText!=null ? currentLineText.trim():"";
+						currentTrimmedLineText = currentLineText!=null ? Text.trimRight(currentLineText):"";
 						semiColonIndex = currentTrimmedLineText.indexOf(';');
 						if(semiColonIndex>=0){
 							foundEndOffset = tempStartOffSet+semiColonIndex+1;
