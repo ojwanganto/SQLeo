@@ -209,6 +209,24 @@ public class TextView extends BorderLayoutPanel
 		}		
 	}
 	
+	public void replaceSelection(String str)
+	{
+		final StyledDocument doc = getDocument();
+		if (doc != null)
+		{
+			try
+			{
+				final int start = editor.getSelectionStart();
+				final int end = editor.getSelectionEnd();
+				doc.remove(start, end-start);
+				doc.insertString(start, str, null);
+			}
+			catch (BadLocationException e)
+			{
+			}
+		}		
+	}
+	
 	public String getText()
 	{
 		return editor.getText();

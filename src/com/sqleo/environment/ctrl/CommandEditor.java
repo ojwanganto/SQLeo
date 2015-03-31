@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -50,12 +51,16 @@ import com.sqleo.common.gui.TextView;
 import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.ctrl.editor.Task;
 import com.sqleo.environment.ctrl.editor._TaskSource;
 import com.sqleo.environment.ctrl.editor._TaskTarget;
 import com.sqleo.environment.mdi.ClientCommandEditor;
 import com.sqleo.environment.mdi.ClientContent;
+import com.sqleo.querybuilder.QueryBuilder;
+import com.sqleo.querybuilder.QueryModel;
+import com.sqleo.querybuilder.syntax.SQLParser;
 
 
 public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
@@ -90,9 +95,13 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 		request.getViewActionMap().put("stop-task", new ActionStopTask());
 		request.getViewActionMap().put("start-task", new ActionStartTask());
+		request.getViewActionMap().put("format-query", new ActionFormatQuery());
 		request.getViewInputMap().put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.CTRL_MASK),
 				"start-task");
+		request.getViewInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.CTRL_MASK),
+				"format-query");
 
 		getActionMap().setParent(request.getViewActionMap());
 
@@ -137,6 +146,28 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		this.request.setDocument(doc);
 		this.request.setCaretPosition(0);
 		this.request.requestFocus();
+	}
+	
+	private class ActionFormatQuery extends AbstractAction {
+		ActionFormatQuery() {
+		}
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			final String requestString = request.getSelectedText();
+			if(requestString!=null){
+				final String sqlcmd = requestString.length() > 7 ? requestString.toUpperCase().substring(0, 7) : requestString;
+				if(sqlcmd.startsWith("SELECT")){
+					try {
+						QueryBuilder.useAlwaysQuote	= false;
+						final QueryModel model = SQLParser.toQueryModel(requestString);
+						final String formattedQuery = model.toString(true);
+						request.replaceSelection(requestString.trim().endsWith(";") ? formattedQuery+";" : formattedQuery);
+						QueryBuilder.useAlwaysQuote	= Preferences.getBoolean("querybuilder.use-quote",false);
+					} catch (IOException e) {
+					}
+				}
+			}
+		}
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////
