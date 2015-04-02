@@ -70,6 +70,7 @@ public class TextView extends BorderLayoutPanel
 	private SuggestionsView suggestions;
 	private JScrollPane scroll;
 	private static final Color DEFAULT_CURRENT_LINE_HIGHLIGHT_COLOR	= new Color(255,255,170);
+	private InternalPopup mousePopup;
 
 	public TextView(StyledDocument doc,final boolean calledFromCommandEditor)
 	{
@@ -101,7 +102,8 @@ public class TextView extends BorderLayoutPanel
 				suggestions = new SuggestionsView(editor, calledFromCommandEditor);
 			}
 		}
-		editor.addMouseListener(new InternalPopup());
+		mousePopup = new InternalPopup();
+		editor.addMouseListener(mousePopup);
 		editor.addCaretListener(new ParenthesisMatcher());
 		
 		editor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT,KeyEvent.SHIFT_MASK),DefaultEditorKit.pasteAction);
@@ -120,6 +122,10 @@ public class TextView extends BorderLayoutPanel
 		
 		this.setTabSize(4);
 		
+	}
+	
+	public void addFormatQueryMouseAction(){
+		mousePopup.addFormatQueryMouseAction();
 	}
 	
 	public void scrollCenter()
@@ -391,6 +397,10 @@ public class TextView extends BorderLayoutPanel
 				add(createItem("Redo","redoMouse",editor.getActionMap().get("Redo")));
 			}
 		}
+		
+		public void addFormatQueryMouseAction(){
+			add(createItem("Format","format",editor.getActionMap().get("format-query")));
+		}
 
 		private JMenuItem createItem(String text, String key, Action[] actions)
 		{
@@ -430,7 +440,9 @@ public class TextView extends BorderLayoutPanel
 				getComponent(2).setEnabled(TextView.this.editor.isEditable());
 				getComponent(3).setEnabled(selection && TextView.this.editor.isEditable());
 				getComponent(6).setEnabled(TextView.this.editor.getText().length()>0);
-				
+				if(getComponents().length>9){
+					getComponent(9).setEnabled(selection);
+				}
 				show(TextView.this.editor,me.getX(),me.getY());
 			}	
 		}

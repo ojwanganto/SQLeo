@@ -35,6 +35,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
@@ -102,6 +103,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		request.getViewInputMap().put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.CTRL_MASK),
 				"format-query");
+		request.addFormatQueryMouseAction();
 
 		getActionMap().setParent(request.getViewActionMap());
 
@@ -150,6 +152,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 	
 	private class ActionFormatQuery extends AbstractAction {
 		ActionFormatQuery() {
+			putValue( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control F7") );
 		}
 		@Override
 		public void actionPerformed(ActionEvent ae) {
