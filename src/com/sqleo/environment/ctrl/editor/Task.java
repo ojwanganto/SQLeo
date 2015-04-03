@@ -32,7 +32,6 @@ import java.sql.Types;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
-
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.SQLHelper;
@@ -75,6 +74,8 @@ public class Task implements Runnable {
 					stmt.setFetchSize(limit);
 					stmt.setMaxRows(limit);
 					long started = System.nanoTime();
+
+					syntax = SQLHelper.getSQLeoPivotQueryIfExists(syntax,source.getHandlerKey());
 
 					String sqlcmd = syntax.length() > 7 ?  syntax.toUpperCase().substring(0, 7) : syntax.toUpperCase();
 					if (sqlcmd.startsWith("WITH")) {

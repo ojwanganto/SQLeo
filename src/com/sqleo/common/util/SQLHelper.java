@@ -24,13 +24,17 @@ package com.sqleo.common.util;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
+import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.environment.Application;
 
 public class SQLHelper {
@@ -201,6 +205,43 @@ public class SQLHelper {
 			return obj != null ? obj.toString() : new String();
 		}
 		return value;
+	}
+	
+	public static String getSQLeoPivotQueryIfExists(final String query,final String keych) throws SQLException {
+		// start SQLeoPivot
+		// to do:
+		// - take table name from syntax not from group(1) --> (remove table as first param)
+		// - use syntax where clause to retrieve pivot values
+		final Pattern p = Pattern.compile("SQLeoPivot\\((.*),(.*),(.*),(.*)\\)");
+		final Matcher m = p.matcher(query);
+		// Parameters : 
+		// 1. [schema.]table
+		// 2. Pivot Column (can be a concat results like col1||'-'||col2)
+		// 3. Aggregate function in COUNT,AVG,SUM,MIN,MAX
+		// 4. Aggregated Column
+		final StringBuffer result = new StringBuffer();
+		final ConnectionHandler ch = ConnectionAssistant.getHandler(keych);
+		final Statement stmt = ch.get().createStatement();
+		try{
+			while (m.find()) {
+				System.out.println("Pivot params: " + m.group(1) + " "+ m.group(2)+" "+ m.group(3)+" "+ m.group(4));
+				ResultSet pivots = stmt.executeQuery("SELECT distinct " + m.group(2) + " FROM " + m.group(1));
+				StringBuilder val = new StringBuilder();
+				while (pivots.next()) {
+					val.append( m.group(3) + "(case " + m.group(2) + " when '" + pivots.getString(1) + "' then "+ m.group(4) +" else null end) " 
+							+ "as \"" + pivots.getString(1)  + "\",");
+				}
+				if(val.length() > 0) val=val.deleteCharAt(val.length()-1); 
+				m.appendReplacement(result, val.toString());
+			}
+		}finally{
+			stmt.close();
+		}
+		m.appendTail(result);
+		final String pivotQuery = result.toString();
+		System.out.println("Pivot SQL: " + pivotQuery ); 
+		// end SQLeoPivot
+		return pivotQuery.isEmpty()?query:pivotQuery;
 	}
 
 }
