@@ -49,6 +49,7 @@ import javax.swing.border.LineBorder;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.content.ContentModel;
 import com.sqleo.environment.ctrl.content.ContentView;
@@ -139,6 +140,7 @@ public class ContentPane extends BorderLayoutPanel
 						Statement stmt = ch.get().createStatement();
 						String originalQuery = getQuery();
 						String countQuery = "SELECT count(*) FROM ( " + originalQuery +" ) X ";
+						countQuery = SQLHelper.getSQLeoPivotQueryIfExists(countQuery,keycah);
 						ResultSet rs = stmt.executeQuery(countQuery);
 						int records = rs.next() ? rs.getInt(1) : 0;
 						retrievedRowCount = Integer.valueOf(records);
