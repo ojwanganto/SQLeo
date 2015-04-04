@@ -152,7 +152,7 @@ public class MaskExport extends AbstractMaskPerform
 			if(target.getHandlerKey()!=null){
 				ConnectionHandler ch = ConnectionAssistant.getHandler(target.getHandlerKey());
 				stmt = ch.get().createStatement();
-				syntax = SQLHelper.getSQLeoPivotQueryIfExists(syntax,target.getHandlerKey());
+				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());
 				rs = stmt.executeQuery(syntax);
 			}
 		}

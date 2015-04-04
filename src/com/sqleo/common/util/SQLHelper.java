@@ -207,8 +207,13 @@ public class SQLHelper {
 		return value;
 	}
 	
-	public static String getSQLeoPivotQueryIfExists(final String query,final String keych) throws SQLException {
+	public static String getSQLeoFunctionQuery(final String query,final String keych) throws SQLException {
 
+		final StringBuffer result = new StringBuffer();
+		final ConnectionHandler ch = ConnectionAssistant.getHandler(keych);
+		final Statement stmt = ch.get().createStatement();
+
+		// ********* SQLeoPivot **************
 		// to do:
 		// - take table name from syntax not from group(1) --> (remove table as first param)
 		// - use syntax where clause to retrieve pivot values
@@ -222,10 +227,8 @@ public class SQLHelper {
 		// 3. Aggregate function in COUNT,AVG,SUM,MIN,MAX
 		// 4. Aggregated Column
 
-		final StringBuffer result = new StringBuffer();
-		final ConnectionHandler ch = ConnectionAssistant.getHandler(keych);
-		final Statement stmt = ch.get().createStatement();
-		try{
+		Integer NbPivotValues = 0;
+//		try{
 			while (m.find()) {
 				System.out.println("Pivot params: " + m.group(1) + " / "+ m.group(2)+" / "+ m.group(3)+" / "+ m.group(4));
 				ResultSet pivots = stmt.executeQuery("SELECT distinct " + m.group(2) + " FROM " + m.group(1));
@@ -233,17 +236,53 @@ public class SQLHelper {
 				while (pivots.next()) {
 					val.append( m.group(3) + "(case " + m.group(2) + " when '" + pivots.getString(1) + "' then "+ m.group(4) +" else null end) " 
 							+ "as \"" + pivots.getString(1)  + "\",");
+					NbPivotValues++;
 				}
 				if(val.length() > 0) val=val.deleteCharAt(val.length()-1); 
 				m.appendReplacement(result, val.toString());
 			}
-		}finally{
-			stmt.close();
-		}
+//		}finally{
+//			stmt.close();
+//		}
 		m.appendTail(result);
 
-		//System.out.println("Pivot SQL: " + result ); 
-		final String pivotQuery = result.toString();
+		// ********* SQLeoGroupConcat **************
+		// to do:
+		// - take table name from syntax not from group(1) --> (remove table as first param)
+		// - use syntax where clause to retrieve pivot values
+
+
+
+		final Pattern p1 = Pattern.compile("SQLeoGroupConcat\\((.*),(.*),(.*)\\)");
+		final Matcher m1 = p1.matcher(result);
+		
+		// Parameters : 
+		// 1. [schema.]table
+		// 2. Grouping Column 
+		// 3. Separator char
+
+		final StringBuffer result1 = new StringBuffer();
+//		final ConnectionHandler ch = ConnectionAssistant.getHandler(keych);
+//		final Statement stmt = ch.get().createStatement();
+//		try{
+			while (m1.find()) {
+				System.out.println("GroupConcat params: " + m1.group(1) + " / "+ m1.group(2)+" / "+ m1.group(3));
+				ResultSet pivots = stmt.executeQuery("SELECT distinct " + m1.group(2) + " FROM " + m1.group(1));
+				StringBuilder val = new StringBuilder();
+				while (pivots.next()) {
+					val.append( "MAX(case " + m1.group(2) + " when '" + pivots.getString(1) + "' then "+ m1.group(2) + "||" + m1.group(3) +" else '' end) ||");
+				}
+				if(val.length() > 0) for (int i=0;i <  2; i++) {val=val.deleteCharAt(val.length()-1);} 
+//				if(val.length() > 0) for (int i=0;i <  m1.group(3).length()+2; i++) {val=val.deleteCharAt(val.length()-15);} 
+				m1.appendReplacement(result1, val.toString());
+			}
+//		}finally{
+			stmt.close();
+//		}
+		m1.appendTail(result1);
+
+		final String pivotQuery = result1.toString().replace("NbPivotValues",NbPivotValues.toString());
+		System.out.println("Pivot SQL: " + pivotQuery ); 
 		return pivotQuery.isEmpty()?query:pivotQuery;
 	}
 

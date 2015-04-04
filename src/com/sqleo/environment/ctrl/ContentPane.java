@@ -140,7 +140,7 @@ public class ContentPane extends BorderLayoutPanel
 						Statement stmt = ch.get().createStatement();
 						String originalQuery = getQuery();
 						String countQuery = "SELECT count(*) FROM ( " + originalQuery +" ) X ";
-						countQuery = SQLHelper.getSQLeoPivotQueryIfExists(countQuery,keycah);
+						countQuery = SQLHelper.getSQLeoFunctionQuery(countQuery,keycah);
 						ResultSet rs = stmt.executeQuery(countQuery);
 						int records = rs.next() ? rs.getInt(1) : 0;
 						retrievedRowCount = Integer.valueOf(records);

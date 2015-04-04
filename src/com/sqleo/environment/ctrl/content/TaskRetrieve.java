@@ -73,7 +73,7 @@ public class TaskRetrieve implements Runnable
 				ConnectionHandler ch = ConnectionAssistant.getHandler(target.getHandlerKey());
 				stmt = ch.get().createStatement();
 				stmt.setMaxRows(limit);
-				syntax = SQLHelper.getSQLeoPivotQueryIfExists(syntax,target.getHandlerKey());
+				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());
 				rs = stmt.executeQuery(syntax);
 				
 				for(int i=1; i<=this.getColumnCount(); i++)

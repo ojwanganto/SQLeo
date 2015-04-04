@@ -75,7 +75,7 @@ public class Task implements Runnable {
 					stmt.setMaxRows(limit);
 					long started = System.nanoTime();
 
-					syntax = SQLHelper.getSQLeoPivotQueryIfExists(syntax,source.getHandlerKey());
+					syntax = SQLHelper.getSQLeoFunctionQuery(syntax,source.getHandlerKey());
 
 					String sqlcmd = syntax.length() > 7 ?  syntax.toUpperCase().substring(0, 7) : syntax.toUpperCase();
 					if (sqlcmd.startsWith("WITH")) {
