@@ -433,6 +433,10 @@ public class MaskExport extends AbstractMaskPerform
 			{
 				case Types.CHAR:
 				case Types.VARCHAR:
+				case Types.LONGVARCHAR:
+				case Types.LONGNVARCHAR:
+				case Types.NCHAR:
+				case Types.NVARCHAR:
 					value = Text.replaceText(value.toString(),"\'","\\\'");
 					return "'" + value.toString() + "'";
 				case Types.DATE:
@@ -559,9 +563,11 @@ public class MaskExport extends AbstractMaskPerform
 					switch(MaskExport.this.view.getColumnType(i))
 					{
 						case Types.CHAR:
-							vals[i] = Text.replaceText(vals[i].toString(),"\"","\"\"");
-							vals[i] = "\"" + vals[i].toString() + "\"";
 						case Types.VARCHAR:
+						case Types.LONGVARCHAR:
+						case Types.LONGNVARCHAR:
+						case Types.NCHAR:
+						case Types.NVARCHAR:
 							vals[i] = Text.replaceText(vals[i].toString(),"\"","\"\"");
 							vals[i] = "\"" + vals[i].toString() + "\"";
 						default:

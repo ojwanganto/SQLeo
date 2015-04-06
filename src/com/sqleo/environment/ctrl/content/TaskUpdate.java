@@ -181,6 +181,9 @@ public class TaskUpdate implements Runnable
 			case Types.CHAR:
 			case Types.VARCHAR:
 			case Types.LONGVARCHAR:
+			case Types.LONGNVARCHAR:
+			case Types.NCHAR:
+			case Types.NVARCHAR:
 				pstmt.setString(i+1,(String)param[0]);
 				break;
 			case Types.DECIMAL:
