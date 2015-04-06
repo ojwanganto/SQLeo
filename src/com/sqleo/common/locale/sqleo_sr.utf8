@@ -10,7 +10,7 @@ querybuilder.menu.removeAll=Ukloni sve
 querybuilder.menu.sortByName=Sortiraj po imenu
 querybuilder.menu.pack=Upakuj
 querybuilder.menu.selectAll=Selektuj sve
-querybuilder.menu.deselectAll=Selektuj ni\u0161ta
+querybuilder.menu.deselectAll=Selektuj ništa
 querybuilder.menu.openAllForeignTables=Otvori sve foreign tabele
 querybuilder.menu.openAllPrimaryTables=Otvori sve primary tabele
 querybuilder.menu.references=Reference...
@@ -18,62 +18,62 @@ querybuilder.menu.addWhereCondition=Dodaj where radnju...
 querybuilder.menu.addHavingCondition=Dodaj having radnju...
 
 querybuilder.message.chooseFunction=Izaberi funkciju:
-querybuilder.message.wait=\u010cekaj...
-querybuilder.message.loading=U\u010ditava: {0}
-querybuilder.message.tableLoadedAliasDisabled=Tabela je ve\u0107 u\u010ditana i aliasing je zabranjen!
-querybuilder.message.reading=U\u010ditava...
+querybuilder.message.wait=Čekaj...
+querybuilder.message.loading=Učitava: {0}
+querybuilder.message.tableLoadedAliasDisabled=Tabela je već učitana i aliasing je zabranjen!
+querybuilder.message.reading=Učitava...
 querybuilder.checkbox.allRowsFrom=Svi redovi od {0}
 querybuilder.menu.foreignTables=Foreign tabele
 querybuilder.message.references={0} reference
 querybuilder.message.reverseSyntax=Obrnuta sintaksa
-querybuilder.action.join=Pove\u017ei sa Drag&Drop
+querybuilder.action.join=Poveži sa Drag&Drop
 querybuilder.action.copySyntax=Kopiraj sintaksu
 querybuilder.action.reverseSyntax=Okreni sintaksu...
 querybuilder.action.arrangeentitiesgrid=Uredi grid
 querybuilder.action.arrangeentitiesspring=Uredi spring
 querybuilder.action.packEntities=Upakuj entitete
 querybuilder.action.removeEntities=Ukloni entitete
-querybuilder.message.continue=Da li \u017eelite da nastavite?
-querybuilder.message.joinAlreadyExists=Relacija ve\u0107 postoji: {0}
+querybuilder.message.continue=Da li želite da nastavite?
+querybuilder.message.joinAlreadyExists=Relacija već postoji: {0}
 querybuilder.message.addJoin=Dodaj relaciju
 querybuilder.tooltip.schemaFilter=Filter sheme
 querybuilder.tooltip.typeFilter=Filter tipa
 
 querybuilder.designer=Dizajner
 querybuilder.syntax=Sintaksa
-querybuilder.syntaxChanged=Sintaksa je promenjena!\nda li \u017eelite da primenite promene (dizajner mora da se pokrene ponovo)?
+querybuilder.syntaxChanged=Sintaksa je promenjena!\nda li želite da primenite promene (dizajner mora da se pokrene ponovo)?
 
 application.preferences.language=Jezik
 application.preferences.autoJoin=Automatska relacija
 application.preferences.autoAlias=Automatski alias
-application.preferences.alwaysQuoteIdentifiers=Uvek ozna\u010di identifikatore
+application.preferences.alwaysQuoteIdentifiers=Uvek označi identifikatore
 application.preferences.useSchemaName=Koristi naziv sheme u definiciji sintakse
-application.preferences.loadObjectsAtOnce=U\u010ditaj listu objekta tabele odjednom
+application.preferences.loadObjectsAtOnce=Učitaj listu objekta tabele odjednom
 application.preferences.selectAllColumns=Automatski selektuj sve kolone
-application.preferences.autoCommit=Automatsko izvr\u0161enje
+application.preferences.autoCommit=Automatsko izvršenje
 
-application.message.replaceFile={0}\nsnimi preko postoje\u0107eg fajla?
-application.saveQuery=Sa\u010duvaj upit
+application.message.replaceFile={0}\nsnimi preko postojećeg fajla?
+application.saveQuery=Sačuvaj upit
 application.launchQuery=Pokreni upit
 
 application.menu.newQuery=Novi upit
 application.message.useConnection=Koristi konekciju:
 application.message.schema=Shema:
 application.message.noConnection=Nema konekcije!
-application.menu.loadQuery=U\u010ditaj upit...
+application.menu.loadQuery=Učitaj upit...
 application.menu.exit=Izlaz
 application.menu.cascade=Redom
 application.menu.tileHorizontal=Horizontalno
 application.menu.closeAll=Zatvori sve
 application.menu.about=O programu {0}...
-application.message.quit=Da li zaista napu\u0161ta\u0161 SQLeo?
-application.ok=OK
+application.message.quit=Da li zaista napuštaš SQLeo?
+application.ok=Ok
 application.close=Zatvori
-application.next=Slede\u0107i >
+application.next=Sledeći >
 application.back=< Prethodni
 
-application.tool.content=Prika\u017ei sadr\u017eaj...
-application.tool.definition=Prika\u017ei definiciju...
+application.tool.content=Prikaži sadržaj...
+application.tool.definition=Prikaži definiciju...
 
 application.objetctype.links=Povezani objekti
 querybuilder.objetctype.all=Svi tipovi objekata
@@ -82,38 +82,38 @@ querybuilder.objetctype.TABLE=Tabele
 querybuilder.objetctype.VIEW=Pogledi
 querybuilder.objetctype.LOCAL\ TEMPORARY=Lokalni privremen
 
-application.preferences.autoCommitWarning=Upozorenje:Izvr\u0161enje u prozoru se odnosi na sve otvorene prozore za konekciju kada je automatsko izvr\u0161enje isklju\u010deno!
+application.preferences.autoCommitWarning=Upozorenje:Izvršenje u prozoru se odnosi na sve otvorene prozore za konekciju kada je automatsko izvršenje isključeno!
 application.preferences.trace=Log (zahteva restart)
-application.preferences.maxcolsize=Maksimalna veli\u010dina kolone:
+application.preferences.maxcolsize=Maksimalna veličina kolone:
 
 --added with 2014.08
-application.menu.recentQueries=Skora\u0161nji upiti
-application.menu.print=\u0161tampa
+application.menu.recentQueries=Skorašnji upiti
+application.menu.print=štampa
 application.menu.help.howtouse=Dokumentacija na internetu
 application.menu.donate=Doniraj
-querybuilder.action.saveDiagramAsImage=Sa\u010duvaj kao sliku
-application.tool.preferences=Pode\u0161avanja
+querybuilder.action.saveDiagramAsImage=Sačuvaj kao sliku
+application.tool.preferences=Podešavanja
 application.query_designer=Dizajner upita
 application.preferences.relationsRenderArc=Luk
 application.preferences.relationsRenderLinear=Linearan
 application.preferences.relationsRender=Prikaz relacija
 application.preferences.checkforupdate=Proveri da li postoji nova verzija pri pokretanju
-application.preferences.autoComplete=Automatski zavr\u0161etak
+application.preferences.autoComplete=Automatski završetak
 application.preferences.askBeforeExit=Pitaj me pre izlaza
-application.fontSizePercentage=Veli\u010dina fonta % (neophodan restart)
+application.fontSizePercentage=Veličina fonta % (neophodan restart)
 application.preferences.maxrowfetchsize=Maksimalan broj dobijenih redova:
 application.menu.file=Datoteka
 application.menu.actions=Akcije
 application.menu.tools=Alati
 application.menu.window=Prozor
-application.menu.help=Pomo\u0107
-application.message.saveQuery=Da li \u017eelis da sa\u010duva\u0161 upit kao datoteku ?
+application.menu.help=Pomoć
+application.message.saveQuery=Da li želis da sačuvaš upit kao datoteku ?
 
 --added with 2014.09
-application.preferences.qb.savePosInSQL=Sa\u010duvaj pozicije tabela u SQL sintaksi
+application.preferences.qb.savePosInSQL=Sačuvaj pozicije tabela u SQL sintaksi
 
 --added with 2014.10
 application.maxQueriesInHistory=Maksimalan broj upita u istoriji
 
 --added with 2014.11
-application.iconSizePercentage=Veli\u010dina ikonica % (neophodan restart)
+application.iconSizePercentage=Veličina ikonica % (neophodan restart)
