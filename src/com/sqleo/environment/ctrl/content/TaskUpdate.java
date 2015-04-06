@@ -76,9 +76,23 @@ public class TaskUpdate implements Runnable
 			}
 			else
 			{
+				Vector whereValues = new Vector();	
+				for(int j=0; j<target.getUpdateModel().getRowIdentifierCount() ; j++)
+				{
+					int col = target.getView().getColumnIndex(target.getUpdateModel().getRowIdentifier(j).getReference());
+					if(col == -1) col = target.getView().getColumnIndex(target.getUpdateModel().getRowIdentifier(j).getName());
+
+					Object cell = rowdata[col];
+					if(cell instanceof Object[]) cell = ((Object[])cell)[1];
+					if(null == cell){
+						whereValues.addElement("null");
+					}else{
+						whereValues.addElement("?");
+					}
+				}
 				if(handler.type.equals(ContentChanges.DELETE))
 				{
-					sql = target.getUpdateModel().getDeleteSyntax();
+					sql = target.getUpdateModel().getDeleteSyntax(whereValues.toArray());
 				}
 				else if(handler.type.equals(ContentChanges.UPDATE))
 				{
@@ -97,7 +111,7 @@ public class TaskUpdate implements Runnable
 							}
 						}
 					}
-					sql = target.getUpdateModel().getUpdateSyntax((String[])columns.toArray(new String[columns.size()]));
+					sql = target.getUpdateModel().getUpdateSyntax((String[])columns.toArray(new String[columns.size()]),whereValues.toArray());
 				}
 				
 				for(int i=0; i<target.getUpdateModel().getRowIdentifierCount() ; i++)
@@ -107,7 +121,9 @@ public class TaskUpdate implements Runnable
 
 					Object cell = rowdata[col];
 					if(cell instanceof Object[]) cell = ((Object[])cell)[1];
-					params.addElement(new Object[]{cell, new Integer(target.getView().getColumnType(col))});
+					if(cell!=null){
+						params.addElement(new Object[]{cell, new Integer(target.getView().getColumnType(col))});
+					}
 				}
 			}
 			
@@ -145,6 +161,11 @@ public class TaskUpdate implements Runnable
 		target.doStop();
 	}
 	
+	private String toJdbcValue(Object value, int col)
+	{
+		return SQLFormatter.toJdbcValue(value,target.getView().getColumnType(col));
+	}
+
 	private boolean alert(Exception e)
 	{
 		String title = e.getClass().getName();
@@ -195,6 +216,7 @@ public class TaskUpdate implements Runnable
 				break;
 			case Types.INTEGER:
 				pstmt.setInt(i+1, new Integer(param[0].toString()).intValue());
+				break;
 			case Types.NUMERIC:
 				pstmt.setLong(i+1, new Long(param[0].toString()).longValue());
 				break;

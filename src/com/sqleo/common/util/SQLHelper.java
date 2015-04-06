@@ -202,7 +202,7 @@ public class SQLHelper {
 		if (null == value) {
 			// try with object (blob,clob etc...types)
 			final Object obj = rs.getObject(index);
-			return obj != null ? obj.toString() : new String();
+			return obj != null ? obj.toString() : null;
 		}
 		return value;
 	}

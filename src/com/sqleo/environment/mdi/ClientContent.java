@@ -417,7 +417,7 @@ public class ClientContent extends MDIClientWithCRActions
 							for(int i=1; i<=cols;i++){
 								vals[i-1] =  SQLHelper.getRowValue(rs, i);
 								if(vals[i-1]==null) {
-									vals[i-1]="";
+									vals[i-1]="null";
 								} else {
 									vals[i-1] = vals[i-1].toString();
 								}

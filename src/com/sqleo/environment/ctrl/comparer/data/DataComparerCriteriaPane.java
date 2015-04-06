@@ -462,7 +462,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 						final StringBuffer buffer = new StringBuffer();
 						for(int i=0; i<vals.length; i++){
 							if(vals[i]==null) {
-								vals[i]="";
+								vals[i]="null";
 							} else {
 								vals[i] = vals[i].toString();
 							}

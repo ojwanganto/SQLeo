@@ -205,6 +205,9 @@ public class Task implements Runnable {
 
 			for (int i = 1; i <= getColumnCount(); i++) {
 				String value = SQLHelper.getRowValue(rs, i);
+				if(null == value) {
+					value = new String();
+				}
 
 				bytes += value.length();
 

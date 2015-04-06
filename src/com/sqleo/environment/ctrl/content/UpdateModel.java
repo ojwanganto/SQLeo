@@ -125,7 +125,9 @@ public class UpdateModel
 		
 		QueryTokens.Condition[] c = new QueryTokens.Condition[rowid.length];
 		for(int i=0; i<c.length; i++)
-			c[i] = new QueryTokens.Condition(SQLFormatter.AND,rowid[i],"=",new QueryTokens.DefaultExpression(params[i].toString()));
+			c[i] = new QueryTokens.Condition(SQLFormatter.AND,rowid[i],
+					params[i].toString().equalsIgnoreCase("null")?"IS":"=",
+					new QueryTokens.DefaultExpression(params[i].toString()));
 		c[0].setAppend(null);
 		
 		return SQLFormatter.WHERE + SQLFormatter.SPACE + SQLFormatter.concat(c,false, 0);
