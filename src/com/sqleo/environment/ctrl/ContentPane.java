@@ -26,8 +26,6 @@ package com.sqleo.environment.ctrl;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,13 +33,9 @@ import java.sql.Statement;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -56,10 +50,8 @@ import com.sqleo.environment.ctrl.content.ContentView;
 import com.sqleo.environment.ctrl.content.TaskRetrieve;
 import com.sqleo.environment.ctrl.content.TaskUpdate;
 import com.sqleo.environment.ctrl.content.UpdateModel;
-import com.sqleo.environment.mdi.MDIClient;
 import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.QueryModel;
-import com.sqleo.querybuilder.syntax.SQLFormatter;
 
 
 public class ContentPane extends BorderLayoutPanel 
@@ -75,6 +67,7 @@ public class ContentPane extends BorderLayoutPanel
 	private String query;
 	private TaskRetrieve retrievingTask;
 	private Integer retrievedRowCount;
+	private boolean update = false;
 	
 	public ContentPane(String keycah, QueryModel qmodel, UpdateModel umodel)
 	{
@@ -246,6 +239,7 @@ public class ContentPane extends BorderLayoutPanel
 	
 	public void doUpdate()
 	{
+		update = true;
 		onBeginTask(new TaskUpdate(this));
 	}
 	
@@ -286,6 +280,10 @@ public class ContentPane extends BorderLayoutPanel
 		this.getActionMap().get("record-delete").setEnabled(true);
 		
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		if(update){
+			this.getActionMap().get("task-go").actionPerformed(null);
+			update = false;
+		}
 	}
 	
 	private void onSuspendTask()
@@ -395,13 +393,6 @@ public class ContentPane extends BorderLayoutPanel
 			if(ContentPane.this.getUpdateModel() !=null && ContentPane.this.getUpdateModel().getRowIdentifierCount() > 0)
 			{
 				doUpdate();
-				//wait until above update task is finished 
-				try {
-					task.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				getActionMap().get("task-go").actionPerformed(null);
 			}
 			else
 			{
