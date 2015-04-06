@@ -94,11 +94,11 @@ public class ContentPane extends BorderLayoutPanel
 		this.umodel = umodel;
 		this.query = query;
 				
+		this.getActionMap().put("task-go"		,new ActionRelaunch());
 		this.getActionMap().put("changes-save"	,new ActionSaveChanges());
 		this.getActionMap().put("record-insert"	,new ActionInsertRecord());
 		this.getActionMap().put("record-delete"	,new ActionDeleteRecord());
 		this.getActionMap().put("task-stop"		,new ActionStopTask());
-		this.getActionMap().put("task-go"		,new ActionRelaunch());
 		
 		status = new JLabel("...");
 		status.setBorder(new CompoundBorder(LineBorder.createGrayLineBorder(), new EmptyBorder(2,4,2,4)));
@@ -395,6 +395,13 @@ public class ContentPane extends BorderLayoutPanel
 			if(ContentPane.this.getUpdateModel() !=null && ContentPane.this.getUpdateModel().getRowIdentifierCount() > 0)
 			{
 				doUpdate();
+				//wait until above update task is finished 
+				try {
+					task.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				getActionMap().get("task-go").actionPerformed(null);
 			}
 			else
 			{

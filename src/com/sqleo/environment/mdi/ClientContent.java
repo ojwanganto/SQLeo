@@ -183,8 +183,9 @@ public class ClientContent extends MDIClientWithCRActions
 			toolbar.add(new ActionShowFindReplace());
 
 			toolbar.addSeparator();
-			Action commit = new ActionCommit(control.getHandlerKey().toString());
-			Action rollback = new ActionRollback(control.getHandlerKey().toString());
+			final Action refresh = control.getActionMap().get("task-go");
+			Action commit = new ActionCommit(control.getHandlerKey().toString(),refresh);
+			Action rollback = new ActionRollback(control.getHandlerKey().toString(),refresh);
 			toolbar.getActionMap().put("action-commit",commit);
 			toolbar.getActionMap().put("action-rollback",rollback);
 			toolbar.add(commit);

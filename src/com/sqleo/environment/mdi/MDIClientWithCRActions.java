@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
@@ -46,6 +47,7 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 
 	protected class ActionCommit extends AbstractAction {
 		private String keyCah = null;
+		private Action refresh = null;
 		ActionCommit(String keyCah) {
 			this.keyCah = keyCah;
 			putValue(SMALL_ICON,
@@ -54,6 +56,10 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 			putValue(NAME, "action-commit");
 			setEnabled(!ConnectionAssistant.getAutoCommitPrefered());
 
+		}
+		ActionCommit(String keyCah,final Action refresh) {
+			this(keyCah);
+			this.refresh = refresh;
 		}
 
 		@Override
@@ -74,12 +80,16 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+				if(this.refresh!=null){
+					this.refresh.actionPerformed(null);
+				}
 			}
 		}
 	}
 
 	protected class ActionRollback extends AbstractAction {
 		private String keyCah = null;
+		private Action refresh = null;
 		ActionRollback(String keyCah) {
 			this.keyCah = keyCah;
 			putValue(SMALL_ICON,
@@ -87,6 +97,10 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 			putValue(SHORT_DESCRIPTION, "Rollback...");
 			putValue(NAME, "action-rollback");
 			setEnabled(!ConnectionAssistant.getAutoCommitPrefered());
+		}
+		ActionRollback(String keyCah,final Action refresh) {
+			this(keyCah);
+			this.refresh = refresh;
 		}
 
 		@Override
@@ -107,6 +121,9 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
+				}
+				if(this.refresh!=null){
+					this.refresh.actionPerformed(null);
 				}
 			}
 		}
