@@ -107,7 +107,7 @@ public class TaskUpdate implements Runnable
 
 					Object cell = rowdata[col];
 					if(cell instanceof Object[]) cell = ((Object[])cell)[1];
-					params.addElement(new Object[]{cell, new Integer(target.getView().getColumnType(i))});
+					params.addElement(new Object[]{cell, new Integer(target.getView().getColumnType(col))});
 				}
 			}
 			

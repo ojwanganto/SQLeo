@@ -368,6 +368,10 @@ public class SQLFormatter implements _ReservedWords
 		{
 		case Types.CHAR:
 		case Types.VARCHAR:
+		case Types.LONGVARCHAR:
+		case Types.LONGNVARCHAR:
+		case Types.NCHAR:
+		case Types.NVARCHAR:
 			return "'" + value.toString() + "'";
 		case Types.DATE:
 			return "{d '" + value.toString() + "'}";

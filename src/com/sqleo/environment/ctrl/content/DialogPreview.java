@@ -87,7 +87,7 @@ public class DialogPreview extends AbstractDialogModal
 
 					Object cell = rowdata[col];
 					if(cell instanceof Object[]) cell = ((Object[])cell)[1];
-					whereValues.addElement(toJdbcValue(cell,j));
+					whereValues.addElement(toJdbcValue(cell,col));
 				}
 				
 				if(handler.type.equals(ContentChanges.DELETE))
