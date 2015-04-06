@@ -218,7 +218,7 @@ public class SQLHelper {
 		// - take table name from syntax not from group(1) --> (remove table as first param)
 		// - use syntax where clause to retrieve pivot values
 
-		final Pattern p = Pattern.compile("SQLeoPivot\\((.*),(.*),(.*),(.*)\\)");
+		final Pattern p = Pattern.compile("SQLeoPivot\\((.*?),(.*?),(.*?),(.*?)\\)");
 		final Matcher m = p.matcher(query);
 		
 		// Parameters : 
@@ -240,6 +240,7 @@ public class SQLHelper {
 				}
 				if(val.length() > 0) val=val.deleteCharAt(val.length()-1); 
 				m.appendReplacement(result, val.toString());
+				System.out.println("PivotSQL: " + val.toString() );
 			}
 //		}finally{
 //			stmt.close();
@@ -253,7 +254,7 @@ public class SQLHelper {
 
 
 
-		final Pattern p1 = Pattern.compile("SQLeoGroupConcat\\((.*),(.*),(.*)\\)");
+		final Pattern p1 = Pattern.compile("SQLeoGroupConcat\\((.*?),(.*?),\\s*(\'.*?\')\\s*\\)");
 		final Matcher m1 = p1.matcher(result);
 		
 		// Parameters : 
@@ -273,8 +274,10 @@ public class SQLHelper {
 					val.append( "MAX(case " + m1.group(2) + " when '" + pivots.getString(1) + "' then "+ m1.group(2) + "||" + m1.group(3) +" else '' end) ||");
 				}
 				if(val.length() > 0) for (int i=0;i <  2; i++) {val=val.deleteCharAt(val.length()-1);} 
-//				if(val.length() > 0) for (int i=0;i <  m1.group(3).length()+2; i++) {val=val.deleteCharAt(val.length()-15);} 
+				// RTRIM is not database independent : not deployed  
+				// val.insert(0, "RTRIM(").append("," + m1.group(3) + ")");
 				m1.appendReplacement(result1, val.toString());
+				System.out.println("GroupConcatSQL: " + val.toString() );
 			}
 //		}finally{
 			stmt.close();
@@ -282,7 +285,7 @@ public class SQLHelper {
 		m1.appendTail(result1);
 
 		final String pivotQuery = result1.toString().replace("NbPivotValues",NbPivotValues.toString());
-		System.out.println("Pivot SQL: " + pivotQuery ); 
+		//System.out.println("Pivot SQL: " + pivotQuery ); 
 		return pivotQuery.isEmpty()?query:pivotQuery;
 	}
 
