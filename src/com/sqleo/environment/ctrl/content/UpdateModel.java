@@ -64,13 +64,6 @@ public class UpdateModel
 		this.rowid = where;
 	}	
 
-	public String getDeleteSyntax()
-	{
-		Object[] whereValues = new Object[rowid.length];
-		Arrays.fill(whereValues,"?");
-		
-		return getDeleteSyntax(whereValues);
-	}
 
 	public String getDeleteSyntax(Object[] whereValues)
 	{
@@ -90,14 +83,6 @@ public class UpdateModel
 		return	"INSERT INTO " + table.getIdentifier() +
 				" (" + SQLFormatter.concatCommaDelimited(columns,false,0) +
 				") VALUES (" + SQLFormatter.concatCommaDelimited(fieldValues,false,0) + ")";
-	}
-	
-	public String getUpdateSyntax(String[] columns)
-	{
-		Object[] whereValues = new Object[rowid.length];
-		Arrays.fill(whereValues,"?");
-		
-		return getUpdateSyntax(columns, whereValues);		
 	}
 	
 	public String getUpdateSyntax(String[] columns, Object[] whereValues)

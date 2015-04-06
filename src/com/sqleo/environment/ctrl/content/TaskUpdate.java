@@ -161,11 +161,6 @@ public class TaskUpdate implements Runnable
 		target.doStop();
 	}
 	
-	private String toJdbcValue(Object value, int col)
-	{
-		return SQLFormatter.toJdbcValue(value,target.getView().getColumnType(col));
-	}
-
 	private boolean alert(Exception e)
 	{
 		String title = e.getClass().getName();
