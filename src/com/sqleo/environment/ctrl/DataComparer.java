@@ -252,7 +252,7 @@ public class DataComparer extends BorderLayoutPanel
 			result.append("MAX(TGT").append(i).append(") as \"agg").append(i).append("_").append(realTargetAlias).append("\"");
 			// ticket #260 add diff status for each line (can help when exporting in excel AND pitvot table
 			if(addDiffStatusInOutput.isSelected()){
-				result.append(",\n").append(" case when MAX(SRC").append(i).append(")=").append("MAX(TGT").append(i).append(")||'' then 'EQU'");
+				result.append(",\n").append(" case when MAX(SRC").append(i).append(")=").append("MAX(TGT").append(i).append(") then 'EQU'");
 				result.append(" when MAX(TGT").append(i).append(")='' then '").append(realSourceAlias).append("'");	
 				result.append(" when MAX(SRC").append(i).append(")='' then '").append(realTargetAlias).append("'");	
 				result.append(" else 'DIFF' end as DIFF").append(i);	
