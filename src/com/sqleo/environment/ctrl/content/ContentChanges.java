@@ -51,6 +51,18 @@ public class ContentChanges
 	{
 		return (Handler)store.elementAt(idx);
 	}
+	
+	Handler getHandlerAt(Long rid)
+	{
+		int idx = -1;
+		for(int i = 0; i<=2; i++){
+			idx = store.indexOf(new Handler(i,rid));
+			if(idx!=-1){
+				break;
+			}
+		}
+		return idx!=-1 ? (Handler)store.elementAt(idx) : null;
+	}
 
 	void removeHandlerAt(int idx)
 	{

@@ -27,6 +27,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import com.sqleo.environment.Preferences;
+import com.sqleo.environment.ctrl.content.ContentChanges.Handler;
 import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
@@ -127,7 +128,11 @@ public class ContentModel implements TableModel
 	public void deleteRow(int row)
 	{
 		Long rid = (Long)rows.elementAt(this.toFlatRow(row));
-		rows.removeElement(rid);
+		
+		final Handler handler = getHandlerAt(row);
+		if(handler!=null && handler.type.equals(ContentChanges.INSERT)){
+			rows.removeElement(rid);
+		}
 		
 		changes.setDeleted(rid);
 	}
@@ -202,7 +207,12 @@ public class ContentModel implements TableModel
 	public boolean isFlatCellChanged(int row, int col)
 	{
 		Long rid = (Long)rows.elementAt(row);
-		return changes.exists(ContentChanges.INSERT,rid) || (getValues(rid)[col] instanceof Object[]);
+		return changes.exists(ContentChanges.INSERT,rid) || changes.exists(ContentChanges.DELETE,rid) ||(getValues(rid)[col] instanceof Object[]);
+	}
+	
+	public Handler getHandlerAt(int row){
+		Long rid = (Long)rows.elementAt(row);
+		return changes.getHandlerAt(rid);
 	}
 	
 	private boolean isFlatRowChanged(int row)

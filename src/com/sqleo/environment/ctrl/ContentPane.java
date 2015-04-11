@@ -281,8 +281,8 @@ public class ContentPane extends BorderLayoutPanel
 		
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		if(update){
-			this.getActionMap().get("task-go").actionPerformed(null);
 			update = false;
+			this.getActionMap().get("task-go").actionPerformed(null);
 		}
 	}
 	
