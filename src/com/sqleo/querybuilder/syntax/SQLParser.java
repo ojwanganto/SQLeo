@@ -103,6 +103,15 @@ public class SQLParser
 			{
 				doParseCTE(li,qe.getQuerySpecification());
 			}
+			else if(next.toString().equalsIgnoreCase(_ReservedWords.UPDATE))
+			{
+				doParseFrom(li,qe.getQuerySpecification());
+			}
+			else if(next.toString().equalsIgnoreCase(_ReservedWords.SET))
+			{
+				doParseSelect(li,qe.getQuerySpecification());
+				doConvertColumns(qe.getQuerySpecification());
+			}
 			else if(next.toString().equalsIgnoreCase(_ReservedWords.SELECT))
 			{
 				doParseSelect(li,qe.getQuerySpecification());
@@ -219,14 +228,17 @@ public class SQLParser
 		{
 			Object next = li.next();
 			
-			boolean isOpenBracket = next.toString().equals("(");
-			boolean isClosedBracket = next.toString().equals(")");
+			boolean isOpenBracket = next.toString().equals("(") 
+					|| next.toString().equalsIgnoreCase("case"); // ticket # 72
+			boolean isClosedBracket = next.toString().equals(")") 
+					|| next.toString().equalsIgnoreCase("end"); // ticket # 72
 			
 			if(next.toString().equalsIgnoreCase(_ReservedWords.DISTINCT) && surrounds == 0 )
 			{
 				qs.setQuantifier(QuerySpecification.DISTINCT);
 			}
-			else if(next.toString().equals(",") && surrounds == 0 )
+			else if(next.toString().equals(",") && surrounds == 0 
+				|| next.toString().equals("=") && surrounds == 0) // replace "=" by "," in UPDATE SET part
 			{
 				if(!value.trim().equals("")) qs.addSelectList(new QueryTokens.DefaultExpression(value.trim(),alias));
 				value = new String();
@@ -454,7 +466,7 @@ public class SQLParser
 				qs.addFromClause(dt);		
 			}
 			// end #80
-			else if(isClauseWord(next) || next.equals(";") )
+			else if(isClauseWord(next) || next.equals(";") || next.toString().equalsIgnoreCase(_ReservedWords.SET) )
 			{
 //				System.out.println("end.");
 				
@@ -704,7 +716,7 @@ public class SQLParser
 				}
 
 			}
-			else if(!next.toString().equalsIgnoreCase("AS"))
+			else if(!next.toString().equalsIgnoreCase("AS")&&!next.toString().equalsIgnoreCase(_ReservedWords.SET))
 			{
 //				System.out.println("table or alias");
 

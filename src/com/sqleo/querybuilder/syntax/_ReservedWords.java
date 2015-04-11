@@ -29,6 +29,8 @@ public interface _ReservedWords
 	public static final String DISTINCT	= "DISTINCT";
 	
 	public static final String WITH		= "WITH";
+	public static final String UPDATE	= "UPDATE";
+	public static final String SET		= "SET";
 	public static final String SELECT	= "SELECT";
 	public static final String FROM		= "FROM";
 	public static final String WHERE	= "WHERE";
@@ -62,7 +64,7 @@ public interface _ReservedWords
 			FULL_OUTER_JOIN, JOIN, INNER_JOIN, LEFT_JOIN, RIGHT_JOIN, FULL_JOIN, CROSS_JOIN, EXTRACT, IN
 			,//SQL commands below 
 				"DELETE","INSERT","INTO","VALUES","UPDATE","SET","ADD","ALTER","CREATE","DROP","CONSTRAINT","REFERENCES",
-				"PRIMARY KEY","FOREIGN KEY","COLUMN","INDEX","TABLE","VIE");
+				"PRIMARY KEY","FOREIGN KEY","COLUMN","INDEX","TABLE","VIEW");
 				
 
 }
