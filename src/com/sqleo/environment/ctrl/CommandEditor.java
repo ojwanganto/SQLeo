@@ -159,7 +159,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			final String requestString = request.getSelectedText();
 			if(requestString!=null){
 				final String sqlcmd = requestString.length() > 7 ? requestString.toUpperCase().substring(0, 7) : requestString;
-				if(sqlcmd.startsWith("SELECT")){
+				if(sqlcmd.startsWith("SELECT") || sqlcmd.startsWith("UPDATE")){
 					try {
 						QueryBuilder.useAlwaysQuote	= false;
 						final QueryModel model = SQLParser.toQueryModel(requestString);
