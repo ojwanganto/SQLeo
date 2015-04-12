@@ -257,7 +257,8 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 
 		public void actionPerformed(ActionEvent e)
 		{
-			String[] functions = new String[] { "count", "max", "min", "sum" };
+			final String sqleoGroupConcat = "SQLeoGroupConcat";
+			String[] functions = new String[] { "count", "max", "min", "sum",  sqleoGroupConcat};
 			Object choose =
 				JOptionPane.showInputDialog(
 					DiagramField.this.getOwner().builder,
@@ -270,7 +271,29 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 
 			if (choose != null)
 			{
-				String expr = choose.toString() + "(" + DiagramField.this.querytoken.getIdentifier() + ")";
+				String expr = null;
+				if(choose.toString().equals(sqleoGroupConcat)){
+					Object sqleoGroupConcatSeparator =
+						JOptionPane.showInputDialog(
+							DiagramField.this.getOwner().builder,
+							I18n.getString("querybuilder.message.sqleoGroupConcat.chooseSeparator", "choose separator:"),
+							I18n.getString("querybuilder.menu.addExpression", "add expression..."),
+							JOptionPane.PLAIN_MESSAGE,
+							null,
+							null,
+							null);
+					if(null == sqleoGroupConcatSeparator){
+						return;
+					}
+					if(!sqleoGroupConcatSeparator.toString().startsWith("'")){
+						sqleoGroupConcatSeparator = "'"+sqleoGroupConcatSeparator+"'";
+					}
+					expr = sqleoGroupConcat + "(" + DiagramField.this.querytoken.getTable() +","+
+							DiagramField.this.querytoken.getIdentifier() + "," + sqleoGroupConcatSeparator
+							+ ")";
+				}else{
+					expr = choose.toString() + "(" + DiagramField.this.querytoken.getIdentifier() + ")";
+				}
 				QueryTokens.DefaultExpression token = new QueryTokens.DefaultExpression(expr);
 				
 				BrowserItems.AbstractQueryTreeItem qti = getOwner().builder.browser.getQueryItem();
