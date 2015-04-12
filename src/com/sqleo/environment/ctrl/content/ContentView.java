@@ -480,8 +480,16 @@ public class ContentView extends JPanel implements ListSelectionListener
 			if(value==null)
 			{
 				super.setText("<null>");
-				if(ContentView.this.model.isCellChanged(row,col))
-					super.setForeground(Color.green);
+				if(ContentView.this.model.isCellChanged(row,col)){
+					final ContentChanges.Handler handler = ContentView.this.model.getHandlerAt(row);
+					if(handler.type.equals(ContentChanges.INSERT)){
+						super.setForeground(Color.green);
+					}else if(handler.type.equals(ContentChanges.DELETE)){
+						super.setForeground(Color.red);
+					}else if(handler.type.equals(ContentChanges.UPDATE)){
+						super.setForeground(Color.blue);
+					}
+				}
 				else
 					super.setForeground(Color.lightGray);
 			}
