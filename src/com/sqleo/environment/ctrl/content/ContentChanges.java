@@ -42,6 +42,20 @@ public class ContentChanges
 		return store.contains(new Handler(type,rid)); 
 	}
 	
+	public boolean existsOnlyInsert()
+	{
+		final int total = count();
+		if(total == 0){
+			return false;
+		}
+		for(int idx=0; idx < total;idx++){
+			if(!((Handler) store.elementAt(idx)).type.equals(INSERT)){
+				return false;
+			}
+		}
+		return true; 
+	}
+	
 	public int count()
 	{
 		return store.size();

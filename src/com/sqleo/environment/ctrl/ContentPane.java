@@ -45,6 +45,7 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.ctrl.content.ContentChanges;
 import com.sqleo.environment.ctrl.content.ContentModel;
 import com.sqleo.environment.ctrl.content.ContentView;
 import com.sqleo.environment.ctrl.content.TaskRetrieve;
@@ -390,9 +391,10 @@ public class ContentPane extends BorderLayoutPanel
 
 		public void actionPerformed(ActionEvent ae)
 		{
-			if(ContentPane.this.getUpdateModel() !=null && ContentPane.this.getUpdateModel().getRowIdentifierCount() > 0)
-			{
-				doUpdate();
+			if(ContentPane.this.getUpdateModel() !=null &&
+					(ContentPane.this.getView().getChanges().existsOnlyInsert()
+							||ContentPane.this.getUpdateModel().getRowIdentifierCount() > 0) ){
+					doUpdate();
 			}
 			else
 			{
