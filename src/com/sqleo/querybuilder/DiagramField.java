@@ -36,7 +36,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -47,6 +47,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.querybuilder.dnd.DragMouseAdapter;
@@ -259,25 +260,21 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 		public void actionPerformed(ActionEvent e)
 		{
 			final String sqleoGroupConcat = "SQLeoGroupConcat";
-			String[] functions = new String[] { "count", "max", "min", "sum",  sqleoGroupConcat};
-			JOptionPane optionPane = new JOptionPane(
+			final String[] functions = new String[] { "count", "max", "min", "sum",  sqleoGroupConcat};
+			final JComboBox combo = new JComboBox(functions);
+			final BorderLayoutPanel panel = new BorderLayoutPanel();
+			panel.setComponentNorth(combo);
+			JCheckBox pivotCheckbox = new JCheckBox(I18n.getString("querybuilder.message.sqleoPivotCheckbox", "Transform as Pivot"));
+			panel.setComponentSouth(pivotCheckbox);
+			int value = JOptionPane.showOptionDialog(DiagramField.this.getOwner().builder,
+					panel,
 					I18n.getString("querybuilder.message.chooseFunction", "choose function:"),
-					JOptionPane.PLAIN_MESSAGE,JOptionPane.OK_CANCEL_OPTION
-			);
-			optionPane.setWantsInput(true);
-			optionPane.setSelectionValues(functions);
-			optionPane.setComponentOrientation(DiagramField.this.getOwner().builder.getComponentOrientation());
-			JCheckBox pivotCheckbox = new JCheckBox(I18n.getString("querybuilder.message.sqleoPivotCheckbox", "SQLeoPivot function"));
-			optionPane.add(pivotCheckbox);
-			JDialog dialog = optionPane.createDialog(DiagramField.this.getOwner().builder,
-					I18n.getString("querybuilder.menu.addExpression", "add expression..."));
-			optionPane.selectInitialValue();
-			dialog.show();
-			dialog.dispose();
-	        Object choose = optionPane.getInputValue();
-	        if(choose == JOptionPane.UNINITIALIZED_VALUE){
-	        	choose = null;
-	        }
+                    JOptionPane.OK_CANCEL_OPTION, 
+                    JOptionPane.PLAIN_MESSAGE,
+                    null, null, null);
+			if(JOptionPane.OK_OPTION != value)
+				return;
+			Object choose = combo.getSelectedItem();
 			if (choose != null)
 			{
 				String expr = null;
@@ -314,9 +311,6 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 								null);
 						if(null == sqleoPivotHeader){
 							return;
-						}
-						if(!sqleoPivotHeader.toString().startsWith("\"")){
-							sqleoPivotHeader = "\""+sqleoPivotHeader+"\"";
 						}
 						expr = "SQLeoPivot(" + DiagramField.this.querytoken.getTable() +","+sqleoPivotHeader
 							+ "," + choose.toString() + ","+ DiagramField.this.querytoken.getIdentifier() + ")";
