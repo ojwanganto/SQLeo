@@ -230,7 +230,7 @@ public class SQLHelper {
 		Integer NbPivotValues = 0;
 //		try{
 			while (m.find()) {
-				System.out.println("Pivot params: " + m.group(1) + " / "+ m.group(2)+" / "+ m.group(3)+" / "+ m.group(4));
+				System.out.println("PivotSQL params: " + m.group(1) + " / "+ m.group(2)+" / "+ m.group(3)+" / "+ m.group(4));
 				ResultSet pivots = stmt.executeQuery("SELECT distinct " + m.group(2) + " FROM " + m.group(1));
 				StringBuilder val = new StringBuilder();
 				while (pivots.next()) {
@@ -238,9 +238,14 @@ public class SQLHelper {
 							+ "as \"" + pivots.getString(1)  + "\",");
 					NbPivotValues++;
 				}
-				if(val.length() > 0) val=val.deleteCharAt(val.length()-1); 
+				if(val.length() > 0) 
+					val=val.deleteCharAt(val.length()-1); 
+				else
+					val=val.append(" null "); 
+
 				m.appendReplacement(result, val.toString());
-				System.out.println("PivotSQL: " + val.toString() );
+				System.out.println("PivotSQL text: " + val.toString() );
+				System.out.println("PivotSQL length: " + val.length() );
 			}
 //		}finally{
 //			stmt.close();
@@ -273,11 +278,16 @@ public class SQLHelper {
 				while (pivots.next()) {
 					val.append( "MAX(case " + m1.group(2) + " when '" + pivots.getString(1) + "' then "+ m1.group(2) + "||" + m1.group(3) +" else '' end) ||");
 				}
-				if(val.length() > 0) for (int i=0;i <  2; i++) {val=val.deleteCharAt(val.length()-1);} 
+				if(val.length() > 0) 
+					for (int i=0;i <  2; i++) {val=val.deleteCharAt(val.length()-1);} 
+				else
+					val=val.append(" null "); 
+
 				// RTRIM is not database independent : not deployed  
 				// val.insert(0, "RTRIM(").append("," + m1.group(3) + ")");
 				m1.appendReplacement(result1, val.toString());
 				System.out.println("GroupConcatSQL: " + val.toString() );
+				System.out.println("GroupConcatSQL length: " + val.length() );
 			}
 //		}finally{
 			stmt.close();
