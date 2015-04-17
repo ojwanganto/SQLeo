@@ -260,7 +260,7 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 		public void actionPerformed(ActionEvent e)
 		{
 			final String sqleoGroupConcat = "SQLeoGroupConcat";
-			final String[] functions = new String[] { "count", "max", "min", "sum",  sqleoGroupConcat};
+			final String[] functions = new String[] { "count", "max", "min", "sum", "avg",  sqleoGroupConcat};
 			final JComboBox combo = new JComboBox(functions);
 			final BorderLayoutPanel panel = new BorderLayoutPanel();
 			panel.setComponentNorth(combo);

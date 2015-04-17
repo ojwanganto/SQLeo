@@ -33,6 +33,28 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2015.04.rc1.zip: 2015-04-17
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.04/
+
+	283 Content window: deleted row should be colored in RED before being applyed to db
+	280 Serbian translation (by DEJAN ZDRAVKOVIĆ)
+	279 Query Builder: Add (database independent) group_concat syntax
+	275 command editor : format sql selected
+	274 sqleo query result shows oracle blob objects as null
+	270 Transform complex UPDATE in SELECT (for testing)
+	269 Query Builder: Add (database independent) pivot syntax
+	267 Content window: Update in grid with 2 varchar fields as update criterias fails
+	262 command editor: display latest connection in connections list (if set in preferences)
+	237 command editor: CTRL ENTER should select previous or current statement not all (Fix)
+	72 Query Builder: reverse "case when ..." is wrong (Fix)
+	46 Content window: can't update or delete on NULL column
+	27 refresh of screen CONTENT/​PREVIEW after action
+	19 message: no update criteria defined! when inserting
+
+
 SQLeoVQB.2015.03.rc1.zip: 2015-03-27
 
   Thanks to Anudeep Gade for his contribution to this release
