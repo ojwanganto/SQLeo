@@ -363,7 +363,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			ClientCommandEditor cce = (ClientCommandEditor) Application.window
 					.getClient(ClientCommandEditor.DEFAULT_TITLE);
         	splitPanePosition  = split.getDividerLocation();
-			if(cce.isGridOutput() && sql.toUpperCase().startsWith("SELECT")){
+			if(cce.isGridOutput() && (sql.toUpperCase().startsWith("SELECT") || sql.toUpperCase().startsWith("SHOW"))){
 				Vector<Integer> prevColWidths = null;
 				if(gridClient!=null){
 					gridClient.getControl().getView().cacheColumnWidths();

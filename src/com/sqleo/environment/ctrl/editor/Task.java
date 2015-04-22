@@ -78,7 +78,7 @@ public class Task implements Runnable {
 					syntax = SQLHelper.getSQLeoFunctionQuery(syntax,source.getHandlerKey());
 
 					String sqlcmd = syntax.length() > 7 ?  syntax.toUpperCase().substring(0, 7) : syntax.toUpperCase();
-					if (sqlcmd.startsWith("WITH")) {
+					if (sqlcmd.startsWith("WITH") || sqlcmd.startsWith("SHOW")) {
 						rs = stmt.executeQuery(syntax);
 						printSelect();
 						rs.close();
