@@ -25,9 +25,6 @@ package com.sqleo.environment.ctrl;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.AbstractAction;
@@ -121,8 +118,8 @@ public class SQLHistoryViewer extends ListView  implements MouseListener
 		public void actionPerformed(ActionEvent ae)
 		{
 			final int selectedRow = getSelectedRow();
-			final Date timestamp = (Date) getValueAt(selectedRow, 0);
-			Application.session.removeSQLFromHistory(timestamp.toString());
+			final String timestamp = (String) getValueAt(selectedRow, 0);
+			Application.session.removeSQLFromHistory(timestamp);
 			removeRow(getSelectedRow());
 		}
 	}
