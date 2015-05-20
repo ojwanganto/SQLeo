@@ -226,7 +226,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					StringTokenizer st = new StringTokenizer(requestString, "\n"); // split sql separated by "\n"
 					StringBuilder sqlBuilder = new StringBuilder();
 					while (!stopped && st.hasMoreTokens()) {
-						final String line = st.nextToken();
+						final String line = st.nextToken().trim();
 						if (line.startsWith("--") || line.startsWith("//") || line.startsWith("#")) {
 		                    // Line is a comment	
 							continue;
