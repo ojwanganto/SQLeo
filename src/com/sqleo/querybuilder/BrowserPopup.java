@@ -24,6 +24,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
@@ -36,7 +38,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import com.sqleo.common.util.I18n;
-import com.sqleo.querybuilder.BrowserItems.DiagramQueryTreeItem;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryExpression;
 import com.sqleo.querybuilder.syntax.QuerySpecification;
@@ -66,6 +67,7 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 	private final static int POP_IDX_REM	= 12;
 	// - 13
 	private final static int POP_IDX_REM_ALL= 14;
+	private final static int POP_IDX_ADD_GS= 15;
 	
 	BrowserPopup(QueryBuilder builder)
 	{
@@ -86,6 +88,7 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 		add(new ActionRemoveNode());
 		addSeparator();
 		add(new ActionRemoveAll());
+		add(new ActionAddGroupBySyncSelect());
 	}
 
 	public void mouseEntered(MouseEvent me){}
@@ -186,18 +189,27 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 				
 				if(node instanceof BrowserItems.ClauseTreeItem)
 				{
-					if(node.getUserObject().toString().indexOf(_ReservedWords.SELECT)!=-1)
+					final String clause = node.getUserObject().toString();
+					if(clause.indexOf(_ReservedWords.SELECT)!=-1)
 					{
 						getComponent(POP_IDX_DISTINCT).setVisible(true);
 						getComponent(POP_IDX_DISTINCT+1).setVisible(true);
 						getComponent(POP_IDX_ADD_E).setVisible(true);
 						getComponent(POP_IDX_ADD_S).setVisible(true);
 	
-						((JCheckBoxMenuItem)getComponent(POP_IDX_DISTINCT)).setSelected(node.getUserObject().toString().indexOf(_ReservedWords.DISTINCT)!=-1);
+						((JCheckBoxMenuItem)getComponent(POP_IDX_DISTINCT)).setSelected(clause.indexOf(_ReservedWords.DISTINCT)!=-1);
 					}
 					
-					getComponent(POP_IDX_ADD_H).setVisible(node.getUserObject().toString().indexOf(_ReservedWords.HAVING)!=-1);
-					getComponent(POP_IDX_ADD_W).setVisible(node.getUserObject().toString().indexOf(_ReservedWords.WHERE)!=-1);
+					if(clause.indexOf(_ReservedWords.GROUP_BY)!=-1){
+						DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) ((BrowserItems.DefaultTreeItem)node.getParent()).getFirstChild();
+						getComponent(POP_IDX_ADD_GS).setVisible(true);
+						getComponent(POP_IDX_ADD_GS).setEnabled(selectNode.getChildCount()>0);
+					}else{
+						getComponent(POP_IDX_ADD_GS).setVisible(false);
+					}
+					
+					getComponent(POP_IDX_ADD_H).setVisible(clause.indexOf(_ReservedWords.HAVING)!=-1);
+					getComponent(POP_IDX_ADD_W).setVisible(clause.indexOf(_ReservedWords.WHERE)!=-1);
 					
 					boolean oneAddVisible = getComponent(POP_IDX_ADD_W).isVisible() || getComponent(POP_IDX_ADD_H).isVisible();
 					boolean areAllRemovable = !getComponent(POP_IDX_ADD_E).isVisible();
@@ -235,6 +247,52 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 			BrowserPopup.this.node.setUserObject(uo);
 			BrowserPopup.this.builder.browser.getQuerySpecification().setQuantifier(q);
 			BrowserPopup.this.builder.browser.refreshSelection();
+		}
+	}
+	
+	class ActionAddGroupBySyncSelect extends AbstractAction
+	{
+		ActionAddGroupBySyncSelect(){super(I18n.getString("querybuilder.menu.addToGroupBySyncSelect","Sync with select columns"));}
+		
+		public void actionPerformed(ActionEvent e)
+		{
+			//Remove all nodes and sync again
+			new ActionRemoveAll().actionPerformed(null);
+			
+			DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) ((BrowserItems.DefaultTreeItem)node.getParent()).getFirstChild();
+			for(int i = 0; i < selectNode.getChildCount() ; i++)
+			{
+				BrowserItems.DefaultTreeItem item = (BrowserItems.DefaultTreeItem)selectNode.getChildAt(i);
+				if(item.getUserObject() instanceof QueryTokens._Expression){
+					final QueryTokens._Expression itemToken = (QueryTokens._Expression)item.getUserObject();
+					/*
+					 * should take all columns and functions/ operations that are not aggregate functions ( count, sum, avg, min, max )
+					 * exemple: select 1, f(a), 'gg', count(*) from group by 1, f(a), 'gg' 
+					 * 
+					 */
+					boolean addToGroupby = false;
+					if(itemToken instanceof  QueryTokens.Column){
+						addToGroupby = true;
+					}else if(itemToken instanceof  QueryTokens.DefaultExpression){
+						final String val = ((QueryTokens.DefaultExpression)itemToken).getValue();
+						if(val!=null){
+							addToGroupby = true;
+							final String valLower = val.toLowerCase();
+							final List<String> aggregates = Arrays.asList("count", "sum", "avg", "min", "max");
+							for(final String aggr : aggregates){
+								if(valLower.startsWith(aggr)){
+									addToGroupby = false;
+									break;
+								}
+							}
+						}
+					}
+					if(addToGroupby){
+						BrowserPopup.this.builder.browser.addGroupByClause(new QueryTokens.Group(itemToken));
+					}
+				}
+			}
+			
 		}
 	}
 
