@@ -33,6 +33,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
+import com.sqleo.environment.Preferences;
 import com.sqleo.querybuilder.BrowserItems.AbstractQueryTreeItem;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryExpression;
@@ -58,6 +59,12 @@ public class ViewBrowser extends BorderLayoutPanel implements TreeSelectionListe
 		tree.setCellRenderer(new QueryModelTreeCellRenderer());
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);
+		
+		final int oldRowHeight = tree.getRowHeight();
+		final int newRowHeight = Preferences.getScaledRowHeight(oldRowHeight);
+		if(newRowHeight != oldRowHeight){
+			tree.setRowHeight(newRowHeight);
+		}
 		
 		BrowserDnD.init(builder,tree);
 		expandAll();

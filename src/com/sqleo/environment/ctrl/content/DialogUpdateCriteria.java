@@ -38,6 +38,7 @@ import com.sqleo.common.gui.AbstractDialogConfirm;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.CheckBoxCellRenderer;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.ContentPane;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
@@ -84,6 +85,12 @@ public class DialogUpdateCriteria extends AbstractDialogConfirm implements ItemL
 		columns.setDefaultRenderer(Boolean.class, new CheckBoxCellRenderer());
 		columns.getTableHeader().setPreferredSize(new Dimension(0,0));
 		columns.getTableHeader().setVisible(false);
+		
+		final int oldRowHeight = columns.getRowHeight();
+		final int newRowHeight = Preferences.getScaledRowHeight(oldRowHeight);
+		if(newRowHeight != oldRowHeight){
+			columns.setRowHeight(newRowHeight);
+		}
 		
 		getContentPane().add(mask);		
 	}

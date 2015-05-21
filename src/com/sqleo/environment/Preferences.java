@@ -125,4 +125,17 @@ public class Preferences
 	public static boolean containsKey(String key) {
 		return get().containsKey(key);
 	}
+	
+	public static int getScaledRowHeight(final int oldRowHeight){
+		final int fontSizePercentage = getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_FONT_PERCENT);
+	    if (fontSizePercentage != 100) {
+	    	final float multiplier = fontSizePercentage / 100.0f;
+	    	final int newHeight = Math.round(oldRowHeight * multiplier);
+	    	return newHeight;
+	    }
+	    return oldRowHeight;
+	}
+	
+	
+	
 }

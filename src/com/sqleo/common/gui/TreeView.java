@@ -31,6 +31,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.sqleo.environment.Preferences;
+
 public class TreeView extends BorderLayoutPanel
 {
     private JTree tree;
@@ -48,6 +50,12 @@ public class TreeView extends BorderLayoutPanel
 		tree.putClientProperty("JTree.lineStyle", "Angled");
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(visible);
+		
+		final int oldRowHeight = tree.getRowHeight();
+		final int newRowHeight = Preferences.getScaledRowHeight(oldRowHeight);
+		if(newRowHeight != oldRowHeight){
+			tree.setRowHeight(newRowHeight);
+		}
     }
     
 	protected JTree getJavaComponent()

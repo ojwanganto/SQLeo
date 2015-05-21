@@ -96,12 +96,12 @@ public class ContentView extends JPanel implements ListSelectionListener
 				}
 			}
 		});
-		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_FONT_PERCENT);
-        if (fontSizePercentage != 100) {
-        	final float multiplier = fontSizePercentage / 100.0f;
-        	final int newHeight = Math.round(data.getRowHeight() * multiplier);
-        	data.setRowHeight(newHeight);
-        }
+		
+		final int oldRowHeight = data.getRowHeight();
+		final int newRowHeight = Preferences.getScaledRowHeight(oldRowHeight);
+		if(newRowHeight != oldRowHeight){
+			data.setRowHeight(newRowHeight);
+		}
 		
 		JScrollPane scroll = new JScrollPane(data);
 		scroll.getViewport().setBackground(UIManager.getDefaults().getColor("Table.background"));

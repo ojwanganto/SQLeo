@@ -59,7 +59,6 @@ import javax.swing.text.TabStop;
 import com.sqleo.common.util.Trie;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
-import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.QueryStyledDocument;
 
 
@@ -77,14 +76,7 @@ public class TextView extends BorderLayoutPanel
 		editor = new JTextPane();
 		editor.setDocument(doc);
 		
-		final int fontSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_FONT_PERCENT);
-        final int editorFontSize;
-        if (fontSizePercentage != 100) {
-        	final float multiplier = fontSizePercentage / 100.0f;
-        	editorFontSize = Math.round(14 * multiplier);
-        }else{
-        	editorFontSize = 14;
-        }
+        final int editorFontSize = Preferences.getScaledRowHeight(14);
 		editor.setFont(new Font("monospaced", Font.PLAIN, editorFontSize));
 		
 		TextLineNumber lineNumberView = null;

@@ -44,6 +44,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.sqleo.environment.Preferences;
+
 public class ListView extends BorderLayoutPanel
 {
 	public final static short SORT_ASCENDING = 0;
@@ -71,6 +73,12 @@ public class ListView extends BorderLayoutPanel
 		
 		table.getActionMap().put("Copy",new ActionCopyCell());
 		table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.CTRL_MASK),"Copy");
+		
+		final int oldRowHeight = table.getRowHeight();
+		final int newRowHeight = Preferences.getScaledRowHeight(oldRowHeight);
+		if(newRowHeight != oldRowHeight){
+			table.setRowHeight(newRowHeight);
+		}
     }
     
 	protected JTable getJavaComponent()
