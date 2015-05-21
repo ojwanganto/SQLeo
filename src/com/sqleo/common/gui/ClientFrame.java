@@ -32,6 +32,8 @@ import javax.swing.plaf.InternalFrameUI;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.plaf.metal.MetalBorders;
 
+import com.sqleo.environment.Preferences;
+
 public class ClientFrame extends JInternalFrame
 {
     public ClientFrame(String title)
@@ -83,6 +85,8 @@ public class ClientFrame extends JInternalFrame
 
     public boolean setCaptionHeight(int nHeight)
 	{
+    	nHeight = Preferences.getScaledRowHeight(nHeight);
+
         InternalFrameUI internalframeui = getUI();
         
 		if(!(internalframeui instanceof BasicInternalFrameUI))

@@ -24,6 +24,7 @@
 
 package com.sqleo.environment.mdi;
 
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -163,6 +164,11 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 		content.setToolTipText(url);
 		String text = "<html><a href=\""+url+"\">"+linkName+"</a></html>";
 		content.setText(text);
+		
+		content.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+		final int fontSize = Preferences.getScaledRowHeight(content.getFont().getSize());
+		content.setFont(new Font(content.getFont().getFamily(), Font.BOLD, fontSize));
+		
 		content.addHyperlinkListener(new HyperlinkListener() {
 			@Override
 			public void hyperlinkUpdate(HyperlinkEvent e) {
