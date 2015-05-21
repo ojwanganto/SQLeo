@@ -29,6 +29,7 @@ public interface _ReservedWords
 	public static final String DISTINCT	= "DISTINCT";
 	
 	public static final String WITH		= "WITH";
+	public static final String SHOW		= "SHOW";
 	public static final String UPDATE	= "UPDATE";
 	public static final String SET		= "SET";
 	public static final String SELECT	= "SELECT";
@@ -59,7 +60,7 @@ public interface _ReservedWords
 	public static final String IN    = "IN";
 	public static final String EXISTS = "EXISTS";
 
-	public static List<String> ALL_RESERVED_WORDS = Arrays.asList(ALL, DISTINCT, WITH, SELECT, FROM, WHERE, GROUP_BY,
+	public static List<String> ALL_RESERVED_WORDS = Arrays.asList(ALL, DISTINCT, WITH, SHOW, SELECT, FROM, WHERE, GROUP_BY,
 			HAVING, UNION, ORDER_BY,EXISTS, BETWEEN, AS, AND, OR, ON, INNER_JOIN, LEFT_OUTER_JOIN, RIGHT_OUTER_JOIN,
 			FULL_OUTER_JOIN, JOIN, INNER_JOIN, LEFT_JOIN, RIGHT_JOIN, FULL_JOIN, CROSS_JOIN, EXTRACT, IN
 			,//SQL commands below 
