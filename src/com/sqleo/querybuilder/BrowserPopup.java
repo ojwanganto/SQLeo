@@ -278,7 +278,7 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 						if(val!=null){
 							addToGroupby = true;
 							final String valLower = val.toLowerCase();
-							final List<String> aggregates = Arrays.asList("count", "sum", "avg", "min", "max");
+							final List<String> aggregates = Arrays.asList("count", "sum", "avg", "min", "max","sqleogroupconcat","sqleopivot");
 							for(final String aggr : aggregates){
 								if(valLower.startsWith(aggr)){
 									addToGroupby = false;
