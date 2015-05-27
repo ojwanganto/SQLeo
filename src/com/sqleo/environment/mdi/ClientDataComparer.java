@@ -90,7 +90,7 @@ public class ClientDataComparer extends MDIClient
 			}
 			@Override
 			public void internalFrameClosing(InternalFrameEvent e) {
-				int option = JOptionPane.showConfirmDialog(Application.window,"Do you want to save datacomparer setup to a file ?",Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
+				int option = JOptionPane.showConfirmDialog(Application.window,I18n.getString("datacomparer.DoYouWantToSave","Do you want to save datacomparer setup to a file ?"),Application.PROGRAM,JOptionPane.YES_NO_CANCEL_OPTION);
 				if(option == JOptionPane.YES_OPTION){
 					toolbar.getActionMap().get("save").actionPerformed(null);
 				}
@@ -111,7 +111,7 @@ public class ClientDataComparer extends MDIClient
 	private class ActionOpen extends MDIActions.AbstractBase {
 		private ActionOpen() {
 			setIcon(Application.ICON_EDITOR_OPEN);
-			setTooltip("Load setup");
+			setTooltip(I18n.getString("datacomparer.LoadSetup","Load setup"));
 		}
 
 		@Override
@@ -144,7 +144,7 @@ public class ClientDataComparer extends MDIClient
 	private class ActionSave extends MDIActions.AbstractBase {
 		private ActionSave() {
 			setIcon(Application.ICON_EDITOR_SAVE);
-			setTooltip("Save setup");
+			setTooltip(I18n.getString("datacomparer.SaveSetup","Save setup"));
 		}
 
 		@Override

@@ -191,7 +191,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			
 			gbc.gridx = 0;
 			gbc.gridy = 12;
-			final JTextArea label=  new JTextArea("Note: Right side texts are automatically\ncopied from left when empty!");
+			final JTextArea label=  new JTextArea(I18n.getString("datacomparer.RightSideText","Note: Right side texts are automatically\ncopied from left when empty!"));
 			label.setEditable(false);
 			label.setBackground(Color.yellow);
 			gbl.setConstraints(label,gbc);
@@ -474,7 +474,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 						if(!isFullVersion){
 							rowCount++;
 							if(rowCount > LIMITED_ROWS_FOR_FREE_VERSION) {
-								Application.alert("Version with max 100 rows for data comparer query result, Please Donate for more");
+								Application.alert(I18n.getString("datacomparer.VersionWith100rowsMax","Version with max 100 rows for data comparer query result, Please Donate for more"));
 								break;
 							}
 						}
