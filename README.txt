@@ -33,6 +33,22 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2015.05.rc1.zip: 2015-05-27
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.05/
+
+	288 Better translation for Data Comparer
+	287 SQL history: npe when trying to delete a record
+	285 Command Editor: support for SHOW syntax with MySQL
+	281 Improve display on High resolution monitors
+		Note that dialog box need to be manually resized
+
+	268 Command Editor: multiple inserts returns only one status line
+	172 query Builder: add "sync columns with select" for group by 
+
+
 SQLeoVQB.2015.04.rc1.zip: 2015-04-17
 
   Thanks to Anudeep Gade for his contribution to this release
