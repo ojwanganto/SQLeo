@@ -44,6 +44,7 @@ public class Picture
 	{
 		final ImageIcon original = new ImageIcon(url);
 		if(scale){
+		// standard icons: ICON scaling factor applied
 	        final int iconSizePercentage = Preferences.getInteger(DialogPreferences.ICON_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_ICON_PERCENT);
 	        if (iconSizePercentage != 100) {
 	        	final float multiplier = iconSizePercentage / 100.0f;
@@ -55,7 +56,17 @@ public class Picture
 				return original;
 			}
 		}else{
-			return original;
+		// metadata tree and query builder icons: FONT scaling factor applied (ticket #289)
+	        final int iconSizePercentage = Preferences.getInteger(DialogPreferences.FONT_SIZE_PERCENTAGE, DialogPreferences.DEFAULT_FONT_PERCENT);
+	        if (iconSizePercentage != 100) {
+	        	final float multiplier = iconSizePercentage / 100.0f;
+				final Image img = original.getImage();  
+				final Image scaled = img.getScaledInstance(Math.round(original.getIconWidth() * multiplier) , Math.round(original.getIconHeight() * multiplier) ,  
+						java.awt.Image.SCALE_SMOOTH);  
+				return new ImageIcon(scaled);
+			}else{
+				return original;
+			}
 		}
 	}
 }
