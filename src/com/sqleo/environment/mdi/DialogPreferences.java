@@ -107,8 +107,9 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	
 
 	public DialogPreferences() {
-		super(Application.window, Application.PROGRAM + ".preferences", 360,
-				480);
+//		super(Application.window, Application.PROGRAM + ".preferences", 360, 480);
+		// ticket #290 resize preference dialog box
+		super(Application.window, Application.PROGRAM + ".preferences", 540, 600);
 
 		JPanel pnlQB = new JPanel(new GridLayout(0, 1));
 		pnlQB.setBorder(new EmptyBorder(10, 5, 90, 5));
