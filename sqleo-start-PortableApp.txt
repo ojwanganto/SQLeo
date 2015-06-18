@@ -1,0 +1,2 @@
+REM Save configuration files in a [choosen directory] that can be on a USB device
+java -Duser.home=[choosen directory path] -jar SQLeoVQB.jar
