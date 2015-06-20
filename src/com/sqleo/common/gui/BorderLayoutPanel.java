@@ -26,6 +26,8 @@ import java.awt.LayoutManager;
 
 import javax.swing.JPanel;
 
+import com.sqleo.environment.Preferences;
+
 public class BorderLayoutPanel extends JPanel
 {
 	public BorderLayoutPanel()
@@ -77,5 +79,10 @@ public class BorderLayoutPanel extends JPanel
 	public final void setComponentWest(Component comp)
 	{
 		add(comp, BorderLayout.WEST);
+	}
+	
+	@Override
+	public void setSize(int w, int h) {
+		super.setSize(Preferences.getScaledRowHeight(w),Preferences.getScaledRowHeight(h));
 	}
 }

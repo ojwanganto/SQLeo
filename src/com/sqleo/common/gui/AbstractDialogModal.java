@@ -41,6 +41,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment.Preferences;
 
 public abstract class AbstractDialogModal extends JDialog implements ActionListener, Runnable
 {
@@ -99,6 +100,11 @@ public abstract class AbstractDialogModal extends JDialog implements ActionListe
 		};
 		this.addWindowListener(wl);
 		this.getRootPane().registerKeyboardAction(this, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+	}
+	
+	@Override
+	public void setSize(int w, int h) {
+		super.setSize(Preferences.getScaledRowHeight(w),Preferences.getScaledRowHeight(h));
 	}
 	
 	protected CommandButton insertButton(int idx,String text)
