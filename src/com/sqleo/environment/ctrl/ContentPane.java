@@ -45,12 +45,12 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
-import com.sqleo.environment.ctrl.content.ContentChanges;
 import com.sqleo.environment.ctrl.content.ContentModel;
 import com.sqleo.environment.ctrl.content.ContentView;
 import com.sqleo.environment.ctrl.content.TaskRetrieve;
 import com.sqleo.environment.ctrl.content.TaskUpdate;
 import com.sqleo.environment.ctrl.content.UpdateModel;
+import com.sqleo.environment.mdi.ClientQueryBuilder;
 import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.QueryModel;
 
@@ -69,6 +69,7 @@ public class ContentPane extends BorderLayoutPanel
 	private TaskRetrieve retrievingTask;
 	private Integer retrievedRowCount;
 	private boolean update = false;
+	private ClientQueryBuilder clientQB;
 	
 	public ContentPane(String keycah, QueryModel qmodel, UpdateModel umodel)
 	{
@@ -425,6 +426,13 @@ public class ContentPane extends BorderLayoutPanel
 		new ActionRelaunch().actionPerformed(null);
 	}
 	
+	public void setClientQB(ClientQueryBuilder clientQB) {
+		this.clientQB = clientQB;
+	}
+	public ClientQueryBuilder getClientQB() {
+		return clientQB;
+	}
+
 	private class ActionStopTask extends AbstractAction
 	{
 		ActionStopTask()

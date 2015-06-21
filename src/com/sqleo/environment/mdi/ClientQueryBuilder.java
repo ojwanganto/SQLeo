@@ -373,6 +373,7 @@ public class ClientQueryBuilder extends MDIClient {
 			previewPanel.setComponentNorth(client.getContentPane().getComponent(1)); 
 			//add content view
 			ContentPane content = (ContentPane)client.getContentPane().getComponent(0);
+			content.setClientQB(ClientQueryBuilder.this);
 			if(prevColWidths!=null){
 				content.getView().setColumnWidths(prevColWidths);
 			}
