@@ -85,7 +85,9 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 				
 				append = (rowdata[3]!=null ? rowdata[3].toString() : null);
 			}
-			content.getClientQB().getQueryBuilder().setQueryModel(content.getQueryModel());
+			if(content.getClientQB()!=null){
+				content.getClientQB().getQueryBuilder().setQueryModel(content.getQueryModel());
+			}
 			content.getActionMap().get("task-go").actionPerformed(null);
 		}
 		
