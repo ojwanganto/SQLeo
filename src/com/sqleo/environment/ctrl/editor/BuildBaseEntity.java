@@ -28,6 +28,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.sqleo.environment.Preferences;
+
 public class BuildBaseEntity extends JTable
 {
 	private BuildBasePane builder;
@@ -67,6 +69,12 @@ public class BuildBaseEntity extends JTable
 		tableColumn.setPreferredWidth(20);
 		tableColumn.setMaxWidth(20);
 		tableColumn.setResizable(false);
+		
+		final int oldRowHeight = getRowHeight();
+		final int newRowHeight = Preferences.getScaledRowHeight(oldRowHeight);
+		if(newRowHeight != oldRowHeight){
+			setRowHeight(newRowHeight);
+		}
 	}
 
 	void addField(String name)

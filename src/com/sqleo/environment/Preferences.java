@@ -20,6 +20,7 @@
 
 package com.sqleo.environment;
 
+import java.awt.Dimension;
 import java.util.Hashtable;
 
 import com.sqleo.environment.mdi.DialogPreferences;
@@ -134,6 +135,10 @@ public class Preferences
 	    	return newHeight;
 	    }
 	    return oldRowHeight;
+	}
+	
+	public static Dimension getScaledDimension(int w, int h){
+		return new Dimension(getScaledRowHeight(w), getScaledRowHeight(h));
 	}
 	
 	

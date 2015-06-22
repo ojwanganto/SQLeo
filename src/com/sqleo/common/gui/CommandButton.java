@@ -26,9 +26,11 @@ import java.awt.event.ActionListener;
 import javax.swing.Action;
 import javax.swing.JButton;
 
+import com.sqleo.environment.Preferences;
+
 public class CommandButton extends JButton
 {
-	public final static Dimension CUSTOM_DIMENSION = new Dimension(82,22);
+	public final static Dimension CUSTOM_DIMENSION = Preferences.getScaledDimension(82,22);
     
 	public CommandButton(Action a)
 	{

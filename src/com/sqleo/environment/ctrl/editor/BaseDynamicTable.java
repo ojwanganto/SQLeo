@@ -40,6 +40,8 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import com.sqleo.environment.Preferences;
+
 public class BaseDynamicTable extends JTable
 {
 	_ClauseOwner owner;
@@ -79,6 +81,12 @@ public class BaseDynamicTable extends JTable
 		tableColumn.setPreferredWidth(15);
 		tableColumn.setMaxWidth(15);
 		tableColumn.setResizable(false);
+		
+		final int oldRowHeight = getRowHeight();
+		final int newRowHeight = Preferences.getScaledRowHeight(oldRowHeight);
+		if(newRowHeight != oldRowHeight){
+			setRowHeight(newRowHeight);
+		}
 		
 		if(col>1){
 			DefaultCellEditor singleclick = new DefaultCellEditor(new JTextField());

@@ -34,10 +34,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
 
+import com.sqleo.environment.Preferences;
 import com.sqleo.querybuilder.BrowserItems.DiagramQueryTreeItem;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryTokens;
-import com.sqleo.querybuilder.syntax.QueryTokens.Table;
 
 
 public class MaskAlias extends BaseMask
@@ -100,7 +100,7 @@ public class MaskAlias extends BaseMask
 	
 	public Dimension getPreferredSize()
 	{
-		return new Dimension(300,100);
+		return Preferences.getScaledDimension(300,100);
 	}
 
 	protected boolean onConfirm()

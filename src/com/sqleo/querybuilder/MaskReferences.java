@@ -41,6 +41,7 @@ import javax.swing.JScrollPane;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.io.ManualDBMetaData;
 import com.sqleo.environment.io.ManualTableMetaData;
 import com.sqleo.querybuilder.syntax.QueryTokens;
@@ -78,7 +79,7 @@ public class MaskReferences extends BaseMask
 	
 	public Dimension getPreferredSize()
 	{
-		return new Dimension(400,220);		
+		return Preferences.getScaledDimension(400,220);		
 	}
 
 	private void addToSource(Object[] tables)

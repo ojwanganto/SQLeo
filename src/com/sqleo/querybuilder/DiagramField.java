@@ -22,7 +22,6 @@ package com.sqleo.querybuilder;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
@@ -50,6 +49,7 @@ import javax.swing.event.PopupMenuListener;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.querybuilder.dnd.DragMouseAdapter;
 import com.sqleo.querybuilder.dnd.RelationDropTargetListener;
 import com.sqleo.querybuilder.dnd.RelationTransferHandler;
@@ -117,7 +117,7 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 
 		getCheckboxComponent().addItemListener(this);
 		getCheckboxComponent().addMouseListener(this);
-		getCheckboxComponent().setPreferredSize(new Dimension(20, 8));
+		getCheckboxComponent().setPreferredSize(Preferences.getScaledDimension(20, 8));
 		getCheckboxComponent().setBorderPainted(false);
 		getCheckboxComponent().setFocusPainted(false);
 		getCheckboxComponent().setOpaque(false);
@@ -266,6 +266,7 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 			panel.setComponentNorth(combo);
 			JCheckBox pivotCheckbox = new JCheckBox(I18n.getString("querybuilder.message.sqleoPivotCheckbox", "Transform as Pivot"));
 			panel.setComponentSouth(pivotCheckbox);
+			panel.setPreferredSize(Preferences.getScaledDimension(200, 80));
 			int value = JOptionPane.showOptionDialog(DiagramField.this.getOwner().builder,
 					panel,
 					I18n.getString("querybuilder.message.chooseFunction", "choose function:"),

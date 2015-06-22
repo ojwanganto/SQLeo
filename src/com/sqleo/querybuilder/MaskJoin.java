@@ -35,6 +35,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import com.sqleo.common.util.I18n;
+import com.sqleo.environment.Preferences;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
 
@@ -104,7 +105,7 @@ public class MaskJoin extends BaseMask
 	
 	public Dimension getPreferredSize()
 	{
-		return new Dimension(350,170);		
+		return Preferences.getScaledDimension(350,170);		
 	}	
 	
 	protected void onShow(){}
