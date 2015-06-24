@@ -176,11 +176,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		
 		// Add all the available languages...
 		java.util.List list = I18n.getListOfAvailLanguages();
-		list.add(0, Locale.getDefault());
+		list.add(0, Locale.ENGLISH);
 
-		if (!Locale.getDefault().equals(Locale.ENGLISH)) {
-			list.add(1, Locale.ENGLISH);
-		}
 
 		int selectedItem = 0;
 		for (int i = 0; i < list.size(); ++i) {
@@ -190,11 +187,6 @@ public class DialogPreferences extends AbstractDialogConfirm {
 			if (I18n.getCurrentLocale().toString().equals(loc.toString())) {
 				selectedItem = i;
 			}
-			// else
-			// {
-			// System.out.println(I18n.getCurrentLocale().toString() + " != " +
-			// loc.toString());
-			// }
 		}
 		jComboBoxLanguage.setSelectedIndex(selectedItem);
 
