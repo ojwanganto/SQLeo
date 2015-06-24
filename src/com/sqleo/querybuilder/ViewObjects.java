@@ -216,8 +216,11 @@ public class ViewObjects extends BorderLayoutPanel implements ItemListener
 
 	public static boolean jdbcUseSchema(DatabaseMetaData dbmd) throws SQLException
 	{
-		String term = dbmd.getSchemaTerm();
-		return term != null && term.length() > 0;
+// #293 Query builder: support adding csvjdbc tables without schema 
+//		String term = dbmd.getSchemaTerm();
+//		return term != null && term.length() > 0;
+		Boolean Schem = dbmd.supportsSchemasInTableDefinitions();
+		return Schem ;
 	}
 
 	private class ClickHandler extends MouseAdapter
