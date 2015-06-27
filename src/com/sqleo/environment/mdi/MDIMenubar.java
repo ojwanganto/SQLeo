@@ -190,7 +190,8 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 			public void run() {
 				String version = getLatestVersionName();
 				if(version!=null){
-					addLink(I18n.getString("application.menu.newversion","New version available")
+					addLink(I18n.getString("application.menu.newversion","New version available : ")
+							+ version
 							,Application.SF_WEB);
 					revalidate();
 					repaint();
