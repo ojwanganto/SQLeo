@@ -33,6 +33,21 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2015.06.rc1.zip: 2015-06-27
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.06/
+
+	293 Query builder: adding csvjdbc table without schema
+	292 Preferences: selected langage in combo is only modifieable by user
+	291 Command script to use SQLeo as a portable app
+	290 Input boxes, labels, panels width/​height are not resized with increased Font size
+	289 Resize icons in metadata tree and query builder tree
+	227 set FONT_SIZE_PERCENTAGE default to 110 and ICON_SIZE_PERCENTAGE to 160
+	173 query builder where filter should be synchronized after use of grid filter
+
+
 SQLeoVQB.2015.05.rc1.zip: 2015-05-27
 
   Thanks to Anudeep Gade for his contribution to this release
