@@ -118,7 +118,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		final JLabel useConnections = new JLabel("Use connection:");
+		final JLabel useConnections = new JLabel(I18n.getString("application.message.useConnection","Use connection:"));
 		gbl.setConstraints(useConnections, gbc);
 		add(useConnections);
 		
@@ -132,7 +132,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		final JLabel schemas = new JLabel("Schema:");
+		final JLabel schemas = new JLabel(I18n.getString("application.message.schema","Schema"));
 		gbl.setConstraints(schemas, gbc);
 		add(schemas);
 
@@ -145,7 +145,7 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 
 		gbc.gridx = 0;
 		gbc.gridy = 3;
-		final JLabel table = new JLabel("Table/View or (Query):");
+		final JLabel table = new JLabel(I18n.getString("datacomparer.TableViewQuery","Table/View or (Query):"));
 		gbl.setConstraints(table, gbc);
 		add(table);
 

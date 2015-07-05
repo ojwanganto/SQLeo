@@ -49,6 +49,7 @@ import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.ListView;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.content.AbstractActionContent;
@@ -66,6 +67,7 @@ import com.sqleo.querybuilder.DiagramLoader;
 import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.beans.Entity;
 import com.sqleo.querybuilder.syntax.QueryTokens;
+
 
 
 public abstract class AbstractViewObjects extends ListView implements MouseListener
@@ -193,7 +195,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 			popup.add(new ActionQuery());
 			
 			MDIClient [] queryWindows = getQueryWindows();
-			JMenu submenu = new JMenu("Add to query");
+			JMenu submenu = new JMenu(I18n.getString("metadataexplorer.menu.AddtoQuery","Add to query"));
 			submenu.setEnabled(false);
 			
 			if(queryWindows.length>0) {
@@ -231,7 +233,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	{
 		ActionQuery()
 		{
-			super("Add to new query");
+ 			super(I18n.getString("metadataexplorer.menu.AddtoNewQuery","Add to new query"));
 		}
 		
 		public void run()
@@ -320,7 +322,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	{
 		ActionAddLink()
 		{
-			super("Add to group...");
+			super(I18n.getString("metadataexplorer.menu.AddtoGroup","Add to group..."));
 		}
 		
 		public void actionPerformed(ActionEvent e)
@@ -353,7 +355,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 
 	protected class ActionDeleteContent extends AbstractActionContent
 	{
-		ActionDeleteContent(){this.putValue(NAME,"Delete content");}
+		ActionDeleteContent(){this.putValue(NAME,I18n.getString("application.tool.delete","Delete content"));}
 		
 		protected boolean isShowCountRecordsPopup(){
 			return true;
@@ -387,7 +389,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 
 	protected class ActionDropObject extends AbstractActionContent
 	{
-		ActionDropObject(){this.putValue(NAME,"Drop <object>");}
+		ActionDropObject(){this.putValue(NAME,I18n.getString("application.tool.drop","Drop <object>"));}
 		
 		protected boolean isShowCountRecordsPopup(){
 			return true;
@@ -423,7 +425,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 
 	protected class ActionShowContent extends AbstractActionContent
 	{
-		ActionShowContent(){this.putValue(NAME,"Show content");}
+		ActionShowContent(){this.putValue(NAME,I18n.getString("application.tool.content","Show content"));}
 		
 		protected boolean isShowCountRecordsPopup(){
 			return false;
@@ -470,7 +472,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	{
 		ActionShowDefinition()
 		{
-			super("Show definition");
+			super(I18n.getString("application.tool.definition","Show definition"));
 		}
 		
 		public void actionPerformed(ActionEvent e)
@@ -487,7 +489,7 @@ public abstract class AbstractViewObjects extends ListView implements MouseListe
 	{
 		ActionCommand()
 		{
-			setText("New command...");
+			setText(I18n.getString("application.tool.NewCommand","New command..."));
 			setAccelerator(null);
 			setIcon(null);
 		}

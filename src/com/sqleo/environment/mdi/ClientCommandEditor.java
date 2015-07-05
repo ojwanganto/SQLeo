@@ -221,7 +221,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
         });
 		toolbar.add(cbxGridOutput);
 		toolbar.addSeparator();
-		toolbar.add(new JLabel("Use connection: "));
+		toolbar.add(new JLabel(I18n.getString("application.message.useConnection","Use connection:")));
 		toolbar.add(cbx);
 		
 

@@ -48,11 +48,16 @@ import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.mdi._ConnectionListener;
+import com.sqleo.common.util.I18n;
 
 
 public class SideSearchCriteria extends JPanel implements ActionListener, _ConnectionListener
 {
-    private String[] operators = {"contains","equals","starts with","ends with"};
+    private String[] operators = {
+		I18n.getString("metadataexplorer.action.Contains","contains"),
+		I18n.getString("metadataexplorer.action.Equals","equals"),
+		I18n.getString("metadataexplorer.action.StartWith","starts with"),
+		I18n.getString("metadataexplorer.action.EndWith","ends with")};
     private ViewSearchResult rView;
     
 	private JComboBox cbxConnections;
@@ -78,10 +83,10 @@ public class SideSearchCriteria extends JPanel implements ActionListener, _Conne
 		txt = new JTextField[3];
 		addTableTypes(gbl);
 	
-        addCriteria(0,gbl,"schema",5);
-        addCriteria(1,gbl,"table" ,5);
-        addCriteria(2,gbl,"column",5);
-        
+        addCriteria(0,gbl,I18n.getString("application.message.schema","schema:"),5);
+        addCriteria(1,gbl,I18n.getString("metadataexplorer.Table","table:"),5);
+        addCriteria(2,gbl,I18n.getString("metadataexplorer.Column","columns:"),5);
+
 		addConnection(gbl);
 		
 		cbxConnections.addItemListener( new OnSelectConnectionListener());
@@ -114,7 +119,7 @@ public class SideSearchCriteria extends JPanel implements ActionListener, _Conne
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(top_gap,5,1,5);
         
-        JLabel lbl = new JLabel(where + ":");
+        JLabel lbl = new JLabel(where);
         gbl.setConstraints(lbl,gbc);
         add(lbl);
         
@@ -143,7 +148,7 @@ public class SideSearchCriteria extends JPanel implements ActionListener, _Conne
         gbc.anchor		= GridBagConstraints.WEST;
         gbc.insets		= new Insets(5,5,1,5);
         
-        JLabel lbl = new JLabel("use connection:");
+        JLabel lbl = new JLabel(I18n.getString("application.message.useConnection","Use connection:"));
         gbl.setConstraints(lbl,gbc);
         add(lbl);
         
@@ -161,7 +166,7 @@ public class SideSearchCriteria extends JPanel implements ActionListener, _Conne
         gbc.anchor		= GridBagConstraints.WEST;
         gbc.insets		= new Insets(5,5,1,5);
         
-        JLabel lbl = new JLabel("table type:");
+        JLabel lbl = new JLabel(I18n.getString("metadataexplorer.TableType","table type:"));
         gbl.setConstraints(lbl,gbc);
         add(lbl);
         
@@ -176,8 +181,8 @@ public class SideSearchCriteria extends JPanel implements ActionListener, _Conne
 	private void addButtons(GridBagLayout gbl)
 	{
 		JPanel pnl = new JPanel();
-		pnl.add(cbStart = new CommandButton("start",this));
-		pnl.add(cbReset = new CommandButton("reset",this));
+		pnl.add(cbStart = new CommandButton(I18n.getString("metadataexplorer.action.Start","Start"),this));
+		pnl.add(cbReset = new CommandButton(I18n.getString("metadataexplorer.action.Reset","Reset"),this));
 		pnl.setOpaque(false);
 		
 		GridBagConstraints gbc = new GridBagConstraints();

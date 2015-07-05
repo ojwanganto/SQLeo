@@ -40,6 +40,7 @@ import com.sqleo.common.gui.AbstractDialogConfirm;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.environment.Application;
+import com.sqleo.common.util.I18n;
 
 
 public class DialogQuickObject extends AbstractDialogConfirm implements ItemListener
@@ -71,7 +72,7 @@ public class DialogQuickObject extends AbstractDialogConfirm implements ItemList
 		gbc.weightx		= 1.0;
 
 		gbc.insets = new Insets(0,8,0,8);
-		JLabel lbl = new JLabel("use connection:");
+		JLabel lbl = new JLabel(I18n.getString("application.message.useConnection","Use connection:"));
 		gbl.setConstraints(lbl, gbc);
 		pnl.add(lbl);
 		gbl.setConstraints(cbxConnections,gbc);

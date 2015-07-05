@@ -34,6 +34,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 
 
@@ -52,8 +53,8 @@ public class SideNavigatorMouse extends MouseAdapter
 		popup.add(new ActionNewDriver());
 		popup.add(new ActionNewDatasource());
 		popup.addSeparator();
-		popup.add(new ActionSchemaFilter("set as default schema"));
-		popup.add(new ActionSchemaFilter("remove schema filter"));
+		popup.add(new ActionSchemaFilter(I18n.getString("metadataexplorer.menu.setAsDefaultSchema", "set as default schema")));
+		popup.add(new ActionSchemaFilter(I18n.getString("metadataexplorer.menu.removeSchemaFilter", "remove schema filter")));
 		popup.addSeparator();
 		popup.add(new ActionDelete());
 		popup.add(new ActionDuplicate());
@@ -165,7 +166,7 @@ public class SideNavigatorMouse extends MouseAdapter
 	{
 		private ActionNewDriver()
 		{
-			putValue(NAME,"new driver...");
+			putValue(NAME,I18n.getString("metadataexplorer.menu.newDriver", "new driver..."));
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -179,7 +180,7 @@ public class SideNavigatorMouse extends MouseAdapter
 	{
 		private ActionNewDatasource()
 		{
-			putValue(NAME,"new datasource...");
+			putValue(NAME,I18n.getString("metadataexplorer.menu.newDatasource", "new datasource..."));
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -201,7 +202,7 @@ public class SideNavigatorMouse extends MouseAdapter
 	{
 		private ActionDelete()
 		{
-			putValue(NAME,"delete");
+			putValue(NAME,I18n.getString("metadataexplorer.menu.delete", "delete"));
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -214,7 +215,7 @@ public class SideNavigatorMouse extends MouseAdapter
 	{
 		private ActionDuplicate()
 		{
-			putValue(NAME,"duplicate...");
+			putValue(NAME,I18n.getString("metadataexplorer.menu.duplicate", "duplicate..."));
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -239,7 +240,7 @@ public class SideNavigatorMouse extends MouseAdapter
 	{
 		private ActionProperties()
 		{
-			putValue(NAME,"properties...");
+			putValue(NAME,I18n.getString("metadataexplorer.menu.properties", "properties..."));
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -264,7 +265,7 @@ public class SideNavigatorMouse extends MouseAdapter
 	{
 		ActionReconnect()
 		{
-			putValue(NAME,"reconnect");
+			putValue(NAME,I18n.getString("metadataexplorer.menu.reconnect", "reconnect"));
 		}
 		
 		public void actionPerformed(ActionEvent ae)
@@ -305,7 +306,7 @@ public class SideNavigatorMouse extends MouseAdapter
 	{
 		ActionConnect()
 		{
-			super("connect");
+			super(I18n.getString("metadataexplorer.menu.connect", "connect"));
 			
 			this.addActionListener(this);
 			this.setSelected(false);

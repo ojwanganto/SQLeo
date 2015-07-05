@@ -74,10 +74,10 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 	{
 		super(2,2);
 		
-		this.getActionMap().put("choose-columns",new ActionChooseColumns());
-		this.getActionMap().put("list-copy"		,new ActionCopyList());
-		this.getActionMap().put("list-export"	,new ActionExportList());
-		this.getActionMap().put("list-refresh"	,new ActionRefreshList());
+		this.getActionMap().put(I18n.getString("metadataexplorer.menu.chooseCol", "choose-columns")	,new ActionChooseColumns());
+		this.getActionMap().put(I18n.getString("metadataexplorer.menu.listCopy", "list-copy")	,new ActionCopyList());
+		this.getActionMap().put(I18n.getString("metadataexplorer.menu.listExport", "list-export")	,new ActionExportList());
+		this.getActionMap().put(I18n.getString("metadataexplorer.menu.listRefresh", "list-refresh")	,new ActionRefreshList());
 		
 		initComponents();
 	    loadNavigator();
@@ -100,8 +100,8 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 		split.setRightComponent(container);
 		
 		tp = new JTabbedPane(JTabbedPane.BOTTOM);
-		tp.addTab("Browse",navigator);
-		tp.addTab("Search",search);
+		tp.addTab(I18n.getString("metadataexplorer.browse", "Browse"),navigator);
+		tp.addTab(I18n.getString("metadataexplorer.search", "Search"),search);
 		tp.addChangeListener(this);
 		split.setLeftComponent(tp);        
 	}
