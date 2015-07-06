@@ -74,11 +74,10 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 	{
 		super(2,2);
 		
-		this.getActionMap().put(I18n.getString("metadataexplorer.menu.chooseCol", "choose-columns")	,new ActionChooseColumns());
-		this.getActionMap().put(I18n.getString("metadataexplorer.menu.listCopy", "list-copy")	,new ActionCopyList());
-		this.getActionMap().put(I18n.getString("metadataexplorer.menu.listExport", "list-export")	,new ActionExportList());
-		this.getActionMap().put(I18n.getString("metadataexplorer.menu.listRefresh", "list-refresh")	,new ActionRefreshList());
-		
+		this.getActionMap().put("choose-columns"	,new ActionChooseColumns());
+		this.getActionMap().put("list-copy"	,new ActionCopyList());
+		this.getActionMap().put("list-export"	,new ActionExportList());
+		this.getActionMap().put("list-refresh"	,new ActionRefreshList());
 		initComponents();
 	    loadNavigator();
 	}
@@ -314,7 +313,7 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 	{
 		private ActionChooseColumns()
 		{
-			putValue(NAME,"Choose columns...");
+			putValue(NAME,I18n.getString("metadataexplorer.menu.chooseCol", "Choose columns..."));
 			setEnabled(false);
 		}
         
@@ -329,7 +328,8 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 	{
 		private ActionCopyList()
 		{
-			putValue(NAME,"Copy list");
+
+			putValue(NAME,I18n.getString("metadataexplorer.menu.listCopy", "Copy list"));
 			setEnabled(false);
 		}
         
@@ -352,7 +352,8 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 	{
 		private ActionExportList()
 		{
-			putValue(NAME,"Export list...");
+
+			putValue(NAME,I18n.getString("metadataexplorer.menu.listExport", "Export list..."));
 			setEnabled(false);
 		}
         
@@ -376,7 +377,7 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 		private ActionRefreshList()
 		{
 			putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(KeyEvent.VK_F5,0));
-			putValue(NAME,"Refresh");
+			putValue(NAME,I18n.getString("metadataexplorer.menu.listRefresh", "Refresh"));
 			setEnabled(false);
 		}
         
