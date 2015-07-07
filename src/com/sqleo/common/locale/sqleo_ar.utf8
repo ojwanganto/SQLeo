@@ -1,0 +1,175 @@
+querybuilder.menu.addToGroupBy=إضافة إلى مجموعة من قبل
+querybuilder.menu.addToOrderBy=إضافة إلى النظام عن طريق
+querybuilder.menu.addExpression=إضافة التعبير ...
+querybuilder.menu.addCondition=إضافة شرط ...
+querybuilder.menu.addSubquery=إضافة فرعي
+querybuilder.menu.union=الاتحاد
+querybuilder.menu.edit=تحرير ...
+querybuilder.menu.remove=إزالة
+querybuilder.menu.removeAll=إزالة جميع
+querybuilder.menu.sortByName=حسب الاسم
+querybuilder.menu.pack=حزمة
+querybuilder.menu.selectAll=اختر الكل
+querybuilder.menu.deselectAll=الغاء تحديد الكل
+querybuilder.menu.openAllForeignTables=فتح كافة الجداول الخارجية
+querybuilder.menu.openAllPrimaryTables=فتح كافة الجداول الأولية
+querybuilder.menu.references=المراجع ...
+querybuilder.menu.addWhereCondition=إضافة حيث شرط ...
+querybuilder.menu.addHavingCondition=إضافة جود حالة ...
+
+querybuilder.message.chooseFunction=اختيار وظيفة:
+querybuilder.message.wait=الانتظار ...
+querybuilder.message.loading=التحميل: {0}
+querybuilder.message.tableLoadedAliasDisabled=الجدول تحميلها بالفعل والتعرجات تعطيل!
+querybuilder.message.reading=القراءة ...
+querybuilder.checkbox.allRowsFrom=كافة الصفوف من {0}
+querybuilder.menu.foreignTables=الجداول الخارجية
+querybuilder.message.references={0} مراجع
+querybuilder.message.reverseSyntax=جملة العكسي
+querybuilder.action.join=الانضمام إليها من خلال السحب والإفلات
+querybuilder.action.copySyntax=تركيب نسخة
+querybuilder.action.reverseSyntax=جملة العكسي ...
+querybuilder.action.arrangeentitiesgrid=ترتيب الشبكة
+querybuilder.action.arrangeentitiesspring=ترتيب الربيع
+querybuilder.action.packEntities=الكيانات حزمة
+querybuilder.action.removeEntities=إزالة الكيانات
+querybuilder.message.continue=هل تريد الاستمرار؟
+querybuilder.message.joinAlreadyExists=تاريخ موجود بالفعل: {0}
+querybuilder.message.addJoin=إضافة الانضمام
+querybuilder.tooltip.schemaFilter=تصفية مخطط
+querybuilder.tooltip.typeFilter=نوع فلتر
+
+querybuilder.designer=مصمم
+querybuilder.syntax=بناء الجملة
+querybuilder.syntaxChanged=جملة تغيرت! \ n هل تريد تطبيق التغييرات (مصمم تحتاج إلى تحميل)؟
+
+application.preferences.language=لغة
+application.preferences.autoJoin=انضمام السيارات
+application.preferences.autoAlias=الاسم المستعار السيارات
+application.preferences.alwaysQuoteIdentifiers=أقتبس معرفات دائما
+application.preferences.useSchemaName=استخدام اسم المخطط في تعريف الجملة
+application.preferences.loadObjectsAtOnce=كائنات الجدول تحميل قائمة في وقت واحد
+application.preferences.selectAllColumns=صناعة السيارات حدد كافة الأعمدة
+application.preferences.autoCommit=ارتكاب السيارات
+
+application.message.replaceFile={0} \ n استبدل الملف الموجود؟
+application.saveQuery=حفظ الاستعلام
+application.launchQuery=الاستعلام إطلاق
+
+application.menu.newQuery=استعلام جديد
+application.message.useConnection=استخدام اتصال:
+application.message.schema=المخطط:
+application.message.noConnection=لا يوجد اتصال!
+application.menu.loadQuery=تحميل الاستعلام ...
+application.menu.exit=خروج
+application.menu.cascade=شلال
+application.menu.tileHorizontal=بلاط الأفقي
+application.menu.closeAll=إغلاق كافة
+application.menu.about=معلومات عن {0} ...
+application.message.quit=هل تريد حقا أن تترك SQLeo؟
+application.ok=حسنا
+application.close=قريب
+application.next=التالي>
+application.back=<السابق
+
+application.tool.content=عرض المحتوى ...
+application.tool.definition=إظهار تعريف ...
+
+application.objetctype.links=الكائنات المرتبطة
+querybuilder.objetctype.all=جميع أنواع الكائنات
+
+querybuilder.objetctype.TABLE=الجداول
+querybuilder.objetctype.VIEW=المشاهدات
+querybuilder.objetctype.LOCAL\ TEMPORARY=محلية مؤقتة
+
+application.preferences.autoCommitWarning=يؤثر فتح الالتزام في إطار جميع النوافذ للاتصال عند ارتكاب السيارات المعاقين: تحذير!
+application.preferences.trace=سجل التتبع (من الضروري إعادة تشغيل)
+application.preferences.maxcolsize=حجم العمود الأقصى:
+
+--added with 2014.08=
+application.menu.recentQueries=استفسارات الأخيرة
+application.menu.print=طباعة
+application.menu.help.howtouse=الوثائق عبر الإنترنت
+application.menu.donate=تبرع
+querybuilder.action.saveDiagramAsImage=حفظ كصورة
+application.tool.preferences=التفضيلات
+application.query_designer=مصمم الاستعلام
+application.preferences.relationsRenderArc=قوس
+application.preferences.relationsRenderLinear=خطي
+application.preferences.relationsRender=العلاقات تجعل
+application.preferences.checkforupdate=تحقق من وجود تحديثات على بدء التشغيل
+application.preferences.autoComplete=استكمال السيارات
+application.preferences.askBeforeExit=نسأل قبل الخروج
+application.fontSizePercentage=حجم الخط التحجيم٪ (من الضروري إعادة تشغيل)
+application.preferences.maxrowfetchsize=الصفوف القصوى جلب الحجم:
+application.menu.file=ملف
+application.menu.actions=تطبيقات
+application.menu.tools=أدوات
+application.menu.window=نافذة
+application.menu.help=مساعدة
+application.message.saveQuery=هل تريد حفظ الاستعلام إلى ملف؟
+
+--added with 2014.09=
+application.preferences.qb.savePosInSQL=حفظ مواقع الجداول في جملة SQL
+
+--added with 2014.10=
+application.maxQueriesInHistory=الحد الأقصى للاستعلامات في التاريخ
+
+--added with 2014.11=
+application.iconSizePercentage=رمز حجم التوسع٪ (من الضروري إعادة تشغيل)
+
+-- add with 2015.05=
+querybuilder.objetctype.GLOBAL\ TEMPORARY=مؤقت العالمية "
+querybuilder.objetctype.SYSTEM\ TABLE=نظام TABLE "
+
+datacomparer.generatedQueryButton=نص الاستعلام ولدت
+datacomparer.onlyDifferentValues=قيم مختلفة فقط
+datacomparer.addDiffStatusInOutput=إضافة وضع فرق في الإخراج
+datacomparer.start=بداية
+datacomparer.RightSideText=ملاحظة: النصوص الجانب الأيمن بشكل تلقائي \ ncopied من اليسار عندما تكون فارغة!
+datacomparer.VersionWith100rowsMax=نسخة مع حد أقصى 100 الصفوف للحصول على نتيجة الاستعلام المقارن البيانات، الرجاء التبرع لأكثر
+datacomparer.LoadSetup=الإعداد تحميل
+datacomparer.SaveSetup=حفظ الإعداد
+datacomparer.DoYouWantToSave=هل تريد حفظ datacomparer الإعداد لملف؟
+
+querybuilder.message.sqleoPivotCheckbox=تحويل كما المحورية
+querybuilder.message.sqleoGroupConcat.chooseSeparator=اختيار فاصل:
+querybuilder.menu.add=إضافة ...
+querybuilder.message.sqleoPivotHeaderColumn=اختيار عمود رأس المحور:
+
+querybuilder.menu.addToGroupBySyncSelect=متزامنا مع حدد الأعمدة
+
+-- add with 2015.07=
+datacomparer.TableViewQuery=الجدول / عرض أو (سؤال):
+metadataexplorer.Table=الطاولة:
+metadataexplorer.Column=عمود:
+metadataexplorer.TableType=نوع الجدول:
+metadataexplorer.action.Start=بداية
+metadataexplorer.action.Reset=إعادة تعيين
+metadataexplorer.action.Contains=يحتوي على
+metadataexplorer.action.Equals=يساوي
+metadataexplorer.action.StartWith=ابدأ مع
+metadataexplorer.action.EndWith=ينتهي
+metadataexplorer.browse=تصفح
+metadataexplorer.search=بحث
+metadataexplorer.menu.AddtoNewQuery=إضافة إلى الاستعلام الجديد
+metadataexplorer.menu.AddtoQuery=إضافة إلى الاستعلام
+metadataexplorer.menu.AddtoGroup=إضافة إلى مجموعة ...
+metadataexplorer.menu.chooseCol=اختيار أعمدة ...
+metadataexplorer.menu.listCopy=قائمة نسخة
+metadataexplorer.menu.listExport=قائمة التصدير ...
+metadataexplorer.menu.listRefresh=تحديث
+
+application.tool.delete=حذف المحتوى
+application.tool.drop=قطرة <كائن>
+application.tool.NewCommand=القيادة الجديدة ...
+
+metadataexplorer.menu.connect=ربط
+metadataexplorer.menu.reconnect=إعادة الاتصال
+metadataexplorer.menu.newDriver=برنامج التشغيل الجديد ...
+metadataexplorer.menu.newDatasource=مصدر بيانات جديد ...
+metadataexplorer.menu.setAsDefaultSchema=على النحو المخطط الافتراضي
+metadataexplorer.menu.removeSchemaFilter=إزالة مخطط تصفية
+metadataexplorer.menu.delete=حذف
+metadataexplorer.menu.duplicate=تكرار ...
+metadataexplorer.menu.properties=خصائص ...

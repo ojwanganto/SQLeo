@@ -1,0 +1,175 @@
+querybuilder.menu.addToGroupBy=समूह-से जोड़ें
+querybuilder.menu.addToOrderBy=आदेश द्वारा जोड़ें
+querybuilder.menu.addExpression=अभिव्यक्ति जोड़ें ...
+querybuilder.menu.addCondition=हालत जोड़ें ...
+querybuilder.menu.addSubquery=Subquery जोड़ें
+querybuilder.menu.union=संघ
+querybuilder.menu.edit=संपादित करें ...
+querybuilder.menu.remove=निकालें
+querybuilder.menu.removeAll=सभी हटाएं
+querybuilder.menu.sortByName=नाम से सॉर्ट
+querybuilder.menu.pack=पैक
+querybuilder.menu.selectAll=सबका चयन करें
+querybuilder.menu.deselectAll=सबको अचयनित करो
+querybuilder.menu.openAllForeignTables=सभी विदेशी टेबल खोलें
+querybuilder.menu.openAllPrimaryTables=सभी प्राथमिक टेबल खोलें
+querybuilder.menu.references=संदर्भ ...
+querybuilder.menu.addWhereCondition=जहां हालत जोड़ें ...
+querybuilder.menu.addHavingCondition=हालत होने जोड़ें ...
+
+querybuilder.message.chooseFunction=समारोह चुनें:
+querybuilder.message.wait=प्रतीक्षा करें ...
+querybuilder.message.loading=लोड हो रहा है: {0}
+querybuilder.message.tableLoadedAliasDisabled=तालिका में पहले से ही भरी हुई है और अलियासिंग को निष्क्रिय कर!
+querybuilder.message.reading=पढ़ रहा है ...
+querybuilder.checkbox.allRowsFrom=सभी पंक्तियों {0}
+querybuilder.menu.foreignTables=विदेश तालिकाओं
+querybuilder.message.references={0} सन्दर्भ
+querybuilder.message.reverseSyntax=रिवर्स वाक्य रचना
+querybuilder.action.join=खींचें और ड्रॉप से ​​जुड़ें
+querybuilder.action.copySyntax=कॉपी करें वाक्य रचना
+querybuilder.action.reverseSyntax=रिवर्स वाक्य रचना ...
+querybuilder.action.arrangeentitiesgrid=ग्रिड की व्यवस्था
+querybuilder.action.arrangeentitiesspring=वसंत की व्यवस्था
+querybuilder.action.packEntities=पैक संस्थाओं
+querybuilder.action.removeEntities=संस्थाओं निकालें
+querybuilder.message.continue=क्या आप जारी रखना चाहते हैं?
+querybuilder.message.joinAlreadyExists=पहले से ही मौजूद जुड़ें: {0}
+querybuilder.message.addJoin=शामिल होने जोड़ें
+querybuilder.tooltip.schemaFilter=स्कीमा फिल्टर
+querybuilder.tooltip.typeFilter=प्रकार फिल्टर
+
+querybuilder.designer=डिजाइनर
+querybuilder.syntax=सिंटेक्स
+querybuilder.syntaxChanged=सिंटेक्स बदल गया है! \ आप (डिजाइनर को फिर से लोड करने की आवश्यकता है) परिवर्तनों को लागू करना चाहते हैं Ndo?
+
+application.preferences.language=भाषा
+application.preferences.autoJoin=ऑटो में शामिल होने के
+application.preferences.autoAlias=ऑटो उर्फ
+application.preferences.alwaysQuoteIdentifiers=हमेशा पहचानकर्ता बोली
+application.preferences.useSchemaName=वाक्य रचना परिभाषा में स्कीमा नाम का प्रयोग करें
+application.preferences.loadObjectsAtOnce=लोड मेज पर एक बार सूची वस्तुओं
+application.preferences.selectAllColumns=ऑटो सभी स्तंभों का चयन
+application.preferences.autoCommit=ऑटो के लिए प्रतिबद्ध
+
+application.message.replaceFile={0} \ nreplace फ़ाइल मौजूदा?
+application.saveQuery=सहेजें क्वेरी
+application.launchQuery=लॉन्च क्वेरी
+
+application.menu.newQuery=नया प्रश्न
+application.message.useConnection=कनेक्शन का उपयोग करें:
+application.message.schema=स्कीमा:
+application.message.noConnection=कोई कनेक्शन नहीं!
+application.menu.loadQuery=लोड क्वेरी ...
+application.menu.exit=बाहर जाएं
+application.menu.cascade=झरना
+application.menu.tileHorizontal=टाइल क्षैतिज
+application.menu.closeAll=सब बंद करें
+application.menu.about=के बारे में {0} ...
+application.message.quit=क्या तुम सच में SQLeo छोड़ने के लिए करना चाहते हैं?
+application.ok=ठीक
+application.close=बंद करे
+application.next=अगले>
+application.back=<पीछे
+
+application.tool.content=सामग्री दिखाओ ...
+application.tool.definition=परिभाषा दिखाएं ...
+
+application.objetctype.links=लिंक्ड वस्तुओं
+querybuilder.objetctype.all=सभी ऑब्जेक्ट प्रकार
+
+querybuilder.objetctype.TABLE=टेबल्स
+querybuilder.objetctype.VIEW=दर्शनों की संख्या
+querybuilder.objetctype.LOCAL\ TEMPORARY=अस्थायी स्थानीय
+
+application.preferences.autoCommitWarning=चेतावनी: ऑटो अक्षम लोगों के लिए प्रतिबद्ध है जब एक खिड़की में कमेटी सभी एक कनेक्शन के लिए खिड़कियां खोल प्रभावित करता है!
+application.preferences.trace=ट्रेस लॉग (पुनः आरंभ की जरूरत है)
+application.preferences.maxcolsize=अधिकतम स्तंभ का आकार:
+
+--added with 2014.08=
+application.menu.recentQueries=हाल ही में प्रश्नों
+application.menu.print=छापा
+application.menu.help.howtouse=ऑनलाइन दस्तावेज़ीकरण
+application.menu.donate=दान करना
+querybuilder.action.saveDiagramAsImage=छवि के रूप में सहेजें
+application.tool.preferences=पसंद
+application.query_designer=क्वेरी डिजाइनर
+application.preferences.relationsRenderArc=आर्क
+application.preferences.relationsRenderLinear=रैखिक
+application.preferences.relationsRender=संबंध प्रस्तुत करना
+application.preferences.checkforupdate=स्टार्टअप पर अद्यतन के लिए जाँच करें
+application.preferences.autoComplete=ऑटो पूरा
+application.preferences.askBeforeExit=बाहर निकलने के पहले पूछें
+application.fontSizePercentage=फ़ॉन्ट आकार स्केलिंग% (पुनः आरंभ करने की जरूरत है)
+application.preferences.maxrowfetchsize=अधिकतम पंक्तियों आकार लाने:
+application.menu.file=फ़ाइल
+application.menu.actions=प्रक्रिया
+application.menu.tools=उपकरण
+application.menu.window=खिड़की
+application.menu.help=मदद
+application.message.saveQuery=आप एक फाइल करने के लिए क्वेरी को बचाने के लिए करना चाहते हैं?
+
+--added with 2014.09=
+application.preferences.qb.savePosInSQL=एसक्यूएल वाक्य रचना में टेबल्स पदों को बचाओ
+
+--added with 2014.10=
+application.maxQueriesInHistory=मैक्स इतिहास में प्रश्नों
+
+--added with 2014.11=
+application.iconSizePercentage=चिह्न आकार स्केलिंग% (पुनः आरंभ करने की जरूरत है)
+
+-- add with 2015.05=
+querybuilder.objetctype.GLOBAL\ TEMPORARY=वैश्विक अस्थायी "
+querybuilder.objetctype.SYSTEM\ TABLE=सिस्टम टेबल "
+
+datacomparer.generatedQueryButton=जनरेट क्वेरी पाठ
+datacomparer.onlyDifferentValues=केवल विभिन्न मूल्यों
+datacomparer.addDiffStatusInOutput=उत्पादन में अन्तर स्थिति जोड़ें
+datacomparer.start=प्रारंभ
+datacomparer.RightSideText=नोट: सही पक्ष ग्रंथों स्वचालित रूप से कर रहे हैं \ छोड़ दिया जब खाली से ncopied!
+datacomparer.VersionWith100rowsMax=डेटा comparer क्वेरी परिणाम के लिए अधिकतम 100 पंक्तियों के साथ संस्करण को और अधिक के लिए दान करें
+datacomparer.LoadSetup=लोड सेटअप
+datacomparer.SaveSetup=सहेजें सेटअप
+datacomparer.DoYouWantToSave=यदि आप एक फाइल करने के लिए datacomparer सेटअप को बचाने के लिए करना चाहते हैं?
+
+querybuilder.message.sqleoPivotCheckbox=धुरी के रूप में परिणत
+querybuilder.message.sqleoGroupConcat.chooseSeparator=विभाजक चयन:
+querybuilder.menu.add=जोड़ ...
+querybuilder.message.sqleoPivotHeaderColumn=धुरी के लिए हैडर कॉलम चुनें:
+
+querybuilder.menu.addToGroupBySyncSelect=चुनिंदा कॉलम के साथ सिंक
+
+-- add with 2015.07=
+datacomparer.TableViewQuery=तालिका / देखें या (क्वेरी):
+metadataexplorer.Table=तालिका:
+metadataexplorer.Column=स्तम्भ:
+metadataexplorer.TableType=तालिका प्रकार:
+metadataexplorer.action.Start=प्रारंभ
+metadataexplorer.action.Reset=रीसेट
+metadataexplorer.action.Contains=शामिल है
+metadataexplorer.action.Equals=के बराबर होती है
+metadataexplorer.action.StartWith=के साथ शुरू करो
+metadataexplorer.action.EndWith=इसी के साथ समाप्त होता है
+metadataexplorer.browse=ब्राउज़ करें
+metadataexplorer.search=खोज
+metadataexplorer.menu.AddtoNewQuery=नई क्वेरी में जोड़ें
+metadataexplorer.menu.AddtoQuery=क्वेरी के लिए जोड़ें
+metadataexplorer.menu.AddtoGroup=समूह में शामिल करें ...
+metadataexplorer.menu.chooseCol=कॉलम चुनें ...
+metadataexplorer.menu.listCopy=कॉपी करें सूची
+metadataexplorer.menu.listExport=निर्यात की सूची ...
+metadataexplorer.menu.listRefresh=ताज़ा करे
+
+application.tool.delete=सामग्री हटाएं
+application.tool.drop=ड्रॉप <वस्तु>
+application.tool.NewCommand=नए आदेश ...
+
+metadataexplorer.menu.connect=कनेक्ट
+metadataexplorer.menu.reconnect=फिर से कनेक्ट
+metadataexplorer.menu.newDriver=नए चालक ...
+metadataexplorer.menu.newDatasource=नई डेटा स्रोत ...
+metadataexplorer.menu.setAsDefaultSchema=डिफ़ॉल्ट स्कीमा के रूप में सेट
+metadataexplorer.menu.removeSchemaFilter=स्कीमा फिल्टर हटा दें
+metadataexplorer.menu.delete=हटाना
+metadataexplorer.menu.duplicate=नकल ...
+metadataexplorer.menu.properties=गुण ...

@@ -1,0 +1,175 @@
+﻿querybuilder.menu.addToGroupBy=Добавить в групповой прочим
+querybuilder.menu.addToOrderBy=Добавить в заказ-по
+querybuilder.menu.addExpression=Добавить выражение ...
+querybuilder.menu.addCondition=Добавить условие ...
+querybuilder.menu.addSubquery=Добавить подзапрос
+querybuilder.menu.union=Союз
+querybuilder.menu.edit=Редактировать ...
+querybuilder.menu.remove=Удалить
+querybuilder.menu.removeAll=Убрать все
+querybuilder.menu.sortByName=Сортировать по имени
+querybuilder.menu.pack=Пакет
+querybuilder.menu.selectAll=Выбрать все
+querybuilder.menu.deselectAll=Убрать выделение со всего
+querybuilder.menu.openAllForeignTables=Откройте все иностранные таблицы
+querybuilder.menu.openAllPrimaryTables=Откройте все основные таблицы
+querybuilder.menu.references=Литературы ...
+querybuilder.menu.addWhereCondition=Добавить в котором состояние ...
+querybuilder.menu.addHavingCondition=Добавить имея состояние ...
+
+querybuilder.message.chooseFunction=Выберите функцию:
+querybuilder.message.wait=Подождите ...
+querybuilder.message.loading=Загрузка: {0}
+querybuilder.message.tableLoadedAliasDisabled=Таблица уже загружен и сглаживание отключается!
+querybuilder.message.reading=Чтение ...
+querybuilder.checkbox.allRowsFrom=Все строки из {0}
+querybuilder.menu.foreignTables=Иностранные столы
+querybuilder.message.references={0} ссылки
+querybuilder.message.reverseSyntax=Обратный синтаксис
+querybuilder.action.join=Регистрация по Drag & капли
+querybuilder.action.copySyntax=Синтаксис Копировать
+querybuilder.action.reverseSyntax=Обратный синтаксис ...
+querybuilder.action.arrangeentitiesgrid=Упорядочить сетки
+querybuilder.action.arrangeentitiesspring=Упорядочить весну
+querybuilder.action.packEntities=Пакет лица
+querybuilder.action.removeEntities=Удалить лиц
+querybuilder.message.continue=Вы хотите продолжить?
+querybuilder.message.joinAlreadyExists=Регистрация уже существует: {0}
+querybuilder.message.addJoin=Добавить присоединиться
+querybuilder.tooltip.schemaFilter=Схема фильтра
+querybuilder.tooltip.typeFilter=Тип фильтра
+
+querybuilder.designer=Дизайнер
+querybuilder.syntax=Синтаксис
+querybuilder.syntaxChanged=Синтаксис изменился! \ NВы хотите, чтобы применить изменения (дизайнер нужно перезагрузить)?
+
+application.preferences.language=Язык
+application.preferences.autoJoin=Авто присоединиться
+application.preferences.autoAlias=Авто псевдоним
+application.preferences.alwaysQuoteIdentifiers=Всегда указывайте идентификаторы
+application.preferences.useSchemaName=Используйте имя схемы в определении синтаксиса
+application.preferences.loadObjectsAtOnce=Нагрузка на стол список объектов сразу
+application.preferences.selectAllColumns=Авто выбрать все столбцы
+application.preferences.autoCommit=Автоматическая фиксация
+
+application.message.replaceFile={0} \ nreplace существующий файл?
+application.saveQuery=Сохранить запрос
+application.launchQuery=Запуск запроса
+
+application.menu.newQuery=Новый запрос
+application.message.useConnection=Используйте соединение:
+application.message.schema=Схема:
+application.message.noConnection=нет соединения!
+application.menu.loadQuery=Нагрузка запросов ...
+application.menu.exit=Выход
+application.menu.cascade=Каскад
+application.menu.tileHorizontal=Плитка горизонтальный
+application.menu.closeAll=Закрыть все
+application.menu.about=О {0} ...
+application.message.quit=Вы действительно хотите бросить SQLeo?
+application.ok=Хорошо
+application.close=Закрыть
+application.next=Следующая>
+application.back=<Вернуться
+
+application.tool.content=Показать содержимое ...
+application.tool.definition=Показать определение ...
+
+application.objetctype.links=Связанные объекты
+querybuilder.objetctype.all=Все типы объектов
+
+querybuilder.objetctype.TABLE=Таблицы
+querybuilder.objetctype.VIEW=Взгляды
+querybuilder.objetctype.LOCAL\ TEMPORARY=Локальные временные
+
+application.preferences.autoCommitWarning=Внимание: Фиксация в окне влияет все открытые окна для связи при автоматическом совершить отключен!
+application.preferences.trace=Журнал трассировки (обязательно перезагрузите)
+application.preferences.maxcolsize=Максимальный размер столбца:
+
+--added with 2014.08=
+application.menu.recentQueries=Последние запросы
+application.menu.print=Печать
+application.menu.help.howtouse=Интернет Документация
+application.menu.donate=Жертвовать
+querybuilder.action.saveDiagramAsImage=Сохранить как изображение
+application.tool.preferences=Предпочтения
+application.query_designer=Дизайнер запросов
+application.preferences.relationsRenderArc=Дуга
+application.preferences.relationsRenderLinear=Линейный
+application.preferences.relationsRender=Отношения оказать
+application.preferences.checkforupdate=Проверить наличие обновлений при запуске
+application.preferences.autoComplete=Автоматическое заполнение
+application.preferences.askBeforeExit=Спросите перед выходом
+application.fontSizePercentage=Размер шрифта масштабирование% (обязательно перезагрузите)
+application.preferences.maxrowfetchsize=Максимум строк размер выборки:
+application.menu.file=Файл
+application.menu.actions=Действия
+application.menu.tools=Инструменты
+application.menu.window=Окно
+application.menu.help=Помогите
+application.message.saveQuery=Вы хотите, чтобы сохранить запрос в файл?
+
+--added with 2014.09=
+application.preferences.qb.savePosInSQL=Сохранить Столы позиции в SQL синтаксиса
+
+--added with 2014.10=
+application.maxQueriesInHistory=Макс запросов в истории
+
+--added with 2014.11=
+application.iconSizePercentage=Размер масштабирования Иконка% (обязательно перезагрузите)
+
+-- add with 2015.05=
+querybuilder.objetctype.GLOBAL\ TEMPORARY=GLOBAL TEMPORARY "
+querybuilder.objetctype.SYSTEM\ TABLE=СИСТЕМА Таблица "
+
+datacomparer.generatedQueryButton=Сгенерировано текст запроса
+datacomparer.onlyDifferentValues=Только разные значения
+datacomparer.addDiffStatusInOutput=Добавить различий статус в выходе
+datacomparer.start=Начало
+datacomparer.RightSideText=Примечание: правая сторона тексты автоматически \ ncopied слева, когда пустой!
+datacomparer.VersionWith100rowsMax=Версия с макс 100 строк для результате сравнения данных запроса, пожалуйста, пожертвовать более
+datacomparer.LoadSetup=Настройка нагрузки
+datacomparer.SaveSetup=Сохранить настройки
+datacomparer.DoYouWantToSave=Вы хотите, чтобы сохранить настройки datacomparer в файл?
+
+querybuilder.message.sqleoPivotCheckbox=Transform, как Pivot
+querybuilder.message.sqleoGroupConcat.chooseSeparator=выбрать разделитель:
+querybuilder.menu.add=Добавить ...
+querybuilder.message.sqleoPivotHeaderColumn=Выберите заголовок столбца для Pivot:
+
+querybuilder.menu.addToGroupBySyncSelect=Синхронизация с некоторыми колоннами
+
+-- add with 2015.07=
+datacomparer.TableViewQuery=Таблица / Просмотр или (Запрос):
+metadataexplorer.Table=Таблица:
+metadataexplorer.Column=Колонка:
+metadataexplorer.TableType=Тип стола:
+metadataexplorer.action.Start=Начало
+metadataexplorer.action.Reset=Сброс
+metadataexplorer.action.Contains=содержит
+metadataexplorer.action.Equals=равна
+metadataexplorer.action.StartWith=начинается с
+metadataexplorer.action.EndWith=заканчивается
+metadataexplorer.browse=Просматривать
+metadataexplorer.search=Поиск
+metadataexplorer.menu.AddtoNewQuery=Добавить в нового запроса
+metadataexplorer.menu.AddtoQuery=Добавить в запрос
+metadataexplorer.menu.AddtoGroup=Добавить в группу ...
+metadataexplorer.menu.chooseCol=Выберите столбцы ...
+metadataexplorer.menu.listCopy=Копировать список
+metadataexplorer.menu.listExport=Экспорт списка ...
+metadataexplorer.menu.listRefresh=Обновление
+
+application.tool.delete=Удалить содержание
+application.tool.drop=Падение <объект>
+application.tool.NewCommand=Новая команда ...
+
+metadataexplorer.menu.connect=подключать
+metadataexplorer.menu.reconnect=подключите
+metadataexplorer.menu.newDriver=Новый драйвер ...
+metadataexplorer.menu.newDatasource=Новый источник данных ...
+metadataexplorer.menu.setAsDefaultSchema=установить в качестве схемы по умолчанию
+metadataexplorer.menu.removeSchemaFilter=удалить фильтр схемы
+metadataexplorer.menu.delete=Удалить
+metadataexplorer.menu.duplicate=дублировать ...
+metadataexplorer.menu.properties=свойства ...
