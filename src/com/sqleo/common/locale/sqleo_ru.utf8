@@ -173,3 +173,7 @@ metadataexplorer.menu.removeSchemaFilter=удалить фильтр схемы
 metadataexplorer.menu.delete=Удалить
 metadataexplorer.menu.duplicate=дублировать ...
 metadataexplorer.menu.properties=свойства ...
+
+
+application.commandEditor.autoSelectConnection=Auto select latest connection
+querybuilder.message.VersionWith3tablesMax=Version with 3 tables max per graph, Please Donate for more

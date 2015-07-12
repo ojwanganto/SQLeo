@@ -173,3 +173,6 @@ metadataexplorer.menu.removeSchemaFilter=删除模式过滤器
 metadataexplorer.menu.delete=删除
 metadataexplorer.menu.duplicate=重复...
 metadataexplorer.menu.properties=性能...
+
+application.commandEditor.autoSelectConnection=Auto select latest connection
+querybuilder.message.VersionWith3tablesMax=Version with 3 tables max per graph, Please Donate for more

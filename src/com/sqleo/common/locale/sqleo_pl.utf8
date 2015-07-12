@@ -1,0 +1,170 @@
+querybuilder.message.references={0} Referencje
+application.message.replaceFile={0} \n Czy chcesz zastąpić istniejący plik?
+application.back=< Wstecz
+application.menu.about={0} - Informacje
+querybuilder.menu.addCondition=Dodaj warunek
+querybuilder.menu.addExpression=Dodaj wyrażenie
+querybuilder.menu.addHavingCondition=Dodaj warunek HAVING
+querybuilder.message.addJoin=Dodaj złączenie
+querybuilder.menu.addSubquery=Dodaj podzapytanie
+querybuilder.menu.addToGroupBy=Dodaj do GROUP BY
+querybuilder.menu.addToOrderBy=Dodaj do ORDER BY
+querybuilder.menu.addWhereCondition=Dodaj warunek WHERE
+querybuilder.objetctype.all=Wszystkie
+querybuilder.checkbox.allRowsFrom=Wszystkie wiersze od {0}
+application.preferences.alwaysQuoteIdentifiers=Dodaj znak ` identyfikatora tabel
+querybuilder.action.arrangeentitiesgrid=Rozmieść ikony względem siatki
+querybuilder.action.arrangeentitiesspring=Rozmieść ikony w odstępach
+application.preferences.autoAlias=Automatyczne aliasy
+application.preferences.autoCommit=Automatyczne zatwierdzanie
+application.preferences.autoJoin=Automatyczne złączenia
+application.preferences.selectAllColumns=Zaznaczaj wszystkie kolumny w dodanej tabeli
+application.menu.cascade=Wyświetlaj okna kaskadowo
+querybuilder.message.chooseFunction=Wybierz funkcję:
+application.close=Anuluj
+application.menu.closeAll=Zamknij wszystko
+querybuilder.action.copySyntax=Kopiuj składnie
+querybuilder.menu.deselectAll=Odznacz wszystko
+querybuilder.designer=Projekt
+application.message.quit=Czy chcesz wyjść ?
+querybuilder.message.continue=Czy chcesz kontynuować?
+querybuilder.menu.edit=Edycja
+application.menu.exit=Wyjście
+querybuilder.menu.foreignTables=Tabele obce
+querybuilder.message.joinAlreadyExists=JOIN już istnieje: {0}
+querybuilder.action.join=Załączenia w trybie załap i puść
+application.preferences.language=Język
+application.launchQuery=Uruchom kwerendę
+application.objetctype.links=Obiekty połączone
+application.menu.loadQuery=Otwórz kwerendę
+application.preferences.loadObjectsAtOnce=Automatyczne ładowanie obiektów tabel
+querybuilder.message.loading=Ładowanie: {0}
+querybuilder.objetctype.LOCAL\ TEMPORARY=Tymczasowe
+application.menu.newQuery=Nowa kwerenda
+application.next=Dalej >
+application.message.noConnection=Brak połączenia!
+application.ok=OK
+querybuilder.menu.openAllForeignTables=Wszystkie tabele obce
+querybuilder.menu.openAllPrimaryTables=Wszystkie tabele podstawowe
+querybuilder.menu.pack=Ukryj rekordy
+querybuilder.action.packEntities=Pokaż tylko nagłówki
+querybuilder.message.reading=Czytanie
+querybuilder.menu.references=Referencje ...
+querybuilder.menu.remove=Usuń
+querybuilder.menu.removeAll=Usuń wszystko
+querybuilder.action.removeEntities=Usuń wszystko
+querybuilder.message.reverseSyntax=Odwrotna składnia 
+querybuilder.action.reverseSyntax=Użyj odwrotnej składni ...
+application.saveQuery=Zapisz kwerendę
+querybuilder.tooltip.schemaFilter=Filtr Schematu
+application.message.schema=Schemat:
+querybuilder.menu.selectAll=Zaznacz wszystko
+application.tool.content=Pokaż zawartość ...
+application.tool.definition=Pokaż definicje ...
+querybuilder.menu.sortByName=Sortuj według nazwy
+querybuilder.syntax=SQL
+querybuilder.syntaxChanged=Zmieniono składnie SQL  \N Czy chcesz zastosować zmiany(projekt bedzie odświerzony)?
+querybuilder.message.tableLoadedAliasDisabled=Tabela została załadowana a alias wyłączony!
+querybuilder.objetctype.TABLE=Tabele
+application.menu.tileHorizontal=Poziomy układ okien
+querybuilder.tooltip.typeFilter=Typ filtra
+querybuilder.menu.union=Unia zapytań
+application.message.useConnection=Użyj połączenia:
+application.preferences.useSchemaName=Użyj nazwy schematu w definicji składni
+querybuilder.objetctype.VIEW=Widoki
+querybuilder.message.wait=Proszę czekać ...
+
+--added with 2014.08
+application.menu.recentQueries=Ostatnio używane kwerendy
+application.menu.print=Drukuj
+application.menu.help.howtouse=Dokumentacja
+application.menu.donate=Przekaż dotacje
+querybuilder.action.saveDiagramAsImage=Zapisz jako obrazek
+application.tool.preferences=Preferencje
+application.query_designer=Projektant kwerend
+application.preferences.autoCommitWarning=Ostrzeżenie:Jeżeli wyłączysz auto zatwierdzanie, zatwierdzenie w aktywnym oknie wpłynie na wszystkie połączone okna !
+application.preferences.trace=Dziennika śledzenia (wymaga restartu)
+application.preferences.maxcolsize=Maksymalny rozmiar kolumny:
+application.preferences.relationsRenderArc=Krzywa
+application.preferences.relationsRenderLinear=Linia
+application.preferences.relationsRender=Sposób reprezentowania relacji
+application.preferences.checkforupdate=Sprawdź aktualizacje przy starcie
+application.preferences.autoComplete=Automatyczne uzupełnianie
+application.preferences.askBeforeExit=Zapytaj przed zamknięciem
+application.fontSizePercentage=Rozmiar czcionki w % (wymaga restartu)
+application.preferences.maxrowfetchsize=Maksymalna liczba pobranych wierszy:
+application.menu.file=Plik
+application.menu.actions=Edycja
+application.menu.tools=Narzędzia
+application.menu.window=Widok
+application.menu.help=Pomoc
+application.message.saveQuery=Czy chcesz zapisać kwerendę do pliku?
+
+--added with 2014.09
+application.preferences.qb.savePosInSQL=Zapisz Stoły pozycje w składni SQL
+
+--added with 2014.10
+application.maxQueriesInHistory=Max pyta w historii
+
+--added with 2014.11
+application.iconSizePercentage=Skalowanie wielkości Ikona% (musi ponownie uruchomić)
+
+-- add with 2015.05 (TRANSLATION TO DO)
+querybuilder.objetctype.GLOBAL\ TEMPORARY=GLOBAL tymczasowy 
+querybuilder.objetctype.SYSTEM\ TABLE=TABELA SYSTEM 
+
+datacomparer.generatedQueryButton=Generowany tekst zapytania
+datacomparer.onlyDifferentValues=Tylko różne wartości
+datacomparer.addDiffStatusInOutput=Dodaj statusu diff w produkcji
+datacomparer.start=Początek
+datacomparer.RightSideText=Uwaga: Teksty są automatycznie prawej stronie \ ncopied od lewej, gdy pusty!
+datacomparer.VersionWith100rowsMax=Wersja z max 100 wierszy dla wyniku zapytania comparer danych, proszę Wpłać więcej
+datacomparer.LoadSetup=Ustawienia obciążenia
+datacomparer.SaveSetup=Zapisz ustawienia
+datacomparer.DoYouWantToSave=Czy chcesz zapisać DataComparer konfiguracji do pliku?
+
+querybuilder.message.sqleoPivotCheckbox=Transform jako Pivot
+querybuilder.message.sqleoGroupConcat.chooseSeparator=wybierz separator:
+querybuilder.menu.add=dodaj ...
+querybuilder.message.sqleoPivotHeaderColumn=Wybierz kolumny nagłówka dla Pivot:
+
+querybuilder.menu.addToGroupBySyncSelect=Synchronizacja z wybranych kolumn
+
+-- add with 2015.07 (TRANSLATION TO DO)
+datacomparer.TableViewQuery=Tabela / Widok lub (zapytań):
+metadataexplorer.Table=Tabela:
+metadataexplorer.Column=Kolumna:
+metadataexplorer.TableType=Typ Tabela:
+metadataexplorer.action.Start=Początek
+metadataexplorer.action.Reset=Zresetować
+metadataexplorer.action.Contains=Zawiera
+metadataexplorer.action.Equals=równa się
+metadataexplorer.action.StartWith=zaczynać z
+metadataexplorer.action.EndWith=kończy się
+metadataexplorer.browse=Przeglądaj
+metadataexplorer.search=Poszukiwanie
+metadataexplorer.menu.AddtoNewQuery=Dodaj do nowej kwerendy
+metadataexplorer.menu.AddtoQuery=Dodaj do zapytania
+metadataexplorer.menu.AddtoGroup=Dodaj do grupy ...
+metadataexplorer.menu.chooseCol=Wybierz kolumny ...
+metadataexplorer.menu.listCopy=Lista Kopiuj
+metadataexplorer.menu.listExport=Eksportuj listę ...
+metadataexplorer.menu.listRefresh=Odśwież
+
+application.tool.delete=Usuń zawartość
+application.tool.drop=Spadek <object>
+application.tool.NewCommand=Nowe polecenie ...
+
+metadataexplorer.menu.connect=połączyć
+metadataexplorer.menu.reconnect=podłącz
+metadataexplorer.menu.newDriver=Nowy sterownik ...
+metadataexplorer.menu.newDatasource=nowe źródło danych ...
+metadataexplorer.menu.setAsDefaultSchema=ustaw jako schematu
+metadataexplorer.menu.removeSchemaFilter=usuń filtr schematu
+metadataexplorer.menu.delete=usunąć
+metadataexplorer.menu.duplicate=powielać ...
+metadataexplorer.menu.properties=nieruchomości ...
+
+application.commandEditor.autoSelectConnection=Auto wybierz najnowszą połączenia
+querybuilder.message.VersionWith3tablesMax=Wersja z 3 stołów max na wykresie, proszę Wpłać więcej
+

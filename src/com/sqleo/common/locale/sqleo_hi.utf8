@@ -173,3 +173,7 @@ metadataexplorer.menu.removeSchemaFilter=स्कीमा फिल्टर �
 metadataexplorer.menu.delete=हटाना
 metadataexplorer.menu.duplicate=नकल ...
 metadataexplorer.menu.properties=गुण ...
+
+
+application.commandEditor.autoSelectConnection=Auto select latest connection
+querybuilder.message.VersionWith3tablesMax=Version with 3 tables max per graph, Please Donate for more
