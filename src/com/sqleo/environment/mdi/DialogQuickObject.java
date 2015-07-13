@@ -79,7 +79,7 @@ public class DialogQuickObject extends AbstractDialogConfirm implements ItemList
 		pnl.add(cbxConnections);
 		
 		gbc.insets = new Insets(5,8,0,8);
-		lbl = new JLabel("schema:");
+		lbl = new JLabel(I18n.getString("application.message.schema","schema:"));
 		gbl.setConstraints(lbl, gbc);
 		pnl.add(lbl);
 		gbc.insets = new Insets(0,8,0,8);
@@ -87,7 +87,7 @@ public class DialogQuickObject extends AbstractDialogConfirm implements ItemList
 		pnl.add(cbxSchemas);
 		
 		gbc.insets = new Insets(5,8,0,8);
-		lbl = new JLabel("table:");
+		lbl = new JLabel(I18n.getString("metadataexplorer.Table","table:"));
 		gbl.setConstraints(lbl, gbc);
 		pnl.add(lbl);
 		gbc.insets = new Insets(0,8,0,8);

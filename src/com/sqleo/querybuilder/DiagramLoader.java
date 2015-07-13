@@ -258,7 +258,7 @@ public class DiagramLoader extends JDialog implements Runnable
 			builder.diagram.addEntity(item);
 		}
 		else{
-			JOptionPane.showMessageDialog(this,"Version with 3 tables max per graph, Please Donate for more", table.getIdentifier() + " " + table.getAlias(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this,I18n.getString("querybuilder.message.VersionWith3tablesMax","Version with 3 tables max per graph, Please Donate for more"), table.getIdentifier() + " " + table.getAlias(), JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		
