@@ -457,7 +457,7 @@ public abstract class MDIActions implements _Constants
 			setAccelerator(ks);
 			setIcon(iconKey);
 			setTooltip(this.getMDIClientName());
-			setText("Show " + this.getMDIClientName());
+			setText(I18n.getString("application.tool.show","Show") + " " + this.getMDIClientName());
 		}
 		
 		public void actionPerformed(ActionEvent ae)

@@ -168,3 +168,17 @@ metadataexplorer.menu.properties=nieruchomości ...
 application.commandEditor.autoSelectConnection=Auto wybierz najnowszą połączenia
 querybuilder.message.VersionWith3tablesMax=Wersja z 3 stołów max na wykresie, proszę Wpłać więcej
 
+application.tool.show=Show
+application.message.loadQueryInWindow=Load file in:
+querybuilder.message.loading.relations=check {0}'s relations
+
+datasource.message.name=datasource name
+datasource.message.url=url
+datasource.message.user=user
+datasource.message.status=status
+datasource.message.password=password
+datasource.message.remember=remember password
+datasource.message.autoConnect=auto-connect on startup
+datasource.message.validName=please, enter a valid name.
+datasource.message.invalidChar=characters \\.|,/;<:>@ aren't allowed!\nplease, enter a valid name.
+datasource.message.joinFile=join definition file

@@ -33,7 +33,9 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import com.sqleo.common.util.Text;
+import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
+
 
 
 public class MaskDatasource extends JPanel
@@ -53,22 +55,22 @@ public class MaskDatasource extends JPanel
 		GridBagLayout gbl = new GridBagLayout();
 		setLayout(gbl);
 			
-		addField(gbl,"name:"	, txtName	= new JTextField()		,0);
-		addField(gbl,"url:"		, txtUrl	= new JTextField()		,25);
-		addField(gbl,"user:"	, txtUid	= new JTextField()		,5);
-		addField(gbl,"password:", txtPwd	= new JPasswordField()	,5);
+		addField(gbl,I18n.getString("datasource.message.name","name")	, txtName	= new JTextField()		,0);
+		addField(gbl,I18n.getString("datasource.message.url","url")	, txtUrl	= new JTextField()		,25);
+		addField(gbl,I18n.getString("datasource.message.user","user")	, txtUid	= new JTextField()		,5);
+		addField(gbl,I18n.getString("datasource.message.password","password"), txtPwd	= new JPasswordField()	,5);
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor		= GridBagConstraints.WEST;
 		gbc.gridwidth	= GridBagConstraints.REMAINDER;
 		gbc.insets		= new Insets(8,5,0,0);
 		
-		cbxRemember = new JCheckBox("remember password");
+		cbxRemember = new JCheckBox(I18n.getString("datasource.message.remember","remember password"));
 		gbl.setConstraints(cbxRemember, gbc);
 		add(cbxRemember);
 		
 		gbc.insets = new Insets(1,5,0,0);
-		cbxAutoconnect = new JCheckBox("auto-connect on startup");
+		cbxAutoconnect = new JCheckBox(I18n.getString("datasource.message.autoConnect","auto-connect on startup"));
 		gbl.setConstraints(cbxAutoconnect, gbc);
 		add(cbxAutoconnect);
 	}
@@ -114,7 +116,7 @@ public class MaskDatasource extends JPanel
 	{
 		if(Text.isEmpty(txtName.getText()) || Text.isEmpty(txtUrl.getText()))
 		{
-			Application.alert(Application.PROGRAM,"please, enter a valid name.");
+			Application.alert(Application.PROGRAM,I18n.getString("datasource.message.validName","please, enter a valid name."));
 			return false;
 		}
 		
@@ -129,7 +131,7 @@ public class MaskDatasource extends JPanel
 		|| txtName.getText().indexOf('@')!=-1
 		|| txtName.getText().indexOf('\\')!=-1)
 		{
-			Application.alert(Application.PROGRAM,"characters \\.|,/;<:>@ aren't allowed!\nplease, enter a valid name.");
+			Application.alert(Application.PROGRAM,I18n.getString("datasource.message.invalidChar","characters \\.|,/;<:>@ aren't allowed!\nplease, enter a valid name."));
 			return false;
 		}
 		

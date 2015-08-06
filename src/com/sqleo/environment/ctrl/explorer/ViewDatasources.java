@@ -39,6 +39,7 @@ import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.gui.ListView;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.util.Classpath;
+//import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 
@@ -52,6 +53,11 @@ public class ViewDatasources extends ListView
 	{
 		this.navigator = navigator;
 		
+// this breaks auto-connect
+//		addColumn(I18n.getString("datasource.message.name","name"));
+//		addColumn(I18n.getString("datasource.message.url","url"));
+//		addColumn(I18n.getString("datasource.message.status","status"));
+//		addColumn(I18n.getString("datasource.message.joinFile","join definition file"));
 		addColumn("name");
 		addColumn("url");
 		addColumn("status");
