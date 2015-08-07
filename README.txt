@@ -33,6 +33,19 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2015.07.rc1.zip: 2015-08-07
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.07/
+
+	302 data comparer broken with Oracle
+	301 test with (automatic) translation in Arabic, Chinese, Hindi, Russian
+	297 Improved German translation (by Philipp Blaszczyk)
+	294 Print Version name in link when new version found
+	217 Give possibility to translate Metadata Explorer (translation available in French only)
+
+
 SQLeoVQB.2015.06.rc1.zip: 2015-06-27
 
   Thanks to Anudeep Gade for his contribution to this release
