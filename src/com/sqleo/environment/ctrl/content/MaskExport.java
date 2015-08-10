@@ -52,8 +52,8 @@ import com.sqleo.environment.ctrl.ContentPane;
 
 public class MaskExport extends AbstractMaskPerform
 {
-	private AbstractChoice eChoice;
-	private ResultSet rs = null;
+	public AbstractChoice eChoice;
+	public ResultSet rs = null;
 
 	public void setEnabled(boolean b)
 	{
@@ -62,7 +62,7 @@ public class MaskExport extends AbstractMaskPerform
 			eChoice.getComponent(i).setEnabled(b);
 	}
 	
-	void setType(short type, String tname, String fname)
+	public void setType(short type, String tname, String fname)
 	{
 		if(eChoice!=null) remove(eChoice);
 		
@@ -273,11 +273,16 @@ public class MaskExport extends AbstractMaskPerform
 		
 		void open()
 		{
+			open(false);
+		}
+		
+		void open(final boolean append)
+		{
 			try
 			{
 				// Ticket #45 this use default encoding, can be modified when launching app by
 				// java -Dfile.encoding=UTF-8 -jar SQLeoVQB.jar 
-				stream = new PrintStream(new FileOutputStream(MaskExport.this.lblFile.getText().substring(6)));
+				stream = new PrintStream(new FileOutputStream(MaskExport.this.lblFile.getText().substring(6), append));
 			}
 			catch (FileNotFoundException e)
 			{
@@ -451,11 +456,11 @@ public class MaskExport extends AbstractMaskPerform
 		}
 	}
 
-	private class TxtChoice extends AbstractChoice
+	public class TxtChoice extends AbstractChoice
 	{
-		JCheckBox cbxHeader;
-		JCheckBox cbxNull;
-		JCheckBox cbxCote;
+		public JCheckBox cbxHeader;
+		public JCheckBox cbxNull;
+		public JCheckBox cbxCote;
 		
 		JRadioButton rbTab;
 		JRadioButton rbOther;
@@ -519,10 +524,19 @@ public class MaskExport extends AbstractMaskPerform
 			rbOther.setSelected(true);
 			txtDelimiter.setText(delimiter);
 		}
-
+		
+		public void close(){
+			super.close();
+		}
+		
 		void open(ResultSetMetaData mtd)
 		{
-			super.open();
+			open(mtd, false);
+		}
+
+		public void open(ResultSetMetaData mtd,final boolean append)
+		{
+			super.open(append);
 
 			if(cbxHeader.isSelected())
 			{

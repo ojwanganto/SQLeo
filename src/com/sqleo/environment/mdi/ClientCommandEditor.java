@@ -293,6 +293,10 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	public boolean isGridOutput(){
 		return cbxGridOutput.isSelected() ;
 	}
+	
+	public void toggleGridOuptput(final boolean isSelected){
+		cbxGridOutput.setSelected(isSelected);
+	}
 
 	@Override
 	public void onConnectionClosed(String keycah) {

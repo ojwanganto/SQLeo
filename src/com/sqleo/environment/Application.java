@@ -32,11 +32,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.Locale;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -51,6 +49,7 @@ import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.Resources;
 import com.sqleo.common.util.Store;
 import com.sqleo.common.util.Text;
+import com.sqleo.environment.ctrl.commands.CommandRunner;
 import com.sqleo.environment.mdi.ClientMetadataExplorer;
 import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.environment.mdi.MDIWindow;
@@ -75,6 +74,8 @@ public class Application extends Appearance implements _Constants,_Version
     public static final Store session		= new Store();
     public static final Resources resources	= new Resources();
     private static String CONFIG_FOLDER = "";
+
+    public static CommandRunner commandRunner;
     
     private static void loadIcons()
     {
@@ -403,6 +404,7 @@ public class Application extends Appearance implements _Constants,_Version
 		Application.loadSession();
 		Application.initI18n();
 		Application.initializeFontSize();
+		Application.initCommands();
 		
 		Application.println("Loading resources...");
 		Application.loadIcons();
@@ -434,7 +436,11 @@ public class Application extends Appearance implements _Constants,_Version
 		
     }
     
-    public static boolean isFullVersion() {
+    private static void initCommands() {
+    	commandRunner = new CommandRunner();
+	}
+
+	public static boolean isFullVersion() {
 		return Application.MINOR.endsWith("+");
 	}
 }
