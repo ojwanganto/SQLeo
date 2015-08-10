@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -53,6 +54,12 @@ import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
+import com.sqleo.environment.ctrl.commands.Command;
+import com.sqleo.environment.ctrl.commands.CommandExecutionResult;
+import com.sqleo.environment.ctrl.commands.FormatCommand;
+import com.sqleo.environment.ctrl.commands.OutputCommand;
+import com.sqleo.environment.ctrl.content.MaskExport;
+import com.sqleo.environment.ctrl.content.MaskExport.TxtChoice;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.ctrl.editor.Task;
 import com.sqleo.environment.ctrl.editor._TaskSource;
@@ -62,7 +69,6 @@ import com.sqleo.environment.mdi.ClientContent;
 import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.QueryModel;
 import com.sqleo.querybuilder.syntax.SQLParser;
-
 
 public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 	private boolean stopped;
@@ -80,6 +86,9 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 	protected MutableAttributeSet errorAttributSet;
 	protected MutableAttributeSet keycahAttributSet;
+
+	private OutputCommand outputCmd;
+	private FormatCommand formatCmd;
 
 	public CommandEditor() {
 		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -357,13 +366,32 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		}
 
 		private void executeCommandQuery(final String sql) {
+			final Command cmd = Application.commandRunner.getCommand(sql);
+			if (cmd != null) {
+				final CommandExecutionResult result = cmd.execute(sql);
+				if (result.isSuccess()) {
+					CommandEditor.this.response.append("\n Command executed successfully: " + sql);
+					if (cmd instanceof OutputCommand) {
+						outputCmd = (OutputCommand) cmd;
+						getClient().toggleGridOuptput(outputCmd.gridMode);
+					} else if (cmd instanceof FormatCommand) {
+						formatCmd = (FormatCommand) cmd;
+					}
+				}else{
+					CommandEditor.this.response.append("\n Command execution failed " + sql);
+				}
+			} else {
+				executeCommandQueryWithDatasource(sql);
+			}
+		}
+
+		private void executeCommandQueryWithDatasource(final String sql) {
 			_TaskSource source = new TaskSource(sql);
-			Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
-					source.getHandlerKey(), "CommandEditor", sql));
-			ClientCommandEditor cce = (ClientCommandEditor) Application.window
-					.getClient(ClientCommandEditor.DEFAULT_TITLE);
-        	splitPanePosition  = split.getDividerLocation();
-			if(cce.isGridOutput() && (sql.toUpperCase().startsWith("SELECT") || sql.toUpperCase().startsWith("SHOW"))){
+			Application.session.addSQLToHistory(new SQLHistoryData(new Date(), source.getHandlerKey(), "CommandEditor",
+					sql));
+			splitPanePosition = split.getDividerLocation();
+			ClientCommandEditor cce = getClient();
+			if (cce.isGridOutput() && (sql.toUpperCase().startsWith("SELECT") || sql.toUpperCase().startsWith("SHOW"))) {
 				Vector<Integer> prevColWidths = null;
 				if(gridClient!=null){
 					gridClient.getControl().getView().cacheColumnWidths();
@@ -417,8 +445,12 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		}
 		
 	}
-	
-	private void adjustSplitPaneDivider(final boolean setGridPanel){
+
+	private ClientCommandEditor getClient() {
+		return (ClientCommandEditor) Application.window.getClient(ClientCommandEditor.DEFAULT_TITLE);
+	}
+
+	private void adjustSplitPaneDivider(final boolean setGridPanel) {
 		SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -512,11 +544,28 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 	@Override
 	public boolean printSelect() {
-		return true;
+		return null == outputCmd || null == outputCmd.filename;
 	}
+
+	private MaskExport mkp;
 
 	@Override
 	public void processResult(ResultSet rs) {
-		//Nothing to process as printSelect = true 
+		mkp = mkp != null ? mkp : new MaskExport();
+		mkp.rs = rs;
+		mkp.setType((short) 3, null, outputCmd.filename);
+		final MaskExport.TxtChoice txtChoice = (TxtChoice) mkp.eChoice;
+		if (formatCmd != null) {
+			txtChoice.cbxHeader.setSelected(formatCmd.header);
+			txtChoice.cbxCote.setSelected(formatCmd.quote);
+			txtChoice.setDefaultDelimiter(formatCmd.delimiter);
+		}
+		try {
+			txtChoice.open(rs.getMetaData(), outputCmd.append);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		mkp.export();
+		txtChoice.close();
 	}
 }

@@ -466,6 +466,7 @@ public class MaskExport extends AbstractMaskPerform
 		JRadioButton rbOther;
 		
 		JTextField txtDelimiter;
+		ResultSetMetaData mtd;
 		
 		void initComponents()
 		{
@@ -537,6 +538,7 @@ public class MaskExport extends AbstractMaskPerform
 		public void open(ResultSetMetaData mtd,final boolean append)
 		{
 			super.open(append);
+			this.mtd = mtd;
 
 			if(cbxHeader.isSelected())
 			{
@@ -573,8 +575,20 @@ public class MaskExport extends AbstractMaskPerform
 
 				// Ticket #162 enclose CHAR and VARCHAR with ""
 				} else if (cbxCote.isSelected()) {
-
-					switch(MaskExport.this.view.getColumnType(i))
+					final int columnType;
+					if(MaskExport.this.view!=null){
+						columnType = MaskExport.this.view.getColumnType(i);
+					}else if(mtd != null){
+						try {
+							columnType = mtd.getColumnType(i+1);
+						} catch (SQLException e) {
+							e.printStackTrace();
+							return;
+						}
+					}else{
+						return;
+					}
+					switch(columnType)
 					{
 						case Types.CHAR:
 						case Types.VARCHAR:

@@ -11,9 +11,15 @@ public class FormatCommand extends AbstractCommand {
 	private static final List<String> OPTIONS = Arrays.asList("csv", "delimiter", "header", "quote");
 	private static final String USAGE = "Usage: format csv delimiter ; header true quote true";
 
-	public String delimiter = ";";
-	public boolean header = false;
-	public boolean quote = false;
+	public String delimiter;
+	public boolean header;
+	public boolean quote;
+	
+	private void init(){
+		delimiter = ";";
+		header = false;
+		quote = false;
+	}
 
 	@Override
 	public String getCommand() {
@@ -49,6 +55,7 @@ public class FormatCommand extends AbstractCommand {
 
 	@Override
 	public CommandExecutionResult execute(String command) {
+		init();
 		final CommandExecutionResult result = new CommandExecutionResult();
 		final List<String> tokens = tokenizeCommand(command);
 		if (tokens.isEmpty()) {

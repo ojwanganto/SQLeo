@@ -12,8 +12,14 @@ public class OutputCommand extends AbstractCommand {
 	private static final String USAGE = "Usage: output text | grid | csv <filename> (append/replace)";
 
 	public String filename;
-	public boolean append = false;
-	public boolean gridMode = false;
+	public boolean append;
+	public boolean gridMode;
+	
+	private void init(){
+		filename = null;
+		append = false;
+		gridMode = false;
+	}
 
 	@Override
 	public String getCommand() {
@@ -41,6 +47,7 @@ public class OutputCommand extends AbstractCommand {
 
 	@Override
 	public CommandExecutionResult execute(String command) {
+		init();
 		final CommandExecutionResult result = new CommandExecutionResult();
 		final List<String> tokens = tokenizeCommand(command);
 		if (tokens.isEmpty()) {
@@ -61,7 +68,7 @@ public class OutputCommand extends AbstractCommand {
 			result.setCode(CommandExecutionResult.SUCCESS);
 			return result;
 		} else if ("csv".equals(option)) {
-			filename = "SQLeo_temp_";
+			filename = "SQLeo_temp.csv";
 			append = true;
 			final int tokSize = tokens.size();
 			if (tokSize == 3) {
