@@ -1,5 +1,6 @@
 package com.sqleo.environment.ctrl.commands;
 
+import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -13,6 +14,8 @@ public class CommandRunner {
 		registerCommand(ConnectCommand.NAME, new ConnectCommand());
 		registerCommand(OutputCommand.NAME, new OutputCommand());
 		registerCommand(FormatCommand.NAME, new FormatCommand());
+		registerCommand(HelpCommand.NAME, new HelpCommand());
+		registerCommand(QuitCommand.NAME, new QuitCommand());
 	}
 
 	public void registerCommand(final String cmd, final Command cmnd) {
@@ -31,5 +34,9 @@ public class CommandRunner {
 			}
 		}
 		return found;
+	}
+
+	public Collection<Command> getCommands() {
+		return commandMap.values();
 	}
 }

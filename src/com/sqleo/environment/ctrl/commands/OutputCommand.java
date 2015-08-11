@@ -9,7 +9,8 @@ public class OutputCommand extends AbstractCommand {
 
 	public static final String NAME = "output";
 	private static final List<String> OPTIONS = Arrays.asList("text", "grid", "csv");
-	private static final String USAGE = "Usage: output text | grid | csv <filename> (append/replace)";
+	private static final String USAGE =
+			"Usage: output text | grid | csv <filename> (append/replace) , Description: Extract query output to text or grid or csv. default option is replace when not provided ";
 
 	public String filename;
 	public boolean append;

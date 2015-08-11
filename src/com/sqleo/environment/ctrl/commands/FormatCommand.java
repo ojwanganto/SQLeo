@@ -9,7 +9,8 @@ public class FormatCommand extends AbstractCommand {
 
 	public static final String NAME = "format";
 	private static final List<String> OPTIONS = Arrays.asList("csv", "delimiter", "header", "quote");
-	private static final String USAGE = "Usage: format csv delimiter ; header true quote true";
+	private static final String USAGE =
+			"Usage: format csv <delimiter ;> <header true> <quote true>, Description: CSV export format, default options for delimiter=; , header=false, quote=false when not provided";
 
 	public String delimiter;
 	public boolean header;

@@ -57,7 +57,9 @@ import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.commands.Command;
 import com.sqleo.environment.ctrl.commands.CommandExecutionResult;
 import com.sqleo.environment.ctrl.commands.FormatCommand;
+import com.sqleo.environment.ctrl.commands.HelpCommand;
 import com.sqleo.environment.ctrl.commands.OutputCommand;
+import com.sqleo.environment.ctrl.commands.QuitCommand;
 import com.sqleo.environment.ctrl.content.MaskExport;
 import com.sqleo.environment.ctrl.content.MaskExport.TxtChoice;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
@@ -100,6 +102,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 		response.setTabSize(4);
 		response.setEditable(false);
+		initResponse();
 
 		setComponentCenter(split);
 
@@ -128,6 +131,10 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 	public void append(String text) {
 		request.append(text);
+	}
+
+	void initResponse() {
+		response.setText("Type help to see available commands and its usage");
 	}
 
 	public void clearResponse() {
@@ -370,15 +377,21 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			if (cmd != null) {
 				final CommandExecutionResult result = cmd.execute(sql);
 				if (result.isSuccess()) {
-					CommandEditor.this.response.append("\n Command executed successfully: " + sql);
+					CommandEditor.this.response.append("\nCommand executed successfully: " + sql);
 					if (cmd instanceof OutputCommand) {
 						outputCmd = (OutputCommand) cmd;
 						getClient().toggleGridOuptput(outputCmd.gridMode);
 					} else if (cmd instanceof FormatCommand) {
 						formatCmd = (FormatCommand) cmd;
+					} else if (cmd instanceof HelpCommand) {
+						CommandEditor.this.response.append(result.getDetail());
+					} else if (cmd instanceof QuitCommand) {
+						outputCmd = null;
+						formatCmd = null;
+						CommandEditor.this.response.append(result.getDetail());
 					}
-				}else{
-					CommandEditor.this.response.append("\n Command execution failed " + sql);
+				} else {
+					CommandEditor.this.response.append("\nCommand execution failed " + sql);
 				}
 			} else {
 				executeCommandQueryWithDatasource(sql);

@@ -9,7 +9,8 @@ import com.sqleo.environment.ctrl.explorer.UoDriver;
 
 public class ConnectCommand extends AbstractCommand {
 
-	private static final String USAGE = "Usage: connect <datasource>";
+	private static final String USAGE =
+			"Usage: connect <datasource>, Description: connects a datasource whose expected format is same value in the connection dropdown";
 	public static String NAME = "connect";
 
 	@Override
