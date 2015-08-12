@@ -2,27 +2,29 @@ package com.sqleo.environment.ctrl.commands;
 
 import java.util.Enumeration;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.explorer.UoDatasource;
 import com.sqleo.environment.ctrl.explorer.UoDriver;
 
 public class ConnectCommand extends AbstractCommand {
 
 	private static final String USAGE =
-			"Usage: connect <datasource>, Description: connects a datasource whose expected format is same value in the connection dropdown";
+		"Usage: connect <datasource>, Description: connects a datasource whose expected format is same value in the connection dropdown";
 	public static String NAME = "connect";
 
 	@Override
 	public String getCommand() {
 		return NAME;
 	}
-	
+
 	@Override
 	public String getCommandUsage() {
 		return USAGE;
 	}
-	
+
 	@Override
 	public List<String> getCommandOptions() {
 		// no-options
@@ -32,6 +34,11 @@ public class ConnectCommand extends AbstractCommand {
 	@Override
 	public int getCommandTokensLength() {
 		return 2;
+	}
+
+	@Override
+	protected Pattern getCommandRegex(){
+		return Pattern.compile("(^connect)\\s(\\w.*)");
 	}
 
 	@Override
@@ -72,20 +79,26 @@ public class ConnectCommand extends AbstractCommand {
 					uoDs.pwd = pwd;
 
 					if(uoDs.getKey().equals(datasource)){
-						if(!uoDs.isConnected()){
-							try {
-								uoDs.connect();
+						final boolean isAutoBefore = Preferences.isAutoSelectConnectionEnabled();
+						try{
+							if(!uoDs.isConnected()){
+								try {
+									uoDs.connect();
+									Application.window.connectionOpened(uoDs.getKey());
+									result.setCode(CommandExecutionResult.SUCCESS);
+									return result;
+								} catch (Exception e) {
+									Application.println(e,true);
+									result.setCode(CommandExecutionResult.FAILED);
+									return result;
+								}
+							}else{
 								Application.window.connectionOpened(uoDs.getKey());
 								result.setCode(CommandExecutionResult.SUCCESS);
 								return result;
-							} catch (Exception e) {
-								Application.println(e,true);
-								result.setCode(CommandExecutionResult.FAILED);
-								return result;
 							}
-						}else{
-							result.setCode(CommandExecutionResult.SUCCESS);
-							return result;
+						}finally{
+
 						}
 					}
 				}

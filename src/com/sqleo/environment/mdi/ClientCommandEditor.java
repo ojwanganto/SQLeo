@@ -305,6 +305,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 	@Override
 	public void onConnectionOpened(String keycah) {
+		removeExistingOne(keycah);
 		if(Preferences.isAutoSelectConnectionEnabled()){
 			cbx.insertItemAt(keycah, 0);
 			cbx.setSelectedIndex(0);
@@ -312,7 +313,15 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 			cbx.addItem(keycah);
 		}
 	}
-
+	
+	private void removeExistingOne(String keycah){
+		for(int i = 0 ; i < cbx.getItemCount(); i++){
+			if(cbx.getItemAt(i).toString().equals(keycah)){
+				cbx.removeItemAt(i);
+			}
+		}
+	}
+	
 	public String getActiveConnection() {
 		return cbx.getSelectedIndex() == -1 ? null : cbx.getSelectedItem()
 				.toString();

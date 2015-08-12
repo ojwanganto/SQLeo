@@ -1,6 +1,7 @@
 package com.sqleo.environment.ctrl.commands;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.sqleo.environment.Application;
 
@@ -28,6 +29,11 @@ public class QuitCommand extends AbstractCommand {
 	@Override
 	public int getCommandTokensLength() {
 		return 1;
+	}
+	
+	@Override
+	protected Pattern getCommandRegex(){
+		return Pattern.compile("(^quit)");
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.sqleo.environment.ctrl.commands;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.sqleo.environment.Application;
 
@@ -43,6 +44,13 @@ public class FormatCommand extends AbstractCommand {
 	@Override
 	public int getCommandTokensLength() {
 		return 2;
+	}
+	
+	@Override
+	protected Pattern getCommandRegex(){
+		//TODO pattern
+		// return Pattern.compile("(^format)\\s(csv)\\s(delimiter)\\s(\\w.*)");
+		return null;
 	}
 
 	private boolean validateToken(final int optIndex, final String token) {

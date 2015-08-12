@@ -2,6 +2,7 @@ package com.sqleo.environment.ctrl.commands;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.sqleo.environment.Application;
 
@@ -45,6 +46,13 @@ public class OutputCommand extends AbstractCommand {
 	public int getCommandTokensLength() {
 		return 2;
 	}
+	
+	@Override
+	protected Pattern getCommandRegex(){
+		//TODO pattern
+		//return Pattern.compile("(^output)(text|grid)|(csv\\s(\\w.*)(append)(\\w*))");
+		return null;
+	}
 
 	@Override
 	public CommandExecutionResult execute(String command) {
@@ -69,8 +77,6 @@ public class OutputCommand extends AbstractCommand {
 			result.setCode(CommandExecutionResult.SUCCESS);
 			return result;
 		} else if ("csv".equals(option)) {
-			filename = "SQLeo_temp.csv";
-			append = true;
 			final int tokSize = tokens.size();
 			if (tokSize == 3) {
 				filename = tokens.get(2);

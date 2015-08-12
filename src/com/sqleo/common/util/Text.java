@@ -105,6 +105,11 @@ public class Text
 		return left(source, start) + text + source.substring(start+len);
 	}
 	
+	public static String trimBoth(String source){
+		final String trimLeft = trimLeft(source);
+		return trimRight(trimLeft);
+	}
+	
 	public static String trimLeft(String source)
 	{
 		int len = source.length();

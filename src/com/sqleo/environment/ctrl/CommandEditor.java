@@ -375,6 +375,10 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		private void executeCommandQuery(final String sql) {
 			final Command cmd = Application.commandRunner.getCommand(sql);
 			if (cmd != null) {
+				Application.session.addSQLToHistory(new SQLHistoryData(new Date(), "command", "CommandEditor",
+						sql));
+				adjustSplitPaneDivider(false);
+				split.setBottomComponent(response);
 				final CommandExecutionResult result = cmd.execute(sql);
 				if (result.isSuccess()) {
 					CommandEditor.this.response.append("\nCommand executed successfully: " + sql);
