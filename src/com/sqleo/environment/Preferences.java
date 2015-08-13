@@ -85,6 +85,12 @@ public class Preferences
 		return getBoolean(DialogPreferences.AUTO_SELECT_CON_KEY, false);
 	}
 	
+	public static void setAutoSelectConnectionEnabled(){
+		if(!isAutoSelectConnectionEnabled()){
+			set(DialogPreferences.AUTO_SELECT_CON_KEY, true);
+		}
+	}
+	
 	public static boolean savePosInSQL(){
 		return getBoolean(DialogPreferences.QB_SAVE_POS_IN_SQL, false);
 	}

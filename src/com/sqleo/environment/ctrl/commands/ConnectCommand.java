@@ -79,26 +79,22 @@ public class ConnectCommand extends AbstractCommand {
 					uoDs.pwd = pwd;
 
 					if(uoDs.getKey().equals(datasource)){
-						final boolean isAutoBefore = Preferences.isAutoSelectConnectionEnabled();
-						try{
-							if(!uoDs.isConnected()){
-								try {
-									uoDs.connect();
-									Application.window.connectionOpened(uoDs.getKey());
-									result.setCode(CommandExecutionResult.SUCCESS);
-									return result;
-								} catch (Exception e) {
-									Application.println(e,true);
-									result.setCode(CommandExecutionResult.FAILED);
-									return result;
-								}
-							}else{
+						Preferences.setAutoSelectConnectionEnabled();
+						if(!uoDs.isConnected()){
+							try {
+								uoDs.connect();
 								Application.window.connectionOpened(uoDs.getKey());
 								result.setCode(CommandExecutionResult.SUCCESS);
 								return result;
+							} catch (Exception e) {
+								Application.println(e,true);
+								result.setCode(CommandExecutionResult.FAILED);
+								return result;
 							}
-						}finally{
-
+						}else{
+							Application.window.connectionOpened(uoDs.getKey());
+							result.setCode(CommandExecutionResult.SUCCESS);
+							return result;
 						}
 					}
 				}
