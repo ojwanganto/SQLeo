@@ -134,7 +134,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 	}
 
 	void initResponse() {
-		response.setText("Type help to see available commands and its usage");
+		response.setText("Type help to see available commands and their usage\n");
 	}
 
 	public void clearResponse() {
@@ -381,7 +381,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				split.setBottomComponent(response);
 				final CommandExecutionResult result = cmd.execute(sql);
 				if (result.isSuccess()) {
-					CommandEditor.this.response.append("\nCommand executed successfully: " + sql);
+					CommandEditor.this.response.append( "\n" + sql + "Command executed successfully\n");
 					if (cmd instanceof OutputCommand) {
 						outputCmd = (OutputCommand) cmd;
 						getClient().toggleGridOuptput(outputCmd.gridMode);
@@ -395,7 +395,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 						CommandEditor.this.response.append(result.getDetail());
 					}
 				} else {
-					CommandEditor.this.response.append("\nCommand execution failed " + sql);
+					CommandEditor.this.response.append( "\n" + sql + "Command failed\n");
 				}
 			} else {
 				executeCommandQueryWithDatasource(sql);

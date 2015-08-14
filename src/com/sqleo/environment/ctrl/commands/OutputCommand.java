@@ -11,7 +11,7 @@ public class OutputCommand extends AbstractCommand {
 	public static final String NAME = "output";
 	private static final List<String> OPTIONS = Arrays.asList("text", "grid", "csv");
 	private static final String USAGE =
-			"Usage: output text | grid | csv <filename> (append/replace) , Description: Extract query output to text or grid or csv. default option is replace when not provided ";
+			"Usage: output text|grid|csv <filename> append|replace , Description: Extract query output to text or grid or csv. default option is replace when not provided ";
 
 	public String filename;
 	public boolean append;
@@ -30,7 +30,7 @@ public class OutputCommand extends AbstractCommand {
 
 	/**
 	 * For csv option : if filename is not provided, a temp file will be used . if append/replace is not provided ,
-	 * append will be used.
+	 * replace will be used.
 	 */
 	@Override
 	public String getCommandUsage() {
@@ -65,7 +65,7 @@ public class OutputCommand extends AbstractCommand {
 		}
 		final String option = tokens.get(1);
 		if (!OPTIONS.contains(option)) {
-			Application.alert("Given option : " + option + " is invalid, see usage" + USAGE);
+			Application.alert("Given option : " + option + " is invalid, see \n" + USAGE);
 			result.setCode(CommandExecutionResult.INVALID);
 			return result;
 		}

@@ -46,7 +46,7 @@ public class HelpCommand extends AbstractCommand {
 		}
 		final String help = tokens.get(0);
 		if (!help.equals(NAME)) {
-			Application.alert("Given option: " + help + " is invalid, expected:" + NAME + " see usage" + USAGE);
+			Application.alert("Given option: " + help + " is invalid, expected:" + NAME + " see \n" + USAGE);
 			result.setCode(CommandExecutionResult.INVALID);
 			return result;
 		}
@@ -58,6 +58,7 @@ public class HelpCommand extends AbstractCommand {
 					.append(cmd.getCommandUsage());
 			i++;
 		}
+		builder.append("\n");
 		result.setDetail(builder.toString());
 		result.setCode(CommandExecutionResult.SUCCESS);
 		return result;

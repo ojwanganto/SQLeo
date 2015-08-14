@@ -50,7 +50,7 @@ public class QuitCommand extends AbstractCommand {
 			result.setCode(CommandExecutionResult.INVALID);
 			return result;
 		}
-		result.setDetail("Bye! quitting command mode, all your previous command settings will not be active anymore, execute any other command to activate your settings");
+		result.setDetail("Bye! quitting command mode, all your previous command settings will not be active anymore, execute any other command to activate your settings\n");
 		result.setCode(CommandExecutionResult.SUCCESS);
 		return result;
 	}

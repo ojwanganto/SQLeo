@@ -11,7 +11,7 @@ public class FormatCommand extends AbstractCommand {
 	public static final String NAME = "format";
 	private static final List<String> OPTIONS = Arrays.asList("csv", "delimiter", "header", "quote");
 	private static final String USAGE =
-			"Usage: format csv <delimiter ;> <header true> <quote true>, Description: CSV export format, default options for delimiter=; , header=false, quote=false when not provided";
+			"Usage: format csv delimiter <char> header true|false quote true|false, Description: CSV export format, default options : delimiter ; header false quote false";
 
 	public String delimiter;
 	public boolean header;
@@ -56,7 +56,7 @@ public class FormatCommand extends AbstractCommand {
 	private boolean validateToken(final int optIndex, final String token) {
 		if (!OPTIONS.get(optIndex).equals(token)) {
 			Application.alert("Given option: " + token + " is invalid, expected:" + OPTIONS.get(optIndex)
-					+ " see usage" + USAGE);
+					+ " see \n" + USAGE);
 			return false;
 		}
 		return true;
