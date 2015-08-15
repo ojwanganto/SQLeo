@@ -377,6 +377,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			if (cmd != null) {
 				Application.session.addSQLToHistory(new SQLHistoryData(new Date(), "command", "CommandEditor",
 						sql));
+				splitPanePosition = split.getDividerLocation();
 				adjustSplitPaneDivider(false);
 				split.setBottomComponent(response);
 				final CommandExecutionResult result = cmd.execute(sql);
@@ -395,7 +396,16 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 						CommandEditor.this.response.append(result.getDetail());
 					}
 				} else {
-					CommandEditor.this.response.append( "\n" + sql + "Command failed\n");
+					String error = "\n" + sql + "Command failed\n";
+					if(result.getDetail()!=null){
+						error = error + result.getDetail();
+					}
+					CommandEditor.this.response.append(error);
+					int offset = CommandEditor.this.response.getDocument()
+							.getLength() - error.length();
+					response.getDocument().setCharacterAttributes(offset,
+							error.length(), errorAttributSet, true);
+					
 				}
 			} else {
 				executeCommandQueryWithDatasource(sql);

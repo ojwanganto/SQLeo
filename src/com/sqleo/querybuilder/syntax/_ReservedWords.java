@@ -20,6 +20,7 @@
 
 package com.sqleo.querybuilder.syntax;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,12 +61,14 @@ public interface _ReservedWords
 	public static final String IN    = "IN";
 	public static final String EXISTS = "EXISTS";
 
-	public static List<String> ALL_RESERVED_WORDS = Arrays.asList(ALL, DISTINCT, WITH, SHOW, SELECT, FROM, WHERE, GROUP_BY,
+	static List<String> SQL_RESERVED_WORDS = Arrays.asList(ALL, DISTINCT, WITH, SHOW, SELECT, FROM, WHERE, GROUP_BY,
 			HAVING, UNION, ORDER_BY,EXISTS, BETWEEN, AS, AND, OR, ON, INNER_JOIN, LEFT_OUTER_JOIN, RIGHT_OUTER_JOIN,
 			FULL_OUTER_JOIN, JOIN, INNER_JOIN, LEFT_JOIN, RIGHT_JOIN, FULL_JOIN, CROSS_JOIN, EXTRACT, IN
 			,//SQL commands below 
 				"DELETE","INSERT","INTO","VALUES","UPDATE","SET","ADD","ALTER","CREATE","DROP","CONSTRAINT","REFERENCES",
 				"PRIMARY KEY","FOREIGN KEY","COLUMN","INDEX","TABLE","VIEW");
+	
+	public static List<String> ALL_RESERVED_WORDS = new ArrayList<String>(SQL_RESERVED_WORDS);
 				
 
 }

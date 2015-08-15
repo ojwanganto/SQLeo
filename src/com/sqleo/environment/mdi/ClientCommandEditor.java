@@ -118,6 +118,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		Application.window.addListener(this);
 
 		loadPrefixTree(getActiveConnection(),null);
+		
 	}
 	
 	private void openSaveQueryDialog(){

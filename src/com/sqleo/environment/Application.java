@@ -49,10 +49,12 @@ import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.Resources;
 import com.sqleo.common.util.Store;
 import com.sqleo.common.util.Text;
+import com.sqleo.environment.ctrl.commands.Command;
 import com.sqleo.environment.ctrl.commands.CommandRunner;
 import com.sqleo.environment.mdi.ClientMetadataExplorer;
 import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.environment.mdi.MDIWindow;
+import com.sqleo.querybuilder.syntax._ReservedWords;
 
 
 public class Application extends Appearance implements _Constants,_Version
@@ -438,6 +440,9 @@ public class Application extends Appearance implements _Constants,_Version
     
     private static void initCommands() {
     	commandRunner = new CommandRunner();
+    	for (final Command cmd : commandRunner.getCommands()) {
+			_ReservedWords.ALL_RESERVED_WORDS.add(cmd.getCommand().toUpperCase());
+		}
 	}
 
 	public static boolean isFullVersion() {

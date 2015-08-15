@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.sqleo.common.util.Text;
-import com.sqleo.environment.Application;
 
 public abstract class AbstractCommand implements Command {
 
@@ -25,8 +24,6 @@ public abstract class AbstractCommand implements Command {
 		final StringTokenizer tokens = new StringTokenizer(command);
 		final List<String> commandWithOptions = new ArrayList<String>();
 		if (tokens.countTokens() < getCommandTokensLength()) {
-			Application
-					.alert("Invalid arguments received for command :" + command + ", see usage:" + getCommandUsage());
 			return commandWithOptions;
 		}
 		while (tokens.hasMoreTokens()) {
@@ -41,8 +38,6 @@ public abstract class AbstractCommand implements Command {
 		final Matcher matcher = getCommandRegex().matcher(command);
 		final List<String> commandWithOptions = new ArrayList<String>();
 		if (matcher.groupCount() < getCommandTokensLength()) {
-			Application
-					.alert("Invalid arguments received for command :" + command + ", see usage:" + getCommandUsage());
 			return commandWithOptions;
 		}
 		while (matcher.find()) {
@@ -54,4 +49,17 @@ public abstract class AbstractCommand implements Command {
 		assert getCommand().startsWith(commandWithOptions.get(0));
 		return commandWithOptions;
 	}
+	
+	protected CommandExecutionResult invalidCommandError(final String command){
+		final CommandExecutionResult result = new CommandExecutionResult();
+		return invalidCommandError(result, "Invalid arguments received for command :" + command + ", see usage:" + getCommandUsage());
+	}
+	
+	protected CommandExecutionResult invalidCommandError(final CommandExecutionResult result,final String detail){
+		result.setDetail(detail);
+		result.setCode(CommandExecutionResult.INVALID);
+		return result;
+	}
+
+	
 }

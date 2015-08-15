@@ -44,11 +44,10 @@ public class ConnectCommand extends AbstractCommand {
 	@Override
 	public CommandExecutionResult execute(final String command) {
 		final List<String> tokens = tokenizeCommand(command);
-		final CommandExecutionResult result = new CommandExecutionResult();
 		if (tokens.isEmpty()) {
-			result.setCode(CommandExecutionResult.INVALID);
-			return result;
+			return invalidCommandError(command);
 		}
+		final CommandExecutionResult result = new CommandExecutionResult();
 		final String datasource = tokens.get(1);
 		if (Application.session.canMount(Application.ENTRY_JDBC)) {
 			Application.session.mount(Application.ENTRY_JDBC);
@@ -101,7 +100,7 @@ public class ConnectCommand extends AbstractCommand {
 				Application.session.home();
 			}
 		}
-		Application.alert("No datasource found with :" + datasource);
+		result.setDetail("No datasource found with :" + datasource);
 		result.setCode(CommandExecutionResult.FAILED);
 		return result;
 	}

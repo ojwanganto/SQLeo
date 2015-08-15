@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.sqleo.environment.Application;
-
 public class OutputCommand extends AbstractCommand {
 
 	public static final String NAME = "output";
@@ -57,17 +55,14 @@ public class OutputCommand extends AbstractCommand {
 	@Override
 	public CommandExecutionResult execute(String command) {
 		init();
-		final CommandExecutionResult result = new CommandExecutionResult();
 		final List<String> tokens = tokenizeCommand(command);
 		if (tokens.isEmpty()) {
-			result.setCode(CommandExecutionResult.INVALID);
-			return result;
+			return invalidCommandError(command);
 		}
 		final String option = tokens.get(1);
+		final CommandExecutionResult result = new CommandExecutionResult();
 		if (!OPTIONS.contains(option)) {
-			Application.alert("Given option : " + option + " is invalid, see \n" + USAGE);
-			result.setCode(CommandExecutionResult.INVALID);
-			return result;
+			return invalidCommandError(result, "Given option : " + option + " is invalid, see \n" + USAGE);
 		}
 		if ("text".equals(option)) {
 			result.setCode(CommandExecutionResult.SUCCESS);

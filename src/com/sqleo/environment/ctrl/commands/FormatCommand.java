@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.sqleo.environment.Application;
-
 public class FormatCommand extends AbstractCommand {
 
 	public static final String NAME = "format";
@@ -19,7 +17,7 @@ public class FormatCommand extends AbstractCommand {
 	
 	private void init(){
 		delimiter = ";";
-		header = false;
+		header = true;
 		quote = false;
 	}
 
@@ -29,7 +27,7 @@ public class FormatCommand extends AbstractCommand {
 	}
 
 	/**
-	 * For csv option : delimiter ; , header false , quote false will be used by default if not provided
+	 * For csv option : delimiter ; , header true , quote false will be used by default if not provided
 	 */
 	@Override
 	public String getCommandUsage() {
@@ -53,47 +51,45 @@ public class FormatCommand extends AbstractCommand {
 		return null;
 	}
 
-	private boolean validateToken(final int optIndex, final String token) {
+	private String validateToken(final int optIndex, final String token) {
 		if (!OPTIONS.get(optIndex).equals(token)) {
-			Application.alert("Given option: " + token + " is invalid, expected:" + OPTIONS.get(optIndex)
+			return("Given option: " + token + " is invalid, expected:" + OPTIONS.get(optIndex)
 					+ " see \n" + USAGE);
-			return false;
 		}
-		return true;
+		return null;
 	}
 
 	@Override
 	public CommandExecutionResult execute(String command) {
 		init();
-		final CommandExecutionResult result = new CommandExecutionResult();
 		final List<String> tokens = tokenizeCommand(command);
 		if (tokens.isEmpty()) {
-			result.setCode(CommandExecutionResult.INVALID);
-			return result;
+			return invalidCommandError(command);
 		}
-		if (!validateToken(0, tokens.get(1))) {
-			result.setCode(CommandExecutionResult.INVALID);
-			return result;
+		final CommandExecutionResult result = new CommandExecutionResult();
+		String errorToken = validateToken(0, tokens.get(1)); 
+		if (errorToken!=null){
+			return invalidCommandError(result, errorToken);
 		}
 		final int tokSize = tokens.size();
 		if (tokSize >= 4) {
-			if (!validateToken(1, tokens.get(2))) {
-				result.setCode(CommandExecutionResult.INVALID);
-				return result;
+			errorToken = validateToken(1, tokens.get(2));
+			if (errorToken!=null) {
+				return invalidCommandError(result, errorToken);
 			}
 			delimiter = tokens.get(3);
 		}
 		if (tokSize >= 6) {
-			if (!validateToken(2, tokens.get(4))) {
-				result.setCode(CommandExecutionResult.INVALID);
-				return result;
+			errorToken = validateToken(2, tokens.get(4));
+			if (errorToken!=null) {
+				return invalidCommandError(result, errorToken);
 			}
 			header = Boolean.valueOf(tokens.get(5));
 		}
 		if (tokSize >= 8) {
-			if (!validateToken(3, tokens.get(6))) {
-				result.setCode(CommandExecutionResult.INVALID);
-				return result;
+			errorToken = validateToken(3, tokens.get(6));
+			if (errorToken!=null) {
+				return invalidCommandError(result, errorToken);
 			}
 			quote = Boolean.valueOf(tokens.get(7));
 		}

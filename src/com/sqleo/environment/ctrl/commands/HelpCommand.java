@@ -39,16 +39,13 @@ public class HelpCommand extends AbstractCommand {
 	@Override
 	public CommandExecutionResult execute(String command) {
 		final List<String> tokens = tokenizeCommand(command);
-		final CommandExecutionResult result = new CommandExecutionResult();
 		if (tokens.isEmpty()) {
-			result.setCode(CommandExecutionResult.INVALID);
-			return result;
+			return invalidCommandError(command);
 		}
 		final String help = tokens.get(0);
+		final CommandExecutionResult result = new CommandExecutionResult();
 		if (!help.equals(NAME)) {
-			Application.alert("Given option: " + help + " is invalid, expected:" + NAME + " see \n" + USAGE);
-			result.setCode(CommandExecutionResult.INVALID);
-			return result;
+			return invalidCommandError(result, "Given option: " + help + " is invalid, expected:" + NAME + " see \n" + USAGE);
 		}
 		final StringBuilder builder = new StringBuilder();
 		builder.append("List of available commands with usage");

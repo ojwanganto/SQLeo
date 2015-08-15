@@ -3,8 +3,6 @@ package com.sqleo.environment.ctrl.commands;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.sqleo.environment.Application;
-
 public class QuitCommand extends AbstractCommand {
 
 	private static final String USAGE = "Usage: quit, Description: Quits the command mode";
@@ -39,16 +37,13 @@ public class QuitCommand extends AbstractCommand {
 	@Override
 	public CommandExecutionResult execute(String command) {
 		final List<String> tokens = tokenizeCommand(command);
-		final CommandExecutionResult result = new CommandExecutionResult();
 		if (tokens.isEmpty()) {
-			result.setCode(CommandExecutionResult.INVALID);
-			return result;
+			return invalidCommandError(command);
 		}
 		final String quit = tokens.get(0);
+		final CommandExecutionResult result = new CommandExecutionResult();
 		if (!quit.equals(NAME)) {
-			Application.alert("Given option: " + quit + " is invalid, expected:" + NAME + " see usage" + USAGE);
-			result.setCode(CommandExecutionResult.INVALID);
-			return result;
+			return invalidCommandError(result, "Given option: " + quit + " is invalid, expected:" + NAME + " see usage" + USAGE);
 		}
 		result.setDetail("Bye! quitting command mode, all your previous command settings will not be active anymore, execute any other command to activate your settings\n");
 		result.setCode(CommandExecutionResult.SUCCESS);
