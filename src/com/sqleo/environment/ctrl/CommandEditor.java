@@ -377,35 +377,27 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			if (cmd != null) {
 				Application.session.addSQLToHistory(new SQLHistoryData(new Date(), "command", "CommandEditor",
 						sql));
-				splitPanePosition = split.getDividerLocation();
-				adjustSplitPaneDivider(false);
-				split.setBottomComponent(response);
 				final CommandExecutionResult result = cmd.execute(sql);
 				if (result.isSuccess()) {
-					CommandEditor.this.response.append( "\n" + sql + "Command executed successfully\n");
+					write( "\n" + sql + "Command executed successfully\n");
 					if (cmd instanceof OutputCommand) {
 						outputCmd = (OutputCommand) cmd;
 						getClient().toggleGridOuptput(outputCmd.gridMode);
 					} else if (cmd instanceof FormatCommand) {
 						formatCmd = (FormatCommand) cmd;
 					} else if (cmd instanceof HelpCommand) {
-						CommandEditor.this.response.append(result.getDetail());
+						write(result.getDetail());
 					} else if (cmd instanceof QuitCommand) {
 						outputCmd = null;
 						formatCmd = null;
-						CommandEditor.this.response.append(result.getDetail());
+						write(result.getDetail());
 					}
 				} else {
 					String error = "\n" + sql + "Command failed\n";
 					if(result.getDetail()!=null){
 						error = error + result.getDetail();
 					}
-					CommandEditor.this.response.append(error);
-					int offset = CommandEditor.this.response.getDocument()
-							.getLength() - error.length();
-					response.getDocument().setCharacterAttributes(offset,
-							error.length(), errorAttributSet, true);
-					
+					write(error, true);
 				}
 			} else {
 				executeCommandQueryWithDatasource(sql);
@@ -524,6 +516,10 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 	@Override
 	public void onTaskFinished(String message, boolean error) {
+		write(message, error);
+	}
+
+	private void write(String message, boolean error) {
 		write(message);
 		if (error) {
 			int offset = response.getDocument().getLength() - message.length();
