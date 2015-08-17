@@ -461,6 +461,8 @@ public class MaskExport extends AbstractMaskPerform
 		public JCheckBox cbxHeader;
 		public JCheckBox cbxNull;
 		public JCheckBox cbxCote;
+		public int bytes;
+		public int rowcount;
 		
 		JRadioButton rbTab;
 		JRadioButton rbOther;
@@ -537,8 +539,11 @@ public class MaskExport extends AbstractMaskPerform
 
 		public void open(ResultSetMetaData mtd,final boolean append)
 		{
-			super.open(append);
+			this.bytes = 0;
+			this.rowcount = 0;
 			this.mtd = mtd;
+			
+			super.open(append);
 
 			if(cbxHeader.isSelected())
 			{
@@ -563,6 +568,7 @@ public class MaskExport extends AbstractMaskPerform
 		void handle(Object[] vals)
 		{
 
+			this.rowcount++;
 			StringBuffer buffer = new StringBuffer();
 			for(int i=0; i<vals.length; i++)
 			{
@@ -607,7 +613,10 @@ public class MaskExport extends AbstractMaskPerform
 				buffer.append(vals[i] + getDelimiter());
 			}
 			if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
-			println(buffer.toString());
+			final String out = buffer.toString(); 
+			bytes += out.length();
+			println(out);
+			
 		}
 	}
 }

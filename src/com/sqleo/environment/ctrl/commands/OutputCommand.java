@@ -27,8 +27,7 @@ public class OutputCommand extends AbstractCommand {
 	}
 
 	/**
-	 * For csv option : if filename is not provided, a temp file will be used . if append/replace is not provided ,
-	 * replace will be used.
+	 * For csv option : if append/replace is not provided , replace will be used.
 	 */
 	@Override
 	public String getCommandUsage() {
@@ -47,9 +46,7 @@ public class OutputCommand extends AbstractCommand {
 	
 	@Override
 	protected Pattern getCommandRegex(){
-		//TODO pattern
-		//return Pattern.compile("(^output)(text|grid)|(csv\\s(\\w.*)(append)(\\w*))");
-		return null;
+		return Pattern.compile("(?:(output) (text|grid))|(?:(output) (csv) (.*) (append|replace))");
 	}
 
 	@Override

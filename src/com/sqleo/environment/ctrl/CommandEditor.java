@@ -31,6 +31,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -457,7 +458,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 						keycah.length(), keycahAttributSet, true);
 				CommandEditor.this.response.append("\n"
 						+ source.getSyntax() + "\n");
-				new Task(source, CommandEditor.this, cce.getLimitRows())
+				new Task(source, CommandEditor.this, printSelect() ? cce.getLimitRows() : 0)
 						.run();
 			}
 			
@@ -590,5 +591,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		}
 		mkp.export();
 		txtChoice.close();
+		write("Record(s): " + NumberFormat.getInstance().format(txtChoice.rowcount) 
+				+ " [ bytes: " + NumberFormat.getInstance().format(txtChoice.bytes) + " ]");
 	}
 }
