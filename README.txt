@@ -33,6 +33,17 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2015.08.rc1.zip: 2015-08-25
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.07/
+
+	310 new portuguese translation (by Bruce Hyatt)
+	307 Improved Italian translation (by Sinhuè Angelo Rossi)
+	286 command editor: support for OUTPUT and choose DATASOURCE in script
+
+
 SQLeoVQB.2015.07.rc1.zip: 2015-08-07
 
   Thanks to Anudeep Gade for his contribution to this release
