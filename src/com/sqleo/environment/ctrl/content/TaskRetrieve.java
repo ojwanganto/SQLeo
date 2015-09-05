@@ -20,14 +20,11 @@
 
 package com.sqleo.environment.ctrl.content;
 
-import java.awt.Cursor;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-
-import javax.swing.JSlider;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
@@ -61,6 +58,15 @@ public class TaskRetrieve implements Runnable
 	
 	public boolean areAllRowsFetched(){
 		return !rowsToFetchExists;
+	}
+	
+	public void close() throws Exception
+	{
+		if(stmt!=null)
+		{
+			stmt.close();
+			stmt = null;
+		}		
 	}
 	
 	public void run()

@@ -152,7 +152,6 @@ public class ClientContent extends MDIClientWithCRActions
 						return;
 				  }
 				}
-				ClientContent.this.control.doStop();
 				ClientContent.this.dispose();
 			}
 		};
@@ -273,6 +272,7 @@ public class ClientContent extends MDIClientWithCRActions
 	
 	public final void dispose()
 	{
+		ClientContent.this.control.doStop();
 		if(ClientContent.this.dlg!=null) dlg.dispose();
 		super.dispose();
 	}

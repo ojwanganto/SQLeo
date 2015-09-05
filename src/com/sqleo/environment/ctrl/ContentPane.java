@@ -271,9 +271,21 @@ public class ContentPane extends BorderLayoutPanel
 		
 	}
 	
+	private void closeRetrievingTask(){
+		if(retrievingTask!=null){
+			try {
+				retrievingTask.close();
+			} catch (Exception e) {
+				Application.println(e, true);
+			}
+		}
+	}
+	
 	private void onEndTask()
 	{
+		closeRetrievingTask();
 		task = null;
+		retrievingTask = null;
 		
 		this.getActionMap().get("task-go").setEnabled(true);
 		this.getActionMap().get("task-stop").setEnabled(false);
