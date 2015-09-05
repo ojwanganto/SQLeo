@@ -267,6 +267,19 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		return dataTypePanelMap;
 	}
 	
+	public boolean validatePanel(){
+		final String target = isSource ? "SOURCE" : "TARGET";
+		if(cbxConnection.getSelectedIndex() < 0){
+			Application.alert("No connection selected in "+target);
+			return false;
+		}
+		if(txtTable.getText().isEmpty()){
+			Application.alert("No table/query entered in "+target);
+			return false;
+		}
+		return true;
+	}
+	
 	public void setQuery(){
 		updateTargetTextIfEmpty();
 

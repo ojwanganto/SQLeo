@@ -74,7 +74,7 @@ public class DataComparer extends BorderLayoutPanel
 		buttonPanel.add(onlyDifferentValues);
 		addDiffStatusInOutput = new JCheckBox(I18n.getString("datacomparer.addDiffStatusInOutput", "Add diff status in output"));
 		buttonPanel.add(addDiffStatusInOutput);
-		buttonPanel.add(getCompareButton());
+		buttonPanel.add(startComparerButton());
 		add(buttonPanel, BorderLayout.PAGE_END);
 	}
 	
@@ -86,12 +86,19 @@ public class DataComparer extends BorderLayoutPanel
 		return target;
 	}
 	
-	private JButton getCompareButton() {
+	private JButton startComparerButton() {
 		final AbstractAction action = new AbstractAction(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				source.setQuery();
 				target.setQuery();
+				if(!source.validatePanel()){
+					return;
+				}
+				if(!target.validatePanel()){
+					return;
+				}
+				
 				final boolean generateMergeCsv = source.getSyntax()!=null && target.getSyntax()!=null;
 				if(!generateMergeCsv) return;
 				
