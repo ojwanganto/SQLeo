@@ -347,7 +347,11 @@ public class ClientQueryBuilder extends MDIClient {
 		}
 		
 		private void onLaunchFromSyntax(String subtitle){
-			String query = ClientQueryBuilder.this.builder.getSyntax().getText();
+			if(ClientQueryBuilder.this.builder.hasMultipleQueries()){
+				Application.alert("Cannot execute multiple queries");
+				return;
+			}
+			final String query = ClientQueryBuilder.this.builder.getSyntax().getText().trim();
 			onLaunch(subtitle, new ClientContent(ClientQueryBuilder.this.keycah, query,true));
 		}
 		

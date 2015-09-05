@@ -584,6 +584,15 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		return relation;
 	}
 	
+	public boolean hasMultipleQueries(){
+		final String query = getSyntax().getText().trim();
+		final int scIndex = query.indexOf(';');
+		if(scIndex!=-1 && query.length() > scIndex+1){
+			return true;
+		}
+		return false;
+	}
+	
 	public void stateChanged(ChangeEvent ce)
 	{
 		this.getActionMap().get(QueryActions.DIAGRAM_SAVE_AS_IMAGE).setEnabled(this.getSelectedIndex() == 0);
