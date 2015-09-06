@@ -29,6 +29,7 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.NumberFormat;
@@ -377,31 +378,44 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		private void executeCommandQuery(final String sql) {
 			final Command cmd = Application.commandRunner.getCommand(sql);
 			if (cmd != null) {
-				Application.session.addSQLToHistory(new SQLHistoryData(new Date(), "command", "CommandEditor",
-						sql));
-				final CommandExecutionResult result = cmd.execute(sql);
-				if (result.isSuccess()) {
-					write( "\n" + sql + "Command executed successfully\n");
-					if (cmd instanceof OutputCommand) {
-						outputCmd = (OutputCommand) cmd;
-						getClient().toggleGridOuptput(outputCmd.gridMode);
-					} else if (cmd instanceof FormatCommand) {
-						formatCmd = (FormatCommand) cmd;
-					} else if (cmd instanceof HelpCommand) {
-						write(result.getDetail());
-					} else if (cmd instanceof QuitCommand) {
-						outputCmd = null;
-						formatCmd = null;
-						write(result.getDetail());
-					}else if (cmd instanceof ClearCommand) {
-						clearResponse();
-					}
-				} else {
-					String error = "\n" + sql + "Command failed\n";
-					if(result.getDetail()!=null){
-						error = error + result.getDetail();
-					}
-					write(error, true);
+				try {
+					SwingUtilities.invokeAndWait(new Runnable() {
+						@Override
+						public void run() {
+							Application.session.addSQLToHistory(new SQLHistoryData(new Date(), "command", "CommandEditor",
+									sql));
+							final CommandExecutionResult result = cmd.execute(sql);
+							if (result.isSuccess()) {
+								write( "\n" + sql + "Command executed successfully\n");
+								if (cmd instanceof OutputCommand) {
+									outputCmd = (OutputCommand) cmd;
+									getClient().toggleGridOuptput(outputCmd.gridMode);
+								} else if (cmd instanceof FormatCommand) {
+									formatCmd = (FormatCommand) cmd;
+								} else if (cmd instanceof HelpCommand) {
+									write(result.getDetail());
+								} else if (cmd instanceof QuitCommand) {
+									outputCmd = null;
+									formatCmd = null;
+									write(result.getDetail());
+								}else if (cmd instanceof ClearCommand) {
+									clearResponse();
+								}
+							} else {
+								String error = "\n" + sql + "Command failed\n";
+								if(result.getDetail()!=null){
+									error = error + result.getDetail();
+								}
+								write(error, true);
+							}
+						}
+					});
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			} else {
 				executeCommandQueryWithDatasource(sql);
