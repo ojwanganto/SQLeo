@@ -55,6 +55,7 @@ import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
+import com.sqleo.environment.ctrl.commands.ClearCommand;
 import com.sqleo.environment.ctrl.commands.Command;
 import com.sqleo.environment.ctrl.commands.CommandExecutionResult;
 import com.sqleo.environment.ctrl.commands.FormatCommand;
@@ -392,6 +393,8 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 						outputCmd = null;
 						formatCmd = null;
 						write(result.getDetail());
+					}else if (cmd instanceof ClearCommand) {
+						clearResponse();
 					}
 				} else {
 					String error = "\n" + sql + "Command failed\n";
