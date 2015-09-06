@@ -270,11 +270,11 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 	public boolean validatePanel(){
 		final String target = isSource ? "SOURCE" : "TARGET";
 		if(cbxConnection.getSelectedIndex() < 0){
-			Application.alert("No connection selected in "+target);
+			Application.alert(I18n.getString("datacomparer.ConnexionNotSet","No connection selected in ")+target);
 			return false;
 		}
 		if(txtTable.getText().isEmpty()){
-			Application.alert("No table/query entered in "+target);
+			Application.alert(I18n.getString("datacomparer.TableNotSet","No table/query entered in ")+target);
 			return false;
 		}
 		return true;
