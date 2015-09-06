@@ -348,7 +348,7 @@ public class ClientQueryBuilder extends MDIClient {
 		
 		private void onLaunchFromSyntax(String subtitle){
 			if(ClientQueryBuilder.this.builder.hasMultipleQueries()){
-				Application.alert("Cannot execute multiple queries");
+				Application.alert(I18n.getString("querybuilder.message.multipleQueries", "Cannot execute multiple queries"));
 				return;
 			}
 			final String query = ClientQueryBuilder.this.builder.getSyntax().getText().trim();

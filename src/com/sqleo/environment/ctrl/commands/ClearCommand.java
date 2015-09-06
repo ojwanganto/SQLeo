@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class ClearCommand extends AbstractCommand {
 
-	private static final String USAGE = "Usage: clear, Description: Clears the command editor text";
+	private static final String USAGE = "Usage: clear, Description: Clears the command editor output text";
 	public static String NAME = "clear";
 
 	@Override
