@@ -42,7 +42,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
 
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.io.FileHelper;
+import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.SQLFormatter;
 
@@ -234,7 +236,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	
 	private class ActionCopyAndOpen extends ActionCopy
 	{
-		private static final String SQ_LEO_TEMP_TXT = "SQLeo_temp.txt";
+		private static final String SQ_LEO_TEMP_TXT = "SQLeo_temp.";
 
 		ActionCopyAndOpen(){super("Copy and open in editor");}
 		
@@ -242,12 +244,14 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		{
 			super.actionPerformed(ae);
 			if(valueCopied!=null){
+				final String extension = Preferences.getString(DialogPreferences.COPY_OPEN_FILE_EXTENSION, "txt");
+				final String realFile =  SQ_LEO_TEMP_TXT+(extension!=null && !extension.isEmpty()?extension:"txt");
 				final String tempDir = System.getProperty("java.io.tmpdir");
 				final File sqleoTempFile;
 				if(tempDir!=null){
-					sqleoTempFile = new File(tempDir,SQ_LEO_TEMP_TXT);
+					sqleoTempFile = new File(tempDir,realFile);
 				}else{
-					sqleoTempFile = new File(SQ_LEO_TEMP_TXT);
+					sqleoTempFile = new File(realFile);
 				}
 				FileHelper.writeTextToFile(valueCopied,sqleoTempFile,false,true);
 			}

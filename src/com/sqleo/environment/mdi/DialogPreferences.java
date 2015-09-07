@@ -25,7 +25,6 @@
 package com.sqleo.environment.mdi;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -84,6 +83,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	private JTextField jTextFieldMaxQueriesInHistory = new JFormattedTextField(numberFormatter);
 	private JTextField jTextFieldMaxRowFetchSize = new JFormattedTextField(numberFormatter);
 	private JTextField jTextFieldMaxColSize = new JFormattedTextField(numberFormatter);
+	private JTextField jTextFieldCopyOpenExt = new JTextField();
+	
 	
 	private JCheckBox jCheckBoxAutoCommit = new JCheckBox();
 	private JCheckBox jCheckBoxAutoComplete = new JCheckBox();
@@ -104,7 +105,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	public static final Integer DEFAULT_FONT_PERCENT = 110;
 	public static final String ICON_SIZE_PERCENTAGE = "application.iconSizePercentage";
 	public static final Integer DEFAULT_ICON_PERCENT = 160;
-	
+	public static final String COPY_OPEN_FILE_EXTENSION = "application.copyAndOpenFileExtension";
 
 	public DialogPreferences() {
 		super(Application.window, Application.PROGRAM + ".preferences", 360,
@@ -329,6 +330,15 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		
 		pnlCommand.add(jCheckBoxAutoComplete);
 		pnlCommand.add(jCheckBoxAutoSelectConnection);
+		
+		// add copyfileextension
+		JPanel pnlCopyFileExt = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlCopyFileExt.add(new JLabel(I18n.getString(
+				"application.copyAndOpenFileExtension", "Copy and open in editor file extension:")));
+		jTextFieldCopyOpenExt.setText(Preferences.getString(COPY_OPEN_FILE_EXTENSION, "txt"));
+		jTextFieldCopyOpenExt.setColumns(4);
+		pnlCopyFileExt.add(jTextFieldCopyOpenExt);
+		pnlCommand.add(pnlCopyFileExt);
 
 		JTabbedPane options = new JTabbedPane();
 		options.addTab("General", pnlGeneral);
@@ -415,6 +425,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		Preferences.set(ICON_SIZE_PERCENTAGE, iconSizeVal>400 ? 400 : iconSizeVal);
 
 		Preferences.set(MAX_QUERIES_IN_HISTORY, new Integer(jTextFieldMaxQueriesInHistory.getText()));
+		Preferences.set(COPY_OPEN_FILE_EXTENSION, jTextFieldCopyOpenExt.getText());
 
 		return true;
 	}
