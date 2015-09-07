@@ -587,7 +587,10 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 	public boolean hasMultipleQueries(){
 		final String query = getSyntax().getText().trim();
 		final int scIndex = query.indexOf(';');
-		if(scIndex!=-1 && query.length() > scIndex+1){
+		if(scIndex!=-1 && 
+				(query.indexOf("select", scIndex)!=-1 
+				  || query.indexOf("SELECT", scIndex)!=-1)
+		){
 			return true;
 		}
 		return false;
