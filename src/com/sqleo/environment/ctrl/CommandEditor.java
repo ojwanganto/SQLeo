@@ -41,6 +41,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.InternalFrameEvent;
@@ -52,6 +53,7 @@ import javax.swing.text.StyleConstants;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.TextView;
+import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
@@ -82,12 +84,13 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 	private TextView request;
 	private TextView response;
-	
+
 	private JSplitPane split;
 	private ClientContent gridClient;
 	private BorderLayoutPanel gridPanel;
 	private int splitPanePosition = -1;
-	
+	private JTabbedPane tabs;
+
 
 	protected MutableAttributeSet errorAttributSet;
 	protected MutableAttributeSet keycahAttributSet;
@@ -98,10 +101,15 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 	public CommandEditor() {
 		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		split.setTopComponent(request = new TextView(new SQLStyledDocument(), true));
-		split.setBottomComponent(response = new TextView(
-				new DefaultStyledDocument(), true));
-		split.setOneTouchExpandable(true);
 		gridPanel = new BorderLayoutPanel();
+
+		tabs = new JTabbedPane();
+		tabs.add(I18n.getString("commandeditor.console","Console"),response = new TextView(
+				new DefaultStyledDocument(), true));
+		tabs.add(I18n.getString("commandeditor.resultGrid","Result grid"),gridPanel);
+		split.setBottomComponent(tabs);
+		
+		split.setOneTouchExpandable(true);
 
 		response.setTabSize(4);
 		response.setEditable(false);
@@ -114,15 +122,15 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		request.getViewActionMap().put("format-query", new ActionFormatQuery());
 		request.getViewInputMap().put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.CTRL_MASK),
-				"start-task");
+		"start-task");
 		request.getViewInputMap().put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.CTRL_MASK),
-				"format-query");
+		"format-query");
 		request.addFormatQueryMouseAction();
 
 		getActionMap().setParent(request.getViewActionMap());
 
-		adjustSplitPaneDivider(false);
+		adjustSplitPaneDivider();
 
 		errorAttributSet = new SimpleAttributeSet();
 		StyleConstants.setForeground(errorAttributSet, Color.red);
@@ -168,7 +176,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		this.request.setCaretPosition(0);
 		this.request.requestFocus();
 	}
-	
+
 	private class ActionFormatQuery extends AbstractAction {
 		ActionFormatQuery() {
 			putValue( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control F7") );
@@ -230,7 +238,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				request.setSelectionEnd(request.getText().length());
 				requestString = request.getSelectedText();
 			}
-			
+
 			if (requestString == null){
 				requestString ="";
 			}
@@ -238,7 +246,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			Boolean PLsql=false;
 			String sqlcmd = requestString.length() > 7 ? requestString.toUpperCase().substring(0, 7) : requestString;
 			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("CREATE") || sqlcmd.startsWith("EXECUTE")) PLsql=true;
-			
+
 			if (requestString != null && requestString.trim().length() > 0 ) {
 				requestString = requestString.trim();
 				if (!PLsql){
@@ -247,15 +255,15 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					while (!stopped && st.hasMoreTokens()) {
 						final String line = st.nextToken().trim();
 						if (line.startsWith("--") || line.startsWith("//") || line.startsWith("#")) {
-		                    // Line is a comment	
+							// Line is a comment	
 							continue;
-		                } else if (line.endsWith(";")) {
-		                	sqlBuilder.append(line.substring(0, line.lastIndexOf(";"))).append("\n");
-		                	executeCommandQuery(sqlBuilder.toString());
-		                	sqlBuilder = new StringBuilder();
-		                }else{
-		                	sqlBuilder.append(line).append("\n");
-		                }
+						} else if (line.endsWith(";")) {
+							sqlBuilder.append(line.substring(0, line.lastIndexOf(";"))).append("\n");
+							executeCommandQuery(sqlBuilder.toString());
+							sqlBuilder = new StringBuilder();
+						}else{
+							sqlBuilder.append(line).append("\n");
+						}
 					}
 					if(!stopped && sqlBuilder.toString().length()>0){
 						executeCommandQuery(sqlBuilder.toString());
@@ -376,49 +384,54 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		}
 
 		private void executeCommandQuery(final String sql) {
-			final Command cmd = Application.commandRunner.getCommand(sql);
-			if (cmd != null) {
-				try {
-					SwingUtilities.invokeAndWait(new Runnable() {
-						@Override
-						public void run() {
-							Application.session.addSQLToHistory(new SQLHistoryData(new Date(), "command", "CommandEditor",
-									sql));
-							final CommandExecutionResult result = cmd.execute(sql);
-							if (result.isSuccess()) {
-								write( "\n" + sql + "Command executed successfully\n");
-								if (cmd instanceof OutputCommand) {
-									outputCmd = (OutputCommand) cmd;
-									getClient().toggleGridOuptput(outputCmd.gridMode);
-								} else if (cmd instanceof FormatCommand) {
-									formatCmd = (FormatCommand) cmd;
-								} else if (cmd instanceof HelpCommand) {
-									write(result.getDetail());
-								} else if (cmd instanceof QuitCommand) {
-									outputCmd = null;
-									formatCmd = null;
-									write(result.getDetail());
-								}else if (cmd instanceof ClearCommand) {
-									clearResponse();
-								}
-							} else {
-								String error = "\n" + sql + "Command failed\n";
-								if(result.getDetail()!=null){
-									error = error + result.getDetail();
-								}
-								write(error, true);
-							}
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						final Command cmd = Application.commandRunner.getCommand(sql);
+						if (cmd != null) {
+							executeCommand(sql, cmd);
+						} else {
+							executeCommandQueryWithDatasource(sql);
 						}
-					});
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					}
+				});
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		private void executeCommand(final String sql,
+				final Command cmd) {
+			Application.session.addSQLToHistory(new SQLHistoryData(new Date(), "command", "CommandEditor",
+					sql));
+			final CommandExecutionResult result = cmd.execute(sql);
+			if (result.isSuccess()) {
+				write( "\n" + sql + "Command executed successfully\n");
+				if (cmd instanceof OutputCommand) {
+					outputCmd = (OutputCommand) cmd;
+					getClient().toggleGridOuptput(outputCmd.gridMode);
+				} else if (cmd instanceof FormatCommand) {
+					formatCmd = (FormatCommand) cmd;
+				} else if (cmd instanceof HelpCommand) {
+					write(result.getDetail());
+				} else if (cmd instanceof QuitCommand) {
+					outputCmd = null;
+					formatCmd = null;
+					write(result.getDetail());
+				}else if (cmd instanceof ClearCommand) {
+					clearResponse();
 				}
 			} else {
-				executeCommandQueryWithDatasource(sql);
+				String error = "\n" + sql + "Command failed\n";
+				if(result.getDetail()!=null){
+					error = error + result.getDetail();
+				}
+				write(error, true);
 			}
 		}
 
@@ -427,8 +440,18 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			Application.session.addSQLToHistory(new SQLHistoryData(new Date(), source.getHandlerKey(), "CommandEditor",
 					sql));
 			splitPanePosition = split.getDividerLocation();
+			String keycah = "*** " + source.getHandlerKey() + " ***";
+			CommandEditor.this.response.append("\n" + keycah);
+			int offset = CommandEditor.this.response.getDocument()
+			.getLength() - keycah.length();
+			response.getDocument().setCharacterAttributes(offset,
+					keycah.length(), keycahAttributSet, true);
+			CommandEditor.this.response.append("\n"
+					+ source.getSyntax() + "\n");
+
 			ClientCommandEditor cce = getClient();
 			if (cce.isGridOutput() && (sql.toUpperCase().startsWith("SELECT") || sql.toUpperCase().startsWith("SHOW"))) {
+				tabs.setSelectedIndex(1);
 				Vector<Integer> prevColWidths = null;
 				if(gridClient!=null){
 					gridClient.getControl().getView().cacheColumnWidths();
@@ -451,61 +474,50 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				BorderLayoutPanel pnlSouth = (BorderLayoutPanel)content.getComponent(0);
 				pnlSouth.remove(pnlSouth.getComponent(2));
 				gridPanel.setComponentCenter(content);
-				
+
 				//append client menu actions inside builder menu actions
 				int len1 = cce.getMenuActions().length;
 				if(len1 == 6){
 					JMenuItem[] allMenuItems = new JMenuItem[len1+1];
 					System.arraycopy(cce.getMenuActions(), 0, allMenuItems, 0, len1);
 					allMenuItems[len1] = gridClient.getMenuActions()[6];
-				    cce.setMenuActions(allMenuItems);
+					cce.setMenuActions(allMenuItems);
 				}
 				Application.window.menubar.internalFrameActivated(
 						new InternalFrameEvent(cce,0));
-				
-				adjustSplitPaneDivider(true);
+
+				adjustSplitPaneDivider();
 			}else{
-				adjustSplitPaneDivider(false);
-				split.setBottomComponent(response);
-				String keycah = "*** " + source.getHandlerKey() + " ***";
-				CommandEditor.this.response.append("\n" + keycah);
-				int offset = CommandEditor.this.response.getDocument()
-						.getLength() - keycah.length();
-				response.getDocument().setCharacterAttributes(offset,
-						keycah.length(), keycahAttributSet, true);
-				CommandEditor.this.response.append("\n"
-						+ source.getSyntax() + "\n");
+				tabs.setSelectedIndex(0);
+				adjustSplitPaneDivider();
 				new Task(source, CommandEditor.this, printSelect() ? cce.getLimitRows() : 0)
-						.run();
+				.run();
 			}
-			
+
 		}
-		
+
 	}
 
 	private ClientCommandEditor getClient() {
 		return (ClientCommandEditor) Application.window.getClient(ClientCommandEditor.DEFAULT_TITLE);
 	}
 
-	private void adjustSplitPaneDivider(final boolean setGridPanel) {
+	private void adjustSplitPaneDivider() {
 		SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-            	if(splitPanePosition != -1) {
-                    boolean isCollapsed = splitPanePosition > split.getMaximumDividerLocation();
-                    if(isCollapsed) {
-                    	split.setDividerLocation(0.5d);
-                    }else {
-                    	split.setDividerLocation(splitPanePosition);
-                    }
-                }else{
-                	split.setDividerLocation(0.5d);
-                }
-            	if(setGridPanel){
-            		split.setBottomComponent(gridPanel);
-            	}
-            }
-		 });
+			@Override
+			public void run() {
+				if(splitPanePosition != -1) {
+					boolean isCollapsed = splitPanePosition > split.getMaximumDividerLocation();
+					if(isCollapsed) {
+						split.setDividerLocation(0.5d);
+					}else {
+						split.setDividerLocation(splitPanePosition);
+					}
+				}else{
+					split.setDividerLocation(0.5d);
+				}
+			}
+		});
 	}
 
 	private class ActionStopTask extends AbstractAction {
@@ -573,7 +585,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		@Override
 		public String getHandlerKey() {
 			ClientCommandEditor client = (ClientCommandEditor) Application.window
-					.getClient(ClientCommandEditor.DEFAULT_TITLE);
+			.getClient(ClientCommandEditor.DEFAULT_TITLE);
 			return client.getActiveConnection();
 		}
 
