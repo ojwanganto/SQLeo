@@ -432,6 +432,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					write(result.getDetail());
 				}else if (cmd instanceof ClearCommand) {
 					clearResponse();
+					gridPanel.removeAll();
 				}else if (cmd instanceof InputCommand) {
 					final InputCommand inpCmd =(InputCommand)cmd;
 					try {
