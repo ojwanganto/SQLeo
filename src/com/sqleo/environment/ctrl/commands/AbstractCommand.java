@@ -43,7 +43,7 @@ public abstract class AbstractCommand implements Command {
 		while (matcher.find()) {
 			for(int i = 1 ; i <= matcher.groupCount() ; i++) {
 				final String match =  matcher.group(i);
-				if(match!=null){
+				if(match!=null && !match.isEmpty()){
 					commandWithOptions.add(Text.trimBoth(match));
 				}
 			}

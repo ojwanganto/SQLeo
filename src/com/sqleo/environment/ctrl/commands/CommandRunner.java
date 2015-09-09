@@ -17,7 +17,7 @@ public class CommandRunner {
 		registerCommand(HelpCommand.NAME, new HelpCommand());
 		registerCommand(QuitCommand.NAME, new QuitCommand());
 		registerCommand(ClearCommand.NAME, new ClearCommand());
-
+		registerCommand(InputCommand.NAME, new InputCommand());
 	}
 
 	public void registerCommand(final String cmd, final Command cmnd) {

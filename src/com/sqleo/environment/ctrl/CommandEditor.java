@@ -63,6 +63,7 @@ import com.sqleo.environment.ctrl.commands.Command;
 import com.sqleo.environment.ctrl.commands.CommandExecutionResult;
 import com.sqleo.environment.ctrl.commands.FormatCommand;
 import com.sqleo.environment.ctrl.commands.HelpCommand;
+import com.sqleo.environment.ctrl.commands.InputCommand;
 import com.sqleo.environment.ctrl.commands.OutputCommand;
 import com.sqleo.environment.ctrl.commands.QuitCommand;
 import com.sqleo.environment.ctrl.content.MaskExport;
@@ -71,6 +72,7 @@ import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.ctrl.editor.Task;
 import com.sqleo.environment.ctrl.editor._TaskSource;
 import com.sqleo.environment.ctrl.editor._TaskTarget;
+import com.sqleo.environment.io.FileStreamSQL;
 import com.sqleo.environment.mdi.ClientCommandEditor;
 import com.sqleo.environment.mdi.ClientContent;
 import com.sqleo.querybuilder.QueryBuilder;
@@ -243,36 +245,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				requestString ="";
 			}
 
-			Boolean PLsql=false;
-			String sqlcmd = requestString.length() > 7 ? requestString.toUpperCase().substring(0, 7) : requestString;
-			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("CREATE") || sqlcmd.startsWith("EXECUTE")) PLsql=true;
-
-			if (requestString != null && requestString.trim().length() > 0 ) {
-				requestString = requestString.trim();
-				if (!PLsql){
-					StringTokenizer st = new StringTokenizer(requestString, "\n"); // split sql separated by "\n"
-					StringBuilder sqlBuilder = new StringBuilder();
-					while (!stopped && st.hasMoreTokens()) {
-						final String line = st.nextToken().trim();
-						if (line.startsWith("--") || line.startsWith("//") || line.startsWith("#")) {
-							// Line is a comment	
-							continue;
-						} else if (line.endsWith(";")) {
-							sqlBuilder.append(line.substring(0, line.lastIndexOf(";"))).append("\n");
-							executeCommandQuery(sqlBuilder.toString());
-							sqlBuilder = new StringBuilder();
-						}else{
-							sqlBuilder.append(line).append("\n");
-						}
-					}
-					if(!stopped && sqlBuilder.toString().length()>0){
-						executeCommandQuery(sqlBuilder.toString());
-					}
-				}else{
-					//pl-sql, execute whole selected text
-					executeCommandQuery(requestString);
-				}
-			}
+			executeMultiLineSQL(requestString);
 			setEnabled(true);
 			final ClientCommandEditor cce = (ClientCommandEditor) Application.window
 			.getClient(ClientCommandEditor.DEFAULT_TITLE);
@@ -383,16 +356,50 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			return requestString;
 		}
 
-		private void executeCommandQuery(final String sql) {
+		private void executeMultiLineSQL(String requestString) {
+			Boolean PLsql=false;
+			String sqlcmd = requestString.length() > 7 ? requestString.toUpperCase().substring(0, 7) : requestString;
+			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("CREATE") || sqlcmd.startsWith("EXECUTE")) PLsql=true;
+
+			if (requestString != null && requestString.trim().length() > 0 ) {
+				requestString = requestString.trim();
+				if (!PLsql){
+					StringTokenizer st = new StringTokenizer(requestString, "\n"); // split sql separated by "\n"
+					StringBuilder sqlBuilder = new StringBuilder();
+					while (!stopped && st.hasMoreTokens()) {
+						final String line = st.nextToken().trim();
+						if (line.startsWith("--") || line.startsWith("//") || line.startsWith("#")) {
+							// Line is a comment	
+							continue;
+						} else if (line.endsWith(";")) {
+							sqlBuilder.append(line.substring(0, line.lastIndexOf(";"))).append("\n");
+							execute(sqlBuilder.toString());
+							sqlBuilder = new StringBuilder();
+						}else{
+							sqlBuilder.append(line).append("\n");
+						}
+					}
+					if(!stopped && sqlBuilder.toString().length()>0){
+						execute(sqlBuilder.toString());
+					}
+				}else{
+					//pl-sql, execute whole selected text
+					execute(requestString);
+				}
+			}
+		}
+
+		
+		private void execute(final String sql) {
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
 					@Override
 					public void run() {
-						final Command cmd = Application.commandRunner.getCommand(sql);
+						final Command cmd = Application.commandRunner.getCommand(sql.trim());
 						if (cmd != null) {
 							executeCommand(sql, cmd);
 						} else {
-							executeCommandQueryWithDatasource(sql);
+							executeQuery(sql);
 						}
 					}
 				});
@@ -425,6 +432,23 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					write(result.getDetail());
 				}else if (cmd instanceof ClearCommand) {
 					clearResponse();
+				}else if (cmd instanceof InputCommand) {
+					final InputCommand inpCmd =(InputCommand)cmd;
+					try {
+						final String inputSql = FileStreamSQL.readSQL(inpCmd.filename);
+						if(inpCmd.echo){
+							append(inputSql);
+						}
+						final Thread inp = new Thread(new Runnable(){
+							@Override
+							public void run() {
+								executeMultiLineSQL(inputSql);
+							}
+						});
+						inp.start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			} else {
 				String error = "\n" + sql + "Command failed\n";
@@ -435,7 +459,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			}
 		}
 
-		private void executeCommandQueryWithDatasource(final String sql) {
+		private void executeQuery(final String sql) {
 			_TaskSource source = new TaskSource(sql);
 			Application.session.addSQLToHistory(new SQLHistoryData(new Date(), source.getHandlerKey(), "CommandEditor",
 					sql));
