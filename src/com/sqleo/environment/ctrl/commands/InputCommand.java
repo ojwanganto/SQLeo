@@ -1,7 +1,11 @@
 package com.sqleo.environment.ctrl.commands;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import com.sqleo.environment.Application;
+import com.sqleo.environment.io.FileStreamSQL;
 
 public class InputCommand extends AbstractCommand {
 
@@ -9,10 +13,10 @@ public class InputCommand extends AbstractCommand {
 	private static final String USAGE =
 			"Usage: input <filename.sql>, Description: Run the commands provided in input file";
 
-	public String filename;
+	public String inputSql;
 	
 	private void init(){
-		filename = null;
+		inputSql = null;
 	}
 
 	@Override
@@ -49,8 +53,15 @@ public class InputCommand extends AbstractCommand {
 			return invalidCommandError(command);
 		}
 		final CommandExecutionResult result = new CommandExecutionResult();
-		filename = tokens.get(1);
-		result.setCode(CommandExecutionResult.SUCCESS);
+		final String filename = tokens.get(1);
+		try {
+			inputSql = FileStreamSQL.readSQL(filename);
+			result.setCode(CommandExecutionResult.SUCCESS);
+		} catch (IOException e) {
+			Application.println(e, false);
+			result.setDetail(e.getMessage());
+			result.setCode(CommandExecutionResult.FAILED);
+		}
 		return result;
 	}
 

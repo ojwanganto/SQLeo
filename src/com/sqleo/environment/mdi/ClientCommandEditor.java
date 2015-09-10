@@ -307,7 +307,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	@Override
 	public void onConnectionOpened(String keycah) {
 		removeExistingOne(keycah);
-		if(Preferences.isAutoSelectConnectionEnabled()){
+		if(Preferences.isAutoSelectConnectionEnabled() || control.isAutoSelectConnectionInCommandMode()){
 			cbx.insertItemAt(keycah, 0);
 			cbx.setSelectedIndex(0);
 		}else{

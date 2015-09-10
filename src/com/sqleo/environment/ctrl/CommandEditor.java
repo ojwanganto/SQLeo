@@ -61,6 +61,7 @@ import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.commands.ClearCommand;
 import com.sqleo.environment.ctrl.commands.Command;
 import com.sqleo.environment.ctrl.commands.CommandExecutionResult;
+import com.sqleo.environment.ctrl.commands.ConnectCommand;
 import com.sqleo.environment.ctrl.commands.FormatCommand;
 import com.sqleo.environment.ctrl.commands.HelpCommand;
 import com.sqleo.environment.ctrl.commands.InputCommand;
@@ -72,7 +73,6 @@ import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
 import com.sqleo.environment.ctrl.editor.Task;
 import com.sqleo.environment.ctrl.editor._TaskSource;
 import com.sqleo.environment.ctrl.editor._TaskTarget;
-import com.sqleo.environment.io.FileStreamSQL;
 import com.sqleo.environment.mdi.ClientCommandEditor;
 import com.sqleo.environment.mdi.ClientContent;
 import com.sqleo.querybuilder.QueryBuilder;
@@ -99,6 +99,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 	private OutputCommand outputCmd;
 	private FormatCommand formatCmd;
+	private boolean autoSelectConnectionInCommandMode = false;
 
 	public CommandEditor() {
 		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -419,7 +420,10 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			final CommandExecutionResult result = cmd.execute(sql);
 			if (result.isSuccess()) {
 				write( "\n" + sql + "Command executed successfully\n");
-				if (cmd instanceof OutputCommand) {
+				if(cmd instanceof ConnectCommand){
+					//autoconnect
+					setAutoSelectConnectionInCommandMode(true);
+				}else if (cmd instanceof OutputCommand) {
 					outputCmd = (OutputCommand) cmd;
 					getClient().toggleGridOuptput(outputCmd.gridMode);
 				} else if (cmd instanceof FormatCommand) {
@@ -427,6 +431,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				} else if (cmd instanceof HelpCommand) {
 					write(result.getDetail());
 				} else if (cmd instanceof QuitCommand) {
+					setAutoSelectConnectionInCommandMode(false);
 					outputCmd = null;
 					formatCmd = null;
 					write(result.getDetail());
@@ -435,18 +440,13 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					gridPanel.removeAll();
 				}else if (cmd instanceof InputCommand) {
 					final InputCommand inpCmd =(InputCommand)cmd;
-					try {
-						final String inputSql = FileStreamSQL.readSQL(inpCmd.filename);
-						final Thread inp = new Thread(new Runnable(){
-							@Override
-							public void run() {
-								executeMultiLineSQL(inputSql);
-							}
-						});
-						inp.start();
-					} catch (IOException e) {
-						Application.println(e, true);
-					}
+					final Thread inp = new Thread(new Runnable(){
+						@Override
+						public void run() {
+							executeMultiLineSQL(inpCmd.inputSql);
+						}
+					});
+					inp.start();
 				}
 			} else {
 				String error = "\n" + sql + "Command failed\n";
@@ -644,5 +644,14 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		txtChoice.close();
 		write("Record(s): " + NumberFormat.getInstance().format(txtChoice.rowcount) 
 				+ " [ bytes: " + NumberFormat.getInstance().format(txtChoice.bytes) + " ]");
+	}
+
+	public void setAutoSelectConnectionInCommandMode(
+			boolean autoSelectConnectionInCommandMode) {
+		this.autoSelectConnectionInCommandMode = autoSelectConnectionInCommandMode;
+	}
+
+	public boolean isAutoSelectConnectionInCommandMode() {
+		return autoSelectConnectionInCommandMode;
 	}
 }

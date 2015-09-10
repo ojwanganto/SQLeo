@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import com.sqleo.environment.Application;
-import com.sqleo.environment.Preferences;
 import com.sqleo.environment.mdi.ClientMetadataExplorer;
 
 public class ConnectCommand extends AbstractCommand {
@@ -57,7 +56,6 @@ public class ConnectCommand extends AbstractCommand {
 		try{
 			final boolean found = getMetadataExplorer().getControl().getNavigator().connect(datasource);
 			if(found){
-				Preferences.setAutoSelectConnectionEnabled();
 				result.setCode(CommandExecutionResult.SUCCESS);
 			}else{
 				result.setCode(CommandExecutionResult.FAILED);
