@@ -1,6 +1,5 @@
 package com.sqleo.environment.ctrl.commands;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -8,15 +7,12 @@ public class InputCommand extends AbstractCommand {
 
 	public static final String NAME = "input";
 	private static final String USAGE =
-			"Usage: input <filename.sql> echo|noecho, Description: Run the commands provided in input file, echo will display the commands by default";
-	private static final List<String> OPTIONS = Arrays.asList("echo", "noecho");
+			"Usage: input <filename.sql>, Description: Run the commands provided in input file";
 
 	public String filename;
-	public boolean echo;
 	
 	private void init(){
 		filename = null;
-		echo = true;
 	}
 
 	@Override
@@ -24,9 +20,6 @@ public class InputCommand extends AbstractCommand {
 		return NAME;
 	}
 
-	/**
-	 * For echo option : if echo|noecho is not provided , echo will be used.
-	 */
 	@Override
 	public String getCommandUsage() {
 		return USAGE;
@@ -34,17 +27,18 @@ public class InputCommand extends AbstractCommand {
 
 	@Override
 	public List<String> getCommandOptions() {
-		return OPTIONS;
+		// no options
+		return null;
 	}
 
 	@Override
 	public int getCommandTokensLength() {
-		return 3;
+		return 2;
 	}
 	
 	@Override
 	protected Pattern getCommandRegex(){
-		return Pattern.compile("(^input) (.*\\.sql)($| echo$| noecho$)");
+		return Pattern.compile("(^input) (.*\\.sql$)");
 	}
 
 	@Override
@@ -56,9 +50,6 @@ public class InputCommand extends AbstractCommand {
 		}
 		final CommandExecutionResult result = new CommandExecutionResult();
 		filename = tokens.get(1);
-		if(tokens.size() > 2){
-			echo = OPTIONS.get(0).equals(tokens.get(2));
-		}
 		result.setCode(CommandExecutionResult.SUCCESS);
 		return result;
 	}

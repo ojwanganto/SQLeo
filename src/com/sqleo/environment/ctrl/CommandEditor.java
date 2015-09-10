@@ -437,9 +437,6 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					final InputCommand inpCmd =(InputCommand)cmd;
 					try {
 						final String inputSql = FileStreamSQL.readSQL(inpCmd.filename);
-						if(inpCmd.echo){
-							append(inputSql);
-						}
 						final Thread inp = new Thread(new Runnable(){
 							@Override
 							public void run() {
@@ -448,7 +445,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 						});
 						inp.start();
 					} catch (IOException e) {
-						e.printStackTrace();
+						Application.println(e, true);
 					}
 				}
 			} else {
