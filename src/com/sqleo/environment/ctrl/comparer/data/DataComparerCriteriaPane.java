@@ -89,6 +89,10 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		initComponents(headerText);
 	}
 	
+	public void removeListener(){
+		Application.window.removeListener(this);
+	}
+	
 	private void initComponents(final String headerText){
 		GridBagConstraints gbc = new GridBagConstraints();
 		GridBagLayout gbl = new GridBagLayout();

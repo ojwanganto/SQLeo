@@ -326,6 +326,11 @@ public class MDIWindow extends JFrame implements _Constants
 	{
 		connectionListeners.add(l);
 	}
+	
+	public void removeListener(_ConnectionListener l)
+	{
+		connectionListeners.remove(l);
+	}
     
 	public void connectionClosed(String keycah)
 	{

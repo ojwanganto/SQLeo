@@ -417,13 +417,14 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				final Command cmd) {
 			Application.session.addSQLToHistory(new SQLHistoryData(new Date(), "command", "CommandEditor",
 					sql));
+			if(cmd instanceof ConnectCommand){
+				//autoConnectLatestConnection boolean
+				setAutoSelectConnectionInCommandMode(true);
+			}
 			final CommandExecutionResult result = cmd.execute(sql);
 			if (result.isSuccess()) {
 				write( "\n" + sql + "Command executed successfully\n");
-				if(cmd instanceof ConnectCommand){
-					//autoconnect
-					setAutoSelectConnectionInCommandMode(true);
-				}else if (cmd instanceof OutputCommand) {
+				if (cmd instanceof OutputCommand) {
 					outputCmd = (OutputCommand) cmd;
 					getClient().toggleGridOuptput(outputCmd.gridMode);
 				} else if (cmd instanceof FormatCommand) {

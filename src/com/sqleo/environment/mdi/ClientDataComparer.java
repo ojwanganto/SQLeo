@@ -103,6 +103,13 @@ public class ClientDataComparer extends MDIClient
 		addInternalFrameListener(ifl);
 	}
 	
+	@Override
+	public void dispose(){
+		control.getSource().removeListener();
+		control.getTarget().removeListener();
+		super.dispose();
+	}
+	
 	public final void setFileName(final String filename) {
 		this.filename = filename;
 		super.setTitle(DEFAULT_TITLE + " : " + filename);

@@ -249,6 +249,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 				new Boolean(cbxLimit.isSelected()));
 		Preferences.set("editor.gridoutput.enabled", new Boolean(cbxGridOutput.isSelected()));
 
+		Application.window.removeListener(this);
 		super.dispose();
 	}
 
