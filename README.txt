@@ -33,11 +33,28 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2015.09.rc1.zip: 2015-09-17
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.09/
+
+	314 command editor: limit rows is broken
+	312 command editor: permit to switch between TEXT Window an GRID
+	311 command editor: add CLEAR command
+	306 command editor: add INPUT <filename.sql> command
+	309 data comparer: check that connexions are set before to start
+	282 Query Builder: add Warning message when trying to run many SQL
+	313 Grid content /​ output: resultset is not closed at end of query
+	278 copy and open in editor: choose file extension in preferences 
+	183 copy and open in editor: line feed are lost 
+
+
 SQLeoVQB.2015.08.rc1.zip: 2015-08-25
 
   Thanks to Anudeep Gade for his contribution to this release
   For changes included see tickets at  
-     http://sourceforge.net/p/sqleo/tickets/milestone/2015.07/
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.08/
 
 	310 new portuguese translation (by Bruce Hyatt)
 	307 Improved Italian translation (by Sinhuè Angelo Rossi)
