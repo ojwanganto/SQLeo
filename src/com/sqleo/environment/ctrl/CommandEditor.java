@@ -475,6 +475,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			ClientCommandEditor cce = getClient();
 			if (cce.isGridOutput() && (sql.toUpperCase().startsWith("SELECT") || sql.toUpperCase().startsWith("SHOW"))) {
 				tabs.setSelectedIndex(1);
+				CommandEditor.this.response.append("Record(s) sent to data grid\n");
 				Vector<Integer> prevColWidths = null;
 				if(gridClient!=null){
 					gridClient.getControl().getView().cacheColumnWidths();
