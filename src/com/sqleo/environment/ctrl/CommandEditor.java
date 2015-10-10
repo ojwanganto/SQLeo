@@ -636,6 +636,10 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			txtChoice.cbxHeader.setSelected(formatCmd.header);
 			txtChoice.cbxCote.setSelected(formatCmd.quote);
 			txtChoice.setDefaultDelimiter(formatCmd.delimiter);
+		}else{
+			txtChoice.cbxHeader.setSelected(true);
+			txtChoice.cbxCote.setSelected(false);
+			txtChoice.setDefaultDelimiter(";");
 		}
 		try {
 			txtChoice.open(rs.getMetaData(), outputCmd.append);

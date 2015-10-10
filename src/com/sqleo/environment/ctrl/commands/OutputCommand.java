@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 public class OutputCommand extends AbstractCommand {
 
+	private static final Pattern OUTPUT_CMD_PATTERN = Pattern.compile("(?:(output) (text|grid))|(?:(output) (csv) (.*) (append|replace))");
 	public static final String NAME = "output";
 	private static final List<String> OPTIONS = Arrays.asList("text", "grid", "csv");
 	private static final String USAGE =
@@ -46,7 +47,7 @@ public class OutputCommand extends AbstractCommand {
 	
 	@Override
 	protected Pattern getCommandRegex(){
-		return Pattern.compile("(?:(output) (text|grid))|(?:(output) (csv) (.*) (append|replace))");
+		return OUTPUT_CMD_PATTERN;
 	}
 
 	@Override
