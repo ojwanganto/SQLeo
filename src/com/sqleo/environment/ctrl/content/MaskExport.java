@@ -62,7 +62,7 @@ public class MaskExport extends AbstractMaskPerform
 			eChoice.getComponent(i).setEnabled(b);
 	}
 	
-	public void setType(short type, String tname, String fname)
+	public void setType(short type, String tname, String fname, boolean appendExtension)
 	{
 		if(eChoice!=null) remove(eChoice);
 		
@@ -86,7 +86,7 @@ public class MaskExport extends AbstractMaskPerform
 		}
 		else if(type == CSV)
 		{
-			if(!fname.endsWith(".csv")) fname = fname + ".csv";
+			if(appendExtension && !fname.endsWith(".csv")) fname = fname + ".csv";
 			TxtChoice csvChoice = new TxtChoice();
 			// csvChoice.setDefaultDelimiter(",");
 			setComponentCenter(eChoice = csvChoice);

@@ -20,9 +20,7 @@
 
 package com.sqleo.environment.ctrl.content;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JCheckBox;
 
@@ -97,7 +95,7 @@ public class DialogStream extends AbstractDialogWizard
 		{
 			if(mkc.getSelectedFile()!=null)
 			{
-				mkp.setType(mkc.getPerformType(),tname,mkc.getSelectedFile().toString());
+				mkp.setType(mkc.getPerformType(),tname,mkc.getSelectedFile().toString(), true);
 				mkp.setContent(view);
 				
 				return true;

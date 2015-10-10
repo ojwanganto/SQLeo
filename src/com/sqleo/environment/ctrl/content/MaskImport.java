@@ -54,7 +54,7 @@ public class MaskImport extends AbstractMaskPerform
 			iChoice.getComponent(i).setEnabled(b);
 	}
 	
-	void setType(short type, String tname, String fname)
+	void setType(short type, String tname, String fname, boolean appendExtension)
 	{
 		if(iChoice!=null) remove(iChoice);
 		

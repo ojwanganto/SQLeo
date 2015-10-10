@@ -630,7 +630,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 	public void processResult(ResultSet rs) {
 		mkp = mkp != null ? mkp : new MaskExport();
 		mkp.rs = rs;
-		mkp.setType((short) 3, null, outputCmd.filename);
+		mkp.setType((short) 3, null, outputCmd.filename, false);
 		final MaskExport.TxtChoice txtChoice = (TxtChoice) mkp.eChoice;
 		if (formatCmd != null) {
 			txtChoice.cbxHeader.setSelected(formatCmd.header);
