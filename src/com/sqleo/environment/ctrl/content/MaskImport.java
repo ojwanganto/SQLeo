@@ -209,7 +209,7 @@ public class MaskImport extends AbstractMaskPerform
 			super();
 			
 			JPanel pnl1 = new JPanel(new GridLayout(3,1));
-			pnl1.add(cbxHeader = new JCheckBox("With header"));
+			pnl1.add(cbxHeader = new JCheckBox("Skip header"));
 			pnl1.add(cbxNull = new JCheckBox("null if blanks"));
 			pnl1.add(cbxTrim = new JCheckBox("Trim value"));
 			

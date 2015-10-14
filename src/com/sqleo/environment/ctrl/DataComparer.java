@@ -255,14 +255,14 @@ public class DataComparer extends BorderLayoutPanel
 		final String realSourceAlias = sourceAlias!=null?sourceAlias:"SOURCE";
 		final String realTargetAlias = targetAlias!=null?targetAlias:"TARGET";
 		for(int i = 1; i<=totalAggregates; i++){
-			result.append("MAX(SRC").append(i).append(") as \"agg").append(i).append("_").append(realSourceAlias).append("\",");
-			result.append("MAX(TGT").append(i).append(") as \"agg").append(i).append("_").append(realTargetAlias).append("\"");
+			result.append("MAX(SRC").append(i).append(") as \"").append(realSourceAlias).append("_").append(sourceAggregates[i-1]).append("\",");
+			result.append("MAX(TGT").append(i).append(") as \"").append(realTargetAlias).append("_").append(targetAggregates[i-1]).append("\"");
 			// ticket #260 add diff status for each line (can help when exporting in excel AND pitvot table
 			if(addDiffStatusInOutput.isSelected()){
 				result.append(",\n").append(" case when MAX(SRC").append(i).append(")=").append("MAX(TGT").append(i).append(") then 'EQU'");
 				result.append(" when MAX(TGT").append(i).append(")='' then '").append(realSourceAlias).append("'");	
 				result.append(" when MAX(SRC").append(i).append(")='' then '").append(realTargetAlias).append("'");	
-				result.append(" else 'DIFF' end as DIFF").append(i);	
+				result.append(" else 'DIFF' end as \"DIFF").append("_").append(sourceAggregates[i-1]).append("\"");	
 			}
 			if(i<totalAggregates){
 				result.append(",\n");
