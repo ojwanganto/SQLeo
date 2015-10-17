@@ -220,6 +220,39 @@ public class SideNavigator extends TreeView implements TreeSelectionListener
 		return false;
 	}
 	
+	public String connect(DefaultMutableTreeNode source) throws Exception{
+		UoDatasource uoDs = (UoDatasource)source.getUserObject();
+		if(!uoDs.isConnected()){
+			uoDs.connect();
+			reload(source);
+			Application.window.connectionOpened(uoDs.getKey());
+		}
+		return uoDs.getKey();
+	}
+	
+	
+	public DefaultMutableTreeNode findDatasourceNode(final String driverName, final String datasourceUrlPrefix)  
+	{
+		DefaultMutableTreeNode root = getRootNode();
+		for(int i = 0; i < root.getChildCount(); i++)
+		{
+			DefaultMutableTreeNode driver = (DefaultMutableTreeNode)root.getChildAt(i);
+			UoDriver uoDv= (UoDriver)driver.getUserObject();
+			if(driverName.equals(uoDv.name)){
+				for(int j = 0; j < driver.getChildCount(); j++)
+				{
+					DefaultMutableTreeNode source = (DefaultMutableTreeNode)driver.getChildAt(j);
+					UoDatasource uoDs = (UoDatasource)source.getUserObject();
+					if(uoDs.url.startsWith(datasourceUrlPrefix))
+					{
+						return source;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
 	public void clearSelection()
 	{
 		super.clearSelection();

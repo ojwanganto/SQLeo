@@ -27,7 +27,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -36,11 +35,10 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.CommandButton;
-import com.sqleo.common.jdbc.ConnectionAssistant;
-import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.DataComparerConfig;
 import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHistoryData;
@@ -48,6 +46,7 @@ import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerCriteriaPane;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
 import com.sqleo.environment.mdi.ClientContent;
+import com.sqleo.environment.mdi.ClientMetadataExplorer;
 import com.sqleo.querybuilder.syntax.SQLParser;
 
 
@@ -57,18 +56,21 @@ public class DataComparer extends BorderLayoutPanel
 	private DataComparerCriteriaPane target;
 	private JCheckBox onlyDifferentValues;
 	private JCheckBox addDiffStatusInOutput;
-	
+
+	private ClientMetadataExplorer cme;
+	private DefaultMutableTreeNode csvJdbcDsNode;
+
 	public DataComparer()
 	{
 		super(2,2);
-		
+
 		source = new DataComparerCriteriaPane("SOURCE", this, true);
 		target = new DataComparerCriteriaPane("TARGET", this, false);
-		
+
 		final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,source,target);
 		split.setResizeWeight(.5d);
 		setComponentCenter(split);
-		
+
 		final JPanel buttonPanel = new JPanel(); 
 		onlyDifferentValues = new JCheckBox(I18n.getString("datacomparer.onlyDifferentValues", "Only different values"));
 		buttonPanel.add(onlyDifferentValues);
@@ -77,15 +79,15 @@ public class DataComparer extends BorderLayoutPanel
 		buttonPanel.add(startComparerButton());
 		add(buttonPanel, BorderLayout.PAGE_END);
 	}
-	
+
 	public DataComparerCriteriaPane getSource(){
 		return source;
 	}
-	
+
 	public DataComparerCriteriaPane getTarget(){
 		return target;
 	}
-	
+
 	private JButton startComparerButton() {
 		final AbstractAction action = new AbstractAction(){
 			@Override
@@ -98,10 +100,10 @@ public class DataComparer extends BorderLayoutPanel
 				if(!target.validatePanel()){
 					return;
 				}
-				
+
 				final boolean generateMergeCsv = source.getSyntax()!=null && target.getSyntax()!=null;
 				if(!generateMergeCsv) return;
-				
+
 				final String columns = source.getDataType(DATA_TYPE.COLUMNS);
 				final String sourceAggregateText = source.getDataType(DATA_TYPE.AGGREGATES);
 				final String targetAggregateText = target.getDataType(DATA_TYPE.AGGREGATES);
@@ -136,54 +138,55 @@ public class DataComparer extends BorderLayoutPanel
 					}
 				}
 				final File mergedCsvFile = new File(filePath);
-			    final String mergedTableName = mergedCsvFile.getName().substring(0, mergedCsvFile.getName().lastIndexOf("."));;
-			    // get merged query 
-			    final String mergedQuery = getMergedQuery(mergedTableName, columns, sourceAggregates, targetAggregates, source.getHeaderAlias(), target.getHeaderAlias());
-				final String csvjdbcKeych = getCsvJdbcConnectionKey();
-				if(null == csvjdbcKeych){
+				final String mergedTableName = mergedCsvFile.getName().substring(0, mergedCsvFile.getName().lastIndexOf("."));;
+				// get merged query 
+				final String mergedQuery = getMergedQuery(mergedTableName, columns, sourceAggregates, targetAggregates, source.getHeaderAlias(), target.getHeaderAlias());
+
+				final String tempFilePath = filePath.substring(0,filePath.lastIndexOf(File.separator));
+				final String tempCsvConnectionUrl= "jdbc:relique:csv:" + tempFilePath + "?separator=;";
+
+				cme = cme!=null ? cme : (ClientMetadataExplorer)Application.window.getClient(ClientMetadataExplorer.DEFAULT_TITLE);
+				csvJdbcDsNode = csvJdbcDsNode!=null ? csvJdbcDsNode : cme.getControl().getNavigator().findDatasourceNode("CsvJdbc", tempCsvConnectionUrl);
+
+				if(null == csvJdbcDsNode){
 					final StringBuilder messageBuilder = new StringBuilder();
 					messageBuilder.append("Please create and OPEN a csvjdbc connection using jar file\n"); 
 					messageBuilder.append("provided in sqleo/lib directory with\n");
 					messageBuilder.append("DRIVER: ").append("org.relique.jdbc.csv.CsvDriver").append("\n");
-					final String tempFilePath = filePath.substring(0,filePath.lastIndexOf(File.separator));
-					messageBuilder.append("URL: ").append("jdbc:relique:csv:").append(tempFilePath).append("?separator=;");
+					messageBuilder.append("URL: ").append(tempCsvConnectionUrl);
 					messageBuilder.append("\n\nThen RE-LAUNCH the data comparer!");
 					Application.alertAsText(messageBuilder.toString());
 				}else{
 					// open connection to csvjdbc using merged.csv
-					// open content window on above connection and run merged query
-					Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
-							csvjdbcKeych, "DataComparer", mergedQuery));
+					String csvjdbcKeych = null;
 					try {
-						final ClientContent client = new ClientContent(csvjdbcKeych, SQLParser.toQueryModel(mergedQuery),null);
-						Application.window.add(client);
-					} catch (IOException e) {
+						csvjdbcKeych = cme.getControl().getNavigator().connect(csvJdbcDsNode);
+					} catch (Exception e) {
 						Application.println(e, true);
 					}
-				}
-			}
-			
-			private String getCsvJdbcConnectionKey(){
-				for(final Object keych : ConnectionAssistant.getHandlers()){
-					final ConnectionHandler ch = ConnectionAssistant.getHandler((String)keych);
-					try {
-						if(ch.get().getMetaData().getDriverName().equals("CsvJdbc")){
-							return (String)keych;
+					if(csvjdbcKeych!=null){
+						source.setWorkingConnection(csvjdbcKeych);
+						// open content window on above connection and run merged query
+						Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
+								csvjdbcKeych, "DataComparer", mergedQuery));
+						try {
+							final ClientContent client = new ClientContent(csvjdbcKeych, SQLParser.toQueryModel(mergedQuery),null);
+							Application.window.add(client);
+						} catch (IOException e) {
+							Application.println(e, true);
 						}
-					} catch (SQLException e) {
-							e.printStackTrace();
 					}
 				}
-				return null;
 			}
+
 		};
 		final CommandButton compare = new CommandButton(action);
 		compare.setText(I18n.getString("datacomparer.start","Start"));
 		return compare;
 	}
-	
+
 	private String getColumnHeaderRow(final String columns,
-					final String[] sourceAggregates,final String[] targetAggregates){
+			final String[] sourceAggregates,final String[] targetAggregates){
 		final StringBuffer buffer = new StringBuffer();
 		if(columns!=null && !columns.isEmpty()){
 			for(final String column : columns.split(",")){
@@ -194,12 +197,12 @@ public class DataComparer extends BorderLayoutPanel
 			buffer.append("SRC").append(i).append(";");
 			buffer.append("TGT").append(i).append(";");
 		}
-//		for(final String sourceAggr : sourceAggregates){
-//			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
-//			if(sourceAggrName!=null){
-//				buffer.append(sourceAggrName).append(";");
-//			}
-//		}
+		//		for(final String sourceAggr : sourceAggregates){
+		//			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
+		//			if(sourceAggrName!=null){
+		//				buffer.append(sourceAggrName).append(";");
+		//			}
+		//		}
 		if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
 		return buffer.toString();
 	}
@@ -234,7 +237,7 @@ public class DataComparer extends BorderLayoutPanel
 		}
 		return null;
 	}
-	
+
 	private String getMergedQuery(final String mergedTableName,final String columns,
 			final String[] sourceAggregates,final String[] targetAggregates,final String sourceAlias,final String targetAlias){
 		final String tableAlias = "data";
@@ -285,7 +288,7 @@ public class DataComparer extends BorderLayoutPanel
 		if(colsGiven){
 			result.append("\nORDER BY ").append(colsWithAlias.toString());
 		}
-		
+
 		return result.toString();
 	}
 
@@ -306,5 +309,5 @@ public class DataComparer extends BorderLayoutPanel
 		setup.setAddDiffStatusInOutput(addDiffStatusInOutput.isSelected());
 		return setup;
 	}
-	
+
 }
