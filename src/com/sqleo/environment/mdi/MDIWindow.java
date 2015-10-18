@@ -92,6 +92,7 @@ public class MDIWindow extends JFrame implements _Constants
 		this.getRootPane().getActionMap().put(ACTION_EXIT				, new MDIActions.Exit());
 		this.getRootPane().getActionMap().put(ACTION_ABOUT				, new MDIActions.About());
 		this.getRootPane().getActionMap().put(ACTION_HOWTOUSE			, new MDIActions.HowToUse());
+		this.getRootPane().getActionMap().put(ACTION_SHORTCUTS			, new MDIActions.KeyboardShortcuts());
 		
 		this.getRootPane().getActionMap().put(ACTION_SHOW_PREFERENCES	, new MDIActions.ShowPreferences());
 		this.getRootPane().getActionMap().put(ACTION_SHOW_CONTENT		, new MDIActions.ShowContent());

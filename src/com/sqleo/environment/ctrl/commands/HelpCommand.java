@@ -55,6 +55,23 @@ public class HelpCommand extends AbstractCommand {
 					.append(cmd.getCommandUsage());
 			i++;
 		}
+		//add other commands
+		builder.append("\n").append(i).append(". ").append(String.format("%-8s", "CTRL-ENTER")).append("\t")
+		.append("Execute current or previous query");
+		i++;
+		builder.append("\n").append(i).append(". ").append(String.format("%-8s", "CTRL-T")).append("\t\t")
+		.append("Clear request area");
+		i++;
+		builder.append("\n").append(i).append(". ").append(String.format("%-8s", "CTRL-B")).append("\t")
+		.append("Clear response area");
+		i++;
+		builder.append("\n").append(i).append(". ").append(String.format("%-8s", "CTRL-F7")).append("\t")
+		.append("Format selected text");
+		i++;
+		builder.append("\n").append(i).append(". ").append(String.format("%-8s", "CTRL-SPACE")).append("\t")
+		.append("Auto-join completion");
+		i++;
+		
 		builder.append("\n");
 		result.setDetail(builder.toString());
 		result.setCode(CommandExecutionResult.SUCCESS);

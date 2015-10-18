@@ -94,6 +94,16 @@ public abstract class MDIActions implements _Constants
 			UriHelper.openUrl(Application.WEB);
 		}
 	}
+	
+	public final static class KeyboardShortcuts extends AbstractAction
+	{
+		public KeyboardShortcuts(){super(I18n.getString("application.menu.help.keyboardShortcuts","Keyboard shortcuts..."));}
+		public void actionPerformed(ActionEvent ae)
+		{
+			new DialogKeyboardShortcuts().setVisible(true);
+		}
+	}
+	
 	public static class NewQuery extends AbstractBase
 	{
 		public NewQuery(){
