@@ -30,8 +30,8 @@ public interface _Version
     public static final String AUTHOR = "";
     
     public static final String MAJOR = "2015";
-    public static final String MINOR = "10.b1";
-    public static final String SRC = "_zip";
+    public static final String MINOR = "09.rc1";
+    public static final String SRC = "_svn";
 
     public static final String WEB = "http://sqleo.sourceforge.net/guide.htm";
     public static final String SVN_BUILD_XML_FILE = "http://svn.code.sf.net/p/sqleo/code/trunk/build.xml";
