@@ -56,6 +56,9 @@ public class HelpCommand extends AbstractCommand {
 			i++;
 		}
 		//add other commands
+		i=1;
+		builder.append("\n\nList of main shortcuts (Full list available in Help menu)");
+
 		builder.append("\n").append(i).append(". ").append(String.format("%-8s", "CTRL-ENTER")).append("\t")
 		.append("Execute current or previous query");
 		i++;
