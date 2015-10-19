@@ -65,7 +65,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 	private static final String DATACOMPARER_WORKINGCONNECTION_URL = "datacomparer.workingconnection.url";
 	private JComboBox<String> cbxWorkingConnection;
 	private ClientMetadataExplorer cme;
-	
+
 	public void onConnectionClosed(String keycah){
 		cbxWorkingConnection.removeItem(keycah);
 	}
@@ -94,13 +94,13 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		workPanel.add(workingConnLbl);
 		cbxWorkingConnection = new JComboBox(ConnectionAssistant.getHandlers().toArray());
 		cbxWorkingConnection.setSelectedItem(null);
-		
+
 		if(Preferences.containsKey(DATACOMPARER_WORKINGCONNECTION_URL)){
 			addToWorkingConnection(Preferences.getString(DATACOMPARER_WORKINGCONNECTION_URL));
 		}
 		workPanel.add(cbxWorkingConnection);
 		buttonPanel.add(workPanel);
-		
+
 		onlyDifferentValues = new JCheckBox(I18n.getString("datacomparer.onlyDifferentValues", "Only different values"));
 		buttonPanel.add(onlyDifferentValues);
 		addDiffStatusInOutput = new JCheckBox(I18n.getString("datacomparer.addDiffStatusInOutput", "Add diff status in output"));
@@ -108,7 +108,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		buttonPanel.add(startComparerButton());
 		add(buttonPanel, BorderLayout.PAGE_END);
 	}
-	
+
 	public void addToWorkingConnection(final String keycah){
 		boolean found = false;
 		for(int i=0; i<cbxWorkingConnection.getItemCount();i++){
@@ -123,7 +123,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 			cbxWorkingConnection.setSelectedItem(keycah);
 		}
 	}
-	
+
 	public DataComparerCriteriaPane getSource(){
 		return source;
 	}
@@ -189,16 +189,15 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 				final String tempFilePath = filePath.substring(0,filePath.lastIndexOf(File.separator));
 				final String tempCsvConnectionUrl= "jdbc:relique:csv:" + tempFilePath + "?separator=;";
 
-				cme = cme!=null ? cme : (ClientMetadataExplorer)Application.window.getClient(ClientMetadataExplorer.DEFAULT_TITLE);
-				final String csvjdbcKeych;
+				final String workingConnectionJdbcKeyCh;
 				if(cbxWorkingConnection.getSelectedItem()!=null){
-					csvjdbcKeych=cbxWorkingConnection.getSelectedItem().toString();
-					Preferences.set(DATACOMPARER_WORKINGCONNECTION_URL, csvjdbcKeych);
+					workingConnectionJdbcKeyCh=cbxWorkingConnection.getSelectedItem().toString();
+					Preferences.set(DATACOMPARER_WORKINGCONNECTION_URL, workingConnectionJdbcKeyCh);
 				}else{
-					csvjdbcKeych=null;
+					workingConnectionJdbcKeyCh=null;
 				}
-				
-				if(null == csvjdbcKeych){
+
+				if(null == workingConnectionJdbcKeyCh){
 					final StringBuilder messageBuilder = new StringBuilder();
 					messageBuilder.append("Please create and OPEN a csvjdbc connection using jar file\n"); 
 					messageBuilder.append("provided in sqleo/lib directory with\n");
@@ -207,22 +206,21 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 					messageBuilder.append("\n\nThen RE-LAUNCH the data comparer!");
 					Application.alertAsText(messageBuilder.toString());
 				}else{
-					// open connection to csvjdbc using merged.csv
+					// open connection to working connection jdbc
+					cme = cme!=null ? cme : (ClientMetadataExplorer)Application.window.getClient(ClientMetadataExplorer.DEFAULT_TITLE);
 					try {
-						cme.getControl().getNavigator().connect(csvjdbcKeych);
+						cme.getControl().getNavigator().connect(workingConnectionJdbcKeyCh);
 					} catch (Exception e) {
 						Application.println(e, true);
 					}
-					if(csvjdbcKeych!=null){
-						// open content window on above connection and run merged query
-						Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
-								csvjdbcKeych, "DataComparer", mergedQuery));
-						try {
-							final ClientContent client = new ClientContent(csvjdbcKeych, SQLParser.toQueryModel(mergedQuery),null);
-							Application.window.add(client);
-						} catch (IOException e) {
-							Application.println(e, true);
-						}
+					// open content window on above connection and run merged query
+					Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
+							workingConnectionJdbcKeyCh, "DataComparer", mergedQuery));
+					try {
+						final ClientContent client = new ClientContent(workingConnectionJdbcKeyCh, SQLParser.toQueryModel(mergedQuery),null);
+						Application.window.add(client);
+					} catch (IOException e) {
+						Application.println(e, true);
 					}
 				}
 			}
