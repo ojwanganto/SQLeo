@@ -56,7 +56,6 @@ import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.environment.Application;
-import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.DataComparer;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
 import com.sqleo.environment.ctrl.editor.Task;
@@ -67,7 +66,6 @@ import com.sqleo.environment.mdi._ConnectionListener;
 
 public class DataComparerCriteriaPane extends JPanel implements _ConnectionListener, ItemListener, _TaskSource{
 	
-	private static final String DATACOMPARER_WORKINGCONNECTION_URL = "datacomparer.workingconnection.url";
 	private static final int LIMITED_ROWS_FOR_FREE_VERSION = 100;
 	private JComboBox cbxConnection;
 	private JComboBox cbxSchema;
@@ -79,7 +77,6 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 	private boolean queryExecutionSuccess = false;
 	private boolean isSource;
 	private JTextField headerAlias;
-	private JComboBox<String> cbxWorkingConnection;
 
 	public DataComparerCriteriaPane(final String headerText,final DataComparer owner,final boolean isSource){
 		this.owner = owner;
@@ -188,25 +185,8 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 		query.setAction(new ShowQueryAction(new QueryDialog()));
 
 		if(isSource){
-			gbc.weightx = 0;
-			gbc.weighty = 0.2;
 			gbl.setConstraints(query,gbc);
 			add(query);
-
-			gbc.gridx = 0;
-			gbc.gridy = 12;
-			final JPanel workPanel = new JPanel();
-			workPanel.setBackground(new Color(128, 255, 0));
-			final JLabel workingConnLbl = new JLabel(I18n.getString("datacomparer.WorkingConnection","Working connection:"));
-			workPanel.add(workingConnLbl);
-			cbxWorkingConnection = new JComboBox();
-			if(Preferences.containsKey(DATACOMPARER_WORKINGCONNECTION_URL)){
-				setWorkingConnection(Preferences.getString(DATACOMPARER_WORKINGCONNECTION_URL));
-			}
-			workPanel.add(cbxWorkingConnection);
-			gbl.setConstraints(workPanel, gbc);
-			add(workPanel);
-			
 		}else{
 			gbc.weightx = 0;
 			gbc.weighty = 0.2;
@@ -221,14 +201,6 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 			gbl.setConstraints(label,gbc);
 			add(label);
 			
-		}
-	}
-	
-	public void setWorkingConnection(final String workingConnection){
-		if(isSource){
-			cbxWorkingConnection.removeAllItems();
-			cbxWorkingConnection.addItem(workingConnection);
-			Preferences.set(DATACOMPARER_WORKINGCONNECTION_URL, workingConnection);
 		}
 	}
 	

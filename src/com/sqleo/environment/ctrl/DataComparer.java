@@ -21,6 +21,7 @@
 package com.sqleo.environment.ctrl;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,32 +34,45 @@ import java.util.StringTokenizer;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.CommandButton;
+import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.util.DataComparerConfig;
 import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerCriteriaPane;
 import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYPE;
 import com.sqleo.environment.mdi.ClientContent;
 import com.sqleo.environment.mdi.ClientMetadataExplorer;
+import com.sqleo.environment.mdi._ConnectionListener;
 import com.sqleo.querybuilder.syntax.SQLParser;
 
 
-public class DataComparer extends BorderLayoutPanel
+public class DataComparer extends BorderLayoutPanel implements _ConnectionListener
 {
 	private DataComparerCriteriaPane source;
 	private DataComparerCriteriaPane target;
 	private JCheckBox onlyDifferentValues;
 	private JCheckBox addDiffStatusInOutput;
 
+	private static final String DATACOMPARER_WORKINGCONNECTION_URL = "datacomparer.workingconnection.url";
+	private JComboBox<String> cbxWorkingConnection;
 	private ClientMetadataExplorer cme;
-	private DefaultMutableTreeNode csvJdbcDsNode;
+	
+	public void onConnectionClosed(String keycah){
+		cbxWorkingConnection.removeItem(keycah);
+	}
+
+	public void onConnectionOpened(String keycah){
+		addToWorkingConnection(keycah);
+	}
 
 	public DataComparer()
 	{
@@ -71,7 +85,22 @@ public class DataComparer extends BorderLayoutPanel
 		split.setResizeWeight(.5d);
 		setComponentCenter(split);
 
-		final JPanel buttonPanel = new JPanel(); 
+		final JPanel buttonPanel = new JPanel();
+
+		Application.window.addListener(this);
+		final JPanel workPanel = new JPanel();
+		workPanel.setBackground(new Color(128, 255, 0));
+		final JLabel workingConnLbl = new JLabel(I18n.getString("datacomparer.WorkingConnection","Working connection:"));
+		workPanel.add(workingConnLbl);
+		cbxWorkingConnection = new JComboBox(ConnectionAssistant.getHandlers().toArray());
+		cbxWorkingConnection.setSelectedItem(null);
+		
+		if(Preferences.containsKey(DATACOMPARER_WORKINGCONNECTION_URL)){
+			addToWorkingConnection(Preferences.getString(DATACOMPARER_WORKINGCONNECTION_URL));
+		}
+		workPanel.add(cbxWorkingConnection);
+		buttonPanel.add(workPanel);
+		
 		onlyDifferentValues = new JCheckBox(I18n.getString("datacomparer.onlyDifferentValues", "Only different values"));
 		buttonPanel.add(onlyDifferentValues);
 		addDiffStatusInOutput = new JCheckBox(I18n.getString("datacomparer.addDiffStatusInOutput", "Add diff status in output"));
@@ -79,7 +108,22 @@ public class DataComparer extends BorderLayoutPanel
 		buttonPanel.add(startComparerButton());
 		add(buttonPanel, BorderLayout.PAGE_END);
 	}
-
+	
+	public void addToWorkingConnection(final String keycah){
+		boolean found = false;
+		for(int i=0; i<cbxWorkingConnection.getItemCount();i++){
+			if(keycah.equals(cbxWorkingConnection.getItemAt(i))){
+				cbxWorkingConnection.setSelectedIndex(i);
+				found = true;
+				break;
+			}
+		}
+		if(!found){
+			cbxWorkingConnection.addItem(keycah);
+			cbxWorkingConnection.setSelectedItem(keycah);
+		}
+	}
+	
 	public DataComparerCriteriaPane getSource(){
 		return source;
 	}
@@ -146,9 +190,15 @@ public class DataComparer extends BorderLayoutPanel
 				final String tempCsvConnectionUrl= "jdbc:relique:csv:" + tempFilePath + "?separator=;";
 
 				cme = cme!=null ? cme : (ClientMetadataExplorer)Application.window.getClient(ClientMetadataExplorer.DEFAULT_TITLE);
-				csvJdbcDsNode = csvJdbcDsNode!=null ? csvJdbcDsNode : cme.getControl().getNavigator().findDatasourceNode("CsvJdbc", tempCsvConnectionUrl);
-
-				if(null == csvJdbcDsNode){
+				final String csvjdbcKeych;
+				if(cbxWorkingConnection.getSelectedItem()!=null){
+					csvjdbcKeych=cbxWorkingConnection.getSelectedItem().toString();
+					Preferences.set(DATACOMPARER_WORKINGCONNECTION_URL, csvjdbcKeych);
+				}else{
+					csvjdbcKeych=null;
+				}
+				
+				if(null == csvjdbcKeych){
 					final StringBuilder messageBuilder = new StringBuilder();
 					messageBuilder.append("Please create and OPEN a csvjdbc connection using jar file\n"); 
 					messageBuilder.append("provided in sqleo/lib directory with\n");
@@ -158,14 +208,12 @@ public class DataComparer extends BorderLayoutPanel
 					Application.alertAsText(messageBuilder.toString());
 				}else{
 					// open connection to csvjdbc using merged.csv
-					String csvjdbcKeych = null;
 					try {
-						csvjdbcKeych = cme.getControl().getNavigator().connect(csvJdbcDsNode);
+						cme.getControl().getNavigator().connect(csvjdbcKeych);
 					} catch (Exception e) {
 						Application.println(e, true);
 					}
 					if(csvjdbcKeych!=null){
-						source.setWorkingConnection(csvjdbcKeych);
 						// open content window on above connection and run merged query
 						Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
 								csvjdbcKeych, "DataComparer", mergedQuery));
