@@ -71,7 +71,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 	}
 
 	public void onConnectionOpened(String keycah){
-		addToWorkingConnection(keycah);
+		addToWorkingConnection(keycah, false);
 	}
 
 	public DataComparer()
@@ -89,14 +89,14 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 
 		Application.window.addListener(this);
 		final JPanel workPanel = new JPanel();
-		workPanel.setBackground(new Color(128, 255, 0));
+		workPanel.setBackground(Color.lightGray);
 		final JLabel workingConnLbl = new JLabel(I18n.getString("datacomparer.WorkingConnection","Working connection:"));
 		workPanel.add(workingConnLbl);
 		cbxWorkingConnection = new JComboBox(ConnectionAssistant.getHandlers().toArray());
 		cbxWorkingConnection.setSelectedItem(null);
 
 		if(Preferences.containsKey(DATACOMPARER_WORKINGCONNECTION_URL)){
-			addToWorkingConnection(Preferences.getString(DATACOMPARER_WORKINGCONNECTION_URL));
+			addToWorkingConnection(Preferences.getString(DATACOMPARER_WORKINGCONNECTION_URL), true);
 		}
 		workPanel.add(cbxWorkingConnection);
 		buttonPanel.add(workPanel);
@@ -109,18 +109,22 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		add(buttonPanel, BorderLayout.PAGE_END);
 	}
 
-	public void addToWorkingConnection(final String keycah){
+	public void addToWorkingConnection(final String keycah, boolean autoselect){
 		boolean found = false;
 		for(int i=0; i<cbxWorkingConnection.getItemCount();i++){
 			if(keycah.equals(cbxWorkingConnection.getItemAt(i))){
-				cbxWorkingConnection.setSelectedIndex(i);
+				if(autoselect || null == cbxWorkingConnection.getSelectedItem()){
+					cbxWorkingConnection.setSelectedIndex(i);
+				}
 				found = true;
 				break;
 			}
 		}
 		if(!found){
 			cbxWorkingConnection.addItem(keycah);
-			cbxWorkingConnection.setSelectedItem(keycah);
+			if(autoselect || null == cbxWorkingConnection.getSelectedItem()){
+				cbxWorkingConnection.setSelectedItem(keycah);
+			}
 		}
 	}
 
