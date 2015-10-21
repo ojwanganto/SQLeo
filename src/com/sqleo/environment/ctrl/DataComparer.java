@@ -21,7 +21,6 @@
 package com.sqleo.environment.ctrl;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -89,7 +88,6 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 
 		Application.window.addListener(this);
 		final JPanel workPanel = new JPanel();
-		workPanel.setBackground(Color.lightGray);
 		final JLabel workingConnLbl = new JLabel(I18n.getString("datacomparer.WorkingConnection","Working connection:"));
 		workPanel.add(workingConnLbl);
 		cbxWorkingConnection = new JComboBox(ConnectionAssistant.getHandlers().toArray());
