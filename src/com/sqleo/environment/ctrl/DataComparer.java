@@ -92,6 +92,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		workPanel.add(workingConnLbl);
 		cbxWorkingConnection = new JComboBox(ConnectionAssistant.getHandlers().toArray());
 		cbxWorkingConnection.setSelectedItem(null);
+		addToWorkingConnection("", true);
 
 		if(Preferences.containsKey(DATACOMPARER_WORKINGCONNECTION_URL)){
 			addToWorkingConnection(Preferences.getString(DATACOMPARER_WORKINGCONNECTION_URL), true);
@@ -120,7 +121,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		}
 		if(!found){
 			cbxWorkingConnection.addItem(keycah);
-			if(autoselect || null == cbxWorkingConnection.getSelectedItem()){
+			if(autoselect){
 				cbxWorkingConnection.setSelectedItem(keycah);
 			}
 		}
@@ -199,7 +200,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 					workingConnectionJdbcKeyCh=null;
 				}
 
-				if(null == workingConnectionJdbcKeyCh){
+				if("" == workingConnectionJdbcKeyCh){
 					final StringBuilder messageBuilder = new StringBuilder();
 					messageBuilder.append("Please create and OPEN a csvjdbc connection using jar file\n"); 
 					messageBuilder.append("provided in sqleo/lib directory with\n");
