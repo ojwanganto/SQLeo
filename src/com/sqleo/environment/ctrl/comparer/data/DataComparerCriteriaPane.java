@@ -319,13 +319,13 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 				int i = 1;
 				for(String aggrSplitted : sourceAggregates){
 					val.append(aggrSplitted).append(" AS SRC").append(i).append(",");
-					val.append("''").append(" AS TGT").append(i).append(",");
+					val.append("'\"\"'").append(" AS TGT").append(i).append(",");
 					i++;
 				}
 			}else{
 				int i = 1;
 				for(String aggrSplitted : targetAggregates){
-					val.append("''").append(" AS SRC").append(i).append(",");
+					val.append("'\"\"'").append(" AS SRC").append(i).append(",");
 					val.append(aggrSplitted).append(" AS TGT").append(i).append(",");
 					i++;
 				}
@@ -374,7 +374,16 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 	}
 
 	public void onConnectionOpened(String keycah){
-		cbxConnection.addItem(keycah);
+		boolean found = false;
+		for(int i=0; i<cbxConnection.getItemCount();i++){
+			if(keycah.equals(cbxConnection.getItemAt(i))){
+				found = true;
+				break;
+			}
+		}
+		if(!found){
+			cbxConnection.addItem(keycah);
+		}
 	}
 
 	public void setEnabled(boolean b){

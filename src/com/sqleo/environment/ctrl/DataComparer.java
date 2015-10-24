@@ -27,6 +27,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -41,6 +46,7 @@ import javax.swing.JSplitPane;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.CommandButton;
 import com.sqleo.common.jdbc.ConnectionAssistant;
+import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.DataComparerConfig;
 import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHistoryData;
@@ -66,7 +72,9 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 	private ClientMetadataExplorer cme;
 
 	public void onConnectionClosed(String keycah){
-		cbxWorkingConnection.removeItem(keycah);
+		if (!cbxWorkingConnection.getSelectedItem().toString().equals(keycah)) {
+			cbxWorkingConnection.removeItem(keycah);
+		}
 	}
 
 	public void onConnectionOpened(String keycah){
@@ -92,7 +100,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		workPanel.add(workingConnLbl);
 		cbxWorkingConnection = new JComboBox(ConnectionAssistant.getHandlers().toArray());
 		cbxWorkingConnection.setSelectedItem(null);
-		addToWorkingConnection("", true);
+	//	addToWorkingConnection("", true);
 
 		if(Preferences.containsKey(DATACOMPARER_WORKINGCONNECTION_URL)){
 			addToWorkingConnection(Preferences.getString(DATACOMPARER_WORKINGCONNECTION_URL), true);
@@ -121,7 +129,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		}
 		if(!found){
 			cbxWorkingConnection.addItem(keycah);
-			if(autoselect){
+			if(autoselect ){
 				cbxWorkingConnection.setSelectedItem(keycah);
 			}
 		}
@@ -197,7 +205,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 					workingConnectionJdbcKeyCh=cbxWorkingConnection.getSelectedItem().toString();
 					Preferences.set(DATACOMPARER_WORKINGCONNECTION_URL, workingConnectionJdbcKeyCh);
 				}else{
-					workingConnectionJdbcKeyCh=null;
+					workingConnectionJdbcKeyCh="";
 				}
 
 				if("" == workingConnectionJdbcKeyCh){
@@ -216,9 +224,22 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 					} catch (Exception e) {
 						Application.println(e, true);
 					}
+
+					// ticket #320 specific for H2 connection
+					if (cbxWorkingConnection.getSelectedItem().toString().startsWith("H2")) {
+						ConnectionHandler ch = ConnectionAssistant.getHandler(cbxWorkingConnection.getSelectedItem().toString());
+						Statement stmt = null;
+						try {
+							stmt = ch.get().createStatement();
+							stmt.executeUpdate("CREATE VIEW "+ mergedTableName + " as SELECT * FROM csvread('" + tempFilePath + "/" + mergedTableName + ".csv',null,'fieldSeparator=;')");
+							stmt.close();
+						} catch (SQLException sqle) {
+							Application.println(sqle, true);
+						}
+					}
+
 					// open content window on above connection and run merged query
-					Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
-							workingConnectionJdbcKeyCh, "DataComparer", mergedQuery));
+					Application.session.addSQLToHistory(new SQLHistoryData(new Date(), workingConnectionJdbcKeyCh, "DataComparer", mergedQuery));
 					try {
 						final ClientContent client = new ClientContent(workingConnectionJdbcKeyCh, SQLParser.toQueryModel(mergedQuery),null);
 						Application.window.add(client);
