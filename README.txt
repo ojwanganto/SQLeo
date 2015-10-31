@@ -33,6 +33,20 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2015.10.rc1.zip: 2015-10-31
+
+  Thanks to Anudeep Gade for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.10/
+
+	320 data comparer: use H2 as working datasource for big datasets
+	319 data comparer: display aggregate text in resulting columns
+	317 command editor: set output default format
+	316 command editor: let user choose output file extension
+	315 command editor: set a message in text log when data sent to grid
+	277 SQLeo display available shortcuts
+	255 Data comparer: save working datasource
+
 SQLeoVQB.2015.09.rc1.zip: 2015-09-17
 
   Thanks to Anudeep Gade for his contribution to this release
