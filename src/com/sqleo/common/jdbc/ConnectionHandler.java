@@ -41,6 +41,8 @@ public class ConnectionHandler
     	try {
     		if(connection!=null){
     			connection.setAutoCommit(ConnectionAssistant.getAutoCommitPrefered());
+    			// test for ticket #326 	create READ ONLY connections
+			// connection.setReadOnly(true);
     		}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
