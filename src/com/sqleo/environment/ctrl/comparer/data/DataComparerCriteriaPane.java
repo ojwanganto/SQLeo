@@ -479,6 +479,8 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 					int cols= rs.getMetaData().getColumnCount();
 					Object[] vals = null;
 					int rowCount = 0;
+					// fetch size optimisation (mainly for Oracle that as a default fetch size of 10)
+					rs.setFetchSize(100);
 					while(rs.next()){
 						vals = new Object[cols];
 						for(int i=1; i<=cols;i++){
