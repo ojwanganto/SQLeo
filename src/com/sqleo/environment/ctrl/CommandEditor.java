@@ -360,7 +360,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		private void executeMultiLineSQL(String requestString) {
 			Boolean PLsql=false;
 			String sqlcmd = requestString.length() > 7 ? requestString.toUpperCase().substring(0, 7) : requestString;
-			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("CREATE") || sqlcmd.startsWith("EXECUTE")) PLsql=true;
+			if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("CREATE") || sqlcmd.startsWith("EXECUTE") || sqlcmd.startsWith("DO $$")) PLsql=true;
 
 			if (requestString != null && requestString.trim().length() > 0 ) {
 				requestString = requestString.trim();
