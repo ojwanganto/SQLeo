@@ -22,6 +22,9 @@ package com.sqleo.environment.ctrl.content;
 
 import java.sql.PreparedStatement;
 import java.sql.Types;
+import java.sql.Savepoint;
+import java.sql.SQLException;
+
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -219,7 +222,17 @@ public class TaskUpdate implements Runnable
 				pstmt.setObject(i+1,param[0],((Integer)param[1]).intValue());
 			}
 		}
+// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+// rs = stmt.executeQuery(syntax);
+String savepointName = "AutoSavepoint";
+Savepoint savepoint= ch.get().setSavepoint(savepointName);
+try {
 		pstmt.executeUpdate();
+} catch (SQLException sqle) {
+			ch.get().rollback(savepoint);
+			Application.println(sqle, true);
+}
+// end test #329
 		this.close();
 	}
 }

@@ -23,6 +23,7 @@ package com.sqleo.environment.ctrl.content;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Types;
 
@@ -80,7 +81,17 @@ public class TaskRetrieve implements Runnable
 				stmt = ch.get().createStatement();
 				stmt.setMaxRows(limit);
 				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());
+// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+// rs = stmt.executeQuery(syntax);
+String savepointName = "AutoSavepoint";
+Savepoint savepoint= ch.get().setSavepoint(savepointName);
+try {
 				rs = stmt.executeQuery(syntax);
+} catch (SQLException sqle) {
+			ch.get().rollback(savepoint);
+			Application.println(sqle,true);
+}
+// end test #329
 				
 				for(int i=1; i<=this.getColumnCount(); i++)
 				{

@@ -29,6 +29,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.CallableStatement;
 import java.sql.Types;
+import java.sql.Savepoint;
+
+
 
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -83,7 +86,18 @@ public class Task implements Runnable {
 						printSelect();
 						rs.close();
 					}else if (sqlcmd.startsWith("SELECT")) {
+
+// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+// rs = stmt.executeQuery(syntax);
+String savepointName = "AutoSavepoint";
+Savepoint savepoint= ch.get().setSavepoint(savepointName);
+try {
 						rs = stmt.executeQuery(syntax);
+} catch (SQLException sqle) {
+			ch.get().rollback(savepoint);
+			target.onTaskFinished(sqle.toString(), true);
+}
+// end test #329
 						if(target.printSelect()){
 							printSelect();
 						}else{
@@ -110,6 +124,10 @@ public class Task implements Runnable {
 						target.write("PL/SQL block executed successfully");
 					} else {
 						rs = null;
+// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+String savepointName = "AutoSavepoint";
+Savepoint savepoint= ch.get().setSavepoint(savepointName);
+try {
 						int rows = stmt.executeUpdate(syntax);
 
 						if (sqlcmd.startsWith("DELETE")
@@ -119,6 +137,11 @@ public class Task implements Runnable {
 						} else {
 							target.write("Command has been executed successfully");
 						}
+} catch (SQLException sqle) {
+			ch.get().rollback(savepoint);
+			target.onTaskFinished(sqle.toString(), true);
+}
+// end test #329
 					}
 					stmt.close();
 
