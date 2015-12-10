@@ -85,9 +85,15 @@ public class DialogPreview extends AbstractDialogModal
 					int col = content.getView().getColumnIndex(content.getUpdateModel().getRowIdentifier(j).getReference());
 					if(col == -1) col = content.getView().getColumnIndex(content.getUpdateModel().getRowIdentifier(j).getName());
 
+					// Ticket #334 Content Window: java.lang.ArrayIndexOutOfBoundsException
+					if(col == -1) Application.alert(Application.PROGRAM,"Column: \"" + content.getUpdateModel().getRowIdentifier(j).getName() + "\" not found in Grid" );
+					// TO DO: CLEAN EXIT
+
 					Object cell = rowdata[col];
 					if(cell instanceof Object[]) cell = ((Object[])cell)[1];
 					whereValues.addElement(toJdbcValue(cell,col));
+
+
 				}
 				
 				if(handler.type.equals(ContentChanges.DELETE))

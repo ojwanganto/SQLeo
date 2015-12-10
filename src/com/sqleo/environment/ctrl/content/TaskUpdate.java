@@ -85,6 +85,9 @@ public class TaskUpdate implements Runnable
 					int col = target.getView().getColumnIndex(target.getUpdateModel().getRowIdentifier(j).getReference());
 					if(col == -1) col = target.getView().getColumnIndex(target.getUpdateModel().getRowIdentifier(j).getName());
 
+					// Ticket #334 Content Window: java.lang.ArrayIndexOutOfBoundsException
+					if(col == -1) Application.alert(Application.PROGRAM,"Column: \"" + target.getUpdateModel().getRowIdentifier(j).getName() + "\" not found in Grid" );
+
 					Object cell = rowdata[col];
 					if(cell instanceof Object[]) cell = ((Object[])cell)[1];
 					if(null == cell){
