@@ -79,6 +79,7 @@ public class TaskUpdate implements Runnable
 			}
 			else
 			{
+				Boolean columnFound = true ;	
 				Vector whereValues = new Vector();	
 				for(int j=0; j<target.getUpdateModel().getRowIdentifierCount() ; j++)
 				{
@@ -86,21 +87,28 @@ public class TaskUpdate implements Runnable
 					if(col == -1) col = target.getView().getColumnIndex(target.getUpdateModel().getRowIdentifier(j).getName());
 
 					// Ticket #334 Content Window: java.lang.ArrayIndexOutOfBoundsException
-					if(col == -1) Application.alert(Application.PROGRAM,"Column: \"" + target.getUpdateModel().getRowIdentifier(j).getName() + "\" not found in Grid" );
-
-					Object cell = rowdata[col];
-					if(cell instanceof Object[]) cell = ((Object[])cell)[1];
-					if(null == cell){
-						whereValues.addElement("null");
-					}else{
-						whereValues.addElement("?");
+					if(col == -1) 
+					{
+						columnFound = false;
+						Application.alert(Application.PROGRAM,"Column: \"" + target.getUpdateModel().getRowIdentifier(j).getName() + "\" not found in Grid" );
 					}
+					else
+					{
+						Object cell = rowdata[col];
+						if(cell instanceof Object[]) cell = ((Object[])cell)[1];
+						if(null == cell){
+							whereValues.addElement("null");
+						}else{
+							whereValues.addElement("?");
+						}
+					}
+
 				}
-				if(handler.type.equals(ContentChanges.DELETE))
+				if(handler.type.equals(ContentChanges.DELETE) && columnFound)
 				{
 					sql = target.getUpdateModel().getDeleteSyntax(whereValues.toArray());
 				}
-				else if(handler.type.equals(ContentChanges.UPDATE))
+				else if(handler.type.equals(ContentChanges.UPDATE) && columnFound)
 				{
 					for(int i=0; i<rowdata.length ; i++)
 					{

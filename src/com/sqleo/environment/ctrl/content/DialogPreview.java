@@ -79,28 +79,34 @@ public class DialogPreview extends AbstractDialogModal
 			}
 			else
 			{
-				Vector whereValues = new Vector();				
+				Boolean columnFound = true ;
+				Vector whereValues = new Vector();
 				for(int j=0; j<content.getUpdateModel().getRowIdentifierCount() ; j++)
 				{
 					int col = content.getView().getColumnIndex(content.getUpdateModel().getRowIdentifier(j).getReference());
 					if(col == -1) col = content.getView().getColumnIndex(content.getUpdateModel().getRowIdentifier(j).getName());
 
 					// Ticket #334 Content Window: java.lang.ArrayIndexOutOfBoundsException
-					if(col == -1) Application.alert(Application.PROGRAM,"Column: \"" + content.getUpdateModel().getRowIdentifier(j).getName() + "\" not found in Grid" );
-					// TO DO: CLEAN EXIT
-
-					Object cell = rowdata[col];
-					if(cell instanceof Object[]) cell = ((Object[])cell)[1];
-					whereValues.addElement(toJdbcValue(cell,col));
+					if(col == -1)
+					{ 
+						columnFound = false;
+						Application.alert(Application.PROGRAM,"Column: \"" + content.getUpdateModel().getRowIdentifier(j).getName() + "\" not found in Grid" );
+					}
+					else
+					{
+						Object cell = rowdata[col];
+						if(cell instanceof Object[]) cell = ((Object[])cell)[1];
+						whereValues.addElement(toJdbcValue(cell,col));
+					}
 
 
 				}
 				
-				if(handler.type.equals(ContentChanges.DELETE))
+				if(handler.type.equals(ContentChanges.DELETE) && columnFound)
 				{
 					sql = content.getUpdateModel().getDeleteSyntax(whereValues.toArray());
 				}
-				else if(handler.type.equals(ContentChanges.UPDATE))
+				else if(handler.type.equals(ContentChanges.UPDATE)  && columnFound)
 				{
 					for(int col=0; col<rowdata.length ; col++)
 					{
