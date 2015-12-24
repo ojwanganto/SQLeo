@@ -168,6 +168,7 @@ public class Application extends Appearance implements _Constants,_Version
 	    	if(Preferences.getBoolean("application.trace",false))
 	    	{
 		    	String temp = System.getProperty("java.io.tmpdir");
+		    	println("Temp dir in use: " + temp);
 				System.setOut(new PrintStream(new FileOutputStream(new File(temp,"sqleo.out"))));
 				System.setErr(new PrintStream(new FileOutputStream(new File(temp,"sqleo.err"))));
 	    	}

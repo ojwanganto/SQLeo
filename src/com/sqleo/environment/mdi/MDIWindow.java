@@ -35,10 +35,12 @@ import javax.swing.Action;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.UWindow;
+import com.sqleo.common.util.MacKeyBindings;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment._Constants;
@@ -110,6 +112,38 @@ public class MDIWindow extends JFrame implements _Constants
 		this.getRootPane().getActionMap().put(ACTION_MDI_CLOSE_ALL	, new MDIActions.CloseAllClients());
 		this.getRootPane().getActionMap().put(ACTION_MDI_CASCADE	, new MDIActions.CascadeClients());
 		this.getRootPane().getActionMap().put(ACTION_MDI_TILEH		, new MDIActions.TileClients());
+
+		// This behavior is needed when:
+		// - SO is a osx
+		// - Look and feel is not aqua
+		// SQLeo will behave like a mac app (CMD+C for copy and other actions)
+		if (System.getProperty("osname", "none").indexOf("mac") > -1 
+			&& javax.swing.UIManager.getLookAndFeel().equals(LAF_AQUA) == false){
+			MacKeyBindings macKeyBindings = new MacKeyBindings();
+			Object o[] = {
+					"ComboBox.ancestorInputMap", macKeyBindings.getComboBoxInputMap(),
+			        "EditorPane.focusInputMap", macKeyBindings.getMultiLineTextInputMap(),
+			        "FormattedTextField.focusInputMap", macKeyBindings.getFormattedTextFieldInputMap(),
+			        "List.focusInputMap", macKeyBindings.getListInputMap(),
+			        "PasswordField.focusInputMap", macKeyBindings.getTextFieldInputMap(),
+			        "ScrollBar.focusInputMap", macKeyBindings.getScrollBarInputMap(),
+			        "ScrollBar.focusInputMap.RightToLeft", macKeyBindings.getScrollBarRightToLeftInputMap(),
+			        "ScrollPane.ancestorInputMap", macKeyBindings.getScrollPaneInputMap(),
+			        "Slider.focusInputMap", macKeyBindings.getSliderInputMap(),
+			        "Slider.focusInputMap.RightToLeft", macKeyBindings.getSliderRightToLeftInputMap(),
+			        "Spinner.ancestorInputMap", macKeyBindings.getSpinnerInputMap(),
+			        "Table.ancestorInputMap", macKeyBindings.getTableInputMap(),
+			        "Table.ancestorInputMap.RightToLeft", macKeyBindings.getTableRightToLeftInputMap(),
+			        "TextArea.focusInputMap", macKeyBindings.getMultiLineTextInputMap(),
+			        "TextField.focusInputMap", macKeyBindings.getTextFieldInputMap(),
+			        "TextPane.focusInputMap", macKeyBindings.getMultiLineTextInputMap(),
+			        "Tree.focusInputMap", macKeyBindings.getTreeInputMap(),
+			        "Tree.focusInputMap.RightToLeft", macKeyBindings.getTreeRightToLeftInputMap()
+				};
+			UIManager.getDefaults().putDefaults(o);
+		}
+    
+    
     }
     
     private void initComponents()

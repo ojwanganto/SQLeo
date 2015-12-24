@@ -122,5 +122,7 @@ public interface _Constants
 	public static final String ICON_DIAG_QUERY  = "icon.182";
 	public static final String ICON_DIAG_OBJECT  = "icon.183";
 
+	//Look and fell
+	public static final String LAF_AQUA = "com.apple.laf.AquaLookAndFeel";
 	
 }
