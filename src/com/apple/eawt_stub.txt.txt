@@ -1,0 +1,3 @@
+for building on other OS tha Mac OS
+use the classes found in https://developer.apple.com/legacy/library/samplecode/AppleJavaExtensions/AppleJavaExtensions.zip
+unzipped in ..\..\..\build\classes\com\apple
