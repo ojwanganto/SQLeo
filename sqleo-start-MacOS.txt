@@ -1,0 +1,2 @@
+java -cp SQLeoVQB.jar com.sqleo.environment.SQLeoMacApp
+pause
