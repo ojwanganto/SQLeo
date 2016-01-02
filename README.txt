@@ -33,6 +33,26 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+
+SQLeoVQB.2015.12.rc1.zip: 2016-01-02
+
+  Thanks to Eder Jorge for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2015.12/
+
+	336 Better MAC OS integration (by Eder Jorge)
+		use sqleo-start-MacOS.txt to start SQLeo on OSX
+
+	335 New portuguese brasilian translation (by Eder Jorge)
+	334 Content Window: java.lang.ArrayIndexOutOfBoundsException with Update or delete
+	329 Query builder /​ Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+		All Statements use Auto SavePoints 
+		rem: Also works with MonetDB
+
+	328 Command editor: support for PostgreSQL Anonymous block DO $$
+	327 Data Comparer: performance problem with Oracle
+
+
 SQLeoVQB.2015.10.rc1.zip: 2015-10-31
 
   Thanks to Anudeep Gade for his contribution to this release
