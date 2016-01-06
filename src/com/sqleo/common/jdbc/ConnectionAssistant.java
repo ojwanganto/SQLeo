@@ -45,7 +45,7 @@ public class ConnectionAssistant
 	private static Hashtable dbMetaDatas = new Hashtable();
     
     /* connection */
-    private static ConnectionHandler openInternal(String keycad, String keycah, String url, String uid, String pwd,String fkDefFileName) throws Exception
+    private static ConnectionHandler openInternal(String keycad, String keycah, String url, String uid, String pwd,String fkDefFileName, boolean readonly) throws Exception
     {
         Driver d = (Driver)drivers.get(keycad);
         if(null == d){
@@ -61,7 +61,7 @@ public class ConnectionAssistant
     	if(pwd != null)
     	    info.put("password", pwd);
     	
-		ConnectionHandler ch = new ConnectionHandler(d.connect(url,info));
+		ConnectionHandler ch = new ConnectionHandler(d.connect(url,info), readonly);
 		connections.put(keycah,ch);
 		
 		if(fkDefFileName!=null){
@@ -75,13 +75,13 @@ public class ConnectionAssistant
     	return ch;
     }
     
-    public static ConnectionHandler open(String keycad, String keycah, String url, String uid, String pwd) throws Exception
+    public static ConnectionHandler open(String keycad, String keycah, String url, String uid, String pwd, boolean readonly) throws Exception
     {
-    	return openInternal(keycad, keycah, url, uid, pwd,null);
+    	return openInternal(keycad, keycah, url, uid, pwd,null, readonly);
     }
-    public static ConnectionHandler open(String keycad, String keycah, String url, String uid, String pwd,String fkDefFileName) throws Exception
+    public static ConnectionHandler open(String keycad, String keycah, String url, String uid, String pwd,String fkDefFileName, boolean readonly) throws Exception
     {
-    	return openInternal(keycad, keycah, url, uid, pwd,fkDefFileName);
+    	return openInternal(keycad, keycah, url, uid, pwd,fkDefFileName, readonly);
     }
     public static ManualDBMetaData getManualDBMetaData(String keycah)
 	{

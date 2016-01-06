@@ -42,6 +42,7 @@ public class UoDatasource
 	
 	public boolean remember = false;
 	public boolean auto_connect = false;
+	public boolean readonly = false;
 	public String selectedFkDefFileName  = null;
 	
 	public UoDatasource(UoDriver uoDv)
@@ -52,7 +53,7 @@ public class UoDatasource
 
 	public void connect() throws Exception
 	{
-		ConnectionAssistant.open(uoDv.getKey(),this.getKey(),url,uid,pwd,selectedFkDefFileName);
+		ConnectionAssistant.open(uoDv.getKey(),this.getKey(),url,uid,pwd,selectedFkDefFileName,readonly);
 	}
 
 	public boolean isConnected()

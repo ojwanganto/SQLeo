@@ -46,6 +46,7 @@ public class MaskDatasource extends JPanel
 	private JPasswordField txtPwd;
 	
 	private JCheckBox cbxRemember;
+	private JCheckBox cbxReadonly;
 	private JCheckBox cbxAutoconnect;
 		
 	MaskDatasource()
@@ -73,6 +74,12 @@ public class MaskDatasource extends JPanel
 		cbxAutoconnect = new JCheckBox(I18n.getString("datasource.message.autoConnect","auto-connect on startup"));
 		gbl.setConstraints(cbxAutoconnect, gbc);
 		add(cbxAutoconnect);
+
+		gbc.insets = new Insets(1,5,0,0);
+		cbxReadonly = new JCheckBox(I18n.getString("datasource.message.readonly","readonly connection"));
+		gbl.setConstraints(cbxReadonly, gbc);
+		add(cbxReadonly);
+
 	}
 
 	private void addField(GridBagLayout gbl, String text, JComponent txt, int top)
@@ -110,6 +117,7 @@ public class MaskDatasource extends JPanel
 		
 		cbxRemember.setSelected(info.remember);
 		cbxAutoconnect.setSelected(info.auto_connect);
+		cbxReadonly.setSelected(info.readonly);
 	}
 	
 	boolean unload(UoDatasource info)
@@ -142,6 +150,7 @@ public class MaskDatasource extends JPanel
 		
 		info.remember		= cbxRemember.isSelected();
 		info.auto_connect	= cbxAutoconnect.isSelected();
+		info.readonly       = cbxReadonly.isSelected();
 		
 		return true;
 	}

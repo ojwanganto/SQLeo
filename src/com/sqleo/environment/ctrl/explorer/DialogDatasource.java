@@ -73,6 +73,8 @@ public class DialogDatasource extends AbstractDialogConfirm
 				uoDs.schema = ((UoDatasource)node.getUserObject()).schema;
 				uoDs.remember = ((UoDatasource)node.getUserObject()).remember;
 				uoDs.auto_connect = ((UoDatasource)node.getUserObject()).auto_connect;
+				uoDs.readonly = ((UoDatasource)node.getUserObject()).readonly;
+				
 				
 				mDs.load(uoDs);
 				break;

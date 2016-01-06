@@ -168,8 +168,13 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 					if(dsInfo.length >= 5)
 						uoDs.schema = dsInfo[4] == null ? null : dsInfo[4].toString();
 					// FK definition file
-					if(dsInfo.length == 6)
+					if(dsInfo.length >= 6)
 						uoDs.selectedFkDefFileName = dsInfo[5] == null ? null : dsInfo[5].toString();
+
+					// FK definition file
+					if(dsInfo.length >= 7)
+						uoDs.readonly = ((Boolean)dsInfo[6]).booleanValue();
+
 					
 					/* links */
 					UoLinks uoLk = (UoLinks)navigator.getSelectionNode().getLastLeaf().getUserObject();
@@ -231,7 +236,7 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 				
 				Application.session.home();
 				Application.session.jump(new String[]{uoDv.name,uoDs.name});
-				Application.session.jump().add(new Object[]{uoDs.url,uoDs.uid,(uoDs.remember?uoDs.pwd:null),new Boolean(uoDs.auto_connect),uoDs.schema,uoDs.selectedFkDefFileName});
+				Application.session.jump().add(new Object[]{uoDs.url,uoDs.uid,(uoDs.remember?uoDs.pwd:null),new Boolean(uoDs.auto_connect),uoDs.schema,uoDs.selectedFkDefFileName,new Boolean(uoDs.readonly)});
 				
 				/* links */
 				UoLinks uoLk = (UoLinks)child.getLastLeaf().getUserObject();

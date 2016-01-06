@@ -24,30 +24,35 @@
 
 package com.sqleo.common.jdbc;
 
-import java.awt.event.ItemEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import com.sqleo.common.jdbc.interceptor.ReadonlySqlCommandInterceptor;
+import com.sqleo.common.jdbc.wrapper.ConnectionWrapper;
+
 public class ConnectionHandler
 {
-    private Connection connection;
+	// Ticket #336 - read only connection
+    private ConnectionWrapper connection;
     private Hashtable metacache;
     
-    public ConnectionHandler(Connection connection)
+    public ConnectionHandler(Connection connection, boolean readonly)
     {
     	try {
     		if(connection!=null){
     			connection.setAutoCommit(ConnectionAssistant.getAutoCommitPrefered());
-    			// test for ticket #326 	create READ ONLY connections
-			// connection.setReadOnly(true);
     		}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-        this.connection = connection;
+    	// Ticket #336 - read only connection
+        this.connection = new ConnectionWrapper(connection);
+        if (readonly){
+        	this.connection.addStatementInterceptor(new ReadonlySqlCommandInterceptor());
+        }
 		
 		metacache = new Hashtable();
 		try
