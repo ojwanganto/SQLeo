@@ -37,6 +37,8 @@ public class StatementWrapper extends AbstractWrapper implements Statement {
 	}
 
 	public ResultSet executeQuery(String sql) throws SQLException {
+		// checking to avoid any DML getting in as a query
+		isUpdatable(sql);
 		return originalStatement.executeQuery(sql);
 	}
 

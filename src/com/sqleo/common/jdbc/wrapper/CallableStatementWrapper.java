@@ -55,6 +55,8 @@ public class CallableStatementWrapper extends AbstractWrapper implements Callabl
 	}
 
 	public ResultSet executeQuery(String sql) throws SQLException {
+		// checking to avoid any DML getting in as a query
+		isUpdatable(sql);
 		return originalCallableStatement.executeQuery(sql);
 	}
 

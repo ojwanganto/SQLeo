@@ -54,6 +54,8 @@ public class PreparedStatementWrapper extends AbstractWrapper implements Prepare
 	}
 
 	public ResultSet executeQuery(String sql) throws SQLException {
+		// checking to avoid any DML getting in as a query
+		isUpdatable(sql);
 		return originalPreparedStatement.executeQuery(sql);
 	}
 
