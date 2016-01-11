@@ -87,17 +87,29 @@ public class Task implements Runnable {
 						rs.close();
 					}else if (sqlcmd.startsWith("SELECT")) {
 
-// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
-// rs = stmt.executeQuery(syntax);
-String savepointName = "AutoSavepoint";
-Savepoint savepoint= ch.get().setSavepoint(savepointName);
-try {
-						rs = stmt.executeQuery(syntax);
-} catch (SQLException sqle) {
-			ch.get().rollback(savepoint);
-			target.onTaskFinished(sqle.toString(), true);
-}
-// end test #329
+						// Ticket #337 - savepoint enable/disable preferences
+						boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", true);
+						if (hasSavepoint)
+						{
+							// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+							// rs = stmt.executeQuery(syntax);
+							String savepointName = "AutoSavepoint";
+							Savepoint savepoint= ch.get().setSavepoint(savepointName);
+							try {
+													rs = stmt.executeQuery(syntax);
+							} catch (SQLException sqle) {
+										ch.get().rollback(savepoint);
+										target.onTaskFinished(sqle.toString(), true);
+							}
+							// end test #329
+						} else {
+							try {
+								rs = stmt.executeQuery(syntax);
+							} catch (SQLException sqle) {
+								target.onTaskFinished(sqle.toString(), true);
+							}
+						}
+
 						if(target.printSelect()){
 							printSelect();
 						}else{
@@ -124,24 +136,44 @@ try {
 						target.write("PL/SQL block executed successfully");
 					} else {
 						rs = null;
-// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
-String savepointName = "AutoSavepoint";
-Savepoint savepoint= ch.get().setSavepoint(savepointName);
-try {
-						int rows = stmt.executeUpdate(syntax);
-
-						if (sqlcmd.startsWith("DELETE")
-								|| sqlcmd.startsWith("INSERT")
-								|| sqlcmd.startsWith("UPDATE")) {
-							target.write(rows + " row(s) affected");
+						// Ticket #337 - savepoint enable/disable preferences
+						boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", true);
+						if (hasSavepoint)
+						{
+							// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+							String savepointName = "AutoSavepoint";
+							Savepoint savepoint= ch.get().setSavepoint(savepointName);
+							try {
+													int rows = stmt.executeUpdate(syntax);
+							
+													if (sqlcmd.startsWith("DELETE")
+															|| sqlcmd.startsWith("INSERT")
+															|| sqlcmd.startsWith("UPDATE")) {
+														target.write(rows + " row(s) affected");
+													} else {
+														target.write("Command has been executed successfully");
+													}
+							} catch (SQLException sqle) {
+										ch.get().rollback(savepoint);
+										target.onTaskFinished(sqle.toString(), true);
+							}
+							// end test #329
 						} else {
-							target.write("Command has been executed successfully");
+							try {
+								int rows = stmt.executeUpdate(syntax);
+		
+								if (sqlcmd.startsWith("DELETE")
+										|| sqlcmd.startsWith("INSERT")
+										|| sqlcmd.startsWith("UPDATE")) {
+									target.write(rows + " row(s) affected");
+								} else {
+									target.write("Command has been executed successfully");
+								}
+							} catch (SQLException sqle) {
+										target.onTaskFinished(sqle.toString(), true);
+							}
+							
 						}
-} catch (SQLException sqle) {
-			ch.get().rollback(savepoint);
-			target.onTaskFinished(sqle.toString(), true);
-}
-// end test #329
 					}
 					stmt.close();
 

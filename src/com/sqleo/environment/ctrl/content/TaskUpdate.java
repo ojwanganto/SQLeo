@@ -24,7 +24,6 @@ import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.sql.Savepoint;
 import java.sql.SQLException;
-
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -33,6 +32,7 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.ContentPane;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.SQLFormatter;
@@ -233,17 +233,28 @@ public class TaskUpdate implements Runnable
 				pstmt.setObject(i+1,param[0],((Integer)param[1]).intValue());
 			}
 		}
-// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
-// rs = stmt.executeQuery(syntax);
-String savepointName = "AutoSavepoint";
-Savepoint savepoint= ch.get().setSavepoint(savepointName);
-try {
-		pstmt.executeUpdate();
-} catch (SQLException sqle) {
-			ch.get().rollback(savepoint);
-			Application.println(sqle, true);
-}
-// end test #329
+		// Ticket #337 - savepoint enable/disable preferences
+		boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", true);
+		if (hasSavepoint)
+		{
+			// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+			// rs = stmt.executeQuery(syntax);
+			String savepointName = "AutoSavepoint";
+			Savepoint savepoint= ch.get().setSavepoint(savepointName);
+			try {
+					pstmt.executeUpdate();
+			} catch (SQLException sqle) {
+						ch.get().rollback(savepoint);
+						Application.println(sqle, true);
+			}
+			// end test #329
+		} else {
+			try {
+				pstmt.executeUpdate();
+			} catch (SQLException sqle) {
+						Application.println(sqle, true);
+			}
+		}
 		this.close();
 	}
 }

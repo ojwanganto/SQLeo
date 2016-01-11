@@ -31,6 +31,7 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.ContentPane;
 
 
@@ -81,17 +82,30 @@ public class TaskRetrieve implements Runnable
 				stmt = ch.get().createStatement();
 				stmt.setMaxRows(limit);
 				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());
-// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
-// rs = stmt.executeQuery(syntax);
-String savepointName = "AutoSavepoint";
-Savepoint savepoint= ch.get().setSavepoint(savepointName);
-try {
-				rs = stmt.executeQuery(syntax);
-} catch (SQLException sqle) {
-			ch.get().rollback(savepoint);
-			Application.println(sqle,true);
-}
-// end test #329
+				
+				// Ticket #337 - savepoint enable/disable preferences
+				boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", true);
+				if (hasSavepoint)
+				{
+					// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+					// rs = stmt.executeQuery(syntax);
+					String savepointName = "AutoSavepoint";
+					Savepoint savepoint= ch.get().setSavepoint(savepointName);
+				
+					try {
+									rs = stmt.executeQuery(syntax);
+					} catch (SQLException sqle) {
+								ch.get().rollback(savepoint);
+								Application.println(sqle,true);
+					}
+					// end test #329
+				} else {
+					try {
+						rs = stmt.executeQuery(syntax);
+					} catch (SQLException sqle) {
+								Application.println(sqle,true);
+					}
+				}
 				
 				for(int i=1; i<=this.getColumnCount(); i++)
 				{
