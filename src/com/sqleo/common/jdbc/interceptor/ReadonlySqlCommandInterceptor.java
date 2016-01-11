@@ -32,6 +32,7 @@ public class ReadonlySqlCommandInterceptor implements SqlCommandInterceptor {
 		permittedOperations.add("SELECT");
 		permittedOperations.add("USE");
 		permittedOperations.add("SHOW");
+		permittedOperations.add("EXPLAIN");
 	}
 	
 	public ReadonlySqlCommandInterceptor() {
