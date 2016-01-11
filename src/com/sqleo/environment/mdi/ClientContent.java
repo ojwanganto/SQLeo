@@ -183,8 +183,8 @@ public class ClientContent extends MDIClientWithCRActions
 
 			toolbar.addSeparator();
 			final Action refresh = control.getActionMap().get("task-go");
-			Action commit = new ActionCommit(control.getHandlerKey().toString(),refresh);
-			Action rollback = new ActionRollback(control.getHandlerKey().toString(),refresh);
+			Action commit = new ActionCommit(refresh);
+			Action rollback = new ActionRollback(refresh);
 			toolbar.getActionMap().put("action-commit",commit);
 			toolbar.getActionMap().put("action-rollback",rollback);
 			toolbar.add(commit);
@@ -196,6 +196,12 @@ public class ClientContent extends MDIClientWithCRActions
 		toolbar.add(new ActionShowExportPivotHtml());
 		setComponentEast(toolbar);
 	}
+	
+	@Override
+	String getActiveConnection() {
+		return control.getHandlerKey().toString();
+	}
+	
 	@Override
 	public void notifyResponseToView(boolean isCommitNotify){
 		if(isCommitNotify){

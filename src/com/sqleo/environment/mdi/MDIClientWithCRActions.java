@@ -44,12 +44,15 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 	protected void notifyResponseToView(boolean isCommitNotify){
 
 	};
+	
+	// Ticket #333 - Commit/Rollback buttons KO out of initial connection
+	// added to leave the responsability of changes to the caller. All related
+	// code has changed
+	abstract String getActiveConnection();
 
 	protected class ActionCommit extends AbstractAction {
-		private String keyCah = null;
 		private Action refresh = null;
-		ActionCommit(String keyCah) {
-			this.keyCah = keyCah;
+		ActionCommit() {
 			putValue(SMALL_ICON,
 					Application.resources.getIcon(Application.ICON_ACCEPT));
 			putValue(SHORT_DESCRIPTION, "Commit...");
@@ -57,13 +60,16 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 			setEnabled(!ConnectionAssistant.getAutoCommitPrefered());
 
 		}
-		ActionCommit(String keyCah,final Action refresh) {
-			this(keyCah);
+		ActionCommit(final Action refresh) {
+			this();
 			this.refresh = refresh;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent ae) {
+			
+			String keyCah = getActiveConnection();
+			
 			if (keyCah == null) {
 				Application.alert(Application.PROGRAM, "No connection!");
 				return;
@@ -88,23 +94,22 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 	}
 
 	protected class ActionRollback extends AbstractAction {
-		private String keyCah = null;
 		private Action refresh = null;
-		ActionRollback(String keyCah) {
-			this.keyCah = keyCah;
+		ActionRollback() {
 			putValue(SMALL_ICON,
 					Application.resources.getIcon(Application.ICON_DELETE)); //TODO keep rollback icon
 			putValue(SHORT_DESCRIPTION, "Rollback...");
 			putValue(NAME, "action-rollback");
 			setEnabled(!ConnectionAssistant.getAutoCommitPrefered());
 		}
-		ActionRollback(String keyCah,final Action refresh) {
-			this(keyCah);
+		ActionRollback(final Action refresh) {
 			this.refresh = refresh;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent ae) {
+			String keyCah = getActiveConnection();
+
 			if (keyCah == null) {
 				Application.alert(Application.PROGRAM, "No connection!");
 				return;

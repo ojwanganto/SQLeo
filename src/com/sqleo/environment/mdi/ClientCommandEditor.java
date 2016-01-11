@@ -198,8 +198,8 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		toolbar.add(control.getActionMap().get("stop-task"));
 		
 		toolbar.addSeparator();
-		Action commit = new ActionCommit(getActiveConnection());
-		Action rollback = new ActionRollback(getActiveConnection());
+		Action commit = new ActionCommit();
+		Action rollback = new ActionRollback();
 		toolbar.getActionMap().put("action-commit",commit);
 		toolbar.getActionMap().put("action-rollback",rollback);
 		toolbar.add(commit);
