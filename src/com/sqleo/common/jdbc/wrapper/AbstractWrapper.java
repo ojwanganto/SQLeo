@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.sqleo.common.jdbc.interceptor.SqlCommandInterceptor;
+import com.sqleo.common.util.I18n;
 
 public abstract class AbstractWrapper {
 
@@ -50,7 +51,7 @@ public abstract class AbstractWrapper {
 		if (sqlCommandInterceptorList.size() > 0){
 			for (SqlCommandInterceptor statementInterceptor : sqlCommandInterceptorList) {
 				if (statementInterceptor.allowUpdate(sqlStatement) == false)
-					throw new SQLException("SQLeo connection is readonly and do not permit this operation");
+					throw new SQLException(I18n.getString("application.message.readonly","SQLeo connection is readonly and do not permit this operation"));
 			}
 		}
 	}

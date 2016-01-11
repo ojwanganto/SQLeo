@@ -206,3 +206,7 @@ commandeditor.resultGrid=Result grid
 -- added with 2015.10 (TRANSLATION TO DO)
 application.menu.help.keyboardShortcuts=Keyboard shortcuts
 datacomparer.WorkingConnection=Working connection:
+
+-- added with 2016.01 (TRANSLATION TO DO)
+datasource.message.readonly=readonly connection
+application.message.readonly=SQLeo connection is readonly and do not permit this operation
