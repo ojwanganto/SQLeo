@@ -264,7 +264,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		jCheckBoxAutoSavePoint.setText(I18n.getString(
 				"application.preferences.autoSavePoint", "Auto savepoint"));
 		jCheckBoxAutoSavePoint.setSelected(Preferences.getBoolean(
-				"application.autoCommit.autoSavePoint", true));
+				"application.autoSavePoint", false));
 		
 		
 		JPanel pnlGeneral = new JPanel(new GridLayout(0, 1));
@@ -415,7 +415,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				new Boolean(jCheckBoxCheckUpdate.isSelected()));
 		Preferences.set("application.autoCommit", new Boolean(
 				jCheckBoxAutoCommit.isSelected()));
-		Preferences.set("application.autoCommit", new Boolean(
+		Preferences.set("application.autoSavePoint", new Boolean(
 				jCheckBoxAutoSavePoint.isSelected()));
 		Preferences.set(ASK_BEFORE_EXIT_KEY, new Boolean(
 				jCheckBoxAskBeforeExit.isSelected()));

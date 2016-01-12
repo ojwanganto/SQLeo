@@ -84,7 +84,7 @@ public class TaskRetrieve implements Runnable
 				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());
 				
 				// Ticket #337 - savepoint enable/disable preferences
-				boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", true);
+				boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", false);
 				if (hasSavepoint)
 				{
 					// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted

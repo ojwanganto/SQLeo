@@ -88,7 +88,7 @@ public class Task implements Runnable {
 					}else if (sqlcmd.startsWith("SELECT")) {
 
 						// Ticket #337 - savepoint enable/disable preferences
-						boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", true);
+						boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", false);
 						if (hasSavepoint)
 						{
 							// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
@@ -137,7 +137,7 @@ public class Task implements Runnable {
 					} else {
 						rs = null;
 						// Ticket #337 - savepoint enable/disable preferences
-						boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", true);
+						boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", false);
 						if (hasSavepoint)
 						{
 							// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
