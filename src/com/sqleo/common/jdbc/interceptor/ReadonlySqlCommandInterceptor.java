@@ -45,7 +45,7 @@ public class ReadonlySqlCommandInterceptor implements SqlCommandInterceptor {
 		// Just intercept and validates real sql commands.
 		// Any futher error will be catch by API/Vendor driver
 		if (sql != null && sql.trim().length() > 0){
-			String newSql = sql.replace("\t", " ");
+			String newSql = sql.replaceFirst("[\\t\\n\\r]+", " ");
 			if (permittedOperations.contains(sql.toUpperCase().substring(0, newSql.indexOf(" ")))){
 				return true;
 			}
