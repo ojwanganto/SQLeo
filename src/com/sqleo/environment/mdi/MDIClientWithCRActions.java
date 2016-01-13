@@ -103,6 +103,7 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 			setEnabled(!ConnectionAssistant.getAutoCommitPrefered());
 		}
 		ActionRollback(final Action refresh) {
+			this();
 			this.refresh = refresh;
 		}
 
