@@ -256,6 +256,9 @@ public class DialogPreferences extends AbstractDialogConfirm {
 			        	pctToolbar.getActionMap().get("action-rollback").setEnabled(!isAutoCommitON);
 		        	}
 		        	
+		        	if (isAutoCommitON){
+			        	jCheckBoxAutoSavePoint.setSelected(false);
+		        	}
 		        	
 		        }
 		    }
@@ -265,7 +268,17 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				"application.preferences.autoSavePoint", "Auto savepoint"));
 		jCheckBoxAutoSavePoint.setSelected(Preferences.getBoolean(
 				"application.autoSavePoint", false));
-		
+		jCheckBoxAutoSavePoint.addItemListener(new ItemListener() {
+
+		    public void itemStateChanged(ItemEvent e) {
+		        if(e.getStateChange() == ItemEvent.SELECTED || e.getStateChange() == ItemEvent.DESELECTED){
+		        	boolean isAutoSavepointON = e.getStateChange() == ItemEvent.SELECTED;
+		        	if (isAutoSavepointON){
+		        		jCheckBoxAutoCommit.setSelected(false);
+		        	}
+		        }
+		    }
+		});
 		
 		JPanel pnlGeneral = new JPanel(new GridLayout(0, 1));
 
