@@ -33,6 +33,16 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2016.01.rc1.zip: 2016-01-19
+
+  Thanks to Eder Jorge for his contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2016.01/
+
+	337 Auto-Savepoint: activate/​disable in preferences
+	333 command editor: Commit/​Rollback buttons KO out of initial connection
+	326 create READ ONLY connections
+
 
 SQLeoVQB.2015.12.rc1.zip: 2016-01-02
 
