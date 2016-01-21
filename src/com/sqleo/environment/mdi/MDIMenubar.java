@@ -195,8 +195,6 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 					addLink(I18n.getString("application.menu.newversion","New version available : ")
 							+ version
 							,Application.SF_WEB);
-					revalidate();
-					repaint();
 				}
 			}
 		});
