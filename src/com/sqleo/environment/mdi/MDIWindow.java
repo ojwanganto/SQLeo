@@ -177,12 +177,14 @@ public class MDIWindow extends JFrame implements _Constants
     {
 		connectionListeners = new ArrayList();
     	
-        initActions();
+	        initActions();
 		initComponents();
         
 		super.show();
 		
+		Application.println("Loading Client Metadata...");
 		add(new ClientMetadataExplorer());
+		Application.println("Metadata Loaded...");
     }
     
 	public final void setTitle(String title)
