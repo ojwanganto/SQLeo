@@ -40,6 +40,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
@@ -420,7 +421,16 @@ public class Application extends Appearance implements _Constants,_Version
 		// check if compatible with PNSPlugin 
         //URL imgUrl = Resources.class.getResource("/images/sqleo.png");
 		Application.window.setIconImage(Application.resources.getIcon(Application.ICON_SQLEO).getImage());
-		Application.window.show();
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					Application.window.show();
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		Application.println("Preparing auto connection...");
 		JWindow wait = new JWindow(window);
