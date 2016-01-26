@@ -31,6 +31,7 @@ import com.sqleo.environment.ctrl.ContentPane;
 import com.sqleo.environment.ctrl.editor.ClauseCondition;
 import com.sqleo.environment.ctrl.editor._ClauseOwner;
 import com.sqleo.querybuilder.syntax.QueryTokens;
+import com.sqleo.querybuilder.syntax.QueryTokens.Column;
 
 
 public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
@@ -45,9 +46,11 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 		this.content = content;
 		
 		where = new ClauseCondition(this);
+		where.setHandlerKey(content.getHandlerKey());
 		getContentPane().add(new JScrollPane(where));
 	}
 
+	@Override
 	protected boolean onConfirm()
 	{
 		Set<Integer> emptyRows = new HashSet<Integer>();
@@ -94,6 +97,7 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 		return true;
 	}
 
+	@Override
 	protected void onOpen()
 	{
 		QueryTokens._Expression[] e = content.getQueryModel().getQueryExpression().getQuerySpecification().getSelectList();
@@ -101,7 +105,9 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 		{
 			if(e[i] instanceof QueryTokens.Column)
 			{
-				where.addColumn(((QueryTokens.Column)e[i]).getIdentifier());
+				Column c = ((QueryTokens.Column)e[i]);
+				where.addColumn(c);
+				
 			}
 		}
 		
@@ -116,6 +122,7 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 		}		
 	}
 
+	@Override
 	public void fireQueryChanged()
 	{
 		modified = true;

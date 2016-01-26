@@ -67,7 +67,6 @@ public class BaseDynamicTable extends JTable
 			}
 		};
 		setModel(model);
-		
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setColumnSelectionAllowed(false);
 		setRowSelectionAllowed(false);
