@@ -26,6 +26,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -197,24 +199,21 @@ public class ClauseCondition extends BaseDynamicTable
 	 */
 	private String[] searchColumnValues(String sql){
 		// TODO search database in background
-		String[] values = null;
+		ArrayList<String> values = null;
 		
 		try
 		{
 			ConnectionHandler ch = ConnectionAssistant.getHandler(handlerKey);
 			Statement stmt = ch.get().createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
-			rs.last();
-			values = new String[rs.getRow()]; 
-			rs.beforeFirst();
+			values = new ArrayList<String>(); 
 			ResultSetMetaData rsmd = rs.getMetaData();
 			boolean bStringValue = rsmd.getColumnClassName(1).equals("java.lang.String");
-			
 			while (rs.next()) {
 				if (bStringValue)
-					values[rs.getRow()-1] = "'" + rs.getString(1) + "'";
+					values.add("'" + rs.getString(1) + "'");
 				else
-					values[rs.getRow()-1] = rs.getString(1);
+					values.add(rs.getString(1));
 			}
 			rs.close();
 			stmt.close();
@@ -225,7 +224,8 @@ public class ClauseCondition extends BaseDynamicTable
 			Application.println(sqle,true);
 		}
 				
-		return values;
+		
+		return values.toArray(new String[0]);
 	}
 
 	public void addColumn(String text)
