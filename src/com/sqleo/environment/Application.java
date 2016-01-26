@@ -432,7 +432,6 @@ public class Application extends Appearance implements _Constants,_Version
 			e.printStackTrace();
 		}
 		
-		Application.println("Preparing auto connection...");
 		JWindow wait = new JWindow(window);
 		wait.getContentPane().add(new JLabel("Wait, auto connections...",JLabel.CENTER));
 		wait.setSize(250,40);
@@ -443,12 +442,10 @@ public class Application extends Appearance implements _Constants,_Version
 		cme.getControl().getNavigator().onFireAutoConnect();
 		wait.dispose();
 		
-		Application.println("Testing for updates...");
 		if(Preferences.getBoolean(DialogPreferences.CHECK_FOR_UPDATE_KEY, true)){
 			// add version link on menubar after window loading
 			Application.window.menubar.addVersionLink();
 		}
-		Application.println("Main done ...");
 		
     }
     
