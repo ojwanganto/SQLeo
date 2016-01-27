@@ -45,7 +45,7 @@ public class DialogDatasource extends AbstractDialogConfirm
 	
 	public DialogDatasource(SideNavigator navigator, short request)
 	{
-		super(Application.window,"datasource." + (request == ITEM_MODIFY ? "edit":"new"));
+		super(Application.window,"datasource." + (request == ITEM_MODIFY ? "edit":"new"), INITIAL_WIDTH, INITIAL_HEIGHT+50);
 		
 		this.request = request;
 		this.navigator = navigator;
@@ -74,7 +74,7 @@ public class DialogDatasource extends AbstractDialogConfirm
 				uoDs.remember = ((UoDatasource)node.getUserObject()).remember;
 				uoDs.auto_connect = ((UoDatasource)node.getUserObject()).auto_connect;
 				uoDs.readonly = ((UoDatasource)node.getUserObject()).readonly;
-				
+				uoDs.color = ((UoDatasource)node.getUserObject()).color;
 				
 				mDs.load(uoDs);
 				break;

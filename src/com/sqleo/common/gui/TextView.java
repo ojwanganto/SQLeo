@@ -116,6 +116,10 @@ public class TextView extends BorderLayoutPanel
 		
 	}
 	
+	public void setBackgroundColor(Color bg){
+		editor.setBackground(bg);
+	}
+	
 	public void addFormatQueryMouseAction(){
 		mousePopup.addFormatQueryMouseAction();
 	}

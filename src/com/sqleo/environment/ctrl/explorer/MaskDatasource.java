@@ -20,20 +20,27 @@
 
 package com.sqleo.environment.ctrl.explorer;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.border.LineBorder;
 
-import com.sqleo.common.util.Text;
 import com.sqleo.common.util.I18n;
+import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
 
 
@@ -49,6 +56,10 @@ public class MaskDatasource extends JPanel
 	private JCheckBox cbxReadonly;
 	private JCheckBox cbxAutoconnect;
 		
+	private Color[] colors={Color.white,Color.red,Color.blue,Color.green,Color.yellow,Color.gray};
+	private JComboBox cbxColor;
+	private JLabel colorLbl;
+	
 	MaskDatasource()
 	{
 		setBorder(LineBorder.createGrayLineBorder());
@@ -79,8 +90,46 @@ public class MaskDatasource extends JPanel
 		cbxReadonly = new JCheckBox(I18n.getString("datasource.message.readonly","readonly connection"));
 		gbl.setConstraints(cbxReadonly, gbc);
 		add(cbxReadonly);
+		
+		gbc.insets = new Insets(1,5,0,0);
+		final JPanel colorPnl = new JPanel();
+		colorLbl = new JLabel(I18n.getString("datasource.message.color","color"));
+		colorPnl.add(colorLbl);
+		cbxColor = new JComboBox(colors);
+		cbxColor.setMaximumRowCount(colors.length);
+		cbxColor.setPreferredSize(new Dimension(200,25));
+		cbxColor.setRenderer(new ColorCellRenderer());
+		colorPnl.add(cbxColor);
+		gbl.setConstraints(colorPnl, gbc);
+		add(colorPnl);
+		colorLbl.setEnabled(false);
 
 	}
+	
+	private class ColorCellRenderer extends JButton implements ListCellRenderer {  
+	     public ColorCellRenderer() {  
+	        setOpaque(true); 
+	 		setPreferredSize(new Dimension(200,25));
+	     }
+	     private Color lastSelectedColor;
+	     @Override
+	     public void setBackground(Color bg) {
+	    	 if(lastSelectedColor!=null){
+	    		 super.setBackground(lastSelectedColor);
+	    	 }
+	     }
+	     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,  
+	        boolean cellHasFocus){  
+	    	lastSelectedColor = (Color)value;
+	        setText("");           
+	        setBackground((Color)value);
+	        if(index == -1){
+	        	lastSelectedColor = null;
+	        }
+	        return this;  
+	     }
+	}
+
 
 	private void addField(GridBagLayout gbl, String text, JComponent txt, int top)
 	{
@@ -106,6 +155,9 @@ public class MaskDatasource extends JPanel
 		super.setEnabled(b);
 		for(int i=0; i<getComponentCount();i++)
 			getComponent(i).setEnabled(b);
+
+		colorLbl.setEnabled(b);
+		cbxColor.setEnabled(b);
 	}
 	
 	void load(UoDatasource info)
@@ -118,6 +170,7 @@ public class MaskDatasource extends JPanel
 		cbxRemember.setSelected(info.remember);
 		cbxAutoconnect.setSelected(info.auto_connect);
 		cbxReadonly.setSelected(info.readonly);
+		cbxColor.setSelectedItem(info.color);
 	}
 	
 	boolean unload(UoDatasource info)
@@ -151,6 +204,7 @@ public class MaskDatasource extends JPanel
 		info.remember		= cbxRemember.isSelected();
 		info.auto_connect	= cbxAutoconnect.isSelected();
 		info.readonly       = cbxReadonly.isSelected();
+		info.color = (Color) cbxColor.getSelectedItem();
 		
 		return true;
 	}

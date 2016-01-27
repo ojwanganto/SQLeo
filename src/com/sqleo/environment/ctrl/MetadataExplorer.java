@@ -25,6 +25,7 @@
 package com.sqleo.environment.ctrl;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -171,9 +172,12 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 					if(dsInfo.length >= 6)
 						uoDs.selectedFkDefFileName = dsInfo[5] == null ? null : dsInfo[5].toString();
 
-					// FK definition file
 					if(dsInfo.length >= 7)
 						uoDs.readonly = ((Boolean)dsInfo[6]).booleanValue();
+					
+					if(dsInfo.length >= 8)
+						uoDs.color = (Color) dsInfo[7];
+
 
 					
 					/* links */
@@ -236,7 +240,9 @@ public class MetadataExplorer extends BorderLayoutPanel implements ChangeListene
 				
 				Application.session.home();
 				Application.session.jump(new String[]{uoDv.name,uoDs.name});
-				Application.session.jump().add(new Object[]{uoDs.url,uoDs.uid,(uoDs.remember?uoDs.pwd:null),new Boolean(uoDs.auto_connect),uoDs.schema,uoDs.selectedFkDefFileName,new Boolean(uoDs.readonly)});
+				Application.session.jump().add(new Object[]{uoDs.url,uoDs.uid,
+						(uoDs.remember?uoDs.pwd:null),new Boolean(uoDs.auto_connect),
+						uoDs.schema,uoDs.selectedFkDefFileName,new Boolean(uoDs.readonly), uoDs.color});
 				
 				/* links */
 				UoLinks uoLk = (UoLinks)child.getLastLeaf().getUserObject();

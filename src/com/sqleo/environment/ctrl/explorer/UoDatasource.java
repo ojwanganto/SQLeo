@@ -24,9 +24,10 @@
 
 package com.sqleo.environment.ctrl.explorer;
 
+import java.awt.Color;
+
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
-import com.sqleo.environment.Preferences;
 
 public class UoDatasource
 {
@@ -44,6 +45,8 @@ public class UoDatasource
 	public boolean auto_connect = false;
 	public boolean readonly = false;
 	public String selectedFkDefFileName  = null;
+	//default command editor background color is white
+	public Color color = Color.white;
 	
 	public UoDatasource(UoDriver uoDv)
 	{
