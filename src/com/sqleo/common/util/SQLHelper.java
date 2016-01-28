@@ -342,31 +342,24 @@ public class SQLHelper {
 		String position2 = "";
 		String position3 = "";
 		String position4 = "";
-		
-		switch (databaseName) {
-		case "mysql":
-		case "mariadb":
-		case "postgree":
+
+		if (databaseName.matches("mysql*|mariadb*|postgre*")){
 			position3 = "LIMIT";
 			position4 = String.valueOf(limit);
-			break;
-		case "oracle":
+		} else if (databaseName.matches("oracle*")){
 			if (whereClause == null || whereClause.trim().equals(""))
 				position3 = " WHERE ROWNUM <";
 			else
 				position3 = " AND ROWNUM <";
 			position4 = String.valueOf(limit);
-			break;
-		case "firebird":
+		} else if (databaseName.matches("firebird*")){
 			position1 = "FIRST";
 			position2 = String.valueOf(limit);
-			break;
-		default:
+		} else {
 			position1 = "TOP";
 			position2 = String.valueOf(limit);
-			break;
 		}
-		
+
 		query.append("SELECT ");
 		query.append(position1);
 		query.append(" ");
