@@ -32,6 +32,8 @@ import com.sqleo.environment.ctrl.editor.ClauseCondition;
 import com.sqleo.environment.ctrl.editor._ClauseOwner;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Column;
+import com.sqleo.querybuilder.syntax.QueryTokens.Table;
+import com.sqleo.querybuilder.syntax.QueryTokens._TableReference;
 
 
 public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
@@ -45,7 +47,14 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 		super(Application.window,"Filters");
 		this.content = content;
 		
-		where = new ClauseCondition(this);
+		String schema = content.getQueryModel().getSchema();
+		String table = "";
+		_TableReference[] tr = content.getQueryModel().getQueryExpression().getQuerySpecification().getFromClause();
+		
+		if (tr.length == 1)
+			table = ((Table) tr[0]).getName();
+			
+		where = new ClauseCondition(this, schema, table);
 		where.setHandlerKey(content.getHandlerKey());
 		getContentPane().add(new JScrollPane(where));
 	}

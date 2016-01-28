@@ -27,8 +27,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.DefaultCellEditor;
@@ -41,15 +41,20 @@ import javax.swing.table.TableColumn;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
+import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Column;
+import com.sqleo.querybuilder.syntax.QueryTokens.Condition;
+import com.sqleo.querybuilder.syntax.QueryTokens.DefaultExpression;
 import com.sqleo.querybuilder.syntax.QueryTokens.Table;
 
 
 public class ClauseCondition extends BaseDynamicTable
 {
-	protected Vector querytokens;
+	protected Vector<QueryTokens.Condition> querytokens;
 	protected JComboBox<String> cbxCols;
 	protected JComboBox<String> cbxValues;
 	private String handlerKey;
@@ -97,7 +102,7 @@ public class ClauseCondition extends BaseDynamicTable
 		    if (selectedValue != null 
 		    	&& selectedValue.equals("") == false){
 			    Column c = new Column(dbTable, selectedValue.toString());
-			    String[] values = columnValues(c);
+			    String[] values = columnValues(c, true);
 			    
 			    if (values != null){
 				    for (String value : values) {
@@ -116,8 +121,8 @@ public class ClauseCondition extends BaseDynamicTable
 		
 		TableColumn tableColumn = this.getColumn(1);
 
-		cbxCols = new JComboBox();
-		cbxValues = new JComboBox();
+		cbxCols = new JComboBox<String>();
+		cbxValues = new JComboBox<String>();
 
 		// whenever the column changes, cbxValues can have different values
 		ItemListener columnValuesListener = new ItemListener() {
@@ -138,7 +143,7 @@ public class ClauseCondition extends BaseDynamicTable
 		tableColumn.setPreferredWidth(60);
 		tableColumn.setMaxWidth(60);
 		tableColumn.setResizable(false);
-		tableColumn.setCellEditor(new DefaultCellEditor(new JComboBox(operation)));
+		tableColumn.setCellEditor(new DefaultCellEditor(new JComboBox<String>(operation)));
 
 		tableColumn = this.getColumn(3);
 		tableColumn.setCellEditor(new DefaultCellEditor(cbxValues));
@@ -147,13 +152,12 @@ public class ClauseCondition extends BaseDynamicTable
 		tableColumn.setPreferredWidth(55);
 		tableColumn.setMaxWidth(55);
 		tableColumn.setResizable(false);
-		tableColumn.setCellEditor(new DefaultCellEditor(new JComboBox(new String[]{"AND","OR"})));
+		tableColumn.setCellEditor(new DefaultCellEditor(new JComboBox<String>(new String[]{"AND","OR"})));
 		
-		querytokens = new Vector();
+		querytokens = new Vector<QueryTokens.Condition>();
 		cbxCols.setEditable(true);
 		cbxValues.setEditable(true);
 		
-
 		// similar to ItemListener, but whenever a row is selected, cbxValues can be uptated
 		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
@@ -173,20 +177,55 @@ public class ClauseCondition extends BaseDynamicTable
 	 * @param columnName
 	 * @return Values in a String[] array
 	 */
-	private String[] columnValues(Column columnName){
+	private String[] columnValues(Column columnName, boolean search){
 		
-		String[] values = columnDistinctValues.get(columnName.getName());
+		boolean cacheValues = !Preferences.getBoolean(DialogPreferences.REFRESH_FILTER_VALUES_WITH_CONDITION);
 		
-		// it wont search if there is no table
-		if (values == null && columnName.getTable().getName() != null && columnName.getTable().getName().equals("") == false){
+		String[] values = null;
+		if (cacheValues)
+			values = columnDistinctValues.get(columnName.getName());
+
+		try
+		{
+			// it wont search if there is no table or search == false
+			if (search && values == null && (((columnName.getTable() != null 
+									&& columnName.getTable().getName() != null 
+									&& columnName.getTable().getName().trim().equals("") == false) 
+								  ) || (dbTable.getName().trim().equals("") == false))){
+				
+				StringBuilder whereClause = new StringBuilder();
+				if (!cacheValues){
+					
+					whereClause.append(new Condition(new DefaultExpression("1"), "=", new DefaultExpression("1")));
+					for (int i = 0; i < querytokens.size(); i++) {
+						
+						// ignore the current condition
+						if (i == getSelectedRow())
+							continue;
+							
+						Condition condition = querytokens.get(i);
+						if (condition.isLeftAndRightValid()){
+							if (condition.getAppend() == null)
+								whereClause.append(" AND ");
+							whereClause.append(" ");
+							whereClause.append(condition);
+						}
+					}
+					
+				}
+				
+				String queryColumnValues = SQLHelper.createDistinctWithLimitQueryByDBMS(getHandlerKey(), (columnName.getTable() == null || ("").equals(columnName.getTable().getName()) ? dbTable : columnName.getTable()), columnName, 200, whereClause.toString());
+				values = searchColumnValues(queryColumnValues);
 			
-			// TODO Add limit/top/rownumber/first/etc depending on RDBMS
-			// see http://www.devmedia.com.br/select-top-em-varios-sgbds/25560
-			String queryColumnValues = "SELECT DISTINCT(" + columnName.getName() + ") FROM " + columnName.getTable();
-			values = searchColumnValues(queryColumnValues);
-			
-			columnDistinctValues.put(columnName.getName(), values);
-			columnDistinctValues.put(columnName.getIdentifier(), values);
+				if (cacheValues){
+					columnDistinctValues.put(columnName.getName(), values);
+					columnDistinctValues.put(columnName.getIdentifier(), values);
+				}
+			}
+		}
+		catch(SQLException sqle)
+		{
+			Application.println(sqle,true);
 		}
 		
 		return values;
@@ -200,32 +239,33 @@ public class ClauseCondition extends BaseDynamicTable
 	private String[] searchColumnValues(String sql){
 		// TODO search database in background
 		ArrayList<String> values = null;
-		
+		Statement stmt = null;
+		ResultSet rs = null;
 		try
 		{
 			ConnectionHandler ch = ConnectionAssistant.getHandler(handlerKey);
-			Statement stmt = ch.get().createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
+			stmt = ch.get().createStatement();
+			stmt.setQueryTimeout(5);
+			rs = stmt.executeQuery(sql);
 			values = new ArrayList<String>(); 
 			ResultSetMetaData rsmd = rs.getMetaData();
-			boolean bStringValue = rsmd.getColumnClassName(1).equals("java.lang.String");
+			String classDataType = rsmd.getColumnClassName(1);
+			boolean bStringValue = classDataType.matches(".*.String|.*.Timestamp|.*.Date");
 			while (rs.next()) {
 				if (bStringValue)
 					values.add("'" + rs.getString(1) + "'");
 				else
 					values.add(rs.getString(1));
 			}
-			rs.close();
-			stmt.close();
-				
 		}
 		catch(SQLException sqle)
 		{
 			Application.println(sqle,true);
+		} finally {
+			SQLHelper.closeObjects(null, stmt, rs);
 		}
 				
-		
-		return values.toArray(new String[0]);
+		return (values == null ? null : values.toArray(new String[0]));
 	}
 
 	public void addColumn(String text)
@@ -240,7 +280,7 @@ public class ClauseCondition extends BaseDynamicTable
 	 */
 	public void addColumn(Column c)
 	{
-		columnValues(c);
+		columnValues(c, false);
 		addColumn(c.getIdentifier());
 	}
 
@@ -252,12 +292,12 @@ public class ClauseCondition extends BaseDynamicTable
 	
 	private void onDelete(int row)
 	{
-		QueryTokens.Condition token = (QueryTokens.Condition)querytokens.elementAt(row);
+		QueryTokens.Condition token = querytokens.elementAt(row);
 		querytokens.removeElementAt(row);
 		
 		if(querytokens.size() > 0 && row < querytokens.size())
 		{
-			QueryTokens.Condition next = (QueryTokens.Condition)querytokens.get(row);
+			QueryTokens.Condition next = querytokens.get(row);
 			next.setAppend(token.getAppend());
 		}
 	}
@@ -287,7 +327,7 @@ public class ClauseCondition extends BaseDynamicTable
 			Object value = this.getValueAt(row,col);
 			if(value == null) value = "";
 			
-			QueryTokens.Condition cond = (QueryTokens.Condition)querytokens.elementAt(row);
+			QueryTokens.Condition cond = querytokens.elementAt(row);
 			if(col == 1)
 				cond.setLeft(new QueryTokens.DefaultExpression(value.toString()));
 			else if(col == 2)
@@ -296,7 +336,7 @@ public class ClauseCondition extends BaseDynamicTable
 				cond.setRight(new QueryTokens.DefaultExpression(value.toString()));
 			else if(col == 4 && ((row+2)<this.getRowCount()))
 			{
-				cond = (QueryTokens.Condition)querytokens.elementAt(row+1);
+				cond = querytokens.elementAt(row+1);
 				cond.setAppend(value.toString());
 			}
 		}

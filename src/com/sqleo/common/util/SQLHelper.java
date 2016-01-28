@@ -33,9 +33,14 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.environment.Application;
+import com.sqleo.querybuilder.QueryBuilder;
+import com.sqleo.querybuilder.syntax.QueryTokens.Column;
+import com.sqleo.querybuilder.syntax.QueryTokens.Table;
 
 public class SQLHelper {
 	
@@ -298,5 +303,151 @@ public class SQLHelper {
 		//System.out.println("Pivot SQL: " + pivotQuery ); 
 		return pivotQuery.isEmpty()?query:pivotQuery;
 	}
+	
+	/**
+	 * Generates a query statement with distinct and limit depending on dbms
+	 * 
+	 * Default option is this one
+	 * SQL Server & HSQLDB
+	 * Maybe sybase (http://infocenter.sybase.com/help/index.jsp?topic=/com.sybase.infocenter.dc00801.1510/html/iqrefso/X315771.htm)
+	 * 
+	 * SELECT TOP [limit] [col] FROM [table]
+	 * 
+	 * 
+	 * MySQL & PostgreSQL & MariaDB
+	 * 
+	 * SELECT [col] FROM [table] LIMIT [limit]
+	 * 
+	 * 
+	 * Oracle
+	 * 
+	 * SELECT [col] FROM [table] WHERE ROWNUM < [limit]
+	 * 
+	 * 
+	 * Firebird
+	 * SELECT FIRST [limit] [col] FROM [table]
+	 * 
+	 * @param t
+	 * @param c
+	 * @param limit
+	 * @return
+	 */
+	public static String createDistinctWithLimitQueryByDBMS(String handlerKey, Table t, Column c, int limit, String whereClause) 
+			throws SQLException {
+		StringBuilder query = new StringBuilder();
+		
+		String databaseName = ConnectionAssistant.getHandler(handlerKey).get().getMetaData().getDatabaseProductName().toLowerCase();
+		
+		String position1 = "";
+		String position2 = "";
+		String position3 = "";
+		String position4 = "";
+		
+		switch (databaseName) {
+		case "mysql":
+		case "mariadb":
+		case "postgree":
+			position3 = "LIMIT";
+			position4 = String.valueOf(limit);
+			break;
+		case "oracle":
+			if (whereClause == null || whereClause.trim().equals(""))
+				position3 = " WHERE ROWNUM <";
+			else
+				position3 = " AND ROWNUM <";
+			position4 = String.valueOf(limit);
+			break;
+		case "firebird":
+			position1 = "FIRST";
+			position2 = String.valueOf(limit);
+			break;
+		default:
+			position1 = "TOP";
+			position2 = String.valueOf(limit);
+			break;
+		}
+		
+		query.append("SELECT ");
+		query.append(position1);
+		query.append(" ");
+		query.append(position2);
+		query.append(" DISTINCT ");
+		query.append(c.getName());
+		query.append(" FROM ");
+		query.append(t.getName());
+		if (whereClause != null && whereClause.trim().equals("") == false){
+			query.append(" WHERE ");
+			query.append(whereClause);
+		}
+		query.append(" ");
+		query.append(position3);
+		query.append(" ");
+		query.append(position4);
+
+		return query.toString();
+	}
+	
+	/**
+	 * @see #createDistinctWithLimitQueryByDBMS(Table, Column, int, String)
+	 */
+	public static String createDistinctWithLimitQueryByDBMS(String handlerKey, Table t, Column c, int limit)
+			throws SQLException {
+		return createDistinctWithLimitQueryByDBMS(handlerKey, t, c, limit, null);
+	}	
+	
+	/**
+	 * Close jdbc objects when not null
+	 * @param c
+	 * @param s
+	 * @param rs
+	 */
+	public static void closeObjects(Connection c, Statement s, ResultSet rs){
+
+		
+		if (rs != null){
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				Application.println(e, false);
+			}
+		}
+		if (s != null){
+			try {
+				s.close();
+			} catch (SQLException e) {
+				Application.println(e, false);
+			}
+		}
+		
+		if (c != null){
+			try {
+				c.close();
+			} catch (SQLException e) {
+				Application.println(e, false);
+			}
+		}
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
