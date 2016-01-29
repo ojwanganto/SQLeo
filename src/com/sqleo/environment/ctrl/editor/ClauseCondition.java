@@ -97,6 +97,7 @@ public class ClauseCondition extends BaseDynamicTable
 		int selectedRow = getSelectedRow();
 
 	    if (selectedRow > -1){
+	    	String originalValue = (String) getValueAt(selectedRow, 3);
 		    cbxValues.removeAllItems();
 	    	Object selectedValue = columnName;
 		    if (selectedValue != null 
@@ -110,6 +111,7 @@ public class ClauseCondition extends BaseDynamicTable
 					}
 			    }
 		    }
+		    setValueAt(originalValue, selectedRow, 3);
     	}
 	}
 	
@@ -252,10 +254,13 @@ public class ClauseCondition extends BaseDynamicTable
 			String classDataType = rsmd.getColumnClassName(1);
 			boolean bStringValue = classDataType.matches(".*.String|.*.Timestamp|.*.Date");
 			while (rs.next()) {
-				if (bStringValue)
-					values.add("'" + rs.getString(1) + "'");
+				String value = rs.getString(1);
+				if (rs.wasNull())
+					values.add("null");
+				else if (bStringValue)
+					values.add("'" + value + "'");
 				else
-					values.add(rs.getString(1));
+					values.add(value);
 			}
 		}
 		catch(SQLException sqle)
