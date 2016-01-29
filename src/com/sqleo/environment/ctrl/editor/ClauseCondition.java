@@ -254,7 +254,8 @@ public class ClauseCondition extends BaseDynamicTable
 			String classDataType = rsmd.getColumnClassName(1);
 			boolean bStringValue = classDataType.matches(".*.String|.*.Timestamp|.*.Date");
 			int maxRows = 200;
-			while (rs.next() && --maxRows > 0) {
+			boolean hasMoreData = rs.next();
+			while (hasMoreData && --maxRows > 0) {
 				String value = rs.getString(1);
 				if (rs.wasNull())
 					values.add("null");
@@ -262,9 +263,10 @@ public class ClauseCondition extends BaseDynamicTable
 					values.add("'" + value + "'");
 				else
 					values.add(value);
+				hasMoreData = rs.next();
 			}
 			
-			if (maxRows == 0 && rs.next())
+			if (hasMoreData)
 				values.add("'...'");
 			
 		}
