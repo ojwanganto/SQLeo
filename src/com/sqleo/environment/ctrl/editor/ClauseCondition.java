@@ -216,7 +216,7 @@ public class ClauseCondition extends BaseDynamicTable
 					
 				}
 				
-				String queryColumnValues = SQLHelper.createDistinctWithLimitQueryByDBMS(getHandlerKey(), (columnName.getTable() == null || ("").equals(columnName.getTable().getName()) ? dbTable : columnName.getTable()), columnName, 200, whereClause.toString());
+				String queryColumnValues = SQLHelper.createDistinctQuery((columnName.getTable() == null || ("").equals(columnName.getTable().getName()) ? dbTable : columnName.getTable()), columnName, 200, whereClause.toString());
 				values = searchColumnValues(queryColumnValues);
 			
 				if (cacheValues){
@@ -253,7 +253,8 @@ public class ClauseCondition extends BaseDynamicTable
 			ResultSetMetaData rsmd = rs.getMetaData();
 			String classDataType = rsmd.getColumnClassName(1);
 			boolean bStringValue = classDataType.matches(".*.String|.*.Timestamp|.*.Date");
-			while (rs.next()) {
+			int maxRows = 200;
+			while (rs.next() && --maxRows > 0) {
 				String value = rs.getString(1);
 				if (rs.wasNull())
 					values.add("null");
@@ -262,6 +263,10 @@ public class ClauseCondition extends BaseDynamicTable
 				else
 					values.add(value);
 			}
+			
+			if (maxRows == 0 && rs.next())
+				values.add("'...'");
+			
 		}
 		catch(SQLException sqle)
 		{

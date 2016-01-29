@@ -332,50 +332,24 @@ public class SQLHelper {
 	 * @param limit
 	 * @return
 	 */
-	public static String createDistinctWithLimitQueryByDBMS(String handlerKey, Table t, Column c, int limit, String whereClause) 
+	public static String createDistinctQuery(Table t, Column c, int limit, String whereClause) 
 			throws SQLException {
 		StringBuilder query = new StringBuilder();
 		
-		String databaseName = ConnectionAssistant.getHandler(handlerKey).get().getMetaData().getDatabaseProductName().toLowerCase();
-		
-		String position1 = "";
-		String position2 = "";
-		String position3 = "";
-		String position4 = "";
-
-		if (databaseName.matches("mysql*|mariadb*|postgre*")){
-			position3 = "LIMIT";
-			position4 = String.valueOf(limit);
-		} else if (databaseName.matches("oracle*")){
-			if (whereClause == null || whereClause.trim().equals(""))
-				position3 = " WHERE ROWNUM <";
-			else
-				position3 = " AND ROWNUM <";
-			position4 = String.valueOf(limit);
-		} else if (databaseName.matches("firebird*")){
-			position1 = "FIRST";
-			position2 = String.valueOf(limit);
-		} else {
-			position1 = "TOP";
-			position2 = String.valueOf(limit);
-		}
-
 		query.append("SELECT ");
-		query.append(position1);
-		query.append(" ");
-		query.append(position2);
 		query.append(" DISTINCT ");
 		query.append(c.getName());
 		query.append(" FROM ");
+		if (t.getSchema() != null && t.getSchema().trim().equals("") == false){
+			query.append(t.getSchema());
+			query.append(".");
+		}
+		
 		query.append(t.getName());
 		if (whereClause != null && whereClause.trim().equals("") == false){
 			query.append(" WHERE ");
 			query.append(whereClause);
 		}
-		query.append(" ");
-		query.append(position3);
-		query.append(" ");
-		query.append(position4);
 
 		return query.toString();
 	}
@@ -383,9 +357,9 @@ public class SQLHelper {
 	/**
 	 * @see #createDistinctWithLimitQueryByDBMS(Table, Column, int, String)
 	 */
-	public static String createDistinctWithLimitQueryByDBMS(String handlerKey, Table t, Column c, int limit)
+	public static String createDistinctWithLimitQueryByDBMS(Table t, Column c, int limit)
 			throws SQLException {
-		return createDistinctWithLimitQueryByDBMS(handlerKey, t, c, limit, null);
+		return createDistinctQuery(t, c, limit, null);
 	}	
 	
 	/**
