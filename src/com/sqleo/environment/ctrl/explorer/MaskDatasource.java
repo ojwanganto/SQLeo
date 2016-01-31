@@ -56,7 +56,7 @@ public class MaskDatasource extends JPanel
 	private JCheckBox cbxReadonly;
 	private JCheckBox cbxAutoconnect;
 		
-	private Color[] colors={Color.white,Color.red,Color.blue,Color.green,Color.yellow,Color.gray};
+	private Color[] colors={Color.white, new Color(255,180,180), new Color(180,255,255), new Color(180,255,180), new Color(255,255,180),new Color(225,225,225)};
 	private JComboBox cbxColor;
 	private JLabel colorLbl;
 	
