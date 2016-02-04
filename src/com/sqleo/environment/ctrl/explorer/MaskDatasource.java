@@ -26,6 +26,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -56,7 +58,9 @@ public class MaskDatasource extends JPanel
 	private JCheckBox cbxReadonly;
 	private JCheckBox cbxAutoconnect;
 		
-	private Color[] colors={Color.white, new Color(255,180,180), new Color(180,255,255), new Color(180,255,180), new Color(255,255,180),new Color(225,225,225)};
+	private static final Color GREY_COLOR = new Color(225,225,225);
+	private static final Color WHITE_COLOR = Color.white;
+	private Color[] colors={WHITE_COLOR, new Color(255,180,180), new Color(180,255,255), new Color(180,255,180), new Color(255,255,180),GREY_COLOR};
 	private JComboBox cbxColor;
 	private JLabel colorLbl;
 	
@@ -103,6 +107,20 @@ public class MaskDatasource extends JPanel
 		gbl.setConstraints(colorPnl, gbc);
 		add(colorPnl);
 		colorLbl.setEnabled(false);
+		
+		//set grey color for readonly by default
+		cbxReadonly.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(cbxReadonly.isSelected()){
+					cbxColor.setSelectedItem(GREY_COLOR);
+					cbxColor.setEnabled(false);
+				}else{
+					cbxColor.setSelectedItem(WHITE_COLOR);
+					cbxColor.setEnabled(true);
+				}
+			}
+		});
 
 	}
 	
