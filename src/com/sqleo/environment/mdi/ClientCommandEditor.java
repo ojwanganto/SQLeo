@@ -24,7 +24,6 @@
 
 package com.sqleo.environment.mdi;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -68,7 +67,6 @@ import com.sqleo.environment.ctrl.CommandEditor;
 import com.sqleo.environment.ctrl.editor.DialogCommand;
 import com.sqleo.environment.ctrl.editor.DialogFindReplace;
 import com.sqleo.environment.ctrl.editor.SQLStyledDocument;
-import com.sqleo.environment.ctrl.explorer.UoDatasource;
 import com.sqleo.querybuilder.DiagramLayout;
 import com.sqleo.querybuilder.QueryModel;
 import com.sqleo.querybuilder.syntax.SQLParser;
@@ -89,7 +87,6 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	private DialogFindReplace dlg;
 	private DialogFindReplace dlg2;
 	private String filename = null;
-	private ClientMetadataExplorer cme;
 
 	public ClientCommandEditor() {
 		super(DEFAULT_TITLE);
@@ -125,23 +122,8 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 		setEditorBackgroundColor(activeConnection);
 	}
 	
-	private ClientMetadataExplorer getMetadataExplorer(){
-		cme = cme!=null ? cme : 
-			(ClientMetadataExplorer)Application.window.getClient(ClientMetadataExplorer.DEFAULT_TITLE);
-		return cme;
-	}
-	
 	private void setEditorBackgroundColor(String chKey) {
-		if(null == chKey){
-			control.getRequestArea().setBackgroundColor(Color.white);
-		}else{
-			UoDatasource uoDs = getMetadataExplorer().getControl().getNavigator().findDatasource(chKey);
-			if(null == uoDs){
-				control.getRequestArea().setBackgroundColor(Color.white);
-			}else{
-				control.getRequestArea().setBackgroundColor(uoDs.color);
-			}
-		}
+		control.getRequestArea().setBackgroundColor(getConnectionBackgroundColor(chKey));
 	}
 
 	private void openSaveQueryDialog(){

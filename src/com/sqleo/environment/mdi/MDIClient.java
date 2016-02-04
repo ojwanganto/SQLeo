@@ -24,6 +24,7 @@
 
 package com.sqleo.environment.mdi;
 
+import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,12 +41,14 @@ import com.sqleo.common.util.SQLHelper;
 import com.sqleo.common.util.Trie;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
+import com.sqleo.environment.ctrl.explorer.UoDatasource;
 import com.sqleo.querybuilder.syntax._ReservedWords;
 
 public abstract class MDIClient extends ClientFrame {
 	private static int counter = 0;
 	private int id = -1;
 	protected Trie prefixTree;
+	private ClientMetadataExplorer cme;
 
 	public MDIClient(String title) {
 		super(title);
@@ -62,6 +65,21 @@ public abstract class MDIClient extends ClientFrame {
 
 	protected int getID() {
 		return id;
+	}
+	
+	protected ClientMetadataExplorer getMetadataExplorer(){
+		cme = cme!=null ? cme : 
+			(ClientMetadataExplorer)Application.window.getClient(ClientMetadataExplorer.DEFAULT_TITLE);
+		return cme;
+	}
+	
+	protected Color getConnectionBackgroundColor(final String chKey) {
+		if(null == chKey){
+			return Color.white;
+		}else{
+			final UoDatasource uoDs = getMetadataExplorer().getControl().getNavigator().findDatasource(chKey);
+			return null == uoDs ? Color.white : uoDs.color;
+		}
 	}
 
 	public abstract JMenuItem[] getMenuActions();

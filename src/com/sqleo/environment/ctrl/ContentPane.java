@@ -24,6 +24,7 @@
 
 package com.sqleo.environment.ctrl;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
@@ -70,6 +71,7 @@ public class ContentPane extends BorderLayoutPanel
 	private Integer retrievedRowCount;
 	private boolean update = false;
 	private ClientQueryBuilder clientQB;
+	private Color connectionBackgroundColor;
 	
 	public ContentPane(String keycah, QueryModel qmodel, UpdateModel umodel)
 	{
@@ -456,5 +458,12 @@ public class ContentPane extends BorderLayoutPanel
 		{
 			ContentPane.this.onEndTask();
 		}
+	}
+
+	public void setBackgroundColor(Color connectionBackgroundColor) {
+		this.connectionBackgroundColor = connectionBackgroundColor;
+	}
+	public Color getBackgroundColor(){
+		return this.connectionBackgroundColor;
 	}
 }

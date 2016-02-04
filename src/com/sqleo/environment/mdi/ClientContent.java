@@ -128,6 +128,7 @@ public class ClientContent extends MDIClientWithCRActions
 		control = control2;
 		setComponentCenter(control);
 		control.setBorder(new EmptyBorder(2,2,2,2));
+		control.setBackgroundColor(getConnectionBackgroundColor(control.getHandlerKey()));
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		InternalFrameListener ifl = new InternalFrameAdapter()

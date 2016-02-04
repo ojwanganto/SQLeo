@@ -53,7 +53,6 @@ import com.sqleo.common.gui.HeaderCellRenderer;
 import com.sqleo.common.util.Appearance;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.ContentPane;
-import com.sqleo.environment.mdi.DialogPreferences;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
 
@@ -460,21 +459,26 @@ public class ContentView extends JPanel implements ListSelectionListener
 
 	private class InternalCellRenderer extends DefaultTableCellRenderer
 	{
+		private void setBackgroundColor(final Color color){
+			final Color backColor = getControl().getBackgroundColor();
+			super.setBackground(backColor!=null ? backColor : color);
+		}
+		
 		public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int col)
 		{
 			super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,col);
-			super.setBackground(UIManager.getDefaults().getColor("Table.background"));
+			setBackgroundColor(UIManager.getDefaults().getColor("Table.background"));
 			super.setFont(Appearance.fontPLAIN);
 			super.setOpaque(true);
 
 			if(isSelected && !hasFocus)
-				super.setBackground(data.getSelectionBackground());
+				setBackgroundColor(data.getSelectionBackground());
 
 			if(ContentView.this.flag != null)
 			{
 				if(ContentView.this.getBlock() == ContentView.this.flag.block
 				&& col == ContentView.this.flag.col	&& row == ContentView.this.flag.row)
-					super.setBackground(ContentView.this.flag.bgcolor);
+					setBackgroundColor(ContentView.this.flag.bgcolor);
 			}
 			
 			if(value==null)
@@ -535,4 +539,5 @@ public class ContentView extends JPanel implements ListSelectionListener
 			}
 		}
 	}
+
 }
