@@ -79,6 +79,7 @@ public class ViewDiagram extends BorderLayoutPanel
 	private QueryBuilder builder;
         
     private JPopupMenu jPopupMenuDiagram = null;
+	private Color backgroundColor;
 	
 	ViewDiagram(QueryBuilder builder)
 	{
@@ -89,7 +90,7 @@ public class ViewDiagram extends BorderLayoutPanel
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				// tiket #223: set white background color for designer with all L&F
-				g.setColor(Color.WHITE);
+				g.setColor(backgroundColor!=null? backgroundColor :  Color.WHITE);
 		        g.fillRect(0, 0, getWidth(), getHeight());
 			};
 		};
@@ -123,6 +124,9 @@ public class ViewDiagram extends BorderLayoutPanel
         });
 	}
 	
+	public void setBackgroundColor(Color color){
+		this.backgroundColor = color;
+	}
 	
 	public Component add(Component c)
 	{

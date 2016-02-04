@@ -127,6 +127,10 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		addChangeListener(this);		
 	}
 	
+	public void setBackgroundColor(final Color color){
+		diagram.setBackgroundColor(color);
+	}
+	
 	public boolean isDragAndDropEnabled()
 	{
 		return diagram.isDragAndDropEnabled();

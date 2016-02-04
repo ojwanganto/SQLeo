@@ -117,6 +117,7 @@ public class ClientQueryBuilder extends MDIClient {
 			builder.setConnection(ConnectionAssistant.getHandler(keycah).get());
 			builder.setConnectionHandlerKey(keycah);
 			loadPrefixTree(keycah,schema);
+			builder.setBackgroundColor(getConnectionBackgroundColor(keycah));
 		}
 		setFileName(null);
 
