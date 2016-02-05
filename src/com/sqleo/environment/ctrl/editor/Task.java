@@ -74,7 +74,7 @@ public class Task implements Runnable {
 					ConnectionHandler ch = ConnectionAssistant
 							.getHandler(source.getHandlerKey());
 					stmt = ch.get().createStatement();
-					stmt.setFetchSize(limit);
+					stmt.setFetchSize(1000);
 					stmt.setMaxRows(limit);
 					long started = System.nanoTime();
 
