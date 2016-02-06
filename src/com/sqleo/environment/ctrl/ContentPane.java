@@ -136,6 +136,11 @@ public class ContentPane extends BorderLayoutPanel
 						ConnectionHandler ch = ConnectionAssistant.getHandler(keycah);
 						Statement stmt = ch.get().createStatement();
 						String originalQuery = getQuery();
+
+						// #344 remove last ORDER BY, that is not supported in MonetDB derived table
+						int orderByPosition = originalQuery.toUpperCase().lastIndexOf("ORDER BY");
+						if (orderByPosition > 0) originalQuery = originalQuery.substring(0,orderByPosition);
+
 						String countQuery = "SELECT count(*) FROM ( " + originalQuery +" ) X ";
 						countQuery = SQLHelper.getSQLeoFunctionQuery(countQuery,keycah);
 						ResultSet rs = stmt.executeQuery(countQuery);
