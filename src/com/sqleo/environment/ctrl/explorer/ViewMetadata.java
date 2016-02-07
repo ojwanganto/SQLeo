@@ -67,6 +67,13 @@ public class ViewMetadata extends AbstractViewObjects
 		{
 			schema	= parent.getUserObject().toString();
 			parent	= (DefaultMutableTreeNode)parent.getParent();
+			if(parent.getUserObject() instanceof UoDatasource)
+			{
+				UoDatasource uoDs = (UoDatasource)parent.getUserObject();
+				if(uoDs.color!=null){
+					setBackgroundColor(uoDs.color);
+				}
+			}
 		}
 		keycah = ((UoDatasource)parent.getUserObject()).getKey();
 
