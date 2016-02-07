@@ -80,6 +80,11 @@ public class ListView extends BorderLayoutPanel
 			table.setRowHeight(newRowHeight);
 		}
     }
+	
+	public void setBackgroundColor(final Color color){
+		table.setFillsViewportHeight(true);
+		table.setBackground(color);
+	}
     
 	protected JTable getJavaComponent()
 	{

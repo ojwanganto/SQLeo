@@ -24,6 +24,7 @@
 
 package com.sqleo.environment.ctrl.explorer;
 
+import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -31,6 +32,7 @@ import java.sql.SQLException;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.mdi.MDIClient;
 import com.sqleo.querybuilder.QueryBuilder;
 
 
@@ -86,6 +88,11 @@ public class ViewSearchResult extends AbstractViewObjects
 			listTables(schema,table,tableTypes);
 		else
 			listColumns(schema,table,column);
+		
+		final Color backgroundColor = MDIClient.getConnectionBackgroundColor(keycah);
+		if (backgroundColor!=null) {
+			setBackgroundColor(backgroundColor);
+		}
     }
     
     private void list(ResultSet rs) throws SQLException

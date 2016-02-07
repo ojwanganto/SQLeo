@@ -25,7 +25,6 @@
 package com.sqleo.environment.ctrl.explorer;
 
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -33,9 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -55,7 +52,6 @@ import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.ListView;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
-import com.sqleo.common.util.Classpath;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 
@@ -240,6 +236,9 @@ public class ViewConnection extends BorderLayoutPanel
 			ArrayList al = ch.getArrayList("$connection_infos");
 			for(Iterator i = al.iterator(); i.hasNext();)
 				lvMetaInfos.addRow((String[])i.next());
+		}
+		if(uo.color!=null){
+			lvMetaInfos.setBackgroundColor(uo.color);
 		}
 		final String fileName = uo.getSelectedFkDefFileName();
 		if(fileName!=null && !fileName.isEmpty()){

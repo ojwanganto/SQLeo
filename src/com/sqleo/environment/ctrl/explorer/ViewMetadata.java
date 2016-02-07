@@ -59,6 +59,9 @@ public class ViewMetadata extends AbstractViewObjects
 		{
 			UoDatasource uoDs = (UoDatasource)parent.getUserObject();
 			schema = uoDs.schema;
+			if(uoDs.color!=null){
+				setBackgroundColor(uoDs.color);
+			}
 		}
 		else
 		{
