@@ -305,64 +305,6 @@ public class SQLHelper {
 	}
 	
 	/**
-	 * Generates a query statement with distinct and limit depending on dbms
-	 * 
-	 * Default option is this one
-	 * SQL Server & HSQLDB
-	 * Maybe sybase (http://infocenter.sybase.com/help/index.jsp?topic=/com.sybase.infocenter.dc00801.1510/html/iqrefso/X315771.htm)
-	 * 
-	 * SELECT TOP [limit] [col] FROM [table]
-	 * 
-	 * 
-	 * MySQL & PostgreSQL & MariaDB
-	 * 
-	 * SELECT [col] FROM [table] LIMIT [limit]
-	 * 
-	 * 
-	 * Oracle
-	 * 
-	 * SELECT [col] FROM [table] WHERE ROWNUM < [limit]
-	 * 
-	 * 
-	 * Firebird
-	 * SELECT FIRST [limit] [col] FROM [table]
-	 * 
-	 * @param t
-	 * @param c
-	 * @param limit
-	 * @return
-	 */
-	public static String createDistinctQuery(Table t, Column c, int limit, String whereClause) 
-			throws SQLException {
-		StringBuilder query = new StringBuilder();
-		
-		query.append("SELECT ");
-		query.append(" DISTINCT ");
-		query.append(c.getName());
-		query.append(" FROM ");
-		if (t.getSchema() != null && t.getSchema().trim().equals("") == false){
-			query.append(t.getSchema());
-			query.append(".");
-		}
-		
-		query.append(t.getName());
-		if (whereClause != null && whereClause.trim().equals("") == false){
-			query.append(" WHERE ");
-			query.append(whereClause);
-		}
-
-		return query.toString();
-	}
-	
-	/**
-	 * @see #createDistinctWithLimitQueryByDBMS(Table, Column, int, String)
-	 */
-	public static String createDistinctWithLimitQueryByDBMS(Table t, Column c, int limit)
-			throws SQLException {
-		return createDistinctQuery(t, c, limit, null);
-	}	
-	
-	/**
 	 * Close jdbc objects when not null
 	 * @param c
 	 * @param s

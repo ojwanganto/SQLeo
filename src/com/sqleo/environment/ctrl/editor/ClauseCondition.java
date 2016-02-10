@@ -43,8 +43,10 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.ctrl.ContentPane;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.mdi.DialogPreferences;
+import com.sqleo.querybuilder.QueryModel;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Column;
 import com.sqleo.querybuilder.syntax.QueryTokens.Condition;
@@ -52,8 +54,13 @@ import com.sqleo.querybuilder.syntax.QueryTokens.DefaultExpression;
 import com.sqleo.querybuilder.syntax.QueryTokens.Table;
 
 
+
 public class ClauseCondition extends BaseDynamicTable
 {
+	private QueryModel qmodel;
+	private String query;
+	private ContentPane content;
+
 	protected Vector<QueryTokens.Condition> querytokens;
 	protected JComboBox<String> cbxCols;
 	protected JComboBox<String> cbxValues;
@@ -80,10 +87,10 @@ public class ClauseCondition extends BaseDynamicTable
 	 * @param defaultSchema
 	 * @param defaultTableName
 	 */
-	public ClauseCondition(_ClauseOwner owner, String defaultSchema, String defaultTableName)
+	public ClauseCondition(_ClauseOwner owner, ContentPane content)
 	{
 		super(owner,4);
-		this.dbTable = new Table(defaultSchema, defaultTableName);
+		this.content = content;
 
 	}
 
@@ -102,9 +109,7 @@ public class ClauseCondition extends BaseDynamicTable
 	    	Object selectedValue = columnName;
 		    if (selectedValue != null 
 		    	&& selectedValue.equals("") == false){
-			    Column c = new Column(dbTable, selectedValue.toString());
-			    String[] values = columnValues(c, true);
-			    
+			    String[] values = columnValues(selectedValue.toString(), true);
 			    if (values != null){
 				    for (String value : values) {
 					    cbxValues.addItem(value);
@@ -159,17 +164,21 @@ public class ClauseCondition extends BaseDynamicTable
 		querytokens = new Vector<QueryTokens.Condition>();
 		cbxCols.setEditable(true);
 		cbxValues.setEditable(true);
+
+		// workarround for onUpdate errors
+		onInsert(0);
+
 		
 		// similar to ItemListener, but whenever a row is selected, cbxValues can be uptated
-		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				int selectedRow = getSelectedRow();
-				if (selectedRow > -1)
-					populateValues(getValueAt(selectedRow, 1));
-				
-			}
-		});
+//		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+//			@Override
+//			public void valueChanged(ListSelectionEvent e) { 
+//				int selectedRow = getSelectedRow();
+//				if (selectedRow > -1)
+//					populateValues(getValueAt(selectedRow, 1));
+//				
+//			}
+//		});
 
 		this.getModel().addTableModelListener(new ChangeHandler());
 	}
@@ -179,60 +188,47 @@ public class ClauseCondition extends BaseDynamicTable
 	 * @param columnName
 	 * @return Values in a String[] array
 	 */
-	private String[] columnValues(Column columnName, boolean search){
+	private String[] columnValues(String columnName, boolean search){
 		
-		boolean cacheValues = !Preferences.getBoolean(DialogPreferences.REFRESH_FILTER_VALUES_WITH_CONDITION);
 		
 		String[] values = null;
-		if (cacheValues)
-			values = columnDistinctValues.get(columnName.getName());
+		values = columnDistinctValues.get(columnName);
 
-		try
-		{
 			// it wont search if there is no table or search == false
-			if (search && values == null && (((columnName.getTable() != null 
-									&& columnName.getTable().getName() != null 
-									&& columnName.getTable().getName().trim().equals("") == false) 
-								  ) || (dbTable.getName().trim().equals("") == false))){
-				
-				StringBuilder whereClause = new StringBuilder();
-				if (!cacheValues){
-					
-					whereClause.append(new Condition(new DefaultExpression("1"), "=", new DefaultExpression("1")));
-					for (int i = 0; i < querytokens.size(); i++) {
-						
-						// ignore the current condition
-						if (i == getSelectedRow())
-							continue;
-							
-						Condition condition = querytokens.get(i);
-						if (condition.isLeftAndRightValid()){
-							if (condition.getAppend() == null)
-								whereClause.append(" AND ");
-							whereClause.append(" ");
-							whereClause.append(condition);
-						}
-					}
-					
-				}
-				
-				String queryColumnValues = SQLHelper.createDistinctQuery((columnName.getTable() == null || ("").equals(columnName.getTable().getName()) ? dbTable : columnName.getTable()), columnName, 200, whereClause.toString());
+			if (search && values == null && content != null){				
+
+				// remove first part from column name: TABLE.COL, ALIAS.COL, SCHEMA.TABLE.COL --> COL
+				String[] columnParts = columnName.split("\\.");
+				if (columnParts.length == 2) columnName=columnParts[1];
+				if (columnParts.length == 3) columnName=columnParts[2];
+
+				String originalQuery = content.getQuery();
+
+				// remove last ORDER BY, that is not supported in MonetDB derived table
+				int orderByPosition = originalQuery.toUpperCase().lastIndexOf("ORDER BY");
+				if (orderByPosition > 0) originalQuery = originalQuery.substring(0,orderByPosition);
+
+				String queryColumnValues = "SELECT DISTINCT " + columnName + " FROM ( " + originalQuery +" ) X ORDER BY 1"; 
+				System.out.println("PopulateFilterSQL text: ");
+				System.out.println(queryColumnValues);
 				values = searchColumnValues(queryColumnValues);
 			
-				if (cacheValues){
-					columnDistinctValues.put(columnName.getName(), values);
-					columnDistinctValues.put(columnName.getIdentifier(), values);
-				}
+				// caching values
+				columnDistinctValues.put(columnName, values);
 			}
-		}
-		catch(SQLException sqle)
-		{
-			Application.println(sqle,true);
-		}
 		
 		return values;
 	}
 	
+	public QueryModel getQueryModel()
+	{
+		return qmodel;
+	}
+
+	public String getQuery() {
+		return getQueryModel()!=null?getQueryModel().toString(false):query;
+	}
+
 	/**
 	 * Search for db distinct values for each column in select.
 	 * @param sql
@@ -247,7 +243,7 @@ public class ClauseCondition extends BaseDynamicTable
 		{
 			ConnectionHandler ch = ConnectionAssistant.getHandler(handlerKey);
 			stmt = ch.get().createStatement();
-			stmt.setQueryTimeout(5);
+			stmt.setQueryTimeout(2);
 			rs = stmt.executeQuery(sql);
 			values = new ArrayList<String>(); 
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -267,12 +263,17 @@ public class ClauseCondition extends BaseDynamicTable
 			}
 			
 			if (hasMoreData)
-				values.add("'...'");
+				values.add("...");
 			
 		}
 		catch(SQLException sqle)
 		{
-			Application.println(sqle,true);
+			Application.println(sqle.toString());
+			if(values == null) {
+				values = new ArrayList<String>(); 
+				values.add("...Time-out or Error...");
+		}
+				
 		} finally {
 			SQLHelper.closeObjects(null, stmt, rs);
 		}
@@ -292,7 +293,7 @@ public class ClauseCondition extends BaseDynamicTable
 	 */
 	public void addColumn(Column c)
 	{
-		columnValues(c, false);
+		columnValues(c.getName(), false);
 		addColumn(c.getIdentifier());
 	}
 

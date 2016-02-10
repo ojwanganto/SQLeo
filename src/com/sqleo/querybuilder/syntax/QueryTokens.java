@@ -339,22 +339,6 @@ public abstract class QueryTokens
 			this.operator = operator;
 		}
 		
-		public boolean isLeftAndRightValid(){
-			
-			if (isDefaultExpressionValid((DefaultExpression) left) == false)
-				return false;
-			if (isDefaultExpressionValid((DefaultExpression) right) == false)
-				return false;
-			
-			return true;
-		}
-		
-		private boolean isDefaultExpressionValid(DefaultExpression de){
-			if (de == null || de.getValue() == null || de.getValue().trim().equals(""))
-				return false;
-			return true;
-		}
-		
 		public String getAppend()
 		{
 			return append;
