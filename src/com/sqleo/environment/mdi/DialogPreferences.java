@@ -215,7 +215,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		jCheckBoxAutoCommit.setText(I18n.getString(
 				"application.preferences.autoCommit", "Auto commit"));
 		jCheckBoxAutoCommit.setSelected(Preferences.getBoolean(
-				"application.autoCommit", true));
+				"application.autoCommit", false));
 		jCheckBoxAutoCommit.addItemListener(new ItemListener() {
 
 		    public void itemStateChanged(ItemEvent e) {
