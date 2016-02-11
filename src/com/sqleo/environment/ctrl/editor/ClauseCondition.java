@@ -170,15 +170,15 @@ public class ClauseCondition extends BaseDynamicTable
 
 		
 		// similar to ItemListener, but whenever a row is selected, cbxValues can be uptated
-//		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-//			@Override
-//			public void valueChanged(ListSelectionEvent e) { 
-//				int selectedRow = getSelectedRow();
-//				if (selectedRow > -1)
-//					populateValues(getValueAt(selectedRow, 1));
-//				
-//			}
-//		});
+		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) { 
+				int selectedRow = getSelectedRow();
+				if (selectedRow > -1)
+					populateValues(getValueAt(selectedRow, 1));
+				
+			}
+		});
 
 		this.getModel().addTableModelListener(new ChangeHandler());
 	}
