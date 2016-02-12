@@ -190,6 +190,8 @@ public class ClauseCondition extends BaseDynamicTable
 	 */
 	private String[] columnValues(String columnName, boolean search){
 		
+		// TODO #350 Column Alias should be used here in place of ColumnName
+		// 
 		boolean populateFilter = Preferences.getBoolean(DialogPreferences.POPULATE_FILTER_VALUES);
 		String[] values = null;
 		values = columnDistinctValues.get(columnName);
@@ -235,7 +237,7 @@ public class ClauseCondition extends BaseDynamicTable
 	 * @return Values in a String[] array
 	 */
 	private String[] searchColumnValues(String sql){
-		// TODO search database in background
+
 		ArrayList<String> values = null;
 		Statement stmt = null;
 		ResultSet rs = null;
