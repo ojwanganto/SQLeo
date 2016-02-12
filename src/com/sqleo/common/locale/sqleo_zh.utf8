@@ -211,3 +211,7 @@ datacomparer.WorkingConnection=Working connection:
 datasource.message.readonly=readonly connection
 application.message.readonly=SQLeo connection is readonly and do not permit this operation
 application.preferences.autoSavePoint=Auto savepoint (PostgreSQL, MonetDB, ...)
+
+-- added with 2016.02 (TRANSLATION TO DO)
+datasource.message.color=color
+application.preferences.populateFilter=Populate filter values

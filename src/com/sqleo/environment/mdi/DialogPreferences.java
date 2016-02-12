@@ -88,6 +88,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	
 	private JCheckBox jCheckBoxAutoCommit = new JCheckBox();
 	private JCheckBox jCheckBoxAutoSavePoint = new JCheckBox();
+	private JCheckBox jCheckBoxPopulateFilter = new JCheckBox();
+
 	private JCheckBox jCheckBoxAutoComplete = new JCheckBox();
 	private JCheckBox jCheckBoxAskBeforeExit = new JCheckBox();
 	private JCheckBox jCheckBoxCheckUpdate = new JCheckBox();
@@ -107,6 +109,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	public static final String ICON_SIZE_PERCENTAGE = "application.iconSizePercentage";
 	public static final Integer DEFAULT_ICON_PERCENT = 160;
 	public static final String COPY_OPEN_FILE_EXTENSION = "application.copyAndOpenFileExtension";
+	public static final String POPULATE_FILTER_VALUES = "application.populateFilter";
 
 	public DialogPreferences() {
 		super(Application.window, Application.PROGRAM + ".preferences", 360,
@@ -279,6 +282,11 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		        }
 		    }
 		});
+
+		jCheckBoxPopulateFilter.setText(I18n.getString(
+				"application.preferences.populateFilter", "Populate filter values"));
+		jCheckBoxPopulateFilter.setSelected(Preferences.getBoolean(POPULATE_FILTER_VALUES, true));
+
 		
 		JPanel pnlGeneral = new JPanel(new GridLayout(0, 1));
 
@@ -323,6 +331,7 @@ public class DialogPreferences extends AbstractDialogConfirm {
 		pnlGeneral.add(scrollV);
 		pnlGeneral.add(jCheckBoxAutoCommit);
 		pnlGeneral.add(jCheckBoxAutoSavePoint);
+		pnlGeneral.add(jCheckBoxPopulateFilter);
 
 		JPanel pnlCommand = new JPanel(new GridLayout(0, 1));
 		pnlCommand.setBorder(new EmptyBorder(10, 5, 150, 5));
@@ -430,6 +439,8 @@ public class DialogPreferences extends AbstractDialogConfirm {
 				jCheckBoxAutoCommit.isSelected()));
 		Preferences.set("application.autoSavePoint", new Boolean(
 				jCheckBoxAutoSavePoint.isSelected()));
+		Preferences.set(POPULATE_FILTER_VALUES, new Boolean(
+				jCheckBoxPopulateFilter.isSelected()));
 		Preferences.set(ASK_BEFORE_EXIT_KEY, new Boolean(
 				jCheckBoxAskBeforeExit.isSelected()));
 		Preferences.set(AUTO_COMPLETE_KEY, new Boolean(

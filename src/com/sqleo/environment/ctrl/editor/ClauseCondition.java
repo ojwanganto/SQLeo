@@ -190,12 +190,12 @@ public class ClauseCondition extends BaseDynamicTable
 	 */
 	private String[] columnValues(String columnName, boolean search){
 		
-		
+		boolean populateFilter = Preferences.getBoolean(DialogPreferences.POPULATE_FILTER_VALUES);
 		String[] values = null;
 		values = columnDistinctValues.get(columnName);
 
 			// it wont search if there is no table or search == false
-			if (search && values == null && content != null){				
+			if (search && populateFilter && values == null && content != null){				
 
 				// remove first part from column name: TABLE.COL, ALIAS.COL, SCHEMA.TABLE.COL --> COL
 				String[] columnParts = columnName.split("\\.");
