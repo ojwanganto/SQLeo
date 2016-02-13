@@ -33,6 +33,21 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2016.02.rc1.zip: 2016-02-13
+
+  Thanks to Eder Jorge and Anudeep Gade for their contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2016.02/
+
+	321,340 All windows: background color per datasource set
+	341 Background color in soft grey for READ ONLY connections
+	318 Content Window: filters prepopulated with data values
+	338 SQLeo Start up GUI does nothing
+	339 Preferences: auto-commit set to off by default
+	344 Content window: count records fails on query with ORDER BY (monetDB)
+	327,342	command editor, data comparer: set fetch size to 1000 for performances
+
+
 SQLeoVQB.2016.01.rc1.zip: 2016-01-19
 
   Thanks to Eder Jorge for his contribution to this release
