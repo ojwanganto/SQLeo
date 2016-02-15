@@ -190,7 +190,7 @@ public class ClauseCondition extends BaseDynamicTable
 	 */
 	private String[] columnValues(String columnName, boolean search){
 		
-		// TODO #350 Column Alias should be used here in place of ColumnName
+	
 		// 
 		boolean populateFilter = Preferences.getBoolean(DialogPreferences.POPULATE_FILTER_VALUES);
 		String[] values = null;
@@ -203,6 +203,19 @@ public class ClauseCondition extends BaseDynamicTable
 				String[] columnParts = columnName.split("\\.");
 				if (columnParts.length == 2) columnName=columnParts[1];
 				if (columnParts.length == 3) columnName=columnParts[2];
+
+				// Ticket #350 ColumnAlias should be used here in place of ColumnName
+				QueryTokens._Expression[] e = content.getQueryModel().getQueryExpression().getQuerySpecification().getSelectList();
+				for(int i=0; i<e.length; i++)
+				{
+					if(e[i] instanceof QueryTokens.Column)	{
+						if (((QueryTokens.Column)e[i]).getName().equals(columnName)  && ((QueryTokens.Column)e[i]).getAlias() != null ){ 
+							columnName = ((QueryTokens.Column)e[i]).getAlias();
+							break;
+						}
+					}
+				}	
+
 
 				String originalQuery = content.getQuery();
 
