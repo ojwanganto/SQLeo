@@ -27,6 +27,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+
+import java.io.*;
+import java.util.*;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -192,6 +196,15 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 						stream.close();
 					}
 				}
+
+				// ticket #348 	data comparer: allow million lines comparison
+				try {
+					sortAndMergeLines(filePath,columns);
+				} catch (Exception e){
+					Application.println(e,true);
+				}
+			
+
 				final File mergedCsvFile = new File(filePath);
 				final String mergedTableName = mergedCsvFile.getName().substring(0, mergedCsvFile.getName().lastIndexOf("."));;
 				// get merged query 
@@ -255,6 +268,73 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		return compare;
 	}
 
+
+	public int nthOccurrence(String str, String c, int n) {
+		if(n <= 0){
+	        	return -1;
+		}
+		int pos = str.indexOf(c, 0);
+		while (n-- > 1 && pos != -1)
+			pos = str.indexOf(c, pos+1);
+		return pos;
+	}
+
+    public void sortAndMergeLines(String file, String columns) throws Exception {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        TreeMap<String, String> rows = new TreeMap<String, String>();
+        String line="";
+	String header = reader.readLine();
+	if(!columns.isEmpty()){
+		int countCols = columns.length() - columns.replace(",", "").length() + 1;
+	        while((line=reader.readLine())!=null){
+			String currKey = line.substring(0,nthOccurrence(line,";",countCols));
+			String prevLine = rows.get(currKey);
+			if (prevLine != null){
+				String[] currVal = line.split(";");
+				String[] prevVal = prevLine.split(";");
+				String   newLine = currKey;
+				for (int z = countCols ; z < currVal.length ; z++){
+					if (!prevVal[z].equals("\"\"")) currVal[z]=prevVal[z];
+	        			newLine = newLine + ";" + currVal[z];
+				}
+				rows.put(currKey,newLine);      
+			} else {
+				rows.put(currKey,line);
+			}
+	        }
+	} else { // no column --> 2 rows
+	        while((line=reader.readLine())!=null){
+			String currKey = "noCols";
+			String prevLine = rows.get(currKey);
+			if (prevLine != null){
+				String[] currVal = line.split(";");
+				String[] prevVal = prevLine.split(";");
+				String   newLine = "";
+				for (int z = 0 ; z < currVal.length ; z++){
+					if (!prevVal[z].equals("\"\"")) currVal[z]=prevVal[z];
+	        			newLine = newLine + currVal[z] + ";";
+				}
+				newLine = newLine.substring(0,newLine.length()-1);
+				rows.put(currKey,newLine);      
+			} else {
+				rows.put(currKey,line);
+			}
+	        }
+	}
+        reader.close();
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+	writer.write(header);
+        writer.newLine();
+	for (String row: rows.values()){
+		writer.write(row);
+        	writer.newLine();
+        }
+        writer.close();
+    }
+
+
+
 	private String getColumnHeaderRow(final String columns,
 			final String[] sourceAggregates,final String[] targetAggregates){
 		final StringBuffer buffer = new StringBuffer();
@@ -267,12 +347,6 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 			buffer.append("SRC").append(i).append(";");
 			buffer.append("TGT").append(i).append(";");
 		}
-		//		for(final String sourceAggr : sourceAggregates){
-		//			final String sourceAggrName = getMatchingAggregateName(sourceAggr, targetAggregates);
-		//			if(sourceAggrName!=null){
-		//				buffer.append(sourceAggrName).append(";");
-		//			}
-		//		}
 		if(buffer.length() > 0) buffer.deleteCharAt(buffer.length()-1);
 		return buffer.toString();
 	}
@@ -296,6 +370,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		}
 		return "";
 	}
+
 
 	private String getMatchingAggregateName(final String sourceAggr, final String[] targetAggregates){
 		final String sourceAggrName = getRealAggregateName(sourceAggr);
@@ -328,13 +403,13 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		final String realSourceAlias = sourceAlias!=null?sourceAlias:"SOURCE";
 		final String realTargetAlias = targetAlias!=null?targetAlias:"TARGET";
 		for(int i = 1; i<=totalAggregates; i++){
-			result.append("MAX(SRC").append(i).append(") as \"").append(realSourceAlias).append("_").append(sourceAggregates[i-1]).append("\",");
-			result.append("MAX(TGT").append(i).append(") as \"").append(realTargetAlias).append("_").append(targetAggregates[i-1]).append("\"");
+			result.append("SRC").append(i).append(" as \"").append(realSourceAlias).append("_").append(sourceAggregates[i-1]).append("\",");
+			result.append("TGT").append(i).append(" as \"").append(realTargetAlias).append("_").append(targetAggregates[i-1]).append("\"");
 			// ticket #260 add diff status for each line (can help when exporting in excel AND pitvot table
 			if(addDiffStatusInOutput.isSelected()){
-				result.append(",\n").append(" case when MAX(SRC").append(i).append(")=").append("MAX(TGT").append(i).append(") then 'EQU'");
-				result.append(" when MAX(TGT").append(i).append(")='' then '").append(realSourceAlias).append("'");	
-				result.append(" when MAX(SRC").append(i).append(")='' then '").append(realTargetAlias).append("'");	
+				result.append(",\n").append(" case when SRC").append(i).append("=").append("TGT").append(i).append(" then 'EQU'");
+				result.append(" when TGT").append(i).append("='' then '").append(realSourceAlias).append("'");	
+				result.append(" when SRC").append(i).append("='' then '").append(realTargetAlias).append("'");	
 				result.append(" else 'DIFF' end as \"DIFF").append("_").append(sourceAggregates[i-1]).append("\"");	
 			}
 			if(i<totalAggregates){
@@ -343,21 +418,20 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		}
 
 		result.append("\nFROM ").append(mergedTableName).append(" ").append(tableAlias);
-		if(colsGiven){
-			result.append("\nGROUP BY ").append(colsWithAlias.toString());
-		}
 		if(onlyDifferentValues.isSelected()){
-			result.append("\nHAVING ");
+			result.append("\nWHERE ");
 			for(int i = 1; i<=totalAggregates; i++){
-				result.append("MAX(SRC").append(i).append(")!=").append("MAX(TGT").append(i).append(")");
+				result.append("SRC").append(i).append("!=").append("TGT").append(i);
 				if(i<totalAggregates){
 					result.append(" OR\n");
 				}
 			}
 		}
-		if(colsGiven){
-			result.append("\nORDER BY ").append(colsWithAlias.toString());
-		}
+
+// ORDER BY not needed any more as CSV data is sorted (by TreeMap) 
+//		if(colsGiven){
+//			result.append("\nORDER BY ").append(colsWithAlias.toString());
+//		}
 
 		return result.toString();
 	}
