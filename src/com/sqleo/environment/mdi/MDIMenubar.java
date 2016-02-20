@@ -474,11 +474,15 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 	    void add(MDIClient client)
 	    {
 	    	enabled = false;
-    		for(int i=current+1; i<sequence.size();)
-    			sequence.removeElementAt(i);
-	    	
-	    	sequence.addElement(client);
-	    	current = sequence.size()-1;
+	    	//elements are removed which we dont want	    	
+//    		for(int i=current+1; i<sequence.size();)
+//    			sequence.removeElementAt(i);
+//	    	current = sequence.size()-1;
+
+	    	//we want element to be added just after current
+	    	//so shift others from current+1 to end
+	    	sequence.add(current+1, client);
+	    	current++; 
 	    }
 	    
 	    void previous()
