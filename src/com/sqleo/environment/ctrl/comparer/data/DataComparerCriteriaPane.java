@@ -61,6 +61,7 @@ import com.sqleo.environment.ctrl.comparer.data.DataComparerDialogTable.DATA_TYP
 import com.sqleo.environment.ctrl.editor.Task;
 import com.sqleo.environment.ctrl.editor._TaskSource;
 import com.sqleo.environment.ctrl.editor._TaskTarget;
+import com.sqleo.environment.mdi.MDIClient;
 import com.sqleo.environment.mdi._ConnectionListener;
 
 
@@ -397,7 +398,10 @@ public class DataComparerCriteriaPane extends JPanel implements _ConnectionListe
 	}
 	
 	public void itemStateChanged(ItemEvent ie){
-		ConnectionHandler ch = ConnectionAssistant.getHandler(ie.getItem().toString());
+		final String keycah = ie.getItem().toString();
+		ConnectionHandler ch = ConnectionAssistant.getHandler(keycah);
+		setBackground(MDIClient.getConnectionBackgroundColor(keycah));
+		
 		if(ch == null)
 		{
 			cbxSchema.setModel(new DefaultComboBoxModel());
