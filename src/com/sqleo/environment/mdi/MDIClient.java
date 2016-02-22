@@ -101,6 +101,9 @@ public abstract class MDIClient extends ClientFrame {
 	}
 	
 	protected void loadPrefixTreeAndView(final String chKey,final String schema,final TextView textView) {
+		if(null == chKey){
+			return;
+		}
 		if (Preferences.isAutoCompleteEnabled()) {
 			final String cacheKey = getCacheKey(chKey, schema);
 			final Object cached = Application.session.getColumnCache(cacheKey);
