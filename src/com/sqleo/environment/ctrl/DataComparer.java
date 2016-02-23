@@ -169,32 +169,42 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 				final String[] sourceAggregates = sourceAggregateText!=null ? sourceAggregateText.split(",") : new String[0];
 				final String[] targetAggregates = targetAggregateText!=null ? targetAggregateText.split(",") : new String[0];
 
-				PrintStream stream = null;
 				String filePath = null;
 				try	{
+
 					// merged.csv
 					final File file = File.createTempFile("merged_", ".csv");
 					filePath = file.getAbsolutePath();
-					stream = new PrintStream(new FileOutputStream(file));
+					final PrintStream stream = new PrintStream(new FileOutputStream(file));
 					file.deleteOnExit();
 
 					stream.println(getColumnHeaderRow(columns, sourceAggregates, targetAggregates));
-					source.retrieveData(stream);
-					if(!source.isQueryExecutionSuccess()){
-						return;
-					}
+
+					// retrieve source data in parallel
+					Thread thread_retrieve1 = new Thread(new Runnable() {
+				            @Override
+				            public void run() {
+						source.retrieveData(stream);
+						if(!source.isQueryExecutionSuccess()){
+							return;
+						}
+				            }
+				        });
+					thread_retrieve1.start();
+
 					target.retrieveData(stream);
 					if(!target.isQueryExecutionSuccess()){
 						return;
 					}
-				}catch (FileNotFoundException e){
+
+					// wait for first thread to finish
+					thread_retrieve1.join();
+				} catch (InterruptedException e) {
+					// 
+				} catch (FileNotFoundException e){
 					Application.println(e,true);
 				} catch (IOException e) {
 					Application.println(e,true);
-				}finally{
-					if(stream!=null){
-						stream.close();
-					}
 				}
 
 				// ticket #348 	data comparer: allow million lines comparison
@@ -290,8 +300,8 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 			String currKey = line.substring(0,nthOccurrence(line,";",countCols));
 			String prevLine = rows.get(currKey);
 			if (prevLine != null){
-				String[] currVal = line.split(";");
-				String[] prevVal = prevLine.split(";");
+				String[] currVal = line.split(";",-1);
+				String[] prevVal = prevLine.split(";",-1);
 				String   newLine = currKey;
 				for (int z = countCols ; z < currVal.length ; z++){
 					if (!prevVal[z].equals("\"\"")) currVal[z]=prevVal[z];
@@ -307,9 +317,9 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 			String currKey = "noCols";
 			String prevLine = rows.get(currKey);
 			if (prevLine != null){
-				String[] currVal = line.split(";");
-				String[] prevVal = prevLine.split(";");
-				String   newLine = "";
+				String[] currVal = line.split(";",-1);
+				String[] prevVal = prevLine.split(";",-1);
+ 				String   newLine = "";
 				for (int z = 0 ; z < currVal.length ; z++){
 					if (!prevVal[z].equals("\"\"")) currVal[z]=prevVal[z];
 	        			newLine = newLine + currVal[z] + ";";
