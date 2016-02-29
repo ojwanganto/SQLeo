@@ -354,7 +354,7 @@ public abstract class MDIActions implements _Constants
 		{
 			super("Go back");
 			setIcon(ICON_BACK);
-			setTooltip("<empty>");
+			setTooltip(I18n.getString("application.back","Go back"));
 			setEnabled(false);
 		}
         
@@ -370,7 +370,7 @@ public abstract class MDIActions implements _Constants
 		{
 			super("Go forward");
 			setIcon(ICON_FWD);
-			setTooltip("<empty>");
+			setTooltip(I18n.getString("application.next","Go forward"));
 			setEnabled(false);
 		}
         

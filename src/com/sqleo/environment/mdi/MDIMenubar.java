@@ -521,9 +521,11 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 	    	for(int found=-1; (found=sequence.indexOf(client))!=-1;)
 	    	{
 	    		sequence.removeElementAt(found);
-	    		if(found==current && sequence.size()>0)
-	    			previous();
-	    		else if(found<current)
+// Ticket #121 retrieve initial behaviour when closing a window
+//	    		if(found==current && sequence.size()>0)
+//	    			previous();
+//	    		else if(found<current)
+			if(found<current)
 	    			current--;
 	    	}
 	    	enableActions();
