@@ -33,6 +33,18 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2016.03.rc1.zip: 2016-03-02
+
+  Thanks Anudeep Gade for their contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2016.03/
+
+	352 Data comparer: set background color according to connection
+	350 Content Window: add Column Alias suppport in Populate filter with values
+	348,353 Data comparer: allow million lines comparison
+	121 Menu: all windows are not reachable using right and left arrows
+
+
 SQLeoVQB.2016.02.rc1.zip: 2016-02-13
 
   Thanks to Eder Jorge and Anudeep Gade for their contribution to this release
