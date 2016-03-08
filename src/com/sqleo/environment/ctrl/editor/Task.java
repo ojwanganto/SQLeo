@@ -116,24 +116,34 @@ public class Task implements Runnable {
 							target.processResult(rs);
 						}
 						rs.close();
-					} else if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN")) {
-						stmt.executeUpdate("begin dbms_output.enable(1000000); end;");
+					} else if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("DO")) {
+
+						// dbms output enable
+						CallableStatement stmtOutput = ch.get().prepareCall("{call dbms_output.enable(1000000) }");
+						stmtOutput.execute();
+
+						// execute current statement
 						stmt.executeUpdate(syntax);
+						target.write("\n");
+
 						// dbms output get
-            				            CallableStatement showOutput = ch.get().prepareCall("begin dbms_output.get_line(:1,:status); end;");
-					            showOutput.registerOutParameter(1, java.sql.Types.VARCHAR); // line
-					            showOutput.registerOutParameter(2, java.sql.Types.INTEGER); // done (no more) ?
-            
-					            for (int i=0;;i++){
-        					        showOutput.executeUpdate();
-					                if(showOutput.getInt(2)== 1){
-					                    break;
-					                }
-					                target.write(showOutput.getString(1) + "\n");                
-					            }
-					            showOutput.close();
-						stmt.executeUpdate("begin dbms_output.disable; end;");
+						stmtOutput =ch.get().prepareCall("{call dbms_output.get_line(?,?)}");
+						stmtOutput.registerOutParameter(1,java.sql.Types.VARCHAR);
+						stmtOutput.registerOutParameter(2,java.sql.Types.INTEGER);
+					        for (int i=0;;i++){
+        						stmtOutput.execute();
+					        	if(stmtOutput.getInt(2)== 1){
+					        		break;
+					        	}
+					        	target.write(stmtOutput.getString(1) + "\n");                
+					        }
+
+						// dbms output disable
+						stmtOutput = ch.get().prepareCall("{call dbms_output.disable() }");
+						stmtOutput.execute();
 						target.write("PL/SQL block executed successfully");
+					        stmtOutput.close();
+
 					} else {
 						rs = null;
 						// Ticket #337 - savepoint enable/disable preferences
