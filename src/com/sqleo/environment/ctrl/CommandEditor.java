@@ -369,7 +369,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					StringBuilder sqlBuilder = new StringBuilder();
 					while (!stopped && st.hasMoreTokens()) {
 						final String line = st.nextToken().trim();
-						if (line.startsWith("--") || line.startsWith("//") || line.startsWith("#")) {
+						if (line.startsWith("--") || line.startsWith("//") || line.startsWith("#") || line.startsWith("/* ")) {
 							// Line is a comment	
 							continue;
 						} else if (line.endsWith(";")) {
