@@ -81,7 +81,7 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 					if(!ConnectionAssistant.getAutoCommitPrefered()){
 						ch.get().commit();
 						notifyResponseToView(true);
-						System.out.println("Commit successfull");
+//						System.out.println("Commit successfull");
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -123,7 +123,7 @@ public abstract class MDIClientWithCRActions extends MDIClient {
 					if(!ConnectionAssistant.getAutoCommitPrefered()){
 						ch.get().rollback();
 						notifyResponseToView(false);
-						System.out.println("Rollback successfull");
+//						System.out.println("Rollback successfull");
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();

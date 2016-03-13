@@ -96,7 +96,7 @@ public class Task implements Runnable {
 							String savepointName = "AutoSavepoint";
 							Savepoint savepoint= ch.get().setSavepoint(savepointName);
 							try {
-													rs = stmt.executeQuery(syntax);
+										rs = stmt.executeQuery(syntax);
 							} catch (SQLException sqle) {
 										ch.get().rollback(savepoint);
 										target.onTaskFinished(sqle.toString(), true);

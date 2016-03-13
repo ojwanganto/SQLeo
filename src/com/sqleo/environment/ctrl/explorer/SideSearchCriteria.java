@@ -258,7 +258,9 @@ public class SideSearchCriteria extends JPanel implements ActionListener, _Conne
 			if(!value.toString().startsWith("%")) value = "%" + value.toString();
 		}
 		
-		return value.toString().toUpperCase();
+// #364 Metadata explorer: search is Upper cased, ko with lower case object names
+//		return value.toString().toUpperCase();
+		return value.toString();
 	}
 	
     public JComponent getRightView()
