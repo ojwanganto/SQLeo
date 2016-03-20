@@ -80,6 +80,11 @@ public class SQLParser
 		
 		if(li.hasNext() && li.next().toString().toUpperCase().equalsIgnoreCase(_ReservedWords.ORDER_BY))
 			doParseOrderBy(li,qm);
+
+		if(li.hasNext() && li.next().toString().equalsIgnoreCase(_ReservedWords.LIMIT))
+		{
+				Application.alert("LIMIT: syntax not supported yet");
+		}
 		
 		final HashMap extrasArrayMap = new HashMap(); 
 		for(Entry<QuerySpecification, List<EntityExtra>> entry : extrasMap.entrySet()){
@@ -163,6 +168,11 @@ public class SQLParser
 			else if(next.toString().equalsIgnoreCase(_ReservedWords.ORDER_BY))
 			{
 				li.previous();
+				break;
+			}
+			else if(next.toString().equalsIgnoreCase(_ReservedWords.LIMIT))
+			{
+				Application.alert("LIMIT: syntax not supported yet");
 				break;
 			}
 			else if(next.toString().equals(")"))
@@ -1052,7 +1062,7 @@ public class SQLParser
 		return s.equalsIgnoreCase(_ReservedWords.SELECT) || s.equalsIgnoreCase(_ReservedWords.FROM)
 			|| s.equalsIgnoreCase(_ReservedWords.WHERE) || s.equalsIgnoreCase(_ReservedWords.GROUP_BY)
 			|| s.equalsIgnoreCase(_ReservedWords.HAVING) || s.equalsIgnoreCase(_ReservedWords.UNION)
-			|| s.equalsIgnoreCase(_ReservedWords.ORDER_BY);
+			|| s.equalsIgnoreCase(_ReservedWords.ORDER_BY) || s.equalsIgnoreCase(_ReservedWords.LIMIT);
 	}
 	
 	private static void doAdjustSequence(ArrayList al)

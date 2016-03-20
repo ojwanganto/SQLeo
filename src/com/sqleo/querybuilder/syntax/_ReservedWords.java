@@ -40,6 +40,7 @@ public interface _ReservedWords
 	public static final String HAVING	= "HAVING";
 	public static final String UNION	= "UNION";
 	public static final String ORDER_BY	= "ORDER BY";
+	public static final String LIMIT	= "LIMIT";
 	
 	public static final String BETWEEN	= "BETWEEN";
 	public static final String AS		= "AS";
