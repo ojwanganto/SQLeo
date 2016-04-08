@@ -184,16 +184,16 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 					Thread thread_retrieve1 = new Thread(new Runnable() {
 				            @Override
 				            public void run() {
-						source.retrieveData(stream);
-						if(!source.isQueryExecutionSuccess()){
+						target.retrieveData(stream);
+						if(!target.isQueryExecutionSuccess()){
 							return;
 						}
 				            }
 				        });
 					thread_retrieve1.start();
 
-					target.retrieveData(stream);
-					if(!target.isQueryExecutionSuccess()){
+					source.retrieveData(stream);
+					if(!source.isQueryExecutionSuccess()){
 						return;
 					}
 
