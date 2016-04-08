@@ -31,6 +31,8 @@ import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+
 import java.util.Locale;
 import java.util.Set;
 
@@ -76,8 +78,9 @@ public class DialogPreferences extends AbstractDialogConfirm {
 	private JTextArea jLabelAutoCommitInfo = new JTextArea();
 	private JComboBox jComboBoxLanguage = new JComboBox();
 	private JCheckBox jCheckBoxTrace = new JCheckBox();
-	
-	private NumberFormatter numberFormatter = new NumberFormatter();
+
+	DecimalFormat decimalFormat = new DecimalFormat("######0");
+	private NumberFormatter numberFormatter = new NumberFormatter(decimalFormat);
 	private JTextField jTextFieldFontSize = new JFormattedTextField(numberFormatter);
 	private JTextField jTextFieldIconSize = new JFormattedTextField(numberFormatter);
 	private JTextField jTextFieldMaxQueriesInHistory = new JFormattedTextField(numberFormatter);
