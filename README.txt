@@ -33,6 +33,19 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2016.04.rc1.zip: 2016-04-19
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2016.04/
+
+	370 Preferences: values > 999 are ignored
+	368 Data comparer: empty error message box displayed
+	364 Metadata explorer: search is Upper case, ko with lower case object names
+	358 Command editor: support dbms_output with PostgreSQL /​ orafce
+	357 Command editor: /​* text */​ in front of query prevent result from being displayed
+	297 Improved German translation (by Philipp Blaszczyk)
+
+
 SQLeoVQB.2016.03.rc1.zip: 2016-03-02
 
   Thanks Anudeep Gade for their contribution to this release
