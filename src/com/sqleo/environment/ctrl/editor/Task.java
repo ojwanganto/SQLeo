@@ -120,27 +120,37 @@ public class Task implements Runnable {
 
 						// dbms output enable
 						CallableStatement stmtOutput = ch.get().prepareCall("{call dbms_output.enable(1000000) }");
-						stmtOutput.execute();
+						boolean dbmsOutput = true;  
+						String savepointName = "AutoSavepoint";
+						Savepoint savepoint= ch.get().setSavepoint(savepointName);
+						try {
+							stmtOutput.execute();
+						} catch (SQLException sqle) {
+							ch.get().rollback(savepoint);
+							dbmsOutput = false;  // dbms_output is not available by default in postgres
+						}
 
 						// execute current statement
 						stmt.executeUpdate(syntax);
 						target.write("\n");
 
 						// dbms output get
-						stmtOutput =ch.get().prepareCall("{call dbms_output.get_line(?,?)}");
-						stmtOutput.registerOutParameter(1,java.sql.Types.VARCHAR);
-						stmtOutput.registerOutParameter(2,java.sql.Types.INTEGER);
-					        for (int i=0;;i++){
-        						stmtOutput.execute();
-					        	if(stmtOutput.getInt(2)== 1){
-					        		break;
+						if(dbmsOutput) {
+							stmtOutput =ch.get().prepareCall("{call dbms_output.get_line(?,?)}");
+							stmtOutput.registerOutParameter(1,java.sql.Types.VARCHAR);
+							stmtOutput.registerOutParameter(2,java.sql.Types.INTEGER);
+						        for (int i=0;;i++){
+        							stmtOutput.execute();
+						        	if(stmtOutput.getInt(2)== 1){
+					        			break;
+					        		}
+					        		target.write(stmtOutput.getString(1) + "\n");                
 					        	}
-					        	target.write(stmtOutput.getString(1) + "\n");                
-					        }
 
-						// dbms output disable
-						stmtOutput = ch.get().prepareCall("{call dbms_output.disable() }");
-						stmtOutput.execute();
+							// dbms output disable
+							stmtOutput = ch.get().prepareCall("{call dbms_output.disable() }");
+							stmtOutput.execute();
+						}
 						target.write("PL/SQL block executed successfully");
 					        stmtOutput.close();
 
