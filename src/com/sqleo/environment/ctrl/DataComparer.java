@@ -431,7 +431,7 @@ public class DataComparer extends BorderLayoutPanel implements _ConnectionListen
 		if(onlyDifferentValues.isSelected()){
 			result.append("\nWHERE ");
 			for(int i = 1; i<=totalAggregates; i++){
-				result.append("SRC").append(i).append("!=").append("TGT").append(i);
+				result.append("coalesce(SRC").append(i).append(",'null')!=").append("coalesce(TGT").append(i).append(",'null')");
 				if(i<totalAggregates){
 					result.append(" OR\n");
 				}
