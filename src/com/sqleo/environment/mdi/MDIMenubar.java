@@ -407,6 +407,11 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
             }
         }
         this.getMenu(IDX_WINDOW).getMenuComponent(5).setVisible(this.getMenu(IDX_WINDOW).getMenuComponentCount()==6);
+        
+        final MDIClient nextVisible = history.getNextVisible();
+        if(nextVisible!=null){
+        	Application.window.toolbar.onMDIClientActivated(nextVisible);
+        }
     }
     
     public void internalFrameOpened(InternalFrameEvent ife)
@@ -513,6 +518,11 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
 	    	MDIClient forward = (MDIClient)sequence.elementAt(++current);
 			Action action = Application.window.menubar.getActionForShow(forward.getName());
 			if(action!=null) action.actionPerformed(null);
+	    }
+	    
+	    MDIClient getNextVisible(){
+	    	final int nextVisible = current >=sequence.size() ? current-1 : current;
+	    	return nextVisible>=0 ? (MDIClient)sequence.elementAt(nextVisible) : null;
 	    }
 	    
 	    void remove(MDIClient client)
