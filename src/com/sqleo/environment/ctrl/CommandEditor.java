@@ -83,6 +83,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 	private boolean stopped;
 
 	private Thread queryThread;
+	private Task queryTask;
 
 	private TextView request;
 	private TextView response;
@@ -253,9 +254,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			if(!cce.isGridOutput()){
 				transferFocus();
 			}
-
-			getActionMap().get("stop-task").setEnabled(false);
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			
 		}
 
 		private String parseAndSelect(String requestString) {
@@ -422,6 +421,8 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 				setAutoSelectConnectionInCommandMode(true);
 			}
 			final CommandExecutionResult result = cmd.execute(sql);
+			getActionMap().get("stop-task").setEnabled(false);
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			if (result.isSuccess()) {
 				write( "\n" + sql + "Command executed successfully\n");
 				if (cmd instanceof OutputCommand) {
@@ -514,8 +515,10 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			}else{
 				tabs.setSelectedIndex(0);
 				adjustSplitPaneDivider();
-				new Task(source, CommandEditor.this, printSelect() ? cce.getLimitRows() : 0)
-				.run();
+				queryTask = new Task(source, CommandEditor.this, printSelect() ? cce.getLimitRows() : 0);
+				Thread queryThread2 = new Thread(queryTask);
+				queryThread2.start();
+//				queryTask.run();
 			}
 
 		}
@@ -554,9 +557,13 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 		@Override
 		public void actionPerformed(ActionEvent ae) {
+			if(queryTask!=null){
+				queryTask.cancel();
+			}
 			stopped = true;
 			setEnabled(false);
 			CommandEditor.this.queryThread = null;
+			CommandEditor.this.queryTask = null;
 		}
 	}
 
@@ -570,6 +577,8 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 
 	@Override
 	public void onTaskFinished(String message, boolean error) {
+		getActionMap().get("stop-task").setEnabled(false);
+		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		write(message, error);
 	}
 

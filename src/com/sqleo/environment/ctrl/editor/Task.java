@@ -24,20 +24,19 @@
 
 package com.sqleo.environment.ctrl.editor;
 
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.CallableStatement;
-import java.sql.Types;
 import java.sql.Savepoint;
-
-
-
+import java.sql.Statement;
+import java.sql.Types;
 import java.text.NumberFormat;
 import java.util.Arrays;
+
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.SQLHelper;
+import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 
 
@@ -158,30 +157,16 @@ public class Task implements Runnable {
 						rs = null;
 						// Ticket #337 - savepoint enable/disable preferences
 						boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", false);
-						if (hasSavepoint)
-						{
+						final Savepoint savepoint;
+						if (hasSavepoint){
 							// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
 							String savepointName = "AutoSavepoint";
-							Savepoint savepoint= ch.get().setSavepoint(savepointName);
-							try {
-													int rows = stmt.executeUpdate(syntax);
-							
-													if (sqlcmd.startsWith("DELETE")
-															|| sqlcmd.startsWith("INSERT")
-															|| sqlcmd.startsWith("UPDATE")) {
-														target.write(rows + " row(s) affected");
-													} else {
-														target.write("Command has been executed successfully");
-													}
-							} catch (SQLException sqle) {
-										ch.get().rollback(savepoint);
-										target.onTaskFinished(sqle.toString(), true);
-							}
-							// end test #329
-						} else {
-							try {
-								int rows = stmt.executeUpdate(syntax);
-		
+							savepoint= ch.get().setSavepoint(savepointName);
+						}else{
+							savepoint = null;
+						}
+						try {
+							  	int rows = stmt.executeUpdate(syntax);
 								if (sqlcmd.startsWith("DELETE")
 										|| sqlcmd.startsWith("INSERT")
 										|| sqlcmd.startsWith("UPDATE")) {
@@ -190,10 +175,12 @@ public class Task implements Runnable {
 									target.write("Command has been executed successfully");
 								}
 							} catch (SQLException sqle) {
-										target.onTaskFinished(sqle.toString(), true);
+								if(savepoint!=null){
+									ch.get().rollback(savepoint);
+								}
+								target.onTaskFinished(sqle.toString(), true);
 							}
-							
-						}
+						// end test #329
 					}
 					stmt.close();
 
@@ -215,6 +202,19 @@ public class Task implements Runnable {
 			target.onTaskFinished(message, false);
 		} catch (SQLException sqle) {
 			target.onTaskFinished(sqle.toString(), true);
+		}
+	}
+	
+	public void cancel(){
+		if(stmt!=null){
+			try {
+				stmt.cancel();
+			} catch (final SQLException e) {
+				Application.println(e, false);
+				if(target!=null){
+					target.onTaskFinished("Cancelling jbdc statement failed due to "+e.getMessage(), true);
+				}
+			}
 		}
 	}
 
