@@ -29,6 +29,7 @@ import java.sql.Types;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.JdbcUtils;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
@@ -66,11 +67,7 @@ public class TaskRetrieve implements Runnable
 	{
 		if(stmt!=null)
 		{	
-			try {
-				stmt.cancel();
-			} catch (final SQLException e) {
-				Application.println(e, false);
-			}	
+			JdbcUtils.cancel(stmt);
 			stmt.close();
 			stmt = null;
 		}		

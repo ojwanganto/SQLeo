@@ -35,8 +35,8 @@ import java.util.Arrays;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.JdbcUtils;
 import com.sqleo.common.util.SQLHelper;
-import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 
 
@@ -206,16 +206,7 @@ public class Task implements Runnable {
 	}
 	
 	public void cancel(){
-		if(stmt!=null){
-			try {
-				stmt.cancel();
-			} catch (final SQLException e) {
-				Application.println(e, false);
-				if(target!=null){
-					target.onTaskFinished("Cancelling jbdc statement failed due to "+e.getMessage(), true);
-				}
-			}
-		}
+		JdbcUtils.cancel(stmt);
 	}
 
 	private void printSelect() throws SQLException {
