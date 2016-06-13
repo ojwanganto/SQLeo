@@ -410,9 +410,10 @@ public class MDIMenubar extends JMenuBar implements InternalFrameListener
         this.getMenu(IDX_WINDOW).getMenuComponent(5).setVisible(this.getMenu(IDX_WINDOW).getMenuComponentCount()==6);
         
         
-        JInternalFrame nextFrame =  Application.window.getDesktop().getAllFrames()[0];
-        if(nextFrame!=null)
-        	Application.window.toolbar.onMDIClientActivated((MDIClient)nextFrame);
+        JInternalFrame nextFrame =  Application.window.getDesktopTopFrame();
+        if(nextFrame!=null){
+     		Application.window.toolbar.onMDIClientActivated((MDIClient)nextFrame);
+        }
         
     }
     

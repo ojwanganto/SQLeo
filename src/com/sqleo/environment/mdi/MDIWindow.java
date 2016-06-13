@@ -55,8 +55,9 @@ public class MDIWindow extends JFrame implements _Constants
     
     private ArrayList connectionListeners;
     
-    public JDesktopPane getDesktop(){
-    	return desktop;
+    public JInternalFrame getDesktopTopFrame(){
+       	final JInternalFrame[] frames = desktop.getAllFrames();
+       	return frames.length>0 ? frames[0] : null;
     }
     
 	public final void dispose()
