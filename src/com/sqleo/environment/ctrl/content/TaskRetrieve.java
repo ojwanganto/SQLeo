@@ -65,7 +65,12 @@ public class TaskRetrieve implements Runnable
 	public void close() throws Exception
 	{
 		if(stmt!=null)
-		{
+		{	
+			try {
+				stmt.cancel();
+			} catch (final SQLException e) {
+				Application.println(e, false);
+			}	
 			stmt.close();
 			stmt = null;
 		}		
@@ -100,11 +105,7 @@ public class TaskRetrieve implements Runnable
 					}
 					// end test #329
 				} else {
-					try {
-						rs = stmt.executeQuery(syntax);
-					} catch (SQLException sqle) {
-								Application.println(sqle,true);
-					}
+					rs = stmt.executeQuery(syntax);
 				}
 				
 				for(int i=1; i<=this.getColumnCount(); i++)
