@@ -55,6 +55,10 @@ public class MDIWindow extends JFrame implements _Constants
     
     private ArrayList connectionListeners;
     
+    public JDesktopPane getDesktop(){
+    	return desktop;
+    }
+    
 	public final void dispose()
 	{
 		ClientMetadataExplorer cme = (ClientMetadataExplorer)getClient(ClientMetadataExplorer.DEFAULT_TITLE);
