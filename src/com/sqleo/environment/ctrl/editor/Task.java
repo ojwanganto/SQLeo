@@ -37,6 +37,7 @@ import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.JdbcUtils;
 import com.sqleo.common.util.SQLHelper;
+import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 
 
@@ -83,7 +84,9 @@ public class Task implements Runnable {
 					if (sqlcmd.startsWith("WITH") || sqlcmd.startsWith("SHOW")) {
 						rs = stmt.executeQuery(syntax);
 						printSelect();
-						rs.close();
+						if(rs!=null){
+							rs.close();
+						}
 					}else if (sqlcmd.startsWith("SELECT")) {
 
 						// Ticket #337 - savepoint enable/disable preferences
@@ -114,7 +117,9 @@ public class Task implements Runnable {
 						}else{
 							target.processResult(rs);
 						}
-						rs.close();
+						if(rs!=null){
+							rs.close();
+						}
 					} else if (sqlcmd.startsWith("DECLARE") || sqlcmd.startsWith("BEGIN") || sqlcmd.startsWith("DO")) {
 
 						// dbms output enable
@@ -206,7 +211,15 @@ public class Task implements Runnable {
 	}
 	
 	public void cancel(){
-		JdbcUtils.cancel(stmt);
+		if(stmt!=null){
+			try {
+				JdbcUtils.cancel(stmt);
+				stmt.close();
+				stmt = null;
+			} catch (Exception e) {
+				Application.println(e, true);
+			}
+		}
 	}
 
 	private void printSelect() throws SQLException {

@@ -401,6 +401,8 @@ public class ClientQueryBuilder extends MDIClient {
 			Application.window.menubar.internalFrameActivated(
 					new InternalFrameEvent(ClientQueryBuilder.this,
 					0));
+			previewPanel.revalidate();
+			previewPanel.repaint();
 			adjustSplitPaneDivider();
 
 		}

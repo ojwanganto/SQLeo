@@ -217,7 +217,6 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			getActionMap().get("stop-task").setEnabled(true);
 
 			setEnabled(false);
 			stopped = false;
@@ -254,6 +253,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			if(!cce.isGridOutput()){
 				transferFocus();
 			}
+			getActionMap().get("stop-task").setEnabled(!cce.isGridOutput());
 			
 		}
 
@@ -512,6 +512,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 						new InternalFrameEvent(cce,0));
 
 				adjustSplitPaneDivider();
+				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}else{
 				tabs.setSelectedIndex(0);
 				adjustSplitPaneDivider();
