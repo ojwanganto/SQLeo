@@ -33,12 +33,25 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+
+SQLeoVQB.2016.05.rc1.zip: 2016-06-28
+
+  Thanks Anudeep Gade for their contribution to this release
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2016.05/
+
+	374 Main Icon bar: not refreshed when closing windows
+	371 Data comparer: "Only different values" is wrong with NULL values on H2
+	367 org.postgresql.util.PSQLException: ERROR: schema "dbms_output" does not exist
+	11 Cancel query doesn’t work
+
+
 SQLeoVQB.2016.04.rc1.zip: 2016-04-19
 
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2016.04/
 
-	370 Preferences: values > 999 are ignored
+	370 Preferences: values > 999 were ignored
 	368 Data comparer: empty error message box displayed
 	364 Metadata explorer: search is Upper case, ko with lower case object names
 	358 Command editor: support dbms_output with PostgreSQL /​ orafce
