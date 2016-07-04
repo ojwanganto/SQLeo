@@ -83,6 +83,9 @@ public class TaskRetrieve implements Runnable
 				ConnectionHandler ch = ConnectionAssistant.getHandler(target.getHandlerKey());
 				stmt = ch.get().createStatement();
 				stmt.setMaxRows(limit);
+				// ticket #375
+				stmt.setFetchSize(ContentModel.MAX_BLOCK_RECORDS);
+
 				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());
 				
 				// Ticket #337 - savepoint enable/disable preferences
