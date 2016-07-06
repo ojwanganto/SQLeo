@@ -210,15 +210,16 @@ public class Task implements Runnable {
 		}
 	}
 	
-	public void cancel(){
+	public void cancel() throws Exception
+	{
 		if(stmt!=null){
 			try {
-				JdbcUtils.cancel(stmt);
-				stmt.close();
-				stmt = null;
+				stmt.cancel();
 			} catch (Exception e) {
 				Application.println(e, true);
 			}
+			stmt.close();
+			stmt = null;
 		}
 	}
 

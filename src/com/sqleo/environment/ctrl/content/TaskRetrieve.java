@@ -67,7 +67,11 @@ public class TaskRetrieve implements Runnable
 	{
 		if(stmt!=null)
 		{	
-			JdbcUtils.cancel(stmt);
+			try {
+				stmt.cancel();
+			} catch (final SQLException e) {
+				Application.println(e, false);
+			}
 			stmt.close();
 			stmt = null;
 		}		
@@ -83,8 +87,14 @@ public class TaskRetrieve implements Runnable
 				ConnectionHandler ch = ConnectionAssistant.getHandler(target.getHandlerKey());
 				stmt = ch.get().createStatement();
 				stmt.setMaxRows(limit);
-				// ticket #375
-				stmt.setFetchSize(ContentModel.MAX_BLOCK_RECORDS);
+				// ticket #375 prevent OutOfMemory errors with Big MySQL tables
+
+				if( ch.getDatabaseProductName() == "MySQL")
+				{
+					stmt.setMaxRows(1000);
+				} else {
+					stmt.setFetchSize(ContentModel.MAX_BLOCK_RECORDS);
+				}
 
 				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());
 				

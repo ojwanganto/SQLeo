@@ -152,6 +152,14 @@ public class MaskExport extends AbstractMaskPerform
 			if(target.getHandlerKey()!=null){
 				ConnectionHandler ch = ConnectionAssistant.getHandler(target.getHandlerKey());
 				stmt = ch.get().createStatement();
+				// ticket #375 prevent OutOfMemory errors with Big MySQL tables
+				if( ch.getDatabaseProductName() == "MySQL")
+				{
+					stmt.setFetchSize(Integer.MIN_VALUE); // MySQL streaming row by row
+				} else {
+					stmt.setFetchSize(ContentModel.MAX_BLOCK_RECORDS);
+				}
+
 				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());
 				rs = stmt.executeQuery(syntax);
 			}

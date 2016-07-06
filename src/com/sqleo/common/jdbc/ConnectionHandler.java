@@ -182,4 +182,9 @@ public class ConnectionHandler
 		return metacache.get(key);
 	}
 
+	public String getDatabaseProductName() throws SQLException
+	{
+		return connection.getMetaData().getDatabaseProductName();
+	}
+
 }
