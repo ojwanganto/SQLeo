@@ -157,7 +157,7 @@ public class MaskExport extends AbstractMaskPerform
 				{
 					stmt.setFetchSize(Integer.MIN_VALUE); // MySQL streaming row by row
 				} else {
-					stmt.setFetchSize(ContentModel.MAX_BLOCK_RECORDS);
+					stmt.setFetchSize(1000);
 				}
 
 				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());

@@ -210,16 +210,16 @@ public class Task implements Runnable {
 		}
 	}
 	
-	public void cancel() throws Exception
+	public void cancel() 
 	{
 		if(stmt!=null){
 			try {
 				stmt.cancel();
+				stmt.close();
+				stmt = null;
 			} catch (Exception e) {
 				Application.println(e, true);
 			}
-			stmt.close();
-			stmt = null;
 		}
 	}
 

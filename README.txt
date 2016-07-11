@@ -34,9 +34,17 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2016.07.rc1.zip: 2016-07-11
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2016.07/
+
+	#375 Content Window: Prevent error "OutOfMemoryError: Java heap space" when opening a big MySQL table
+
+
 SQLeoVQB.2016.05.rc1.zip: 2016-06-28
 
-  Thanks Anudeep Gade for their contribution to this release
+  Thanks Anudeep Gade for his contribution to this release
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2016.05/
 
@@ -61,7 +69,7 @@ SQLeoVQB.2016.04.rc1.zip: 2016-04-19
 
 SQLeoVQB.2016.03.rc1.zip: 2016-03-02
 
-  Thanks Anudeep Gade for their contribution to this release
+  Thanks Anudeep Gade for his contribution to this release
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2016.03/
 
