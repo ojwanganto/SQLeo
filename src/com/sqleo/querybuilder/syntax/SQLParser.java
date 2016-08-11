@@ -649,32 +649,49 @@ public class SQLParser
 
 					if(side==0)
 						tcl = new QueryTokens.Column(tr,leftFunctionName!=null? leftFunctionName: e.substring(dot+1));
-
 					else
 						tcr = new QueryTokens.Column(tr,rightFunctionName!=null ? rightFunctionName : e.substring(dot+1));
 					
 					if(dot == -1){
+/* to do 
+	#377 Designer: reverse query with ON condition with values is wrong
+ this test is not correct for handling
+
+	select *
+	from
+	A join B
+	on A.x=B.x
+	and y=2
+
+and
+
+	select *
+	from
+	A join B
+	on A.x=B.x
+	and 2=B.y
+*/
+
+
+
 						final QueryTokens.DefaultExpression conditionVal = 	new QueryTokens.DefaultExpression(e);
 						// fix #142 transform values on join into where clause
 						final QueryTokens.Condition conditionToken = new QueryTokens.Condition();
 						conditionToken.setOperator(op);
-						final QueryTokens.Table tableReference;
-						if(side==0){
+						if(side==0 && tcr != null){
 							conditionToken.setLeft(conditionVal);
 							conditionToken.setRight(tcr);
-							tableReference = tcr.getTable();
-						}else{
+						}
+						if(side==1 && tcl != null){
 							conditionToken.setRight(conditionVal);
 							conditionToken.setLeft(tcl);
-							tableReference = tcl.getTable();
 						}
-						if(qs.getWhereClause().length>0){
+
+						if(qs.getWhereClause().length>0 ){
 							conditionToken.setAppend(next);
 						}
 						qs.addWhereClause(conditionToken);
-						if(getTableIndexInFromClause(qs,tableReference,true)==-1){
-							qs.addFromClause(tableReference);
-						}
+
 						addToFromClause = false;
 						Application.alert("!!! WARNING conditions on join are converted into where clause( " + conditionToken + " )!!!");
 					}
