@@ -44,6 +44,7 @@ import javax.swing.border.LineBorder;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.JdbcUtils;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.content.ContentModel;
@@ -118,6 +119,8 @@ public class ContentPane extends BorderLayoutPanel
 		setComponentCenter(view = new ContentView(this));		
 	}
 	
+	private Statement countQueryStmt;
+	
 	private class ActionCountRows extends AbstractAction {
 
 		ActionCountRows(){this.putValue(NAME,"count records");}
@@ -125,32 +128,34 @@ public class ContentPane extends BorderLayoutPanel
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
-			
-			
 			new Thread((new Runnable() {
 				@Override
 				public void run() {
 					
 					try
 					{
-						ConnectionHandler ch = ConnectionAssistant.getHandler(keycah);
-						Statement stmt = ch.get().createStatement();
+						toggleActions(true);
+						
 						String originalQuery = getQuery();
-
 						// #344 remove last ORDER BY, that is not supported in MonetDB derived table
 						int orderByPosition = originalQuery.toUpperCase().lastIndexOf("ORDER BY");
 						if (orderByPosition > 0) originalQuery = originalQuery.substring(0,orderByPosition);
-
 						String countQuery = "SELECT count(*) FROM ( " + originalQuery +" ) X ";
 						countQuery = SQLHelper.getSQLeoFunctionQuery(countQuery,keycah);
-						ResultSet rs = stmt.executeQuery(countQuery);
-						int records = rs.next() ? rs.getInt(1) : 0;
+
+						final ConnectionHandler ch = ConnectionAssistant.getHandler(keycah);
+						countQueryStmt = ch.get().createStatement();
+						final ResultSet rs = countQueryStmt.executeQuery(countQuery);
+						final int records = rs.next() ? rs.getInt(1) : 0;
 						retrievedRowCount = Integer.valueOf(records);
 						doRefreshStatus(false);
 						rs.close();
-						stmt.close();
+						countQueryStmt.close();
+						countQueryStmt = null;
+						toggleActions(false);
+						
 						JOptionPane.showMessageDialog(Application.window,"Total records count : "+records);
-							
+						
 					}
 					catch(SQLException sqle)
 					{
@@ -252,15 +257,20 @@ public class ContentPane extends BorderLayoutPanel
 		onBeginTask(new TaskUpdate(this));
 	}
 	
+	private void toggleActions(final boolean taskRunning){
+		
+		this.getActionMap().get("task-go").setEnabled(!taskRunning);
+		this.getActionMap().get("task-stop").setEnabled(taskRunning);
+		this.getActionMap().get("changes-save").setEnabled(!taskRunning);
+		this.getActionMap().get("record-insert").setEnabled(!taskRunning);
+		this.getActionMap().get("record-delete").setEnabled(!taskRunning);
+		
+	}
+	
 	private void onBeginTask(Runnable r)
 	{
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		
-		this.getActionMap().get("task-go").setEnabled(false);
-		this.getActionMap().get("task-stop").setEnabled(true);
-		this.getActionMap().get("changes-save").setEnabled(false);
-		this.getActionMap().get("record-insert").setEnabled(false);
-		this.getActionMap().get("record-delete").setEnabled(false);
+		toggleActions(true);
 		
 		task = new Thread(r);
 		task.start();		
@@ -269,13 +279,7 @@ public class ContentPane extends BorderLayoutPanel
 	private void onResumeTask()
 	{
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		
-		this.getActionMap().get("task-go").setEnabled(false);
-		this.getActionMap().get("task-stop").setEnabled(true);
-		this.getActionMap().get("changes-save").setEnabled(false);
-		this.getActionMap().get("record-insert").setEnabled(false);
-		this.getActionMap().get("record-delete").setEnabled(false);
-		
+		toggleActions(true);
 	}
 	
 	private void closeRetrievingTask(){
@@ -288,17 +292,25 @@ public class ContentPane extends BorderLayoutPanel
 		}
 	}
 	
+	private void closeCountQueryTask(){
+		JdbcUtils.cancel(countQueryStmt);
+		toggleActions(false);
+	}
+	
+	
 	private void onEndTask()
 	{
+		if(countQueryStmt!=null){
+			closeCountQueryTask();
+			return;
+		}
+		
 		closeRetrievingTask();
+		
 		task = null;
 		retrievingTask = null;
 		
-		this.getActionMap().get("task-go").setEnabled(true);
-		this.getActionMap().get("task-stop").setEnabled(false);
-		this.getActionMap().get("changes-save").setEnabled(true);
-		this.getActionMap().get("record-insert").setEnabled(true);
-		this.getActionMap().get("record-delete").setEnabled(true);
+		toggleActions(false);
 		
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		if(update){
@@ -309,11 +321,7 @@ public class ContentPane extends BorderLayoutPanel
 	
 	private void onSuspendTask()
 	{
-		this.getActionMap().get("task-go").setEnabled(true);
-		this.getActionMap().get("task-stop").setEnabled(false);
-		this.getActionMap().get("changes-save").setEnabled(true);
-		this.getActionMap().get("record-insert").setEnabled(true);
-		this.getActionMap().get("record-delete").setEnabled(true);
+		toggleActions(false);
 		
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
@@ -321,7 +329,6 @@ public class ContentPane extends BorderLayoutPanel
 
 	public void doRefreshStatus()
 	{
-
 
 		if(view.getRowCount() > 0){
 			status.setText(	" record " + view.getLineAt(0) + " to " + view.getLineAt(view.getRowCount()-1) + " of " + view.getFlatRowCount() +

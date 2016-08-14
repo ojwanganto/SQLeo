@@ -65,16 +65,7 @@ public class TaskRetrieve implements Runnable
 	
 	public void close() throws Exception
 	{
-		if(stmt!=null)
-		{	
-			try {
-				stmt.cancel();
-			} catch (final SQLException e) {
-				Application.println(e, false);
-			}
-			stmt.close();
-			stmt = null;
-		}		
+		JdbcUtils.cancel(stmt);	
 	}
 	
 	public void run()
