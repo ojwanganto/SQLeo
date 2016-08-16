@@ -67,6 +67,7 @@ public abstract class AbstractMaskPerform extends BorderLayoutPanel
 			{
 				AbstractMaskPerform.this.lblMsg.setText("Stopped!");
 				AbstractMaskPerform.this.btnStop.setEnabled(false);
+				fireOnBtnStopClicked();
 				
 				AbstractMaskPerform.this.view.onTableChanged(true);
 				AbstractMaskPerform.this.view.getControl().doRefreshStatus();
@@ -84,6 +85,10 @@ public abstract class AbstractMaskPerform extends BorderLayoutPanel
 		setComponentSouth(statusbar);
 	}
 	
+	protected void fireOnBtnStopClicked() {
+		
+	}
+
 	void setContent(ContentView view)
 	{
 		this.view = view;

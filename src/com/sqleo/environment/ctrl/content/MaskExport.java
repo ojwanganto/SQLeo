@@ -44,6 +44,7 @@ import javax.swing.border.TitledBorder;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.JdbcUtils;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
@@ -54,6 +55,7 @@ public class MaskExport extends AbstractMaskPerform
 {
 	public AbstractChoice eChoice;
 	public ResultSet rs = null;
+	private Statement stmt = null;
 
 	public void setEnabled(boolean b)
 	{
@@ -106,11 +108,12 @@ public class MaskExport extends AbstractMaskPerform
 
 		if(!eChoice.isExportFromGrid()){
 			executeContentViewQuery();
-			try {
-				eChoice.open(rs.getMetaData());
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if(rs!=null){
+				try {
+					eChoice.open(rs.getMetaData());
+				} catch (SQLException e) {
+					Application.println(e, true);
+				}
 			}
 		}else{
 			eChoice.open();
@@ -118,6 +121,9 @@ public class MaskExport extends AbstractMaskPerform
 	}
 
 	public void export(){
+		if(null == rs){
+			return;
+		}
 		try {
 			int cols= rs.getMetaData().getColumnCount();
 			Object[] vals = null;
@@ -129,24 +135,27 @@ public class MaskExport extends AbstractMaskPerform
 				eChoice.handle(vals);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Application.println(e, true);
 		}finally {
 			try {
 				rs.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Application.println(e, true);
 			}
 		}
 		progress.setValue(progress.getMaximum());
 
 	}
 
+	@Override
+	protected void fireOnBtnStopClicked() {
+		JdbcUtils.cancel(stmt);
+	}
+	
 	private void executeContentViewQuery(){
 		try
 		{
-			Statement stmt = null;
+			stmt = null;
 			ContentPane target = view.getControl();
 			String syntax = target.getQuery();
 			if(target.getHandlerKey()!=null){
