@@ -1,219 +1,176 @@
-﻿querybuilder.menu.addToGroupBy=Добавить в групповой прочим
-querybuilder.menu.addToOrderBy=Добавить в заказ-по
-querybuilder.menu.addExpression=Добавить выражение ...
-querybuilder.menu.addCondition=Добавить условие ...
-querybuilder.menu.addSubquery=Добавить подзапрос
-querybuilder.menu.union=Союз
-querybuilder.menu.edit=Редактировать ...
-querybuilder.menu.remove=Удалить
-querybuilder.menu.removeAll=Убрать все
-querybuilder.menu.sortByName=Сортировать по имени
-querybuilder.menu.pack=Пакет
-querybuilder.menu.selectAll=Выбрать все
-querybuilder.menu.deselectAll=Убрать выделение со всего
-querybuilder.menu.openAllForeignTables=Откройте все иностранные таблицы
-querybuilder.menu.openAllPrimaryTables=Откройте все основные таблицы
-querybuilder.menu.references=Литературы ...
-querybuilder.menu.addWhereCondition=Добавить в котором состояние ...
-querybuilder.menu.addHavingCondition=Добавить имея состояние ...
-
-querybuilder.message.chooseFunction=Выберите функцию:
-querybuilder.message.wait=Подождите ...
-querybuilder.message.loading=Загрузка: {0}
-querybuilder.message.tableLoadedAliasDisabled=Таблица уже загружен и сглаживание отключается!
-querybuilder.message.reading=Чтение ...
-querybuilder.checkbox.allRowsFrom=Все строки из {0}
-querybuilder.menu.foreignTables=Иностранные столы
-querybuilder.message.references={0} ссылки
-querybuilder.message.reverseSyntax=Обратный синтаксис
-querybuilder.action.join=Регистрация по Drag & капли
-querybuilder.action.copySyntax=Синтаксис Копировать
-querybuilder.action.reverseSyntax=Обратный синтаксис ...
-querybuilder.action.arrangeentitiesgrid=Упорядочить сетки
-querybuilder.action.arrangeentitiesspring=Упорядочить весну
-querybuilder.action.packEntities=Пакет лица
-querybuilder.action.removeEntities=Удалить лиц
-querybuilder.message.continue=Вы хотите продолжить?
-querybuilder.message.joinAlreadyExists=Регистрация уже существует: {0}
-querybuilder.message.addJoin=Добавить присоединиться
-querybuilder.tooltip.schemaFilter=Схема фильтра
-querybuilder.tooltip.typeFilter=Тип фильтра
-
-querybuilder.designer=Дизайнер
-querybuilder.syntax=Синтаксис
-querybuilder.syntaxChanged=Синтаксис изменился! \ NВы хотите, чтобы применить изменения (дизайнер нужно перезагрузить)?
-
-application.preferences.language=Язык
-application.preferences.autoJoin=Авто присоединиться
-application.preferences.autoAlias=Авто псевдоним
-application.preferences.alwaysQuoteIdentifiers=Всегда указывайте идентификаторы
-application.preferences.useSchemaName=Используйте имя схемы в определении синтаксиса
-application.preferences.loadObjectsAtOnce=Нагрузка на стол список объектов сразу
-application.preferences.selectAllColumns=Авто выбрать все столбцы
-application.preferences.autoCommit=Автоматическая фиксация
-
-application.message.replaceFile={0} \ nreplace существующий файл?
-application.saveQuery=Сохранить запрос
-application.launchQuery=Запуск запроса
-
-application.menu.newQuery=Новый запрос
-application.message.useConnection=Используйте соединение:
-application.message.schema=Схема:
-application.message.noConnection=нет соединения!
-application.menu.loadQuery=Нагрузка запросов ...
-application.menu.exit=Выход
-application.menu.cascade=Каскад
-application.menu.tileHorizontal=Плитка горизонтальный
-application.menu.closeAll=Закрыть все
-application.menu.about=О {0} ...
-application.message.quit=Вы действительно хотите бросить SQLeo?
-application.ok=Хорошо
+﻿application.back=< Назад
 application.close=Закрыть
-application.next=Следующая>
-application.back=<Вернуться
-
-application.tool.content=Показать содержимое ...
-application.tool.definition=Показать определение ...
-
-application.objetctype.links=Связанные объекты
-querybuilder.objetctype.all=Все типы объектов
-
-querybuilder.objetctype.TABLE=Таблицы
-querybuilder.objetctype.VIEW=Взгляды
-querybuilder.objetctype.LOCAL\ TEMPORARY=Локальные временные
-
-application.preferences.autoCommitWarning=Внимание: Фиксация в окне влияет все открытые окна для связи при автоматическом совершить отключен!
-application.preferences.trace=Журнал трассировки (обязательно перезагрузите)
-application.preferences.maxcolsize=Максимальный размер столбца:
-
---added with 2014.08=
-application.menu.recentQueries=Последние запросы
-application.menu.print=Печать
-application.menu.help.howtouse=Интернет Документация
-application.menu.donate=Жертвовать
-querybuilder.action.saveDiagramAsImage=Сохранить как изображение
-application.tool.preferences=Предпочтения
-application.query_designer=Дизайнер запросов
-application.preferences.relationsRenderArc=Дуга
-application.preferences.relationsRenderLinear=Линейный
-application.preferences.relationsRender=Отношения оказать
-application.preferences.checkforupdate=Проверить наличие обновлений при запуске
-application.preferences.autoComplete=Автоматическое заполнение
-application.preferences.askBeforeExit=Спросите перед выходом
-application.fontSizePercentage=Размер шрифта масштабирование% (обязательно перезагрузите)
-application.preferences.maxrowfetchsize=Максимум строк размер выборки:
-application.menu.file=Файл
+application.commandEditor.autoSelectConnection=Использовать последнее подключение
+application.copyAndOpenFileExtension=Copy and open in editor file extension:
+application.fontSizePercentage=Размер шрифта % (необходим перезапуск)
+application.iconSizePercentage=Размер иконок% (необходим перезапуск)
+application.launchQuery=Выполнить
+application.maxQueriesInHistory=Число запросов в списке последних
+application.menu.about=О программе {0}
 application.menu.actions=Действия
+application.menu.cascade=Расположить подряд
+application.menu.closeAll=Закрыть все
+application.menu.donate=Поддержать
+application.menu.exit=Выход
+application.menu.file=Файл
+application.menu.help.howtouse=Документация
+application.menu.help.keyboardShortcuts=Комбинации клавиш
+application.menu.help=Помощь
+application.menu.loadQuery=Открыть ...
+application.menu.newQuery=Новый запрос
+application.menu.print=Печать
+application.menu.recentQueries=Последние запросы
+application.menu.tileHorizontal=Расположить горизонтально
 application.menu.tools=Инструменты
-application.menu.window=Окно
-application.menu.help=Помогите
-application.message.saveQuery=Вы хотите, чтобы сохранить запрос в файл?
-
---added with 2014.09=
-application.preferences.qb.savePosInSQL=Сохранить Столы позиции в SQL синтаксиса
-
---added with 2014.10=
-application.maxQueriesInHistory=Макс запросов в истории
-
---added with 2014.11=
-application.iconSizePercentage=Размер масштабирования Иконка% (обязательно перезагрузите)
-
--- add with 2015.05=
-querybuilder.objetctype.GLOBAL\ TEMPORARY=GLOBAL TEMPORARY "
-querybuilder.objetctype.SYSTEM\ TABLE=СИСТЕМА Таблица "
-
-datacomparer.generatedQueryButton=Сгенерировано текст запроса
-datacomparer.onlyDifferentValues=Только разные значения
-datacomparer.addDiffStatusInOutput=Добавить различий статус в выходе
-datacomparer.start=Начало
-datacomparer.RightSideText=Примечание: правая сторона тексты автоматически \ ncopied слева, когда пустой!
-datacomparer.VersionWith100rowsMax=Версия с макс 100 строк для результате сравнения данных запроса, пожалуйста, пожертвовать более
-datacomparer.LoadSetup=Настройка нагрузки
+application.menu.window=Окна
+application.message.loadQueryInWindow=Открыть файл в окне
+application.message.noConnection=Отсутствует подключение!
+application.message.quit=Вы хотите закрыть SQLeo?
+application.message.readonly=SQLeo подключен только для чтения и выполнить эту операцию невозможно
+application.message.replaceFile={0}\nЗаменить существующий файл?
+application.message.saveQuery=Вы хотите сохранить запрос в файл?
+application.message.schema=База данных:
+application.message.useConnection=Использовать подключение:
+application.next=Дальше >
+application.objetctype.links=Связанные объекты
+application.ok=OK
+application.preferences.alwaysQuoteIdentifiers=Идентификаторы в кавычках
+application.preferences.askBeforeExit=Подтверждать выход из программы
+application.preferences.autoAlias=Добавлять псевдонимы (alias)
+application.preferences.autoCommit=Автоматически Фиксировать транзакции 
+application.preferences.autoCommitWarning=Внимание! Фиксация транзакции в текущем окне влияет на все открытые окна текущего соединения если выключена фиксация транзакций!
+application.preferences.autoComplete=Автоматическое завершение команд
+application.preferences.autoJoin=Автоматически создавать соединения (join)
+application.preferences.autoSavePoint=Создавать точки сохранения автоматически (PostgreSQL, MonetDB, ...)
+application.preferences.checkforupdate=Проверять наличие обновлений при запуске
+application.preferences.language=Язык
+application.preferences.loadObjectsAtOnce=Загружать объекты сразу
+application.preferences.maxcolsize=Максимальный размер столбца:
+application.preferences.maxrowfetchsize=Максимум размер выборки:
+application.preferences.populateFilter=Заполнять значения отбора 
+application.preferences.qb.savePosInSQL=Сохранить положение таблиц в тексте запроса 
+application.preferences.relationsRender=Отображение связи
+application.preferences.relationsRenderArc=Дугами
+application.preferences.relationsRenderLinear=Прямыми
+application.preferences.selectAllColumns=Выбрать все столбцы
+application.preferences.trace=Журнал трассировки (необходим перезапуск)
+application.preferences.useSchemaName=Использовать имя базы данных в тексте запроса
+application.query_designer=Дизайнер запросов
+application.saveQuery=Сохранить запрос
+application.tool.content=Показать содержимое таблицы
+application.tool.definition=Показать свойства таблицы
+application.tool.delete=Очистить таблицу
+application.tool.drop=Удалить <объект>
+application.tool.NewCommand=Новая команда ...
+application.tool.preferences=Настройки
+application.tool.show=Показать
+commandeditor.console=Консоль
+commandeditor.resultGrid=Результат
+datacomparer.addDiffStatusInOutput=Вывести в результат данные о  различиях 
+datacomparer.ConnexionNotSet=Не выбрано соединение 
+datacomparer.DoYouWantToSave=Вы хотите сохранить настройки сравнения данных?
+datacomparer.generatedQueryButton=Сгенерированый текст запроса
+datacomparer.LoadSetup=Загрузить настройки
+datacomparer.onlyDifferentValues=Только отличающиеся значения
+datacomparer.RightSideText=Примечание: Если текст в правой части не заполнен,\nто он автоматически копируется с левой части!
 datacomparer.SaveSetup=Сохранить настройки
-datacomparer.DoYouWantToSave=Вы хотите, чтобы сохранить настройки datacomparer в файл?
-
-querybuilder.message.sqleoPivotCheckbox=Transform, как Pivot
-querybuilder.message.sqleoGroupConcat.chooseSeparator=выбрать разделитель:
-querybuilder.menu.add=Добавить ...
-querybuilder.message.sqleoPivotHeaderColumn=Выберите заголовок столбца для Pivot:
-
-querybuilder.menu.addToGroupBySyncSelect=Синхронизация с некоторыми колоннами
-
--- add with 2015.07=
-datacomparer.TableViewQuery=Таблица / Просмотр или (Запрос):
-metadataexplorer.Table=Таблица:
-metadataexplorer.Column=Колонка:
-metadataexplorer.TableType=Тип стола:
-metadataexplorer.action.Start=Начало
-metadataexplorer.action.Reset=Сброс
+datacomparer.start=Выполнить
+datacomparer.TableNotSet=Не указана таблица или запрос 
+datacomparer.TableViewQuery=Таблица/Представление или (Запрос):
+datacomparer.VersionWith100rowsMax=Версия ограничена 100 строками результата сравнения данных. Пожалуйста, поддержите проект для снятия ограничений
+datacomparer.WorkingConnection=Текущее подключение:
+datasource.message.autoConnect=подключение при запуске
+datasource.message.color=цвет
+datasource.message.invalidChar=Символы \\.|,/;<:>@ запрещены!\nПожалуйста, введите корректное имя.
+datasource.message.joinFile=файл условий соединения
+datasource.message.name=имя источника данных
+datasource.message.password=пароль
+datasource.message.readonly=соединение только для чтения
+datasource.message.remember=запомнить пароль
+datasource.message.status=статус
+datasource.message.url=url
+datasource.message.user=пользователь
+datasource.message.validName=Введите корректное имя.
 metadataexplorer.action.Contains=содержит
-metadataexplorer.action.Equals=равна
+metadataexplorer.action.Start=Выполнить
 metadataexplorer.action.StartWith=начинается с
-metadataexplorer.action.EndWith=заканчивается
-metadataexplorer.browse=Просматривать
-metadataexplorer.search=Поиск
-metadataexplorer.menu.AddtoNewQuery=Добавить в нового запроса
-metadataexplorer.menu.AddtoQuery=Добавить в запрос
+metadataexplorer.browse=Посмотреть
+metadataexplorer.Column=Столбец:
 metadataexplorer.menu.AddtoGroup=Добавить в группу ...
+metadataexplorer.menu.AddtoNewQuery=Добавить в новый запрос
+metadataexplorer.menu.AddtoQuery=Добавить в запрос
+
+
 metadataexplorer.menu.chooseCol=Выберите столбцы ...
+metadataexplorer.menu.connect=Подключиться
+metadataexplorer.menu.delete=Удалить
+metadataexplorer.menu.duplicate=Дублировать ...
 metadataexplorer.menu.listCopy=Копировать список
 metadataexplorer.menu.listExport=Экспорт списка ...
-metadataexplorer.menu.listRefresh=Обновление
-
-application.tool.delete=Удалить содержание
-application.tool.drop=Падение <объект>
-application.tool.NewCommand=Новая команда ...
-
-metadataexplorer.menu.connect=подключать
-metadataexplorer.menu.reconnect=подключите
-metadataexplorer.menu.newDriver=Новый драйвер ...
+metadataexplorer.menu.listRefresh=Обновить
 metadataexplorer.menu.newDatasource=Новый источник данных ...
-metadataexplorer.menu.setAsDefaultSchema=установить в качестве схемы по умолчанию
-metadataexplorer.menu.removeSchemaFilter=удалить фильтр схемы
-metadataexplorer.menu.delete=Удалить
-metadataexplorer.menu.duplicate=дублировать ...
-metadataexplorer.menu.properties=свойства ...
-
-
-application.commandEditor.autoSelectConnection=Auto select latest connection
-querybuilder.message.VersionWith3tablesMax=Version with 3 tables max per graph, Please Donate for more
-
-application.tool.show=Show
-application.message.loadQueryInWindow=Load file in:
-querybuilder.message.loading.relations=check {0}'s relations
-
-datasource.message.name=datasource name
-datasource.message.url=url
-datasource.message.user=user
-datasource.message.status=status
-datasource.message.password=password
-datasource.message.remember=remember password
-datasource.message.autoConnect=auto-connect on startup
-datasource.message.validName=please, enter a valid name.
-datasource.message.invalidChar=characters \\.|,/;<:>@ aren't allowed!\nplease, enter a valid name.
-datasource.message.joinFile=join definition file
-
--- add with 2015.09 (TRANSLATION TO DO)
-datacomparer.ConnexionNotSet=No connection selected in 
-datacomparer.TableNotSet=No table/query entered in 
-
-querybuilder.message.multipleQueries=Cannot execute multiple queries in Query Builder, \nPlease use Command Editor
-
-application.copyAndOpenFileExtension=Copy and open in editor file extension:
-
-commandeditor.console=Console
-commandeditor.resultGrid=Result grid
-
--- added with 2015.10 (TRANSLATION TO DO)
-application.menu.help.keyboardShortcuts=Keyboard shortcuts
-datacomparer.WorkingConnection=Working connection:
-
-
--- added with 2016.01 (TRANSLATION TO DO)
-datasource.message.readonly=readonly connection
-application.message.readonly=SQLeo connection is readonly and do not permit this operation
-application.preferences.autoSavePoint=Auto savepoint (PostgreSQL, MonetDB, ...)
-
--- added with 2016.02 (TRANSLATION TO DO)
-datasource.message.color=color
-application.preferences.populateFilter=Populate filter values
+metadataexplorer.menu.newDriver=Новый драйвер ...
+metadataexplorer.menu.properties=Свойства ...
+metadataexplorer.menu.reconnect=Подключиться повторно
+metadataexplorer.menu.removeSchemaFilter= отключить отбор базы данных
+metadataexplorer.menu.setAsDefaultSchema= Выбрать как базу по умолчанию
+metadataexplorer.search=Поиск
+metadataexplorer.Table=Таблица:
+metadataexplorer.TableType=Тип таблицы:
+querybuilder.action.arrangeentitiesgrid=Упорядочить таблицей
+querybuilder.action.arrangeentitiesspring=Упорядочить по центру
+querybuilder.action.copySyntax=Копировать текст запроса
+querybuilder.action.join=Соединение с Drag & Drop
+querybuilder.action.packEntities= Скрыть невыбранные 
+querybuilder.action.removeEntities=Убрать таблицы
+querybuilder.action.reverseSyntax=Восстановить запрос...
+querybuilder.action.saveDiagramAsImage=Сохранить как изображение
+querybuilder.checkbox.allRowsFrom=Все строки из {0}
+querybuilder.designer=Дизайнер
+querybuilder.menu.add=Добавить ...
+querybuilder.menu.addCondition=Добавить условие ...
+querybuilder.menu.addExpression=Добавить выражение ...
+querybuilder.menu.addHavingCondition=Добавить условие HAVING...
+querybuilder.menu.addSubquery=Добавить подзапрос
+querybuilder.menu.addToGroupBy=Добавить в GROUP BY
+querybuilder.menu.addToGroupBySyncSelect=Добавить выбранные колонки
+querybuilder.menu.addToOrderBy=Добавить в ORDER BY 
+querybuilder.menu.addWhereCondition=Добавить условие WHERE...
+querybuilder.menu.deselectAll=Снять все
+querybuilder.menu.edit=Редактировать...
+querybuilder.menu.foreignTables=Внешние таблицы 
+querybuilder.menu.openAllForeignTables=Открыть все внешние таблицы
+querybuilder.menu.openAllPrimaryTables= Открыть все первичные таблицы
+querybuilder.menu.pack=Скрыть невыбранные
+querybuilder.menu.references=Ссылки...
+querybuilder.menu.remove=Удалить
+querybuilder.menu.removeAll=Удалить все
+querybuilder.menu.selectAll=Выбрать все
+querybuilder.menu.sortByName=Сортировать по имени
+querybuilder.menu.union=Объединение (Union)
+querybuilder.message.addJoin=Добавить соединение (Join)
+querybuilder.message.chooseFunction=Выберите функцию:
+querybuilder.message.continue=Вы хотите продолжить?
+querybuilder.message.joinAlreadyExists=Соединение (Join) уже существует: {0}
+querybuilder.message.loading.relations=проверите связи у {0} 
+querybuilder.message.loading=Загрузка: {0}
+querybuilder.message.multipleQueries=В Query Builder нельзя выполнить несколько запросов, \nПожалуйста используйте Command Editor
+querybuilder.message.reading=Чтение ...
+querybuilder.message.references={0} ссылки
+querybuilder.message.reverseSyntax=Восстановить запрос
+querybuilder.message.sqleoGroupConcat.chooseSeparator=выбрать разделитель:
+querybuilder.message.sqleoPivotCheckbox=Вывести в Pivot
+querybuilder.message.sqleoPivotHeaderColumn=Выберите заголовок столбца для Pivot:
+querybuilder.message.tableLoadedAliasDisabled=Таблица уже загружена и псевдонимы отключены!
+querybuilder.message.VersionWith3tablesMax=Версия ограничена тремя таблицами в визуальном построителе. Пожалуйста, поддержите проект для снятия ограничений.
+querybuilder.message.wait=Подождите ...
+querybuilder.objetctype.all=Все типы объектов
+querybuilder.objetctype.GLOBAL\ TEMPORARY=GLOBAL TEMPORARY"
+querybuilder.objetctype.LOCAL\ TEMPORARY=Local temporary
+querybuilder.objetctype.SYSTEM\ TABLE=SYSTEM TABLE"
+querybuilder.objetctype.TABLE=Таблицы
+querybuilder.objetctype.VIEW=Представления
+querybuilder.syntax=Запрос
+querybuilder.syntaxChanged=Текст запроса изменился! \ NВы хотите применить изменения (дизайнер перезагрузит данные)?
+querybuilder.tooltip.schemaFilter=отбор базы данных
+querybuilder.tooltip.typeFilter= Фильтр по типу
