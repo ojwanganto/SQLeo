@@ -35,6 +35,7 @@ import java.util.Arrays;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.JdbcUtils;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
@@ -87,30 +88,12 @@ public class Task implements Runnable {
 							rs.close();
 						}
 					}else if (sqlcmd.startsWith("SELECT")) {
-
-						// Ticket #337 - savepoint enable/disable preferences
-						boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", false);
-						if (hasSavepoint)
-						{
-							// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
-							// rs = stmt.executeQuery(syntax);
-							String savepointName = "AutoSavepoint";
-							Savepoint savepoint= ch.get().setSavepoint(savepointName);
-							try {
-										rs = stmt.executeQuery(syntax);
-							} catch (SQLException sqle) {
-										ch.get().rollback(savepoint);
-										target.onTaskFinished(sqle.toString(), true);
-							}
-							// end test #329
-						} else {
-							try {
-								rs = stmt.executeQuery(syntax);
-							} catch (SQLException sqle) {
-								target.onTaskFinished(sqle.toString(), true);
-							}
+						// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+						try {
+							rs = JdbcUtils.executeQuery(ch, syntax, stmt);
+						} catch (SQLException sqle) {
+							target.onTaskFinished(sqle.toString(), true);
 						}
-
 						if(target.printSelect()){
 							printSelect();
 						}else{

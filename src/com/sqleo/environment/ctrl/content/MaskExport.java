@@ -149,7 +149,7 @@ public class MaskExport extends AbstractMaskPerform
 
 	@Override
 	protected void fireOnBtnStopClicked() {
-		JdbcUtils.cancel(stmt);
+		JdbcUtils.cancelAndCloseStatement(stmt);
 	}
 	
 	private void executeContentViewQuery(){
@@ -170,7 +170,7 @@ public class MaskExport extends AbstractMaskPerform
 				}
 
 				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());
-				rs = stmt.executeQuery(syntax);
+				rs = JdbcUtils.executeQuery(ch, syntax, stmt);
 			}
 		}
 		catch(SQLException sqle)

@@ -145,7 +145,9 @@ public class ContentPane extends BorderLayoutPanel
 
 						final ConnectionHandler ch = ConnectionAssistant.getHandler(keycah);
 						countQueryStmt = ch.get().createStatement();
-						final ResultSet rs = countQueryStmt.executeQuery(countQuery);
+						
+						final ResultSet rs = JdbcUtils.executeQuery(ch, countQuery, countQueryStmt);
+						
 						final int records = rs.next() ? rs.getInt(1) : 0;
 						retrievedRowCount = Integer.valueOf(records);
 						doRefreshStatus(false);
@@ -293,7 +295,7 @@ public class ContentPane extends BorderLayoutPanel
 	}
 	
 	private void closeCountQueryTask(){
-		JdbcUtils.cancel(countQueryStmt);
+		JdbcUtils.cancelAndCloseStatement(countQueryStmt);
 		toggleActions(false);
 	}
 	

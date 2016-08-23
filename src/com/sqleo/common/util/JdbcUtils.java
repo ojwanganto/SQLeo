@@ -21,24 +21,54 @@
  */
 package com.sqleo.common.util;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
 
+import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.Preferences;
 
 public class JdbcUtils {
 
-	public static void cancel(Statement stmt) {
+	public static void cancelAndCloseStatement(Statement stmt) {
 		if(stmt!=null)
 		{	
 			try {
 				stmt.cancel();
-//				stmt.close();
-				stmt = null;
 			} catch (final SQLException e) {
 				Application.println(e, false);
+			}finally{
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					Application.println(e, false);
+				}
+				stmt = null;
 			}
 		}		
+	}
+	
+	public static ResultSet executeQuery(final ConnectionHandler ch,final String sql, final Statement stmt) throws SQLException{
+		// Ticket #337 - savepoint enable/disable preferences
+		final boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", false);
+		final Savepoint savepoint;
+		if (hasSavepoint){
+			// Avoid PostgreSQL ERROR: current transaction is aborted
+			final String savepointName = "AutoSavepoint";
+			savepoint = ch.get().setSavepoint(savepointName);
+		}else{
+			savepoint = null;
+		}
+		try {
+			return stmt.executeQuery(sql);
+		} catch (SQLException sqle) {
+			if(savepoint!=null){
+				ch.get().rollback(savepoint);
+			}
+			throw sqle;
+		}
 	}
 
 }

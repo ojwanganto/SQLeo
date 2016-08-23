@@ -23,7 +23,6 @@ package com.sqleo.environment.ctrl.content;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Types;
 
@@ -32,7 +31,6 @@ import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.common.util.JdbcUtils;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
-import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.ContentPane;
 
 
@@ -65,7 +63,7 @@ public class TaskRetrieve implements Runnable
 	
 	public void close() throws Exception
 	{
-		JdbcUtils.cancel(stmt);	
+		JdbcUtils.cancelAndCloseStatement(stmt);	
 	}
 	
 	public void run()
@@ -89,25 +87,8 @@ public class TaskRetrieve implements Runnable
 
 				syntax = SQLHelper.getSQLeoFunctionQuery(syntax,target.getHandlerKey());
 				
-				// Ticket #337 - savepoint enable/disable preferences
-				boolean hasSavepoint = Preferences.getBoolean("application.autoSavePoint", false);
-				if (hasSavepoint)
-				{
-					// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
-					// rs = stmt.executeQuery(syntax);
-					String savepointName = "AutoSavepoint";
-					Savepoint savepoint= ch.get().setSavepoint(savepointName);
-				
-					try {
-									rs = stmt.executeQuery(syntax);
-					} catch (SQLException sqle) {
-								ch.get().rollback(savepoint);
-								Application.println(sqle,true);
-					}
-					// end test #329
-				} else {
-					rs = stmt.executeQuery(syntax);
-				}
+				// test #329 Query builder / Command editor: avoid PostgreSQL ERROR: current transaction is aborted
+				rs = JdbcUtils.executeQuery(ch, syntax, stmt);
 				
 				for(int i=1; i<=this.getColumnCount(); i++)
 				{
