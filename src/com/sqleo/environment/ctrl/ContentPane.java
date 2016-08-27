@@ -350,7 +350,7 @@ public class ContentPane extends BorderLayoutPanel
 				appendOf =""+retrievedRowCount;
 			}
 			status.setText(	I18n.getString("datacontent.Record","record ") + view.getLineAt(0) + " ... " + view.getLineAt(view.getRowCount()-1) + " / " + appendOf +
-					"  |" + I18n.getString("datacontent.Changes","changes ") + view.getChanges().count());
+					"  | " + I18n.getString("datacontent.Changes","changes ") + view.getChanges().count());
 		}
 		else
 			status.setText("0 records");
