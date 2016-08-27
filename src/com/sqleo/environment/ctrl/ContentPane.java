@@ -15,7 +15,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ * short
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -44,6 +44,7 @@ import javax.swing.border.LineBorder;
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.JdbcUtils;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
@@ -55,6 +56,7 @@ import com.sqleo.environment.ctrl.content.UpdateModel;
 import com.sqleo.environment.mdi.ClientQueryBuilder;
 import com.sqleo.querybuilder.QueryBuilder;
 import com.sqleo.querybuilder.QueryModel;
+
 
 
 public class ContentPane extends BorderLayoutPanel 
@@ -123,7 +125,7 @@ public class ContentPane extends BorderLayoutPanel
 	
 	private class ActionCountRows extends AbstractAction {
 
-		ActionCountRows(){this.putValue(NAME,"count records");}
+		ActionCountRows(){this.putValue(NAME,I18n.getString("datacontent.menu.CountRecords","count records"));}
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -156,7 +158,7 @@ public class ContentPane extends BorderLayoutPanel
 						countQueryStmt = null;
 						toggleActions(false);
 						
-						JOptionPane.showMessageDialog(Application.window,"Total records count : "+records);
+						JOptionPane.showMessageDialog(Application.window,I18n.getString("datacontent.message.TotalRecords","Total records count : ")+records);
 						
 					}
 					catch(SQLException sqle)
@@ -347,8 +349,8 @@ public class ContentPane extends BorderLayoutPanel
 			if(retrievedRowCount!=null){
 				appendOf =""+retrievedRowCount;
 			}
-			status.setText(	" record " + view.getLineAt(0) + " to " + view.getLineAt(view.getRowCount()-1) + " of " + appendOf +
-					" | changes " + view.getChanges().count());
+			status.setText(	I18n.getString("datacontent.Record","record ") + view.getLineAt(0) + " ... " + view.getLineAt(view.getRowCount()-1) + " / " + appendOf +
+					"  |" + I18n.getString("datacontent.Changes","changes ") + view.getChanges().count());
 		}
 		else
 			status.setText("0 records");
@@ -364,7 +366,7 @@ public class ContentPane extends BorderLayoutPanel
 		ActionInsertRecord()
 		{
 			this.putValue(SMALL_ICON, Application.resources.getIcon(Application.ICON_CONTENT_INSERT));
-			this.putValue(SHORT_DESCRIPTION, "insert record");
+			this.putValue(SHORT_DESCRIPTION, I18n.getString("datacontent.InsertRecord","insert record"));
 			this.putValue(NAME, "insert record");
 		}
 
@@ -389,7 +391,7 @@ public class ContentPane extends BorderLayoutPanel
 		ActionDeleteRecord()
 		{
 			this.putValue(SMALL_ICON, Application.resources.getIcon(Application.ICON_CONTENT_DELETE));
-			this.putValue(SHORT_DESCRIPTION, "delete record");
+			this.putValue(SHORT_DESCRIPTION, I18n.getString("datacontent.DeleteRecord","delete record"));
 			this.putValue(NAME, "delete record");
 		}
 
@@ -415,7 +417,7 @@ public class ContentPane extends BorderLayoutPanel
 		ActionSaveChanges()
 		{
 			this.putValue(SMALL_ICON, Application.resources.getIcon(Application.ICON_CONTENT_UPDATE));
-			this.putValue(SHORT_DESCRIPTION, "apply changes to db");
+			this.putValue(SHORT_DESCRIPTION, I18n.getString("datacontent.ApplyChangesToDB","apply changes to db"));
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -427,7 +429,7 @@ public class ContentPane extends BorderLayoutPanel
 			}
 			else
 			{
-				Application.alert(Application.PROGRAM,"No update criteria defined!");
+				Application.alert(Application.PROGRAM,I18n.getString("datacontent.message.NoUpdateCriteria","No update criteria defined!"));
 			}
 		}
 	}
@@ -436,7 +438,7 @@ public class ContentPane extends BorderLayoutPanel
 	{
 		ActionRelaunch()
 		{
-			this.putValue(NAME, "relaunch query");
+			this.putValue(NAME, I18n.getString("datacontent.menu.RelaunchQuery","relaunch query"));
 		}
 
 		public void actionPerformed(ActionEvent ae)

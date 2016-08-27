@@ -47,6 +47,7 @@ import javax.swing.event.InternalFrameListener;
 import com.sqleo.common.gui.Toolbar;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
@@ -235,14 +236,14 @@ public class ClientContent extends MDIClientWithCRActions
 	
 	private class ActionReverseSyntax extends AbstractAction {
 		ActionReverseSyntax() {
-			putValue(NAME, "Reverse syntax");
+			putValue(NAME, I18n.getString("datacontent.menu.ReverseSyntax","Reverse syntax"));
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			String sql = control.getQuery();
 			if (Text.isEmpty(sql)) {
-				Application.alert(Application.PROGRAM, "No query exists to reverse!");
+				Application.alert(Application.PROGRAM, I18n.getString("datacontent.message.NoQueryToReverse","No query exists to reverse!"));
 				return;
 			}
 			try {
@@ -318,7 +319,7 @@ public class ClientContent extends MDIClientWithCRActions
 	{
 		ActionShowUpdateCriteria()
 		{
-			super("Update criteria...");			
+			super(I18n.getString("datacontent.menu.UpdateCriteria","Update criteria..."));			
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -332,7 +333,7 @@ public class ClientContent extends MDIClientWithCRActions
 	{
 		ActionShowChanges()
 		{
-			super("Show changes...");
+			super(I18n.getString("datacontent.menu.ShowChanges","Show changes..."));
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -345,7 +346,7 @@ public class ClientContent extends MDIClientWithCRActions
 			}
 			else
 			{
-				Application.alert(Application.PROGRAM,"No update criteria defined!");
+				Application.alert(Application.PROGRAM,I18n.getString("datacontent.message.NoUpdateCriteria","No update criteria defined!"));
 			}			
 		}
 	}	
@@ -354,7 +355,7 @@ public class ClientContent extends MDIClientWithCRActions
 	{
 		ActionShowImport()
 		{
-			this.putValue(NAME, "Import data...");
+			this.putValue(NAME, I18n.getString("datacontent.menu.ImportData","Import data..."));
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -371,7 +372,7 @@ public class ClientContent extends MDIClientWithCRActions
 			this.putValue(NAME, "Export excel...");
 			this.putValue(SMALL_ICON,
 					Application.resources.getIcon(Application.ICON_EXCEL));
-			putValue(SHORT_DESCRIPTION, "export excel...");
+			putValue(SHORT_DESCRIPTION, I18n.getString("datacontent.ExcelExport","export excel..."));
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -387,7 +388,7 @@ public class ClientContent extends MDIClientWithCRActions
 			this.putValue(NAME, "Export pivot HTML...");
 			this.putValue(SMALL_ICON,
 					Application.resources.getIcon(Application.ICON_EXPORT_PIVOT));
-			putValue(SHORT_DESCRIPTION, "export pivot HTML...");
+			putValue(SHORT_DESCRIPTION,  I18n.getString("datacontent.ExcelPivot","export pivot HTML..."));
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -449,7 +450,7 @@ public class ClientContent extends MDIClientWithCRActions
 	{
 		ActionShowExport()
 		{
-			this.putValue(NAME, "Export data...");
+			this.putValue(NAME,  I18n.getString("datacontent.menu.ExportData","Export data..."));
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -464,7 +465,7 @@ public class ClientContent extends MDIClientWithCRActions
 		ActionShowFilter()
 		{
 			this.putValue(SMALL_ICON, Application.resources.getIcon(Application.ICON_FILTER));
-			this.putValue(SHORT_DESCRIPTION, "Filter");
+			this.putValue(SHORT_DESCRIPTION, I18n.getString("datacontent.Filter","Filter"));
 			this.putValue(NAME, "Filter...");
 		}
 
@@ -480,7 +481,7 @@ public class ClientContent extends MDIClientWithCRActions
 		ActionShowFindReplace()
 		{
 			this.putValue(SMALL_ICON, Application.resources.getIcon(Application.ICON_FIND));
-			this.putValue(SHORT_DESCRIPTION, "Find/replace...");
+			this.putValue(SHORT_DESCRIPTION, I18n.getString("datacontent.FindReplace","Find/replace..."));
 			this.putValue(NAME, "Find/replace...");			
 		}
 		
