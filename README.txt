@@ -34,6 +34,17 @@ specify the complete path to the java command or update your
 PATH environment variable.
 
 
+SQLeoVQB.2016.08.rc1.zip: 2016-08-28
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2016.08/
+
+	#378 New russian translation (by Vladimir Solovyov)
+	#376 Add Cancel query for "count records" and "export"
+	#300 Better translation for Content Window
+	#228 Designer: reverse query returns nothing
+
+
 SQLeoVQB.2016.07.rc1.zip: 2016-07-11
 
   For changes included see tickets at  
