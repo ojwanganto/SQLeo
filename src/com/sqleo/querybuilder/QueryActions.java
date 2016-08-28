@@ -69,7 +69,7 @@ public abstract class QueryActions
 			super(builder);
 			putValue(SMALL_ICON,
 					Application.resources.getIcon(Application.ICON_FIND));
-			putValue(SHORT_DESCRIPTION, "find/replace...");
+			putValue(SHORT_DESCRIPTION, I18n.getString("datacontent.FindReplace","find/replace..."));
 			putValue(NAME, "find/replace...");
 			setEnabled(false);
 		}

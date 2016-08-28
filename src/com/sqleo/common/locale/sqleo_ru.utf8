@@ -1,4 +1,31 @@
-﻿application.back=< Назад
+-- added with 2016.08
+datacontent.InsertRecord=Вставить запись
+datacontent.DeleteRecord=Удалить запись
+datacontent.ApplyChangesToDB=Внести изменения в БД 
+datacontent.ExcelExport=Выгрузить в Excel
+datacontent.ExcelPivot=Выгрузить в сводную таблицу (HTML)
+datacontent.Filter=Отбор
+datacontent.FindReplace=Поиск/Замена
+datacontent.menu.ShowChanges=Показать изменения
+datacontent.menu.UpdateCriteria=Условия обновления
+datacontent.message.NoUpdateCriteria=Не определены условия обновления! 
+datacontent.menu.ReverseSyntax=Восстановить текст запроса
+datacontent.message.NoQueryToReverse=Нет запросов, которые можно восстановить!
+datacontent.menu.RelaunchQuery=Выполнить запрос
+datacontent.menu.ExportData=Выгрузить данные ...
+datacontent.menu.ImportData=Загрузить данные ...
+datacontent.menu.CountRecords=Посчитать записи
+datacontent.message.TotalRecords=Всего записей: 
+datacontent.Record=запись 
+datacontent.Changes=изменений 
+
+-- added 
+metadataexplorer.action.EndWith=заканчивается на
+metadataexplorer.action.Equals=равно
+metadataexplorer.action.Reset=Сбросить
+
+-- Main 
+application.back=< Назад
 application.close=Закрыть
 application.commandEditor.autoSelectConnection=Использовать последнее подключение
 application.copyAndOpenFileExtension=Скопировать и открыть в редакторе с расширением:
@@ -159,8 +186,8 @@ querybuilder.message.reading=Чтение ...
 querybuilder.message.references={0} ссылки
 querybuilder.message.reverseSyntax=Восстановить запрос
 querybuilder.message.sqleoGroupConcat.chooseSeparator=выбрать разделитель:
-querybuilder.message.sqleoPivotCheckbox=Вывести в Pivot
-querybuilder.message.sqleoPivotHeaderColumn=Выберите заголовок столбца для Pivot:
+querybuilder.message.sqleoPivotCheckbox=Вывести в сводную таблицу
+querybuilder.message.sqleoPivotHeaderColumn=Выберите заголовок столбца для сводной таблицы:
 querybuilder.message.tableLoadedAliasDisabled=Таблица уже загружена и псевдоним таблицы не задан !
 querybuilder.message.VersionWith3tablesMax=Версия ограничена тремя таблицами в визуальном построителе. Пожалуйста, поддержите проект для снятия ограничений.
 querybuilder.message.wait=Подождите ...
