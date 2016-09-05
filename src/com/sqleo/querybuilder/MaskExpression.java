@@ -32,6 +32,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
+import com.sqleo.environment._Version;
 import com.sqleo.querybuilder.BrowserItems.DiagramQueryTreeItem;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 
@@ -68,9 +69,9 @@ public class MaskExpression extends BaseMask
 				String message = "Please, set a valid alias.";
 				
 				if(SwingUtilities.getWindowAncestor(builder) instanceof Frame)
-					JOptionPane.showMessageDialog((Frame)SwingUtilities.getWindowAncestor(builder),message,"SQLeonardo",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog((Frame)SwingUtilities.getWindowAncestor(builder),message,_Version.PROGRAM,JOptionPane.WARNING_MESSAGE);
 				else if(SwingUtilities.getWindowAncestor(builder) instanceof Dialog)
-					JOptionPane.showMessageDialog((Dialog)SwingUtilities.getWindowAncestor(builder),message,"SQLeonardo",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog((Dialog)SwingUtilities.getWindowAncestor(builder),message,_Version.PROGRAM,JOptionPane.WARNING_MESSAGE);
 							
 				return false;
 			}

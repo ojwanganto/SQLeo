@@ -101,8 +101,12 @@ public class ViewBrowser extends BorderLayoutPanel implements TreeSelectionListe
 
 	void refreshSelection()
 	{
-		TreeNode node = (TreeNode)tree.getSelectionPath().getLastPathComponent();
+		TreeNode node = getSelectedNode();
 		nodeChanged(node);
+	}
+	
+	TreeNode getSelectedNode(){
+		return (TreeNode)tree.getSelectionPath().getLastPathComponent();
 	}
 	
 	void setSelectedItem(BrowserItems.DefaultTreeItem item)

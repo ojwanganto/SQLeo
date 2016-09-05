@@ -35,9 +35,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
 
 import com.sqleo.environment.Preferences;
+import com.sqleo.environment._Version;
+import com.sqleo.querybuilder.BrowserItems.DefaultTreeItem;
 import com.sqleo.querybuilder.BrowserItems.DiagramQueryTreeItem;
 import com.sqleo.querybuilder.syntax.DerivedTable;
+import com.sqleo.querybuilder.syntax.QuerySpecification;
 import com.sqleo.querybuilder.syntax.QueryTokens;
+import com.sqleo.querybuilder.syntax.QueryTokens.Condition;
+import com.sqleo.querybuilder.syntax.QueryTokens.DefaultExpression;
+import com.sqleo.querybuilder.syntax.SQLFormatter;
 
 
 public class MaskAlias extends BaseMask
@@ -102,14 +108,63 @@ public class MaskAlias extends BaseMask
 	{
 		return Preferences.getScaledDimension(300,100);
 	}
+	
+	private String getUpdatedTokenWithAlias(final String schema, final String tableName,
+			final String token, final String aliasBefore, final String aliasAfter){
+		if(token.lastIndexOf(SQLFormatter.DOT)!=-1){
+			final String[] split = token.split("\\"+SQLFormatter.DOT);
+			final String tabNameOfToken = schema!=null? split[1] : split[0];
+			if(null == aliasBefore){
+				if(tableName.equals(tabNameOfToken)){
+					return token.replaceFirst(tableName, aliasAfter);
+				}
+			}else {
+				if(aliasBefore.equals(tabNameOfToken)){
+					return token.replaceFirst(aliasBefore, aliasAfter);
+				}
+			}
+		}
+		return null;
+	}
+	
+	private Condition updateConditionTokenAlias(final Condition condition,final String schema,final String tableName,
+			final String aliasBefore,final String aliasAfter){
+		if(condition.getLeft() instanceof DefaultExpression){
+			final DefaultExpression exp = (DefaultExpression) condition.getLeft();
+			final String updatedToken = getUpdatedTokenWithAlias(schema, tableName, exp.toString(), aliasBefore, aliasAfter);
+			if(updatedToken!=null){
+				exp.setValue(updatedToken);
+			}
+		}
+		return condition;
+	}
+	
+	private void updateQueryTokensRelatedToTableAlias(String schema, String tableName, String aliasBefore, String aliasAfter){
+		QuerySpecification qs = builder.browser.getQueryItem().getQueryExpression().getQuerySpecification();
+		for(int i = 0 ; i < qs.getWhereClause().length ; i++){
+			updateConditionTokenAlias(qs.getWhereClause()[i], schema, tableName, aliasBefore, aliasAfter );
+		}
+		for(int i = 0; i < qs.getHavingClause().length; i++){
+			updateConditionTokenAlias(qs.getHavingClause()[i], schema, tableName, aliasBefore, aliasAfter );
+		}
+	}
 
 	protected boolean onConfirm()
 	{
 		if(querytoken instanceof QueryTokens.Table)
 		{
+			updateQueryTokensRelatedToTableAlias(((QueryTokens.Table) querytoken).getSchema(), querytoken.getName(), querytoken.getAlias(), value.getText());
+			
 			DiagramEntity entity = builder.diagram.getEntity((QueryTokens.Table)querytoken);
 			querytoken.setAlias(value.getText());
 			entity.setQueryToken((QueryTokens.Table)querytoken);
+			
+			final TreeNode parent = builder.browser.getQueryItem().getParent();
+			if(parent!=null){
+				final TreeNode selected = builder.browser.getSelectedNode();
+				builder.browser.reload(parent.getChildAt(0));
+				builder.browser.setSelectedItem((DefaultTreeItem) selected);
+			}
 		}
 		else
 		{
@@ -120,9 +175,9 @@ public class MaskAlias extends BaseMask
 					String message = "Please, set a valid alias.";
 					
 					if(SwingUtilities.getWindowAncestor(builder) instanceof Frame)
-						JOptionPane.showMessageDialog((Frame)SwingUtilities.getWindowAncestor(builder),message,"SQLeonardo",JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog((Frame)SwingUtilities.getWindowAncestor(builder),message,_Version.PROGRAM,JOptionPane.WARNING_MESSAGE);
 					else if(SwingUtilities.getWindowAncestor(builder) instanceof Dialog)
-						JOptionPane.showMessageDialog((Dialog)SwingUtilities.getWindowAncestor(builder),message,"SQLeonardo",JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog((Dialog)SwingUtilities.getWindowAncestor(builder),message,_Version.PROGRAM,JOptionPane.WARNING_MESSAGE);
 								
 					return false;
 				}
