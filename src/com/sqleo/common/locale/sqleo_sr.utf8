@@ -79,7 +79,7 @@ application.objetctype.links=Povezani objekti
 querybuilder.objetctype.all=Svi tipovi objekata
 
 querybuilder.objetctype.TABLE=Tabele
-querybuilder.objetctype.VIEW=Pogledi
+querybuilder.objetctype.VIEW=Upiti
 querybuilder.objetctype.LOCAL\ TEMPORARY=Lokalni privremen
 
 application.preferences.autoCommitWarning=Upozorenje:Izvršenje u prozoru se odnosi na sve otvorene prozore za konekciju kada je automatsko izvršenje isključeno!
@@ -118,7 +118,7 @@ application.maxQueriesInHistory=Maksimalan broj upita u istoriji
 --added with 2014.11
 application.iconSizePercentage=Veličina ikonica % (neophodan restart)
 
--- add with 2015.05 (TRANSLATION TO DO)
+-- add with 2015.05 
 querybuilder.objetctype.GLOBAL\ TEMPORARY=GLOBALNI PRIVREMEN"
 querybuilder.objetctype.SYSTEM\ TABLE=SISTEMSKE TABELE"
 
@@ -139,7 +139,7 @@ querybuilder.message.sqleoPivotHeaderColumn=Odaberi kolonu zaglavlja za Pivot:
 
 querybuilder.menu.addToGroupBySyncSelect=Sinhronizuj sa selektovanim kolonama
 
--- add with 2015.07 (TRANSLATION TO DO)
+-- add with 2015.07 
 datacomparer.TableViewQuery=Tabela/Pregled ili (Upit):
 metadataexplorer.Table=Tabela:
 metadataexplorer.Column=Kolona:
@@ -178,62 +178,62 @@ metadataexplorer.menu.properties=podešavanja...
 application.commandEditor.autoSelectConnection=Automatski selektuj poslednju konekciju
 querybuilder.message.VersionWith3tablesMax=Verzija sa 3 tabele maksimalno po prikazu, Molimo Vas donirajte za više
 
-application.tool.show=Show
-application.message.loadQueryInWindow=Load file in:
-querybuilder.message.loading.relations=check {0}'s relations
+application.tool.show=Prikaži
+application.message.loadQueryInWindow=Učitaj datoteku u:
+querybuilder.message.loading.relations=proveri {0} relacije
 
-datasource.message.name=datasource name
+datasource.message.name=naziv izvora
 datasource.message.url=url
-datasource.message.user=user
+datasource.message.user=korisnik
 datasource.message.status=status
-datasource.message.password=password
-datasource.message.remember=remember password
-datasource.message.autoConnect=auto-connect on startup
-datasource.message.validName=please, enter a valid name.
-datasource.message.invalidChar=characters \\.|,/;<:>@ aren't allowed!\nplease, enter a valid name.
-datasource.message.joinFile=join definition file
+datasource.message.password=lozinka
+datasource.message.remember=sačuvaj lozinku
+datasource.message.autoConnect=automatski se poveži prilikom pokretanja
+datasource.message.validName=molim, unesite ispravan naziv.
+datasource.message.invalidChar=karakteri \\.|,/;<:>@ nisu dozvoljeni!\nmolim, unesite ispravan naziv.
+datasource.message.joinFile=join definicija fajla
 
--- add with 2015.09 (TRANSLATION TO DO)
-datacomparer.ConnexionNotSet=No connection selected in 
-datacomparer.TableNotSet=No table/query entered in 
+-- add with 2015.09 
+datacomparer.ConnexionNotSet=Nema selektovane konekcije u 
+datacomparer.TableNotSet=Nema tabele/upita selektovanog u 
 
-querybuilder.message.multipleQueries=Cannot execute multiple queries in Query Builder, \nPlease use Command Editor
+querybuilder.message.multipleQueries=Nije moguće selektovati više upita u Query Builderu, \nMolim koristite Command Editor
 
-application.copyAndOpenFileExtension=Copy and open in editor file extension:
+application.copyAndOpenFileExtension=Kopiraj i otvori u editoru ekstenziju:
 
-commandeditor.console=Console
-commandeditor.resultGrid=Result grid
+commandeditor.console=Konzola
+commandeditor.resultGrid=Resultat
 
--- added with 2015.10 (TRANSLATION TO DO)
-application.menu.help.keyboardShortcuts=Keyboard shortcuts
-datacomparer.WorkingConnection=Working connection:
+-- added with 2015.10 
+application.menu.help.keyboardShortcuts=Prečice tastature
+datacomparer.WorkingConnection=Trenutna konekcija:
 
--- added with 2016.01 (TRANSLATION TO DO)
-datasource.message.readonly=readonly connection
-application.message.readonly=SQLeo connection is readonly and do not permit this operation
+-- added with 2016.01 
+datasource.message.readonly=konekcija sa pravom pregleda
+application.message.readonly=SQLeo konekcija samo sa pravom pregleda i ne dozvoljava vam ovu operaciju
 application.preferences.autoSavePoint=Auto savepoint (PostgreSQL, MonetDB, ...)
 
--- added with 2016.02 (TRANSLATION TO DO)
-datasource.message.color=color
-application.preferences.populateFilter=Populate filter values
+-- added with 2016.02 
+datasource.message.color=boja
+application.preferences.populateFilter=Popunite vrednosti filtera
 
--- added with 2016.08 (TRANSLATION TO DO)
-datacontent.InsertRecord=Insert record
-datacontent.DeleteRecord=Delete record
-datacontent.ApplyChangesToDB=Apply changes to db
-datacontent.ExcelExport=Export excel...
-datacontent.ExcelPivot=Export pivot HTML...
+-- added with 2016.08 
+datacontent.InsertRecord=Unesi zapis
+datacontent.DeleteRecord=Obriši zapis
+datacontent.ApplyChangesToDB=Evidentiraj promene u bazi
+datacontent.ExcelExport=Izvoz u excel...
+datacontent.ExcelPivot=Izvezi pivot HTML...
 datacontent.Filter=Filter
-datacontent.FindReplace=Find/replace...
-datacontent.menu.ShowChanges=Show changes...
-datacontent.menu.UpdateCriteria=Update criteria...
-datacontent.message.NoUpdateCriteria=No update criteria defined!
-datacontent.menu.ReverseSyntax=Reverse syntax
-datacontent.message.NoQueryToReverse=No query exists to reverse!
-datacontent.menu.RelaunchQuery=relaunch query
-datacontent.menu.ExportData=Export data ...
-datacontent.menu.ImportData=Import data ...
-datacontent.menu.CountRecords=count records
-datacontent.message.TotalRecords=Total records count : 
-datacontent.Record=record 
-datacontent.Changes=changes 
+datacontent.FindReplace=Pronađi/zameni...
+datacontent.menu.ShowChanges=Prikaži promene...
+datacontent.menu.UpdateCriteria=Kriterijum ažuriranja...
+datacontent.message.NoUpdateCriteria=Ne postoji kriterijum ažuriranja!
+datacontent.menu.ReverseSyntax=Obrnuta sintaksa
+datacontent.message.NoQueryToReverse=Ne postoji upit!
+datacontent.menu.RelaunchQuery=ponovo pokreni upit
+datacontent.menu.ExportData=Izvoz podataka ...
+datacontent.menu.ImportData=Uvoz podataka ...
+datacontent.menu.CountRecords=broj zapisa
+datacontent.message.TotalRecords=Ukupan broj zapisa : 
+datacontent.Record=zapis 
+datacontent.Changes=promene 
