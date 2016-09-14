@@ -397,6 +397,14 @@ public class ClientContent extends MDIClientWithCRActions
 			final ConnectionHandler ch = ConnectionAssistant.getHandler(control.getHandlerKey());
 			try{
 				final Statement stmt = ch.get().createStatement();
+				// ticket #375 prevent OutOfMemory errors with Big MySQL tables
+				if( ch.getDatabaseProductName() == "MySQL")
+				{
+					stmt.setFetchSize(Integer.MIN_VALUE); // MySQL streaming row by row
+				} else {
+				// ticket #380 for export performances
+					stmt.setFetchSize(1000);
+				}
 				final ResultSet rs = stmt.executeQuery(control.getQuery());
 				final int cols= rs.getMetaData().getColumnCount();
 				
