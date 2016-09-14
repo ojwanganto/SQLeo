@@ -52,6 +52,7 @@ import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.gui.ListView;
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 
@@ -113,7 +114,7 @@ public class ViewConnection extends BorderLayoutPanel
 		gbc.gridwidth	= 1;
 		gbc.weightx		= 0.0;
 		gbc.insets	= new Insets(0,0,0,0);
-		JLabel lbl = new JLabel("uid:");
+		JLabel lbl = new JLabel(I18n.getString("datasource.message.user","user")+":");
 		gbl.setConstraints(lbl,gbc);
 		pnl.add(lbl);
 		
@@ -123,7 +124,7 @@ public class ViewConnection extends BorderLayoutPanel
 		
 		gbc.weightx	= 0.0;
 		gbc.insets	= new Insets(0,5,0,0);
-		lbl = new JLabel("pwd:");
+		lbl = new JLabel(I18n.getString("datasource.message.password","password")+":");
 		gbl.setConstraints(lbl,gbc);
 		pnl.add(lbl);
 		

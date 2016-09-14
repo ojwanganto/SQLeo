@@ -201,3 +201,17 @@ querybuilder.syntax=Запрос
 querybuilder.syntaxChanged=Текст запроса изменился! \nВы хотите применить изменения (дизайнер перезагрузит данные)?
 querybuilder.tooltip.schemaFilter=отбор базы данных
 querybuilder.tooltip.typeFilter= Фильтр по типу
+
+-- added with 2016.09 (TRANSLATION TO DO)
+datacontent.popup.CopySpecial=Copy special
+datacontent.popup.CopyAndOpen=Copy and open in editor
+datacontent.popup.Copy=Copy
+datacontent.popup.Paste=Paste
+datacontent.popup.CloneRecord=Clone record
+datacontent.popup.TrimSpace=Trim trailing spaces
+datacontent.popup.SetNull=Set <null>
+datacontent.popup.SetToday=Set <today>
+datacontent.popup.ResetOldVal=Reset <old-value>
+datacontent.popup.SortAsc=Sort ascending
+datacontent.popup.SortDesc=Sort descending
+datacontent.popup.Jump=Jump...

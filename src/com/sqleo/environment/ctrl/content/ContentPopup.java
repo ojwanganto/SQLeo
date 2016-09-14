@@ -41,6 +41,7 @@ import javax.swing.MenuElement;
 import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
 
+import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.io.FileHelper;
@@ -76,7 +77,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 		JMenuItem iRi = add(view.getControl().getActionMap().get("record-insert"));
 		JMenuItem iRd = add(view.getControl().getActionMap().get("record-delete"));
 		addSeparator(); // 14
-		add("Save record").setEnabled(false);
+		add("...").setEnabled(false);
 		
 		addSeparator(); // 16
 		add(new ActionJump());
@@ -177,7 +178,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionCopySpecial()
 		{
-			this.putValue(NAME,"Copy special");
+			this.putValue(NAME,I18n.getString("datacontent.popup.CopySpecial","Copy special"));
 		}
 
 		public void actionPerformed(ActionEvent ae)
@@ -238,7 +239,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		private static final String SQ_LEO_TEMP_TXT = "SQLeo_temp.";
 
-		ActionCopyAndOpen(){super("Copy and open in editor");}
+		ActionCopyAndOpen(){super(I18n.getString("datacontent.popup.CopyAndOpen","Copy and open in editor"));}
 		
 		public void actionPerformed(ActionEvent ae)
 		{
@@ -260,7 +261,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 
 	private class ActionCopy extends AbstractAction
 	{
-		ActionCopy(){super("Copy");}
+		ActionCopy(){super(I18n.getString("datacontent.popup.Copy","Copy"));}
 		
 		ActionCopy(String title){super(title);}
 		
@@ -302,7 +303,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionPaste()
 		{
-			super("Paste");
+			super(I18n.getString("datacontent.popup.Paste","Paste"));
 			setEnabled(!view.isReadOnly());
 		}
 		
@@ -330,7 +331,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionClone()
 		{
-			this.putValue(NAME,"Clone record");
+			this.putValue(NAME,I18n.getString("datacontent.popup.CloneRecord","Clone record"));
 			setEnabled(!view.isReadOnly());
 		}
 
@@ -353,7 +354,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionTrim()
 		{
-			this.putValue(NAME,"Trim trailing spaces");
+			this.putValue(NAME,I18n.getString("datacontent.popup.TrimSpace","Trim trailing spaces"));
 			setEnabled(!view.isReadOnly());
 		}
 
@@ -442,13 +443,13 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	
 	private class ActionSetNull extends AbstractActionSet
 	{
-		ActionSetNull(){super("Set <null>");}
+		ActionSetNull(){super(I18n.getString("datacontent.popup.SetNull","Set <null>"));}
 		Object getValue(){return null;}
 	}
 	
 	private class ActionSetToday extends AbstractActionSet
 	{
-		ActionSetToday(){super("Set <today>");}
+		ActionSetToday(){super(I18n.getString("datacontent.popup.SetToday","Set <today>"));}
 		Object getValue(){return new Date(System.currentTimeMillis());}
 	}
 	
@@ -456,7 +457,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionResetOldValue()
 		{
-			this.putValue(NAME,"Reset <old-value>");
+			this.putValue(NAME,I18n.getString("datacontent.popup.ResetOldVal","Reset <old-value>"));
 			setEnabled(!view.isReadOnly());
 		}
 
@@ -513,13 +514,13 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	
 	private class ActionSortAsc extends AbstractActionSort
 	{
-		ActionSortAsc(){super("Sort ascending");}
+		ActionSortAsc(){super(I18n.getString("datacontent.popup.SortAsc","Sort ascending"));}
 		short getType(){return QueryTokens.Sort.ASCENDING;}
 	}
 	
 	private class ActionSortDesc extends AbstractActionSort
 	{
-		ActionSortDesc(){super("Sort descending");}
+		ActionSortDesc(){super(I18n.getString("datacontent.popup.SortDesc","Sort descending"));}
 		short getType(){return QueryTokens.Sort.DESCENDING;}
 	}
 	
@@ -527,7 +528,7 @@ public class ContentPopup extends JPopupMenu implements MouseListener
 	{
 		ActionJump()
 		{
-			this.putValue(NAME,"Jump...");
+			this.putValue(NAME,I18n.getString("datacontent.popup.Jump","Jump..."));
 			setEnabled(!view.isReadOnly());
 		}
 
