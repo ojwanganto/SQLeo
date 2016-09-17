@@ -89,7 +89,9 @@ public class JumpManager implements Runnable
 		for(int i=0; i<tmd.getImportedKeys().size(); i++)
 		{
 			if(tmd.getImportedKeyProperty(i,TableMetaData.IDX_REL_FKCOLUMN_NAME)
-					.equals(isCSVMode?csource.getName():csource.getName().toUpperCase()))
+// ticket #331 Content window: jump doesn't work (for lower case column names)
+//					.equals(isCSVMode?csource.getName():csource.getName().toUpperCase()))
+					.equals(isCSVMode?csource.getName():csource.getName()))
 			{
 				TableMetaData tmdPK = new TableMetaData(tmd.getHandlerKey(),
 														tmd.getImportedKeyProperty(i,TableMetaData.IDX_REL_PKTABLE_SCHEM),
@@ -110,7 +112,9 @@ public class JumpManager implements Runnable
 			for(int i=0; i<tmd.getExportedKeys().size(); i++)
 			{
 				if(tmd.getExportedKeyProperty(i,TableMetaData.IDX_REL_PKCOLUMN_NAME).
-						equals(isCSVMode?csource.getName():csource.getName().toUpperCase()))
+// ticket #331 Content window: jump doesn't work (for lower case column names)
+//						equals(isCSVMode?csource.getName():csource.getName().toUpperCase()))
+						equals(isCSVMode?csource.getName():csource.getName()))
 				{
 					TableMetaData tmdFK = new TableMetaData(tmd.getHandlerKey(),
 															tmd.getExportedKeyProperty(i,TableMetaData.IDX_REL_FKTABLE_SCHEM),
