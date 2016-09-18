@@ -34,6 +34,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeNode;
 
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment._Version;
 import com.sqleo.querybuilder.BrowserItems.DefaultTreeItem;
@@ -43,6 +44,7 @@ import com.sqleo.querybuilder.syntax.QuerySpecification;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Condition;
 import com.sqleo.querybuilder.syntax.QueryTokens.DefaultExpression;
+import com.sqleo.querybuilder.syntax.QueryTokens.Group;
 import com.sqleo.querybuilder.syntax.SQLFormatter;
 
 
@@ -109,34 +111,78 @@ public class MaskAlias extends BaseMask
 		return Preferences.getScaledDimension(300,100);
 	}
 	
+	private boolean isAggregateToken(final String token){
+		if(token.endsWith(")")){
+			final String tokenL = token.toLowerCase();
+			for(final String aggregate : SQLHelper.SQL_AGGREGATES){
+				if(tokenL.startsWith(aggregate)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean isTableAliasMatches(final String aliasBefore, final String tableName, final String tableNameOfToken){
+		final String realAlias = null == aliasBefore ? tableName : aliasBefore;
+		return realAlias.equals(tableNameOfToken);
+	}
+	
 	private String getUpdatedTokenWithAlias(final String schema, final String tableName,
-			final String token, final String aliasBefore, final String aliasAfter){
-		if(token.lastIndexOf(SQLFormatter.DOT)!=-1){
-			final String[] split = token.split("\\"+SQLFormatter.DOT);
-			final String tabNameOfToken = schema!=null? split[1] : split[0];
-			if(null == aliasBefore){
-				if(tableName.equals(tabNameOfToken)){
-					return token.replaceFirst(tableName, aliasAfter);
+			final String fieldToken, final String aliasBefore, final String aliasAfter){
+		if(fieldToken.lastIndexOf(SQLFormatter.DOT)!=-1){
+			final boolean isAggrToken = isAggregateToken(fieldToken);
+			final String[] split = fieldToken.split("\\"+SQLFormatter.DOT);
+			final String aggrToken;
+			final String tableNameOfToken;
+			final String fieldOfToken;
+			if(schema!=null){
+				if(isAggrToken){
+					aggrToken =  split[0].split("\\(")[0];
+				}else{
+					aggrToken = null;
 				}
-			}else {
-				if(aliasBefore.equals(tabNameOfToken)){
-					return token.replaceFirst(aliasBefore, aliasAfter);
+				tableNameOfToken = split[1];
+				fieldOfToken = split[2];
+			}else{
+				if(isAggrToken){
+					final String[] functionSplit = split[0].split("\\(");
+					aggrToken = functionSplit[0];
+					tableNameOfToken =  functionSplit[1];
+				}else{
+					tableNameOfToken = split[0];
+					aggrToken = null;
 				}
+				fieldOfToken = split[1];
+			}
+			if(isTableAliasMatches(aliasBefore, tableName, tableNameOfToken)){
+				String updatedToken = "";
+				if(aggrToken!=null){
+					updatedToken = aggrToken+"(";
+				}
+				if(schema!=null){
+					updatedToken =updatedToken+schema+SQLFormatter.DOT;
+				}
+				return updatedToken	+ aliasAfter + SQLFormatter.DOT+fieldOfToken;
 			}
 		}
 		return null;
 	}
 	
-	private Condition updateConditionTokenAlias(final Condition condition,final String schema,final String tableName,
+	private void updateConditionTokenAlias(final Condition condition,final String schema,final String tableName,
 			final String aliasBefore,final String aliasAfter){
 		if(condition.getLeft() instanceof DefaultExpression){
 			final DefaultExpression exp = (DefaultExpression) condition.getLeft();
-			final String updatedToken = getUpdatedTokenWithAlias(schema, tableName, exp.toString(), aliasBefore, aliasAfter);
-			if(updatedToken!=null){
-				exp.setValue(updatedToken);
-			}
+			updateExpressionTokenAlias(exp, schema, tableName, aliasBefore,	aliasAfter);
 		}
-		return condition;
+	}
+
+	private void updateExpressionTokenAlias(final DefaultExpression exp, final String schema, final String tableName, final String aliasBefore,
+			final String aliasAfter) {
+		final String updatedToken = getUpdatedTokenWithAlias(schema, tableName, exp.toString(), aliasBefore, aliasAfter);
+		if(updatedToken!=null){
+			exp.setValue(updatedToken);
+		}
 	}
 	
 	private void updateQueryTokensRelatedToTableAlias(String schema, String tableName, String aliasBefore, String aliasAfter){
@@ -147,6 +193,21 @@ public class MaskAlias extends BaseMask
 		for(int i = 0; i < qs.getHavingClause().length; i++){
 			updateConditionTokenAlias(qs.getHavingClause()[i], schema, tableName, aliasBefore, aliasAfter );
 		}
+		for(int i = 0; i < qs.getGroupByClause().length; i++){
+			final Group gr = qs.getGroupByClause()[i];
+			if(gr.getExpression() instanceof DefaultExpression){
+				final DefaultExpression exp = (DefaultExpression) gr.getExpression();
+				updateExpressionTokenAlias(exp, schema, tableName, aliasBefore, aliasAfter );
+			}
+		}
+		for(int i = 0; i < qs.getSelectList().length; i++){
+			if(qs.getSelectList()[i] instanceof DefaultExpression){
+				final DefaultExpression exp = (DefaultExpression) qs.getSelectList()[i];
+				updateExpressionTokenAlias(exp, schema, tableName, aliasBefore, aliasAfter );
+			}
+		}
+
+
 	}
 
 	protected boolean onConfirm()

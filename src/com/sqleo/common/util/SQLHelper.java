@@ -33,17 +33,14 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
 import com.sqleo.environment.Application;
-import com.sqleo.querybuilder.QueryBuilder;
-import com.sqleo.querybuilder.syntax.QueryTokens.Column;
-import com.sqleo.querybuilder.syntax.QueryTokens.Table;
 
 public class SQLHelper {
 	
+	public static final String[] SQL_AGGREGATES = new String[]{"count","avg","min","max","sum"};
+
 	private static final String JOINCOLUMNS = "joincolumns";
 	private static final String COLUMNS = "columns";
 

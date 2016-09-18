@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,6 +39,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import com.sqleo.common.util.I18n;
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QueryExpression;
 import com.sqleo.querybuilder.syntax.QuerySpecification;
@@ -278,7 +280,9 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 						if(val!=null){
 							addToGroupby = true;
 							final String valLower = val.toLowerCase();
-							final List<String> aggregates = Arrays.asList("count", "sum", "avg", "min", "max","sqleogroupconcat","sqleopivot");
+							final List<String> aggregates = new ArrayList<String>(Arrays.asList(SQLHelper.SQL_AGGREGATES));
+							aggregates.addAll(Arrays.asList("sqleogroupconcat","sqleopivot"));
+							
 							for(final String aggr : aggregates){
 								if(valLower.startsWith(aggr)){
 									addToGroupby = false;

@@ -30,6 +30,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -48,6 +51,7 @@ import javax.swing.event.PopupMenuListener;
 
 import com.sqleo.common.gui.BorderLayoutPanel;
 import com.sqleo.common.util.I18n;
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 import com.sqleo.querybuilder.dnd.DragMouseAdapter;
@@ -260,8 +264,9 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 		public void actionPerformed(ActionEvent e)
 		{
 			final String sqleoGroupConcat = "SQLeoGroupConcat";
-			final String[] functions = new String[] { "count", "max", "min", "sum", "avg",  sqleoGroupConcat};
-			final JComboBox combo = new JComboBox(functions);
+			final List<String> functions = new ArrayList<String>(Arrays.asList(SQLHelper.SQL_AGGREGATES));
+			functions.add(sqleoGroupConcat);
+			final JComboBox combo = new JComboBox(functions.toArray());
 			final BorderLayoutPanel panel = new BorderLayoutPanel();
 			panel.setComponentNorth(combo);
 			JCheckBox pivotCheckbox = new JCheckBox(I18n.getString("querybuilder.message.sqleoPivotCheckbox", "Transform as Pivot"));

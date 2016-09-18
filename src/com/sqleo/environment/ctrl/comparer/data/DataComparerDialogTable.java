@@ -30,8 +30,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 
+import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.ctrl.editor.BaseDynamicTable;
-import com.sqleo.environment.ctrl.editor._ClauseOwner;
 
 
 public class DataComparerDialogTable extends BaseDynamicTable{
@@ -40,7 +40,7 @@ public class DataComparerDialogTable extends BaseDynamicTable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final String[] operation = new String[]{"=","<",">","<=",">=","<>","like","not like","is","is not","in","not in"};
-	private static final String[] aggregates = new String[]{"count","avg","min","max","sum"};
+	private static final String[] aggregates = SQLHelper.SQL_AGGREGATES;
 	public static enum DATA_TYPE { COLUMNS, AGGREGATES , FILTERS};
 	
 	private Vector<String> querytokens;
