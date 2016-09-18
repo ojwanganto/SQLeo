@@ -128,7 +128,7 @@ public class MaskAlias extends BaseMask
 		return realAlias.equals(tableNameOfToken);
 	}
 	
-	private String getUpdatedTokenWithAlias(final String schema, final String tableName,
+	private String getUpdatedTokenWithAlias(final String querySchema, final String tableName,
 			final String fieldToken, final String aliasBefore, final String aliasAfter){
 		if(fieldToken.lastIndexOf(SQLFormatter.DOT)!=-1){
 			final boolean isAggrToken = isAggregateToken(fieldToken);
@@ -136,6 +136,12 @@ public class MaskAlias extends BaseMask
 			final String aggrToken;
 			final String tableNameOfToken;
 			final String fieldOfToken;
+			final String schema;
+			if(split.length == 3){
+				schema = querySchema;
+			}else{
+				schema = null;
+			}
 			if(schema!=null){
 				if(isAggrToken){
 					aggrToken =  split[0].split("\\(")[0];
@@ -159,9 +165,6 @@ public class MaskAlias extends BaseMask
 				String updatedToken = "";
 				if(aggrToken!=null){
 					updatedToken = aggrToken+"(";
-				}
-				if(schema!=null){
-					updatedToken =updatedToken+schema+SQLFormatter.DOT;
 				}
 				return updatedToken	+ aliasAfter + SQLFormatter.DOT+fieldOfToken;
 			}
