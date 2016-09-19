@@ -67,7 +67,7 @@ public class ViewConnection extends BorderLayoutPanel
 	private JTextField	txtSelectedFKDef;
 	private JButton btnSelectFKDef;
 	private UoDatasource uo;
-	public static final String defaultText = "Choose any file...."; 
+	public static final String defaultText = "          "; 
 
 	private ListView lvMetaInfos;
 	private StatusButton btnStatus;
@@ -151,7 +151,7 @@ public class ViewConnection extends BorderLayoutPanel
 		checkBox.setSelected(false);
 		pnl.add(checkBox);	
 		
-		pnl.add(new JLabel("Join definition:"));	
+		pnl.add(new JLabel(I18n.getString("datasource.message.joinFile","Join definition:")));	
 		
 		txtSelectedFKDef = new JTextField();
 		txtSelectedFKDef.setText(defaultText);
