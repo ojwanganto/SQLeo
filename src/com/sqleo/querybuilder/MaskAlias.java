@@ -37,7 +37,6 @@ import javax.swing.tree.TreeNode;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment._Version;
-import com.sqleo.querybuilder.BrowserItems.DefaultTreeItem;
 import com.sqleo.querybuilder.BrowserItems.DiagramQueryTreeItem;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QuerySpecification;
@@ -125,7 +124,7 @@ public class MaskAlias extends BaseMask
 	
 	private boolean isTableAliasMatches(final String aliasBefore, final String tableName, final String tableNameOfToken){
 		final String realAlias = null == aliasBefore ? tableName : aliasBefore;
-		return realAlias.equals(tableNameOfToken);
+		return realAlias.trim().equals(tableNameOfToken.trim());
 	}
 	
 	private String getUpdatedTokenWithAlias(final String querySchema, final String tableName,
@@ -142,6 +141,7 @@ public class MaskAlias extends BaseMask
 			}else{
 				schema = null;
 			}
+			boolean appendAggrTokenSpace = false;
 			if(schema!=null){
 				if(isAggrToken){
 					aggrToken =  split[0].split("\\(")[0];
@@ -155,6 +155,7 @@ public class MaskAlias extends BaseMask
 					final String[] functionSplit = split[0].split("\\(");
 					aggrToken = functionSplit[0];
 					tableNameOfToken =  functionSplit[1];
+					appendAggrTokenSpace = tableNameOfToken.startsWith(" ");
 				}else{
 					tableNameOfToken = split[0];
 					aggrToken = null;
@@ -165,6 +166,9 @@ public class MaskAlias extends BaseMask
 				String updatedToken = "";
 				if(aggrToken!=null){
 					updatedToken = aggrToken+"(";
+					if(appendAggrTokenSpace){
+						updatedToken = updatedToken+" ";
+					}
 				}
 				return updatedToken	+ aliasAfter + SQLFormatter.DOT+fieldOfToken;
 			}
@@ -209,6 +213,15 @@ public class MaskAlias extends BaseMask
 				updateExpressionTokenAlias(exp, schema, tableName, aliasBefore, aliasAfter );
 			}
 		}
+		
+		QueryTokens.Sort[] sortTokens = builder.getQueryModel().getOrderByClause();
+		for(int i=0; i<sortTokens.length; i++){
+			QueryTokens.Sort orderByToken = sortTokens[i];
+			if(orderByToken.getExpression() instanceof DefaultExpression){
+				final DefaultExpression exp = (DefaultExpression) orderByToken.getExpression();
+				updateExpressionTokenAlias(exp, schema, tableName, aliasBefore, aliasAfter );
+			}
+		}
 
 
 	}
@@ -225,9 +238,7 @@ public class MaskAlias extends BaseMask
 			
 			final TreeNode parent = builder.browser.getQueryItem().getParent();
 			if(parent!=null){
-				final TreeNode selected = builder.browser.getSelectedNode();
-				builder.browser.reload(parent.getChildAt(0));
-				builder.browser.setSelectedItem((DefaultTreeItem) selected);
+				builder.browser.nodeChanged(parent);
 			}
 		}
 		else

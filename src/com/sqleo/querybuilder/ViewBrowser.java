@@ -89,7 +89,7 @@ public class ViewBrowser extends BorderLayoutPanel implements TreeSelectionListe
 		tree.expandPath(path);
 	}
 	
-	private void nodeChanged(TreeNode node)
+	public void nodeChanged(TreeNode node)
 	{
 		((DefaultTreeModel)tree.getModel()).nodeChanged(node);
 	}
