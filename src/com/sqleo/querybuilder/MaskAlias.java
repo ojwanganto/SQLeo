@@ -37,6 +37,7 @@ import javax.swing.tree.TreeNode;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment._Version;
+import com.sqleo.querybuilder.BrowserItems.AbstractQueryTreeItem;
 import com.sqleo.querybuilder.BrowserItems.DiagramQueryTreeItem;
 import com.sqleo.querybuilder.syntax.DerivedTable;
 import com.sqleo.querybuilder.syntax.QuerySpecification;
@@ -44,6 +45,7 @@ import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Condition;
 import com.sqleo.querybuilder.syntax.QueryTokens.DefaultExpression;
 import com.sqleo.querybuilder.syntax.QueryTokens.Group;
+import com.sqleo.querybuilder.syntax.QueryTokens._Expression;
 import com.sqleo.querybuilder.syntax.SQLFormatter;
 
 
@@ -176,70 +178,67 @@ public class MaskAlias extends BaseMask
 		return null;
 	}
 	
-	private void updateConditionTokenAlias(final Condition condition,final String schema,final String tableName,
-			final String aliasBefore,final String aliasAfter){
-		if(condition.getLeft() instanceof DefaultExpression){
-			final DefaultExpression exp = (DefaultExpression) condition.getLeft();
-			updateExpressionTokenAlias(exp, schema, tableName, aliasBefore,	aliasAfter);
+	private void updateExpressionTokenAlias(final _Expression exp, final String schema, final String tableName, final String aliasBefore,
+			final String aliasAfter) {
+		if(exp instanceof DefaultExpression){
+			final String updatedToken = getUpdatedTokenWithAlias(schema, tableName, exp.toString(), aliasBefore, aliasAfter);
+			if(updatedToken!=null){
+				((DefaultExpression)exp).setValue(updatedToken);
+			}
 		}
 	}
 
-	private void updateExpressionTokenAlias(final DefaultExpression exp, final String schema, final String tableName, final String aliasBefore,
-			final String aliasAfter) {
-		final String updatedToken = getUpdatedTokenWithAlias(schema, tableName, exp.toString(), aliasBefore, aliasAfter);
-		if(updatedToken!=null){
-			exp.setValue(updatedToken);
+	
+	private void updateQueryTokensRelatedToTableAlias(QuerySpecification qs,String schema, String tableName, String aliasBefore, String aliasAfter){
+		final _Expression[] selectList = qs.getSelectList();
+		for(int i = 0; i < selectList.length; i++){
+			updateExpressionTokenAlias(selectList[i], schema, tableName, aliasBefore, aliasAfter );
 		}
+		final Condition[] whereClause = qs.getWhereClause();
+		for(int i = 0 ; i < whereClause.length ; i++){
+			updateExpressionTokenAlias(whereClause[i].getLeft(), schema, tableName, aliasBefore, aliasAfter );
+		}
+		final Group[] groupByClause = qs.getGroupByClause();
+		for(int i = 0; i < groupByClause.length; i++){
+			updateExpressionTokenAlias(groupByClause[i].getExpression(), schema, tableName, aliasBefore, aliasAfter );
+		}
+		final Condition[] havingClause = qs.getHavingClause();
+		for(int i = 0; i < havingClause.length; i++){
+			updateExpressionTokenAlias(havingClause[i].getLeft(), schema, tableName, aliasBefore, aliasAfter );
+		}
+		final QueryTokens.Sort[] orderByClause = builder.getQueryModel().getOrderByClause();
+		for(int i=0; i<orderByClause.length; i++){
+			updateExpressionTokenAlias(orderByClause[i].getExpression(), schema, tableName, aliasBefore, aliasAfter );
+		}
+
 	}
 	
-	private void updateQueryTokensRelatedToTableAlias(String schema, String tableName, String aliasBefore, String aliasAfter){
-		QuerySpecification qs = builder.browser.getQueryItem().getQueryExpression().getQuerySpecification();
-		for(int i = 0 ; i < qs.getWhereClause().length ; i++){
-			updateConditionTokenAlias(qs.getWhereClause()[i], schema, tableName, aliasBefore, aliasAfter );
+	private void nodeAndChildrenChanged(final TreeNode node){
+		for(int i = 0; i < node.getChildCount();i++){
+			builder.browser.nodeChanged(node.getChildAt(i));
 		}
-		for(int i = 0; i < qs.getHavingClause().length; i++){
-			updateConditionTokenAlias(qs.getHavingClause()[i], schema, tableName, aliasBefore, aliasAfter );
-		}
-		for(int i = 0; i < qs.getGroupByClause().length; i++){
-			final Group gr = qs.getGroupByClause()[i];
-			if(gr.getExpression() instanceof DefaultExpression){
-				final DefaultExpression exp = (DefaultExpression) gr.getExpression();
-				updateExpressionTokenAlias(exp, schema, tableName, aliasBefore, aliasAfter );
-			}
-		}
-		for(int i = 0; i < qs.getSelectList().length; i++){
-			if(qs.getSelectList()[i] instanceof DefaultExpression){
-				final DefaultExpression exp = (DefaultExpression) qs.getSelectList()[i];
-				updateExpressionTokenAlias(exp, schema, tableName, aliasBefore, aliasAfter );
-			}
-		}
-		
-		QueryTokens.Sort[] sortTokens = builder.getQueryModel().getOrderByClause();
-		for(int i=0; i<sortTokens.length; i++){
-			QueryTokens.Sort orderByToken = sortTokens[i];
-			if(orderByToken.getExpression() instanceof DefaultExpression){
-				final DefaultExpression exp = (DefaultExpression) orderByToken.getExpression();
-				updateExpressionTokenAlias(exp, schema, tableName, aliasBefore, aliasAfter );
-			}
-		}
-
-
+		builder.browser.nodeChanged(node);
+	}
+	private void nodeOrderByChanged(){
+		//refresh order by
+		final TreeNode rootParent = builder.browser.getRootQueryItem().getParent();
+		nodeAndChildrenChanged(rootParent.getChildAt(1));
 	}
 
 	protected boolean onConfirm()
 	{
 		if(querytoken instanceof QueryTokens.Table)
 		{
-			updateQueryTokensRelatedToTableAlias(((QueryTokens.Table) querytoken).getSchema(), querytoken.getName(), querytoken.getAlias(), value.getText());
+			updateQueryTokensRelatedToTableAlias(
+					 builder.browser.getQueryItem().getQueryExpression().getQuerySpecification(),
+					((QueryTokens.Table) querytoken).getSchema(), querytoken.getName(), querytoken.getAlias(), value.getText());
 			
 			DiagramEntity entity = builder.diagram.getEntity((QueryTokens.Table)querytoken);
 			querytoken.setAlias(value.getText());
 			entity.setQueryToken((QueryTokens.Table)querytoken);
 			
-			final TreeNode parent = builder.browser.getQueryItem().getParent();
-			if(parent!=null){
-				builder.browser.nodeChanged(parent);
-			}
+			nodeAndChildrenChanged(builder.browser.getQueryItem());
+			nodeOrderByChanged();
 		}
 		else
 		{
@@ -259,9 +258,28 @@ public class MaskAlias extends BaseMask
 				
 				BrowserItems.DiagramQueryTreeItem dqti = (BrowserItems.DiagramQueryTreeItem)builder.browser.getQueryItem();
 				if(querytoken!=null){
+					updateQueryTokensRelatedToTableAlias(
+							 builder.browser.getQueryItem().getQueryExpression().getQuerySpecification(),
+							((QueryTokens.Table) querytoken).getSchema(),
+							querytoken.getName(), querytoken.getAlias(), value.getText());
+					
+					nodeAndChildrenChanged(dqti);
+					nodeOrderByChanged();
+
 					final String fieldName = querytoken.getAlias()!=null ? querytoken.getAlias() : querytoken.getName();
 					reloadParentWithAlias(dqti,fieldName, value.getText());
+
 				}else if (derivedTable!=null){
+					AbstractQueryTreeItem parentItem = (AbstractQueryTreeItem) dqti.getParent().getParent();
+					
+					updateQueryTokensRelatedToTableAlias(
+							parentItem.getQueryExpression().getQuerySpecification(),
+							null,
+							derivedTable.getAlias(), derivedTable.getAlias(), value.getText());
+					
+					nodeAndChildrenChanged(dqti);
+					nodeOrderByChanged();
+					
 					final DiagramQuery diagQuery = dqti.getDiagramObject();
 					final String oldAlias = derivedTable.getAlias();
 					derivedTable.setAlias(value.getText());
@@ -270,6 +288,7 @@ public class MaskAlias extends BaseMask
 					}
 					dqti.setUserObject(value.getText());
 					reloadParentWithAlias(dqti,oldAlias, value.getText());
+
 				}
 			}
 			if(querytoken!=null) {		

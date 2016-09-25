@@ -431,7 +431,7 @@ public class ViewBrowser extends BorderLayoutPanel implements TreeSelectionListe
 		return model;
 	}
 
-	private BrowserItems.AbstractQueryTreeItem getRootQueryItem()
+	public BrowserItems.AbstractQueryTreeItem getRootQueryItem()
 	{
 		BrowserItems.DefaultTreeItem root = (BrowserItems.DefaultTreeItem)tree.getModel().getRoot();
 		return (BrowserItems.AbstractQueryTreeItem)root.getFirstChild();
