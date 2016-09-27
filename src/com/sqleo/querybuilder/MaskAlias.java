@@ -258,6 +258,7 @@ public class MaskAlias extends BaseMask
 				
 				BrowserItems.DiagramQueryTreeItem dqti = (BrowserItems.DiagramQueryTreeItem)builder.browser.getQueryItem();
 				if(querytoken!=null){
+					if(querytoken instanceof QueryTokens.Table){
 					updateQueryTokensRelatedToTableAlias(
 							 builder.browser.getQueryItem().getQueryExpression().getQuerySpecification(),
 							((QueryTokens.Table) querytoken).getSchema(),
@@ -265,6 +266,7 @@ public class MaskAlias extends BaseMask
 					
 					nodeAndChildrenChanged(dqti);
 					nodeOrderByChanged();
+					}
 
 					final String fieldName = querytoken.getAlias()!=null ? querytoken.getAlias() : querytoken.getName();
 					reloadParentWithAlias(dqti,fieldName, value.getText());
