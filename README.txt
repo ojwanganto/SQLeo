@@ -33,6 +33,16 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2016.09.rc1.zip: 2016-09-28
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2016.09/
+
+	#380 Export Pivot: set fetchsize to 1000
+	#331 Content window: jump doesn't work
+	#120 Query Builder: changing table alias is not applyed to condition ...
+	#xxx Updated Translations for French, Serbian (by Dejan Zdravkovic), Spanish (Miguel Angel Gil Rios)
+
 
 SQLeoVQB.2016.08.rc1.zip: 2016-08-28
 
