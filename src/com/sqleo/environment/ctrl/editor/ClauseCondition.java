@@ -41,6 +41,7 @@ import javax.swing.table.TableColumn;
 
 import com.sqleo.common.jdbc.ConnectionAssistant;
 import com.sqleo.common.jdbc.ConnectionHandler;
+import com.sqleo.common.util.JdbcUtils;
 import com.sqleo.common.util.SQLHelper;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.ContentPane;
@@ -259,7 +260,10 @@ public class ClauseCondition extends BaseDynamicTable
 			ConnectionHandler ch = ConnectionAssistant.getHandler(handlerKey);
 			stmt = ch.get().createStatement();
 			stmt.setQueryTimeout(2);
-			rs = stmt.executeQuery(sql);
+			// #349 Content Window: add AutoSavepoint in Populate filter with values
+			// rs = stmt.executeQuery(sql);
+			rs = JdbcUtils.executeQuery(ch, sql, stmt);
+			// #349 end
 			values = new ArrayList<String>(); 
 			ResultSetMetaData rsmd = rs.getMetaData();
 			String classDataType = rsmd.getColumnClassName(1);
@@ -294,6 +298,7 @@ public class ClauseCondition extends BaseDynamicTable
 		}
 				
 		return (values == null ? null : values.toArray(new String[0]));
+
 	}
 
 	public void addColumn(String text)
