@@ -25,15 +25,22 @@ package com.sqleo.environment.ctrl;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.util.Date;
+
 
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
 import com.sqleo.common.gui.ListView;
+import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.environment.Application;
+import com.sqleo.environment.io.FileHelper;
+import com.sqleo.environment.mdi.DialogPreferences;
+import com.sqleo.environment.Preferences;
+
 
 
 public class SQLHistoryViewer extends ListView  implements MouseListener
@@ -91,6 +98,7 @@ public class SQLHistoryViewer extends ListView  implements MouseListener
 			
 			JPopupMenu popup = new JPopupMenu();
 			popup.add(new ActionCopyQuery());
+			popup.add(new ActionCopyAndOpen());
 			popup.add(new ActionDeleteRow());
 			popup.show(getJavaComponent(),me.getX(),me.getY());
 		}
@@ -100,7 +108,7 @@ public class SQLHistoryViewer extends ListView  implements MouseListener
 	{
 		private ActionCopyQuery()
 		{
-			putValue(NAME,"Copy query");
+			putValue(NAME,I18n.getString("querybuilder.action.copySyntax","Copy Query"));
 		}
         
 		public void actionPerformed(ActionEvent ae)
@@ -108,11 +116,37 @@ public class SQLHistoryViewer extends ListView  implements MouseListener
 			copyValueAt(getSelectedRow(), 3);
 		}
 	}
+	private class ActionCopyAndOpen extends AbstractAction
+	{
+		private static final String SQ_LEO_TEMP_TXT = "SQLeo_temp.";
+		final int selectedRow = getSelectedRow();
+		final String SqlQuery = (String) getValueAt(selectedRow, 3);
+
+		private ActionCopyAndOpen()
+		{
+			putValue(NAME,I18n.getString("datacontent.popup.CopyAndOpen","Copy and open in editor"));
+		}
+		public void actionPerformed(ActionEvent ae)
+		{
+//			if(getSelectedRow()!=null){
+				final String extension = Preferences.getString(DialogPreferences.COPY_OPEN_FILE_EXTENSION, "txt");
+				final String realFile =  SQ_LEO_TEMP_TXT+(extension!=null && !extension.isEmpty()?extension:"txt");
+				final String tempDir = System.getProperty("java.io.tmpdir");
+				final File sqleoTempFile;
+				if(tempDir!=null){
+					sqleoTempFile = new File(tempDir,realFile);
+				}else{
+					sqleoTempFile = new File(realFile);
+				}
+				FileHelper.writeTextToFile(SqlQuery,sqleoTempFile,false,true);
+//			}
+		}
+	}
 	private class ActionDeleteRow extends AbstractAction
 	{
 		private ActionDeleteRow()
 		{
-			putValue(NAME,"Delete row");
+			putValue(NAME,I18n.getString("datacontent.DeleteRecord","Delete row"));
 		}
         
 		public void actionPerformed(ActionEvent ae)
