@@ -358,7 +358,7 @@ public class ClientQueryBuilder extends MDIClient {
 		
 		private void onLaunch(String subtitle,ClientContent newClient){
 			Application.session.addSQLToHistory(new SQLHistoryData(new Date(), 
-					ClientQueryBuilder.this.keycah, "QueryBuilder", newClient.getControl().getQuery()));
+					ClientQueryBuilder.this.keycah, "QueryBuilder", newClient.getControl().getQuery().toString()));
 			Vector<Integer> prevColWidths = null;
 			if(client!=null){
 				client.getControl().getView().cacheColumnWidths();
