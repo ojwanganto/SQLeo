@@ -76,8 +76,11 @@ public class TaskRetrieve implements Runnable
 				ConnectionHandler ch = ConnectionAssistant.getHandler(target.getHandlerKey());
 				stmt = ch.get().createStatement();
 				stmt.setMaxRows(limit);
-				// ticket #375 prevent OutOfMemory errors with Big MySQL tables
 
+				// reset timeout for #351 Content Window: SQLexception: Statement was canceled or the session timed out 
+				stmt.setQueryTimeout(0);
+
+				// ticket #375 prevent OutOfMemory errors with Big MySQL tables
 				if( ch.getDatabaseProductName() == "MySQL")
 				{
 					stmt.setMaxRows(1000);
