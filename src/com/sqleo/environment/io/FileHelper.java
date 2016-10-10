@@ -30,10 +30,6 @@ public class FileHelper {
 			saveSuccess = false;
 			Application.println(e, true);
 			e.printStackTrace();
-		} catch (IOException e) {
-			saveSuccess = false;
-			Application.println(e, true);
-			e.printStackTrace();
 		}finally{
 			if(out!=null){
 				out.close();

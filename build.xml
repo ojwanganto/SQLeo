@@ -227,5 +227,43 @@
   </target>
   
 
+  <property name="test.build.dir" value="${basedir}/build/test-classes"/>
+  <property name="test.src.dir" value="${basedir}/test"/>
+  <property name="test.lib.dir" value="${basedir}/test/lib"/>
+  <property name="test.res.dir" value="${basedir}/test/resources"/>
+  
+  <path id="classpath.test">
+	<fileset dir="${test.lib.dir}" includes="**/*.jar"/>
+	<pathelement location="${test.build.dir}"/>
+	<pathelement location="${test.res.dir}"/>
+  </path>
+
+  <target name="test-compile">
+	<mkdir dir="${test.build.dir}"/>
+	<copy todir="${test.build.dir}">
+      <fileset dir="${test.res.dir}" />
+    </copy>
+    <javac destdir="${test.build.dir}">
+		<src path="${src}" />
+        <exclude name="com/apple/**"/>
+		<exclude name="org/**"/>
+		<exclude name="com/sqleo/environment/SQLeoMacApp.java"/>
+    </javac>
+    <javac srcdir="${test.src.dir}" destdir="${test.build.dir}">
+        <classpath refid="classpath.test"/>
+    </javac> 
+  </target>
+  
+  <target name="test" depends="test-compile">
+    <junit printsummary="on" haltonfailure="yes" fork="true">
+        <classpath>
+          <path refid="classpath.test"/>
+        </classpath>
+        <formatter type="brief" usefile="false" />
+        <batchtest>
+            <fileset dir="${test.src.dir}" />
+        </batchtest>
+    </junit>
+  </target>
   
 </project>
