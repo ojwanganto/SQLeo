@@ -307,6 +307,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	@Override
 	public void onConnectionClosed(String keycah) {
 		cbx.removeItem(keycah);
+		cbx.setSelectedIndex(-1);
 	}
 
 	@Override
