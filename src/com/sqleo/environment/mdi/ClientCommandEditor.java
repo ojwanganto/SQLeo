@@ -308,6 +308,7 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	public void onConnectionClosed(String keycah) {
 		cbx.removeItem(keycah);
 		cbx.setSelectedIndex(-1);
+		setEditorBackgroundColor(null);
 	}
 
 	@Override
