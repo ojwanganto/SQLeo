@@ -306,9 +306,12 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 
 	@Override
 	public void onConnectionClosed(String keycah) {
+		// ticket #386 command editor: current connexion should be emptyed after disconnect
+		if (getActiveConnection() != null && getActiveConnection().equals(keycah) && !Preferences.isAutoSelectConnectionEnabled()) { 
+			cbx.setSelectedIndex(-1);
+			setEditorBackgroundColor(null);
+		}
 		cbx.removeItem(keycah);
-		cbx.setSelectedIndex(-1);
-		setEditorBackgroundColor(null);
 	}
 
 	@Override
@@ -318,7 +321,14 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 			cbx.insertItemAt(keycah, 0);
 			cbx.setSelectedIndex(0);
 		}else{
-			cbx.addItem(keycah);
+			if (cbx.getSelectedIndex() == -1){
+				// new connection arriving in an empty list should not be selected by default
+				cbx.insertItemAt(keycah, 0);
+				// add it but don't select it
+			} else {
+				cbx.addItem(keycah);
+			}
+			
 		}
 	}
 	
