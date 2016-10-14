@@ -307,11 +307,14 @@ public class ClientCommandEditor extends MDIClientWithCRActions implements
 	@Override
 	public void onConnectionClosed(String keycah) {
 		// ticket #386 command editor: current connexion should be emptyed after disconnect
-		if (getActiveConnection() != null && getActiveConnection().equals(keycah) && !Preferences.isAutoSelectConnectionEnabled()) { 
+		if (getActiveConnection() != null && getActiveConnection().equals(keycah) && !Preferences.isAutoSelectConnectionEnabled() ) { 
 			cbx.setSelectedIndex(-1);
 			setEditorBackgroundColor(null);
 		}
 		cbx.removeItem(keycah);
+		if (cbx.getSelectedIndex() == -1) {
+			setEditorBackgroundColor(null);
+		};
 	}
 
 	@Override

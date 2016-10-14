@@ -287,12 +287,13 @@ public class SideNavigatorMouse extends MouseAdapter
 			}
 			finally
 			{
-				if(disconnected){
-					Application.window.connectionClosed(uoDs.getKey());
-				}
+//#386 command editor: current connexion should be emptyed after disconnect
+//				if(disconnected){
+//					Application.window.connectionClosed(uoDs.getKey());
+//				}
 				final boolean connected = uoDs.isConnected();
 				if(connected){
-					Application.window.connectionOpened(uoDs.getKey());
+//					Application.window.connectionOpened(uoDs.getKey());
 				}else{
 					Application.window.connectionClosed(uoDs.getKey());
 				}
