@@ -10,7 +10,7 @@ import com.sqleo.querybuilder.QueryModel;
 
 public class SQLParserTest extends AbstractSQLeoTest{
 
-	private static final int TOTAL_TEST_CASES = 1 ;
+	private static final int TOTAL_TEST_CASES = 4 ;
 	
 	@Override
 	protected String getTestResourcesFolder() {
@@ -28,17 +28,20 @@ public class SQLParserTest extends AbstractSQLeoTest{
 			final String inputFileName = getFileName(inputFile);
 			final String expectedFileName = getFileName(expectedFile);
 
-			
+			System.out.println("\n--------------- "+inputFile+" --------------- ");
 			testParserWithExpectedResult(inputFileName, expectedFileName);
 		}
 	}
 	
 	private void testParserWithExpectedResult(final String inputFileName, final String expectedFileName) throws ClassNotFoundException, IOException{
 
+		//QueryBuilder.useAlwaysQuote = true;
+		//QueryBuilder.identifierQuoteString = new String("\"");
+		
 		final QueryModel qm = FileStreamSQL.read(inputFileName);
 		final String actual = qm.toString(true);
 		
-//		FileStreamSQL.writeSQL(expectedFileName+".gen", actual);
+		// FileStreamSQL.writeSQL(expectedFileName+".gen", actual);
 		System.out.println(actual);
 		
 		final String expected = FileStreamSQL.readSQL(expectedFileName);
@@ -48,3 +51,5 @@ public class SQLParserTest extends AbstractSQLeoTest{
 	}
 
 }
+
+

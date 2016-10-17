@@ -1,1 +1,1 @@
-select * from actor where actor_id = 1;
+select * from actor where actor_id = 1
