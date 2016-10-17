@@ -33,8 +33,11 @@ import com.sqleo.environment.ctrl.define.TableMetaData;
 import com.sqleo.environment.ctrl.explorer.AbstractViewObjects;
 import com.sqleo.environment.mdi.ClientContent;
 import com.sqleo.environment.mdi.ClientDefinition;
+import com.sqleo.querybuilder.syntax.QuerySpecification;
 import com.sqleo.querybuilder.syntax.QueryTokens;
-
+import com.sqleo.querybuilder.syntax.QueryTokens.Condition;
+import com.sqleo.querybuilder.syntax.QueryTokens.Group;
+import com.sqleo.querybuilder.syntax.QueryTokens.Sort;
 
 public class DiagramEntity extends DiagramAbstractEntity
 {
@@ -127,6 +130,34 @@ public class DiagramEntity extends DiagramAbstractEntity
 		fireDeselectAll();
 		builder.diagram.removeAllRelation(this);
 		builder.browser.removeFromClause(querytoken);
+		
+// Ticket #379  Designer: removing a table should remove all related columns (By Dana P)
+		QuerySpecification qs = builder.browser.getQuerySpecification();
+      
+		Condition[] conditions = qs.getWhereClause();
+      
+		for (int i = 0; i < conditions.length; i++)
+			if (conditions[i].getLeft().toString().indexOf(querytoken.getName()) != -1 || conditions[i].getLeft().toString().indexOf(querytoken.getAlias()) != -1)
+				builder.browser.removeWhereClause(conditions[i]);
+      
+		conditions = qs.getHavingClause();
+      
+		for (int i = 0; i < conditions.length; i++)
+			if (conditions[i].getLeft().toString().indexOf(querytoken.getName()) != -1 || conditions[i].getLeft().toString().indexOf(querytoken.getAlias()) != -1)
+				builder.browser.removeHavingClause(conditions[i]);
+      
+		Group[] groups = qs.getGroupByClause();
+      
+		for (int i = 0; i < groups.length; i++)
+			if (groups[i].toString().indexOf(querytoken.getName()) != -1 || groups[i].toString().indexOf(querytoken.getAlias()) != -1)
+				builder.browser.removeGroupByClause(groups[i]);
+      
+		Sort[] orders = builder.getQueryModel().getOrderByClause();
+      
+		for (int i = 0; i < orders.length; i++)
+			if (orders[i].getExpression().toString().indexOf(querytoken.getName()) != -1 || orders[i].getExpression().toString().indexOf(querytoken.getAlias()) != -1)
+				builder.browser.removeOrderByClause(orders[i]);
+// end #379
 	}
 	
 	DiagramField addField(Integer ordinalPosition, String label, Object key)
