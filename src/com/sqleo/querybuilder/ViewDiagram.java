@@ -367,28 +367,28 @@ public class ViewDiagram extends BorderLayoutPanel
     /* BAD? */
 	public void join(DiagramAbstractEntity eP, DiagramField fP, DiagramAbstractEntity eF, DiagramField fF)
 	{
-		joinInternal(eP, fP, eF, fF, "INNER");
+		joinInternal(eP, fP, eF, fF, "INNER","=");
 	}
 	public void join(DiagramAbstractEntity eP, DiagramField fP, DiagramAbstractEntity eF, DiagramField fF,String joinType)
 	{	
-		joinInternal(eP, fP, eF, fF, joinType);
+		joinInternal(eP, fP, eF, fF, joinType,"=");
 	}
-	private void joinInternal(DiagramAbstractEntity eP, DiagramField fP, DiagramAbstractEntity eF, DiagramField fF,String joinType)
+	private void joinInternal(DiagramAbstractEntity eP, DiagramField fP, DiagramAbstractEntity eF, DiagramField fF, String joinType, String operator)
 	{
 		temporany = null;
-		join(eP,fP,joinType);
-		join(eF,fF,joinType);
+		join(eP,fP,joinType,operator);
+		join(eF,fF,joinType,operator);
 	}
 	/* BAD? */
-	void join(DiagramAbstractEntity entity, DiagramField field)
+	void join(DiagramAbstractEntity entity, DiagramField field, String operator)
 	{
-		joinInternal(entity, field, "INNER");
+		joinInternal(entity, field, "INNER", operator);
 	}
-	void join(DiagramAbstractEntity entity, DiagramField field,String joinType)
+	void join(DiagramAbstractEntity entity, DiagramField field,String joinType, String operator)
 	{
-		joinInternal(entity, field, joinType);
+		joinInternal(entity, field, joinType, operator);
 	}
-	private void joinInternal(DiagramAbstractEntity entity, DiagramField field,String joinType)
+	private void joinInternal(DiagramAbstractEntity entity, DiagramField field,String joinType, String operator)
 	{
 		if(temporany==null)
 		{
@@ -426,7 +426,7 @@ public class ViewDiagram extends BorderLayoutPanel
 			temporany.foreignEntity = entity;
 			temporany.foreignField = field;
 			
-			QueryTokens.Join join = new QueryTokens.Join(QueryTokens.Join.getTypeInt(joinType),temporany.primaryField.querytoken,"=",temporany.foreignField.querytoken);
+			QueryTokens.Join join = new QueryTokens.Join(QueryTokens.Join.getTypeInt(joinType),temporany.primaryField.querytoken,operator,temporany.foreignField.querytoken);
 			if(getRelation(join) == null)
 			{
 				temporany.primaryField.joined();

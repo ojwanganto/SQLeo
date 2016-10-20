@@ -498,7 +498,11 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				//System.out.println("**** dovrebbe essere una join ****");
 				QueryTokens.Join token = new QueryTokens.Join(left,tokens[i].getOperator(),right);
 				DiagramRelation relation = doJoin(token);
-				if(relation!=null) browser.removeWhereClause(tokens[i]);
+				if(relation!=null)
+				{
+				   browser.removeWhereClause(tokens[i]);
+				   onModelChanged();
+				}
 			}
 			catch(IOException e)
 			{
@@ -577,8 +581,8 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 		
 		if(fieldP!=null && fieldF!=null)
 		{
-			diagram.join(entityP,fieldP);
-			diagram.join(entityF,fieldF);
+			diagram.join(entityP,fieldP, token.getCondition().getOperator());
+			diagram.join(entityF,fieldF, token.getCondition().getOperator());
 			
 			relation = diagram.getRelation(token);
 			if(relation!=null) relation.setQueryToken(token);

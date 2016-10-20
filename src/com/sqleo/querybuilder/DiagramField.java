@@ -178,7 +178,7 @@ public class DiagramField extends JPanel implements ItemListener, MouseListener,
 		}
 		else if (!this.getOwner().builder.isDragAndDropEnabled())
 		{
-			getOwner().builder.diagram.join(this.getOwner(),this);
+			getOwner().builder.diagram.join(this.getOwner(),this,"=");
 		}
 	}
 
