@@ -159,6 +159,11 @@ public abstract class DiagramAbstractEntity extends JInternalFrame
 		return getField(label,false);
 	}
 	
+	public JPanel getFields()
+	{
+	   return fields;
+	}
+	
 	// argument : unpack = true -> remove field from filter
 	DiagramField getField(String label, boolean unpack)
 	{

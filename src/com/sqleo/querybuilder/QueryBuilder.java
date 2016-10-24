@@ -33,6 +33,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -293,7 +294,17 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 					DiagramField field = null;
 					if(entities[j] instanceof DiagramEntity) {
 						DiagramEntity entity = (DiagramEntity)entities[j];
-						field =  entity.getField(whereToken.toString());
+						String whereString = whereToken.toString();
+						JPanel entityFields = entity.getFields();
+						 
+						for(int i = 0; i < entityFields.getComponentCount(); i++)
+						{
+						   DiagramField currentField = (DiagramField) entityFields.getComponent(i);
+						   if (SQLFormatter.stripQuote(whereToken.toString()).indexOf(
+						      SQLFormatter.stripQuote(currentField.getQueryToken().toString())) != -1)
+						      whereString = currentField.getQueryToken().toString();   
+						}
+						field = entity.getField(whereString);
 						if(null == field && whereToken.toString().lastIndexOf(SQLFormatter.DOT)!=-1){
 							final String[] split = whereToken.toString().split("\\"+SQLFormatter.DOT);
 							final String tableName = split[0];
