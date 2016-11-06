@@ -381,7 +381,7 @@ public class ClientContent extends MDIClientWithCRActions
 			DialogStream.showExportExcel(ClientContent.this.control);
 		}
 	}
-	private class ActionShowExportPivotHtml extends AbstractAction
+	private class ActionShowExportPivotHtml extends AbstractAction implements Runnable
 	{
 		ActionShowExportPivotHtml()
 		{
@@ -390,13 +390,20 @@ public class ClientContent extends MDIClientWithCRActions
 					Application.resources.getIcon(Application.ICON_EXPORT_PIVOT));
 			putValue(SHORT_DESCRIPTION,  I18n.getString("datacontent.ExcelPivot","export pivot HTML..."));
 		}
-
 		public void actionPerformed(ActionEvent ae)
 		{
+			final Thread t = new Thread(this);
+			t.start();
+
+		}
+		public void run()
+		{
 			if(ClientContent.this.control.isBusy() || control.getHandlerKey()==null) return;
+			control.toggleActions(true);
 			final ConnectionHandler ch = ConnectionAssistant.getHandler(control.getHandlerKey());
 			try{
 				final Statement stmt = ch.get().createStatement();
+				control.setExportPivotStmt(stmt);
 				// ticket #375 prevent OutOfMemory errors with Big MySQL tables
 				if( ch.getDatabaseProductName() == "MySQL")
 				{
@@ -448,6 +455,8 @@ public class ClientContent extends MDIClientWithCRActions
 			rs.close();
 			}catch(SQLException sqle){
 				Application.println(sqle,true);
+			}finally{
+				control.toggleActions(false);
 			}
 
 

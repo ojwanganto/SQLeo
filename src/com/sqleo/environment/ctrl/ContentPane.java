@@ -122,6 +122,10 @@ public class ContentPane extends BorderLayoutPanel
 	}
 	
 	private Statement countQueryStmt;
+	private Statement exportPivotStmt;
+	public void setExportPivotStmt(final Statement stmt){
+		this.exportPivotStmt = stmt;
+	}
 	
 	private class ActionCountRows extends AbstractAction {
 
@@ -261,7 +265,7 @@ public class ContentPane extends BorderLayoutPanel
 		onBeginTask(new TaskUpdate(this));
 	}
 	
-	private void toggleActions(final boolean taskRunning){
+	public void toggleActions(final boolean taskRunning){
 		
 		this.getActionMap().get("task-go").setEnabled(!taskRunning);
 		this.getActionMap().get("task-stop").setEnabled(taskRunning);
@@ -296,8 +300,8 @@ public class ContentPane extends BorderLayoutPanel
 		}
 	}
 	
-	private void closeCountQueryTask(){
-		JdbcUtils.cancelAndCloseStatement(countQueryStmt);
+	private void closeStatement(final Statement stmt){
+		JdbcUtils.cancelAndCloseStatement(stmt);
 		toggleActions(false);
 	}
 	
@@ -305,7 +309,11 @@ public class ContentPane extends BorderLayoutPanel
 	private void onEndTask()
 	{
 		if(countQueryStmt!=null){
-			closeCountQueryTask();
+			closeStatement(countQueryStmt);
+			return;
+		}
+		if(exportPivotStmt!=null){
+			closeStatement(exportPivotStmt);
 			return;
 		}
 		
