@@ -63,7 +63,7 @@ public class MaskJoin extends BaseMask
 		foreign.setOpaque(true);
 		foreign.setBackground(ViewDiagram.BGCOLOR_JOINED);
 		
-		operator = new JComboBox(new String[]{"=","<",">","<=",">=","<>"});
+		operator = new JComboBox(new String[]{"=","<",">","<=",">=","<>","!="});
 		operator.setSelectedItem(relation.querytoken.getCondition().getOperator());
 		
 		GridBagLayout gbl = new GridBagLayout();

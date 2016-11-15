@@ -125,7 +125,7 @@ public class ClauseCondition extends BaseDynamicTable
 	{
 		super.initTableModel(col);
 		
-		String[] operation = new String[]{"=","<",">","<=",">=","<>","like","not like","is","is not","in","not in"};
+		String[] operation = new String[]{"=","<",">","<=",">=","<>","!=","like","not like","is","is not","in","not in"};
 		
 		TableColumn tableColumn = this.getColumn(1);
 

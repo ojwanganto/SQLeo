@@ -512,7 +512,8 @@ public class QueryBuilder extends JTabbedPane implements ChangeListener
 				if(relation!=null)
 				{
 				   browser.removeWhereClause(tokens[i]);
-				   onModelChanged();
+					// #393 Designer: reversing query never ends 
+					// onModelChanged();
 				}
 			}
 			catch(IOException e)

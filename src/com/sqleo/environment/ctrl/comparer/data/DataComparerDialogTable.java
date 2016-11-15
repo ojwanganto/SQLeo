@@ -39,7 +39,7 @@ public class DataComparerDialogTable extends BaseDynamicTable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String[] operation = new String[]{"=","<",">","<=",">=","<>","like","not like","is","is not","in","not in"};
+	private static final String[] operation = new String[]{"=","<",">","<=",">=","<>","!=","like","not like","is","is not","in","not in"};
 	private static final String[] aggregates = SQLHelper.SQL_AGGREGATES;
 	public static enum DATA_TYPE { COLUMNS, AGGREGATES , FILTERS};
 	
