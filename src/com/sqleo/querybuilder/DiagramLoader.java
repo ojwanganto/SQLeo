@@ -124,7 +124,9 @@ public class DiagramLoader extends JDialog implements Runnable
 		}
 		catch(SQLException sqle)
 		{
-			System.out.println("[ DiagramLoader::run ]\n" + sqle);
+			// #394 Designer: reversing query doesn't warn on closed connection 
+			// System.out.println("[ DiagramLoader::run ]\n" + sqle);
+			Application.alert("[ DiagramLoader::run ]\n" + sqle);
 		}
 		finally
 		{
