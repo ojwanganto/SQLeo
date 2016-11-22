@@ -32,7 +32,7 @@ import com.sqleo.environment.Preferences;
 
 public class JdbcUtils {
 
-	public static void cancelAndCloseStatement(Statement stmt) {
+	public static void cancelAndCloseStatement(final Statement stmt) {
 		if(stmt!=null)
 		{	
 			try {
@@ -47,7 +47,6 @@ public class JdbcUtils {
 				} catch (SQLException e) {
 					Application.println(e, false);
 				}
-				stmt = null;
 			}
 		}		
 	}

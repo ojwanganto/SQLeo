@@ -138,6 +138,8 @@ public class ContentPane extends BorderLayoutPanel
 				@Override
 				public void run() {
 					
+					int records = 0;
+					ResultSet rs = null;
 					try
 					{
 						toggleActions(true);
@@ -152,22 +154,29 @@ public class ContentPane extends BorderLayoutPanel
 						final ConnectionHandler ch = ConnectionAssistant.getHandler(keycah);
 						countQueryStmt = ch.get().createStatement();
 						
-						final ResultSet rs = JdbcUtils.executeQuery(ch, countQuery, countQueryStmt);
+						rs = JdbcUtils.executeQuery(ch, countQuery, countQueryStmt);
 						
-						final int records = rs.next() ? rs.getInt(1) : 0;
+						records = rs.next() ? rs.getInt(1) : 0;
 						retrievedRowCount = Integer.valueOf(records);
 						doRefreshStatus(false);
-						rs.close();
-						countQueryStmt.close();
-						countQueryStmt = null;
-						toggleActions(false);
-						
-						JOptionPane.showMessageDialog(Application.window,I18n.getString("datacontent.message.TotalRecords","Total records count : ")+records);
-						
 					}
 					catch(SQLException sqle)
 					{
 						Application.println(sqle,true);
+					}finally{
+							try {
+								if(rs!=null){
+									rs.close();
+								}
+								if(countQueryStmt!=null){
+									countQueryStmt.close();
+								}
+								countQueryStmt = null;
+								toggleActions(false);
+								JOptionPane.showMessageDialog(Application.window,I18n.getString("datacontent.message.TotalRecords","Total records count : ")+records);
+							} catch (SQLException e) {
+								Application.println(e, true);
+							}
 					}
 					
 				}
@@ -310,10 +319,12 @@ public class ContentPane extends BorderLayoutPanel
 	{
 		if(countQueryStmt!=null){
 			closeStatement(countQueryStmt);
+			countQueryStmt = null;
 			return;
 		}
 		if(exportPivotStmt!=null){
 			closeStatement(exportPivotStmt);
+			exportPivotStmt = null;
 			return;
 		}
 		

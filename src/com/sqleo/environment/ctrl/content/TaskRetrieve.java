@@ -63,7 +63,9 @@ public class TaskRetrieve implements Runnable
 	
 	public void close() throws Exception
 	{
-		JdbcUtils.cancelAndCloseStatement(stmt);	
+		JdbcUtils.cancelAndCloseStatement(stmt);
+		stmt = null;
+		rs = null;
 	}
 	
 	public void run()
