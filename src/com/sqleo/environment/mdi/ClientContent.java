@@ -401,6 +401,7 @@ public class ClientContent extends MDIClientWithCRActions
 			if(ClientContent.this.control.isBusy() || control.getHandlerKey()==null) return;
 			control.toggleActions(true);
 			final ConnectionHandler ch = ConnectionAssistant.getHandler(control.getHandlerKey());
+			ResultSet rsRef = null;
 			try{
 				final Statement stmt = ch.get().createStatement();
 				control.setExportPivotStmt(stmt);
@@ -413,6 +414,7 @@ public class ClientContent extends MDIClientWithCRActions
 					stmt.setFetchSize(1000);
 				}
 				final ResultSet rs = stmt.executeQuery(control.getQuery());
+				rsRef = rs;
 				final int cols= rs.getMetaData().getColumnCount();
 				
 				new PivotTableExport() {
@@ -452,10 +454,16 @@ public class ClientContent extends MDIClientWithCRActions
 
 			};
 			
-			rs.close();
 			}catch(SQLException sqle){
 				Application.println(sqle,true);
 			}finally{
+				try {
+					if(rsRef!=null){
+						rsRef.close();
+					}
+				} catch (SQLException e) {
+					Application.println(e, true);
+				}
 				control.toggleActions(false);
 			}
 

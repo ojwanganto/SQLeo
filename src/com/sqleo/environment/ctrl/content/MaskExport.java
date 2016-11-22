@@ -127,7 +127,7 @@ public class MaskExport extends AbstractMaskPerform
 		try {
 			int cols= rs.getMetaData().getColumnCount();
 			Object[] vals = null;
-			while(rs.next()){
+			while(rs!=null && rs.next()){
 				vals = new Object[cols];
 				for(int i=1; i<=cols;i++)				{
 					vals[i-1] = SQLHelper.getRowValue(rs, i);
@@ -138,7 +138,9 @@ public class MaskExport extends AbstractMaskPerform
 			Application.println(e, true);
 		}finally {
 			try {
-				rs.close();
+				if(rs!=null){
+					rs.close();
+				}
 			} catch (SQLException e) {
 				Application.println(e, true);
 			}
@@ -150,6 +152,8 @@ public class MaskExport extends AbstractMaskPerform
 	@Override
 	protected void fireOnBtnStopClicked() {
 		JdbcUtils.cancelAndCloseStatement(stmt);
+		stmt = null;
+		rs = null;
 	}
 	
 	private void executeContentViewQuery(){

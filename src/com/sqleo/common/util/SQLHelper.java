@@ -200,8 +200,11 @@ public class SQLHelper {
 	}
 
 	public static String getRowValue(final ResultSet rs, final int index) throws SQLException {
+		if(rs == null || rs.isClosed()){
+			return null;
+		}
 		final String value = rs.getString(index);
-		if (null == value) {
+		if (value == null) {
 			// try with object (blob,clob etc...types)
 			final Object obj = rs.getObject(index);
 			return obj != null ? obj.toString() : null;

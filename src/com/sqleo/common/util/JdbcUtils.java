@@ -41,7 +41,9 @@ public class JdbcUtils {
 				Application.println(e, false);
 			}finally{
 				try {
-					stmt.close();
+					if(stmt!=null){
+						stmt.close();
+					}
 				} catch (SQLException e) {
 					Application.println(e, false);
 				}
