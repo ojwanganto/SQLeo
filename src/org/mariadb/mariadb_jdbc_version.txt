@@ -1,2 +1,2 @@
 Original source code and jar file taken from 
-https://downloads.mariadb.org/client-java/1.1.6/
+https://downloads.mariadb.org/client-java/1.4.6/
