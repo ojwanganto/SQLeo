@@ -200,7 +200,7 @@ public class SQLHelper {
 	}
 
 	public static String getRowValue(final ResultSet rs, final int index) throws SQLException {
-		if(rs == null || rs.isClosed()){
+		if(rs == null){
 			return null;
 		}
 		final String value = rs.getString(index);
