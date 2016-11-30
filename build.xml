@@ -11,7 +11,7 @@
   <property name="build.sysclasspath" value="ignore"/>
 
   <property name="name" value="SQLeoVQB"/>
-  <property name="version" value="2016.10.rc1"/>
+  <property name="version" value="2016.11.rc1+"/>
 
   <property name="src" value="${basedir}/src"/>
   <property name="lib" value="${basedir}/lib"/>
@@ -70,10 +70,10 @@
            debug="on"
 	   excludes="**/bak/**"
            optimize="on"
-           target="1.6"
-           source="6">
+           target="1.7"
+           source="7">
 	<!-- TO DO check compilation Warning -->
-	<!-- compilerarg value="-Xlint" />    -->
+	<!-- compilerarg value="-Xlint" /> -->
       <classpath refid="compile.classpath"/>
     </javac>
 

@@ -33,20 +33,34 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2016.11.rc1.zip: 2016-11-29
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2016.11/
+
+	#396 Embeded MySQL driver update from MariaDB 1.1.6 to 1.4.6
+	#394 Designer: reversing query doesn't warn on closed connection
+	#393 Designer: reversing query never ends
+	#387 Java : version 1.7 by default
+	#381 Add Cancel query for "export to HTML Pivot"
+	#356 Query builder: support for "NOT column"
+	#219 Refactor Beginner User guide
+
+
 SQLeoVQB.2016.10.rc1.zip: 2016-10-23
 
   For changes included see tickets at  
      http://sourceforge.net/p/sqleo/tickets/milestone/2016.10/
 
+	#386 command editor: current connexion should be emptyed after disconnect
+	#384 automated SQLparser testing
+	#382 SQL History: add a Copy an open in editor
+	#379 Designer: removing a table should remove all related columns
+	#351 Content Window: SQLexception: Statement was canceled or the session timed out
+	#349 Content Window: add AutoSavepoint in Populate filter with values
+	#231 SQL history: format SQL from query designer before to save
+	#77  Query builder: reverse "where a.x >= b.y" is wrong
 
-	#386 	command editor: current connexion should be emptyed after disconnect
-	#384 	automated SQLparser testing
-	#382 	SQL History: add a Copy an open in editor
-	#379 	Designer: removing a table should remove all related columns
-	#351 	Content Window: SQLexception: Statement was canceled or the session timed out
-	#349 	Content Window: add AutoSavepoint in Populate filter with values
-	#231 	SQL history: format SQL from query designer before to save
-	#77 	Query builder: reverse "where a.x >= b.y" is wrong
 
 SQLeoVQB.2016.09.rc1.zip: 2016-09-28
 
