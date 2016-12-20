@@ -228,9 +228,7 @@ public class TaskUpdate implements Runnable
 				pstmt.setInt(i+1, new Integer(param[0].toString()).intValue());
 				break;
 			case Types.NUMERIC:
-//				pstmt.setLong(i+1, new Long(param[0].toString()).longValue());
 				pstmt.setBigDecimal(i+1, new BigDecimal(param[0].toString()));
-//				pstmt.setDouble(i+1, new Double(param[0].toString()).doubleValue());
 				break;
 			default:
 				pstmt.setObject(i+1,param[0],((Integer)param[1]).intValue());

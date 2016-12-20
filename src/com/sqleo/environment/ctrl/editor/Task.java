@@ -169,7 +169,8 @@ public class Task implements Runnable {
 							}
 						// end test #329
 					}
-					stmt.close();
+// already closed ???
+//					stmt.close();
 
 					long ended = System.nanoTime();
 					long nano = ended - started;	
