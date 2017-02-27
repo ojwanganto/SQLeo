@@ -257,6 +257,51 @@ public class SQLHelper {
 //		}
 		m.appendTail(result);
 
+		// ********* SQLeoPivotDiff **************
+		// to do:
+		// - take table name from syntax not from group(1) --> (remove table as first param)
+		// - use syntax where clause to retrieve pivot values
+
+		final Pattern p0 = Pattern.compile("SQLeoPivotDiff\\((.*?),(.*?),(.*?),(.*?)\\)");
+		final Matcher m0 = p0.matcher(result);
+		
+		// Parameters : 
+		// 1. [schema.]table
+		// 2. Pivot Column (can be a concat results like col1||'-'||col2)
+		// 3. Aggregate function in COUNT,AVG,SUM,MIN,MAX
+		// 4. Aggregated Column
+
+		Integer NbPivotDiffValues = 0;
+		String PrevVal = null;
+		final StringBuffer result0 = new StringBuffer();
+//		try{
+			while (m0.find()) {
+				System.out.println("PivotSQL params: " + m0.group(1) + " / "+ m0.group(2)+" / "+ m0.group(3)+" / "+ m0.group(4));
+				ResultSet pivots = stmt.executeQuery("SELECT distinct " + m0.group(2) + " FROM " + m0.group(1));
+				StringBuilder val = new StringBuilder();
+				while (pivots.next()) {
+					if (PrevVal != null) {
+						val.append( m0.group(3) + "(case " + m0.group(2) + " when '" + pivots.getString(1) + "' then "+ m0.group(4) +" else null end) - " 
+							+   m0.group(3) + "(case " + m0.group(2) + " when '" + PrevVal + "' then "+ m0.group(4) +" else null end) "
+							+ "as \"Diff_" + PrevVal + "_" + pivots.getString(1)  + "\",");
+						NbPivotDiffValues++;
+					}
+					PrevVal = pivots.getString(1);
+				}
+				if(val.length() > 0) 
+					val=val.deleteCharAt(val.length()-1); 
+				else
+					val=val.append(" null "); 
+
+				m0.appendReplacement(result0, val.toString());
+				System.out.println("PivotSQL text: " + val.toString() );
+				System.out.println("PivotSQL length: " + val.length() );
+			}
+//		}finally{
+//			stmt.close();
+//		}
+		m0.appendTail(result0);
+
 		// ********* SQLeoGroupConcat **************
 		// to do:
 		// - take table name from syntax not from group(1) --> (remove table as first param)
@@ -265,7 +310,7 @@ public class SQLHelper {
 
 
 		final Pattern p1 = Pattern.compile("SQLeoGroupConcat\\((.*?),(.*?),\\s*(\'.*?\')\\s*\\)");
-		final Matcher m1 = p1.matcher(result);
+		final Matcher m1 = p1.matcher(result0);
 		
 		// Parameters : 
 		// 1. [schema.]table
@@ -298,9 +343,9 @@ public class SQLHelper {
 			stmt.close();
 //		}
 		m1.appendTail(result1);
-
-		final String pivotQuery = result1.toString().replace("NbPivotValues",NbPivotValues.toString());
-		//System.out.println("Pivot SQL: " + pivotQuery ); 
+		
+		final String pivotQuery = result1.toString().replace("NbPivotValues",NbPivotValues.toString()).replace("NbPivotDiffValues",NbPivotDiffValues.toString());
+		// System.out.println("Pivot SQL: " + pivotQuery ); 
 		return pivotQuery.isEmpty()?query:pivotQuery;
 	}
 	
