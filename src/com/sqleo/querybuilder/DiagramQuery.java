@@ -79,6 +79,9 @@ public class DiagramQuery extends DiagramAbstractEntity
 	void removeField(String label)
 	{
 		DiagramField df = getField(label);
+		if(df==null){
+			return;
+		}
 		removeField(df);
 		
 		queryItem.getQueryExpression().getQuerySpecification().removeSelectList(df.getQueryToken());

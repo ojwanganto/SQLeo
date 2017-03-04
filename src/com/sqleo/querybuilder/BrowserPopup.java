@@ -158,7 +158,6 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 				if(node instanceof BrowserItems.DefaultTreeItem && ((BrowserItems.DefaultTreeItem)node).isQueryToken())
 				{
 					boolean isEditable = !(token instanceof QueryTokens.Group);
-					boolean isRemovable = !(token instanceof QueryTokens.Table);
 					
 					getComponent(POP_IDX_ADD_G).setVisible(token instanceof QueryTokens._Expression);
 					getComponent(POP_IDX_ADD_O).setVisible(token instanceof QueryTokens._Expression);
@@ -168,7 +167,7 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 					getComponent(POP_IDX_EDIT).setEnabled(isEditable);
 					getComponent(POP_IDX_REM-1).setVisible(true);
 					getComponent(POP_IDX_REM).setVisible(true);
-					getComponent(POP_IDX_REM).setEnabled(isRemovable);
+					getComponent(POP_IDX_REM).setEnabled(true);
 	
 					getComponent(POP_IDX_ADD_O).setEnabled(builder.browser.getQueryItem().toString().indexOf("ROOT")!=-1);
 				}
@@ -547,6 +546,14 @@ public class BrowserPopup extends JPopupMenu implements MouseListener
 				else if(BrowserPopup.this.node instanceof BrowserItems.UnionQueryTreeItem)
 				{
 					BrowserPopup.this.builder.browser.setUnion(null);
+				}
+			}
+			else if(BrowserPopup.this.token instanceof QueryTokens.Table)
+			{
+				DiagramEntity entity = builder.diagram.getEntity((QueryTokens.Table)token);
+				if(entity!=null)
+				{
+					entity.dispose();
 				}
 			}
 		}

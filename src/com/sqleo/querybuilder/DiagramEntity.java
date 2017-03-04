@@ -30,7 +30,6 @@ import com.sqleo.common.util.I18n;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.ctrl.content.AbstractActionContent;
 import com.sqleo.environment.ctrl.define.TableMetaData;
-import com.sqleo.environment.ctrl.explorer.AbstractViewObjects;
 import com.sqleo.environment.mdi.ClientContent;
 import com.sqleo.environment.mdi.ClientDefinition;
 import com.sqleo.querybuilder.syntax.QuerySpecification;
@@ -137,25 +136,25 @@ public class DiagramEntity extends DiagramAbstractEntity
 		Condition[] conditions = qs.getWhereClause();
       
 		for (int i = 0; i < conditions.length; i++)
-			if (conditions[i].getLeft().toString().indexOf(querytoken.getName()) != -1 || conditions[i].getLeft().toString().indexOf(querytoken.getAlias()) != -1)
+			if (conditions[i].getLeft().toString().indexOf(querytoken.getName()) != -1 || (querytoken.getAlias()!=null && conditions[i].getLeft().toString().indexOf(querytoken.getAlias()) != -1))
 				builder.browser.removeWhereClause(conditions[i]);
       
 		conditions = qs.getHavingClause();
       
 		for (int i = 0; i < conditions.length; i++)
-			if (conditions[i].getLeft().toString().indexOf(querytoken.getName()) != -1 || conditions[i].getLeft().toString().indexOf(querytoken.getAlias()) != -1)
+			if (conditions[i].getLeft().toString().indexOf(querytoken.getName()) != -1 || (querytoken.getAlias()!=null && conditions[i].getLeft().toString().indexOf(querytoken.getAlias()) != -1))
 				builder.browser.removeHavingClause(conditions[i]);
       
 		Group[] groups = qs.getGroupByClause();
       
 		for (int i = 0; i < groups.length; i++)
-			if (groups[i].toString().indexOf(querytoken.getName()) != -1 || groups[i].toString().indexOf(querytoken.getAlias()) != -1)
+			if (groups[i].toString().indexOf(querytoken.getName()) != -1 || (querytoken.getAlias()!=null && groups[i].toString().indexOf(querytoken.getAlias()) != -1))
 				builder.browser.removeGroupByClause(groups[i]);
       
 		Sort[] orders = builder.getQueryModel().getOrderByClause();
       
 		for (int i = 0; i < orders.length; i++)
-			if (orders[i].getExpression().toString().indexOf(querytoken.getName()) != -1 || orders[i].getExpression().toString().indexOf(querytoken.getAlias()) != -1)
+			if (orders[i].getExpression().toString().indexOf(querytoken.getName()) != -1 || (querytoken.getAlias()!=null && orders[i].getExpression().toString().indexOf(querytoken.getAlias()) != -1))
 				builder.browser.removeOrderByClause(orders[i]);
 // end #379
 	}
