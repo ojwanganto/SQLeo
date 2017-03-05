@@ -621,7 +621,7 @@ public class SQLParser
 					String ref = dot==-1 ? new String() : e.substring(0,dot);
 
 					//  fix #80 for derived tables
-					QueryTokens.Table tr = new QueryTokens.Table(null,ref);
+					QueryTokens.Table tr = dot==-1 ? null : new QueryTokens.Table(null,ref);
 
 					if(tables.containsKey(ref))
 					{
@@ -647,11 +647,12 @@ public class SQLParser
 
 					} // end #92
 
-					if(side==0)
-						tcl = new QueryTokens.Column(tr,leftFunctionName!=null? leftFunctionName: e.substring(dot+1));
-					else
-						tcr = new QueryTokens.Column(tr,rightFunctionName!=null ? rightFunctionName : e.substring(dot+1));
-					
+					if(tr!=null){
+						if(side==0)
+							tcl = new QueryTokens.Column(tr,leftFunctionName!=null? leftFunctionName: e.substring(dot+1));
+						else
+							tcr = new QueryTokens.Column(tr,rightFunctionName!=null ? rightFunctionName : e.substring(dot+1));
+					}
 					if(dot == -1){
 /* to do 
 	#377 Designer: reverse query with ON condition with values is wrong
@@ -678,13 +679,25 @@ and
 						// fix #142 transform values on join into where clause
 						final QueryTokens.Condition conditionToken = new QueryTokens.Condition();
 						conditionToken.setOperator(op);
-						if(side==0 && tcr != null){
+						if(side==0){
 							conditionToken.setLeft(conditionVal);
-							conditionToken.setRight(tcr);
-						}
-						if(side==1 && tcl != null){
+							final String rightVal = rightFunctionName!=null ? rightFunctionName : right;
+							if(tcr != null){
+								conditionToken.setRight(tcr);
+							}else if(rightVal!=null){
+								//right side is a value,
+								conditionToken.setRight(new QueryTokens.DefaultExpression(rightVal));
+								side++;
+							}
+						}else if(side==1){
 							conditionToken.setRight(conditionVal);
-							conditionToken.setLeft(tcl);
+							final String leftVal = leftFunctionName!=null ? leftFunctionName : left;
+							if(tcl != null){
+								conditionToken.setLeft(tcl);
+							}else if(leftVal!=null){
+								//left side is a value,
+								conditionToken.setLeft(new QueryTokens.DefaultExpression(leftVal));
+							}
 						}
 
 						if(qs.getWhereClause().length>0 ){
