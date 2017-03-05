@@ -878,11 +878,11 @@ and
 				if(token!=null)
 				{
 					token.setRight(expr);
+					token.setAppend(next.toString());
 					tokens.add(token);
 				}
 				
 				token = new QueryTokens.Condition();
-				token.setAppend(next.toString());
 				
 				expr = null;
 			}
