@@ -403,10 +403,10 @@ public abstract class QueryTokens
 			
 			if(operator.equals("EXISTS") || operator.equals("NOT EXISTS"))
 			{
-				return  operator + " " + exprR + (append!=null ? " "+append : "");
+				return (append!=null ? append + " " : "") + operator + " " + exprR;
 			}
 			
-			return exprL + " " + operator + " " + exprR + (append!=null ? " "+append : "");
+			return (append!=null ? append + " " : "") + exprL + " " + operator + " " + exprR;
 		}
 		
 		public String toString(boolean wrap, int offset)
@@ -459,10 +459,10 @@ public abstract class QueryTokens
 
 			if(operator.equals("EXISTS") || operator.equals("NOT EXISTS"))
 			{
-				return  operator +" "+exprR+(append!=null ? " " +append  : "");
+				return (append!=null ? append + " " : "") +  operator +" "+exprR;
 			}
 			
-			return exprL + delimiter +operator + " " +exprR + (append!=null ? " "+append : "");
+			return (append!=null ? append + " " : "") + exprL + delimiter +operator + " " +exprR;
 		}
 	}
 

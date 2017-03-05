@@ -82,12 +82,11 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 
 				QueryTokens.DefaultExpression exprL = new QueryTokens.DefaultExpression((rowdata[0] == null ? null : rowdata[0].toString()));
 				QueryTokens.DefaultExpression exprR = new QueryTokens.DefaultExpression((rowdata[2] == null ? null : rowdata[2].toString()));
-				append = (rowdata[3]!=null ? rowdata[3].toString() : null);
-				
+
 				QueryTokens.Condition ctoken = new QueryTokens.Condition(append,exprL,rowdata[1].toString(),exprR);
 				content.getQueryModel().getQueryExpression().getQuerySpecification().addWhereClause(ctoken);
 				
-
+				append = (rowdata[3]!=null ? rowdata[3].toString() : null);
 			}
 			if(content.getClientQB()!=null){
 				content.getClientQB().getQueryBuilder().setQueryModel(content.getQueryModel());
@@ -119,10 +118,7 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 			where.setValueAt(qtokens[i].getLeft().toString(),r,1);
 			where.setValueAt(qtokens[i].getOperator(),r,2);
 			where.setValueAt(qtokens[i].getRight().toString(),r,3);
-			final String append = qtokens[i].getAppend()!=null?qtokens[i].getAppend().toUpperCase():null;
-			if(append!=null && (append.equals("OR") ||append.equals("AND"))){
-				where.setValueAt(append,r,4);
-			}
+			where.setValueAt(qtokens[i].getAppend(),r,4);
 		}		
 	}
 
