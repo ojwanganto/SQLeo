@@ -32,6 +32,7 @@ import com.sqleo.environment.ctrl.editor.ClauseCondition;
 import com.sqleo.environment.ctrl.editor._ClauseOwner;
 import com.sqleo.querybuilder.syntax.QueryTokens;
 import com.sqleo.querybuilder.syntax.QueryTokens.Column;
+import com.sqleo.querybuilder.syntax._ReservedWords;
 
 
 public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
@@ -118,7 +119,12 @@ public class DialogFilters extends AbstractDialogConfirm implements _ClauseOwner
 			where.setValueAt(qtokens[i].getLeft().toString(),r,1);
 			where.setValueAt(qtokens[i].getOperator(),r,2);
 			where.setValueAt(qtokens[i].getRight().toString(),r,3);
-			where.setValueAt(qtokens[i].getAppend(),r,4);
+			if(i+1<qtokens.length){
+				final String append = qtokens[i+1].getAppend()!=null?qtokens[i+1].getAppend().toUpperCase():null;
+				if(append!=null && (append.equals(_ReservedWords.OR) ||append.equals(_ReservedWords.AND))){
+					where.setValueAt(append,r,4);
+				}
+			}
 		}		
 	}
 
