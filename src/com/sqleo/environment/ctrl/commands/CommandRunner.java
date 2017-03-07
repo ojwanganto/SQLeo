@@ -18,6 +18,8 @@ public class CommandRunner {
 		registerCommand(QuitCommand.NAME, new QuitCommand());
 		registerCommand(ClearCommand.NAME, new ClearCommand());
 		registerCommand(InputCommand.NAME, new InputCommand());
+		registerCommand(AliasCommand.NAME, new AliasCommand());
+		registerCommand(UnaliasCommand.NAME, new UnaliasCommand());
 	}
 
 	public void registerCommand(final String cmd, final Command cmnd) {
