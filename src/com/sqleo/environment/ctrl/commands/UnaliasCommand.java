@@ -48,9 +48,11 @@ public class UnaliasCommand extends AbstractCommand {
 		final String aliasName = tokens.get(1);
 		if(AliasCommand.ALIAS_MAP.containsKey(aliasName)){
 			AliasCommand.ALIAS_MAP.remove(aliasName);
+			result.setCode(CommandExecutionResult.SUCCESS);
+			return result;
+		}else{
+			return invalidCommandError(result, "Unknown alias provided ->" + aliasName);
 		}
-		result.setCode(CommandExecutionResult.SUCCESS);
-		return result;
 
 	}
 

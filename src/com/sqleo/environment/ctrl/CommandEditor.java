@@ -58,6 +58,7 @@ import com.sqleo.common.util.SQLHistoryData;
 import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
+import com.sqleo.environment.ctrl.commands.AliasCommand;
 import com.sqleo.environment.ctrl.commands.ClearCommand;
 import com.sqleo.environment.ctrl.commands.Command;
 import com.sqleo.environment.ctrl.commands.CommandExecutionResult;
@@ -399,7 +400,8 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 						if (cmd != null) {
 							executeCommand(sql, cmd);
 						} else {
-							executeQuery(sql);
+							final String sqlAliased = AliasCommand.getAliasedSQL(sql);
+							executeQuery(sqlAliased);
 						}
 					}
 				});
@@ -451,9 +453,9 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					inp.start();
 				}
 			} else {
-				String error = "\n" + sql + "Command failed\n";
+				String error = "\n" + sql + "Command "+(result.isFailed()?"failed": "invalid") + "\n";
 				if(result.getDetail()!=null){
-					error = error + result.getDetail();
+					error = error + "Reason: "+result.getDetail();
 				}
 				write(error, true);
 			}

@@ -3,6 +3,7 @@ package com.sqleo.environment.ctrl.commands;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 public class AliasCommand extends AbstractCommand {
@@ -11,6 +12,25 @@ public class AliasCommand extends AbstractCommand {
 	public static String NAME = "alias";
 	
 	public static Map<String,String> ALIAS_MAP = new HashMap<String,String>();
+	
+	public static String getAliasedSQL(final String sql){
+		if(sql.charAt(0) == '@'){
+			final String sqlSuffix = sql.substring(1); 
+			final StringTokenizer sqlTokens = new StringTokenizer(sqlSuffix);
+			final String alias = sqlTokens.nextToken();
+			if(alias!=null){
+				final String aliasVal = ALIAS_MAP.get(alias);
+				if(aliasVal!=null){
+					String sqlReplaced = aliasVal;
+					while(sqlTokens.hasMoreTokens()){
+						sqlReplaced = sqlReplaced.replace("?", sqlTokens.nextToken());
+					}
+					return sqlReplaced;
+				}
+			}
+		}
+		return sql;
+	}
 
 	@Override
 	public String getCommand() {

@@ -20,6 +20,12 @@ public class CommandExecutionResult {
 	public boolean isSuccess() {
 		return code > 0;
 	}
+	public boolean isInvalid() {
+		return code == 0;
+	}
+	public boolean isFailed() {
+		return code < 0;
+	}
 
 	public String getDetail() {
 		return detail;
