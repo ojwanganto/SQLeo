@@ -50,6 +50,7 @@ import com.sqleo.common.util.I18n;
 import com.sqleo.common.util.Resources;
 import com.sqleo.common.util.Store;
 import com.sqleo.common.util.Text;
+import com.sqleo.environment.ctrl.commands.AliasCommand;
 import com.sqleo.environment.ctrl.commands.Command;
 import com.sqleo.environment.ctrl.commands.CommandRunner;
 import com.sqleo.environment.mdi.ClientMetadataExplorer;
@@ -165,6 +166,7 @@ public class Application extends Appearance implements _Constants,_Version
 			}
 			
 			Preferences.loadDefaults();
+			AliasCommand.loadAliases();
 			
 	    	if(Preferences.getBoolean("application.trace",false))
 	    	{

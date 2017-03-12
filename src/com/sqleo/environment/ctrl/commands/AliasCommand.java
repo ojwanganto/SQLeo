@@ -1,18 +1,28 @@
 package com.sqleo.environment.ctrl.commands;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+import com.sqleo.environment.Application;
+
 public class AliasCommand extends AbstractCommand {
 	
-	private static final String USAGE = "Usage: alias, Description: Syntax -> alias selstar=\"select * from ?\" , @selstar mytable;  ";
+	private static final String USAGE = "Usage: alias, Description: Alias any query with parameters Example: alias selstar=\"select * from ?\" , @selstar mytable;  ";
 	public static String NAME = "alias";
 	
-	public static Map<String,String> ALIAS_MAP = new HashMap<String,String>();
+	public static Hashtable<String,String> ALIAS_MAP;
 	
+	public static void loadAliases(){
+		if(Application.session.mount(Application.ENTRY_ALIASES).size() == 0)
+		{
+			Application.session.mount(Application.ENTRY_ALIASES).add(new Hashtable<String,String>());
+		}
+		ALIAS_MAP = (Hashtable)Application.session.mount(Application.ENTRY_ALIASES).get(0);
+		
+	}
+
 	public static String getAliasedSQL(final String sql){
 		if(sql.charAt(0) == '@'){
 			final String sqlSuffix = sql.substring(1); 
@@ -29,7 +39,7 @@ public class AliasCommand extends AbstractCommand {
 				}
 			}
 		}
-		return sql;
+		return null;
 	}
 
 	@Override

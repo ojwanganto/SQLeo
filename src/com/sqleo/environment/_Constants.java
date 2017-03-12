@@ -29,6 +29,8 @@ public interface _Constants
 	public static final String ENTRY_PREFERENCES	= "$PREFERENCES";
 	public static final String ENTRY_JDBC			= "$JDBC";
 	public static final String ENTRY_INFO			= "$INFO";
+	public static final String ENTRY_ALIASES		= "$ALIASES";
+
 
 /*******************************************************************************/
 // actions

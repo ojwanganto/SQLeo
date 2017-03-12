@@ -401,7 +401,15 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 							executeCommand(sql, cmd);
 						} else {
 							final String sqlAliased = AliasCommand.getAliasedSQL(sql);
-							executeQuery(sqlAliased);
+							final String sqlToExecute, sqlAlias;
+							if(sqlAliased!=null){
+								sqlToExecute = sqlAliased;
+								sqlAlias = sql;
+							}else{
+								sqlToExecute = sql;
+								sqlAlias = null;
+							}
+							executeQuery(sqlToExecute, sqlAlias);
 						}
 					}
 				});
@@ -461,7 +469,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			}
 		}
 
-		private void executeQuery(final String sql) {
+		private void executeQuery(final String sql,final String sqlAlias) {
 			_TaskSource source = new TaskSource(sql);
 			Application.session.addSQLToHistory(new SQLHistoryData(new Date(), source.getHandlerKey(), "CommandEditor",
 					sql));
@@ -472,8 +480,10 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			.getLength() - keycah.length();
 			response.getDocument().setCharacterAttributes(offset,
 					keycah.length(), keycahAttributSet, true);
-			CommandEditor.this.response.append("\n"
-					+ source.getSyntax() + "\n");
+			if(sqlAlias!=null){
+				CommandEditor.this.response.append("\nAlias: "	+ sqlAlias);
+			}
+			CommandEditor.this.response.append("\n"+ source.getSyntax() + "\n");
 
 			ClientCommandEditor cce = getClient();
 			if (cce.isGridOutput() && (sql.toUpperCase().startsWith("SELECT") || sql.toUpperCase().startsWith("SHOW"))) {
