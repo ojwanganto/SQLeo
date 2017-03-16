@@ -59,6 +59,7 @@ import com.sqleo.common.util.Text;
 import com.sqleo.environment.Application;
 import com.sqleo.environment.Preferences;
 import com.sqleo.environment.ctrl.commands.AliasCommand;
+import com.sqleo.environment.ctrl.commands.AliasListCommand;
 import com.sqleo.environment.ctrl.commands.ClearCommand;
 import com.sqleo.environment.ctrl.commands.Command;
 import com.sqleo.environment.ctrl.commands.CommandExecutionResult;
@@ -440,7 +441,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 					getClient().toggleGridOuptput(outputCmd.gridMode);
 				} else if (cmd instanceof FormatCommand) {
 					formatCmd = (FormatCommand) cmd;
-				} else if (cmd instanceof HelpCommand) {
+				} else if (cmd instanceof HelpCommand || cmd instanceof AliasListCommand) {
 					write(result.getDetail());
 				} else if (cmd instanceof QuitCommand) {
 					setAutoSelectConnectionInCommandMode(false);

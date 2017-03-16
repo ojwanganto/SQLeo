@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class UnaliasCommand extends AbstractCommand {
 	
-	private static final String USAGE = "Usage: unalias selstart, Description: Unalias user defined aliases, syntax -> unalias selstar";
+	private static final String USAGE = "Usage: unalias <aliasname>, Description: Unalias user defined alias, syntax -> unalias selstar";
 	public static String NAME = "unalias";
 
 	@Override

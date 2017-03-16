@@ -20,6 +20,7 @@ public class CommandRunner {
 		registerCommand(InputCommand.NAME, new InputCommand());
 		registerCommand(AliasCommand.NAME, new AliasCommand());
 		registerCommand(UnaliasCommand.NAME, new UnaliasCommand());
+		registerCommand(AliasListCommand.NAME, new AliasListCommand());
 	}
 
 	public void registerCommand(final String cmd, final Command cmnd) {

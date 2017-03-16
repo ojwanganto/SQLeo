@@ -9,7 +9,7 @@ import com.sqleo.environment.Application;
 
 public class AliasCommand extends AbstractCommand {
 	
-	private static final String USAGE = "Usage: alias, Description: Alias any query with parameters Example: alias selstar=\"select * from ?\" , @selstar mytable;  ";
+	private static final String USAGE = "Usage: alias <aliasname>=<query>, Description: Alias any query with parameters Example: alias selstar=\"select * from ?\" , @selstar mytable;  ";
 	public static String NAME = "alias";
 	
 	public static Hashtable<String,String> ALIAS_MAP;
@@ -22,6 +22,8 @@ public class AliasCommand extends AbstractCommand {
 		ALIAS_MAP = (Hashtable)Application.session.mount(Application.ENTRY_ALIASES).get(0);
 		
 	}
+	
+	private static String REPLACE_MATCH = "\\?";
 
 	public static String getAliasedSQL(final String sql){
 		if(sql.charAt(0) == '@'){
@@ -33,7 +35,7 @@ public class AliasCommand extends AbstractCommand {
 				if(aliasVal!=null){
 					String sqlReplaced = aliasVal;
 					while(sqlTokens.hasMoreTokens()){
-						sqlReplaced = sqlReplaced.replace("?", sqlTokens.nextToken());
+						sqlReplaced = sqlReplaced.replaceFirst(REPLACE_MATCH, sqlTokens.nextToken());
 					}
 					return sqlReplaced;
 				}
@@ -66,7 +68,7 @@ public class AliasCommand extends AbstractCommand {
 	@Override
 	protected Pattern getCommandRegex() {
 		//alias selstar="select * from ?"
-		return Pattern.compile("(^alias)\\s(\\w.*)=\\\"(\\w.*)\\\"");
+		return Pattern.compile("(^alias)\\s(\\w.*)=\\\"(.*)\\\"", Pattern.DOTALL);
 	}
 
 	@Override
