@@ -1,7 +1,8 @@
 package com.sqleo.environment.ctrl.commands;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class AliasListCommand extends AbstractCommand {
@@ -49,11 +50,13 @@ public class AliasListCommand extends AbstractCommand {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("List of available aliases");
 		int i = 1;
-		for (final Map.Entry<String, String> entry : AliasCommand.ALIAS_MAP.entrySet()) {
-			builder.append("\n").append(i).append(". ").append(String.format("%-15s", entry.getKey())).append("=\t")
-					.append(entry.getValue());
+		final List<String> aliases = new ArrayList<String>(AliasCommand.ALIAS_MAP.keySet());
+		Collections.sort(aliases);
+		for(final String alias : aliases){	
+			builder.append("\n").append(i).append(". ").append(alias);
 			i++;
 		}
+		builder.append("\n");
 		result.setDetail(builder.toString());
 		result.setCode(CommandExecutionResult.SUCCESS);
 		return result;

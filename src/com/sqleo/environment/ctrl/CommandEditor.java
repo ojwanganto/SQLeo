@@ -434,6 +434,7 @@ public class CommandEditor extends BorderLayoutPanel implements _TaskTarget {
 			final CommandExecutionResult result = cmd.execute(sql);
 			getActionMap().get("stop-task").setEnabled(false);
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			tabs.setSelectedIndex(0);
 			if (result.isSuccess()) {
 				write( "\n" + sql + "Command executed successfully\n");
 				if (cmd instanceof OutputCommand) {
