@@ -33,6 +33,19 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2017.03.rc1.zip: 2017-03-21
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2017.03/
+	
+	#401 	SQLeoPivotDiff
+	#389 	Designer: filter with OR condition is changed in AND
+	#388 	Designer: enable "remove" on right click on table
+	#377 	Designer: reverse query with ON condition with values is wrong
+	#325 	create Aliases for SQL queries
+			see sql/aliases.sql 
+
+
 SQLeoVQB.2016.12.rc1.zip: 2016-12-30
 
   For changes included see tickets at  
