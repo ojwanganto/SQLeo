@@ -33,6 +33,15 @@ command is in your path.  If it isn't, then you should either
 specify the complete path to the java command or update your
 PATH environment variable.
 
+SQLeoVQB.2017.09.rc1.zip: 2017-09-17
+
+  For changes included see tickets at  
+     http://sourceforge.net/p/sqleo/tickets/milestone/2017.09/
+	
+	#403 	Update pivottable.js to version 2.14.0
+	#402 	Update csvjdbc driver to 1.0.32
+
+
 SQLeoVQB.2017.03.rc1.zip: 2017-03-21
 
   For changes included see tickets at  
